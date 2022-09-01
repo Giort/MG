@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 options = Options()
 options.add_argument('--headless')
@@ -7,14 +6,10 @@ ch_options = Options()
 ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 driver.maximize_window()
-# options.headless = True
 
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 
@@ -37,7 +32,7 @@ try:
         if form_1_text.startswith("Хотите узнать"):
             print(' OK: 1.2 заголовок формы "Хотите узнать подробнее о проекте?"')
         else:
-            print('ERROR: 1.2 заголовок формы не "Хотите узнать подробнее о проекте?"')
+            print('ERROR: 1.2 заголовок формы не "Хотите узнать подробнее о проекте?", а ' + form_1_text)
         # 1.3 проверим, что есть кнопка на форме
         try:
             if driver.find_element(by=By.CSS_SELECTOR, value="div.presentation > div > div > ul > li > form > div > button").is_displayed():
@@ -48,7 +43,7 @@ try:
                 if button_1_text == "ОТПРАВИТЬ":
                     print(' OK: 1.4 кнопка называется "ОТПРАВИТЬ"')
                 else:
-                    ('ERROR: 1.4 название кнопки не "ОТПРАВИТЬ", а ' + button_1_text)
+                    print("ERROR: 1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_1_text)
         except NoSuchElementException:
             print('ERROR: 1.3 нет кнопки или её расположение изменилось')
 except NoSuchElementException:
@@ -66,7 +61,7 @@ try:
         if form_2_text == "Получите каталог посёлков":
             print(' OK: 2.2 заголовок формы "Получите каталог посёлков"')
         else:
-            print('ERROR: 2.2 заголовок формы не "Получите каталог посёлков"')
+            print('ERROR: 2.2 заголовок формы не "Получите каталог посёлков", а ' + form_2_text)
         # 2.3 проверим, что есть кнопка на форме
         try:
             if driver.find_element(by=By.CSS_SELECTOR, value="div.catalogue > div > div > ul > li > form > div > button").is_displayed():
@@ -77,7 +72,7 @@ try:
                 if button_2_text == "ПОЛУЧИТЬ":
                     print(' OK: 2.4 кнопка называется "ПОЛУЧИТЬ"')
                 else:
-                    ('ERROR: 2.4 название кнопки не "ПОЛУЧИТЬ", а ' + button_1_text)
+                    print("ERROR: 2.4 название кнопки не \"ПОЛУЧИТЬ\", а " + button_2_text)
         except NoSuchElementException:
             print('ERROR: 2.3 нет кнопки или её расположение изменилось')
 except NoSuchElementException:
@@ -88,15 +83,15 @@ except NoSuchElementException:
 # 3. найти форму "Подпишитесь на рассылку"
 # 3.1 убедиться, что есть форма по указанному селектору:
 try:
-    if driver.find_element(by=By.XPATH, value="//div[35]/div/div/div/h1/b").is_displayed():
+    if driver.find_element(by=By.XPATH, value="//div[48]/div/div/div/h1/b").is_displayed():
         print(' OK: 3.1 вторая форма на странице есть')
         # 3.2 раз форма есть, то проверим, что заголовок соответствует шаблону
-        form_3 = driver.find_element(by=By.XPATH, value="//div[35]/div/div/div/h1/b")
+        form_3 = driver.find_element(by=By.XPATH, value="//div[48]/div/div/div/h1/b")
         form_3_text = form_3.text
         if form_3_text == "Подпишитесь на рассылку":
             print(' OK: 3.2 заголовок формы "Подпишитесь на рассылку"')
         else:
-            print('ERROR: 3.2 заголовок формы не "Подпишитесь на рассылку"')
+            print('ERROR: 3.2 заголовок формы не "Подпишитесь на рассылку", а ' + form_3_text)
         # 2.3 проверим, что есть кнопка на форме
         try:
             if driver.find_element(by=By.XPATH, value="//form/div[2]/button").is_displayed():
@@ -107,7 +102,7 @@ try:
                 if button_3_text == "ПОДПИСАТЬСЯ":
                     print(' OK: 3.4 кнопка называется "ПОДПИСАТЬСЯ"')
                 else:
-                    ('ERROR: 3.4 название кнопки не "ПОДПИСАТЬСЯ", а ' + button_3_text)
+                    print("ERROR: 3.4 название кнопки не \"ПОДПИСАТЬСЯ\", а " + button_3_text)
         except NoSuchElementException:
             print('ERROR: 3.3 нет кнопки или её расположение изменилось')
 except NoSuchElementException:
@@ -127,7 +122,7 @@ try:
         if form_4_text.startswith("Действуйте!"):
             print(' OK: 4.2 заголовок формы "Действуйте! Лучшие участки уже бронируют!"')
         else:
-            print('ERROR: 4.2 заголовок формы не "Действуйте! Лучшие участки уже бронируют!"')
+            print('ERROR: 4.2 заголовок формы не "Действуйте! Лучшие участки уже бронируют!", а ' + form_4_text)
         # 4.3 проверим, что есть кнопка на форме
         try:
             if driver.find_element(by=By.CSS_SELECTOR, value="div.doit > div > div > ul > li > form > div > button").is_displayed():
@@ -138,7 +133,7 @@ try:
                 if button_4_text == "УЗНАТЬ":
                     print(' OK: 4.4 кнопка называется "УЗНАТЬ"')
                 else:
-                    ('ERROR: 4.4 название кнопки не "УЗНАТЬ", а ' + button_4_text)
+                    print("ERROR: 4.4 название кнопки не \"УЗНАТЬ\", а " + button_4_text)
         except NoSuchElementException:
             print('ERROR: 4.3 нет кнопки или её расположение изменилось')
 except NoSuchElementException:
