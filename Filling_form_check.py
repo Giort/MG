@@ -190,93 +190,93 @@ else:
 
 
 # переход на страницу "О проекте"
-# тут просто проверка, что форма "Хотите узнать подробнее о проекте?" на страницах есть
-# так как предполагается, что её функционал уже проверен на главной
-time.sleep(3)
+# далее на шести страницах проверка наличия формы, функционал которой уже проверен на главной
 driver.get("https://moigektar.ru/about")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.1 форма "Хотите узнать подробнее о проекте?" на странице "О проекте" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте" \n       или селектор формы изменился')
+    print('ERROR: 2.1 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте" \n       или селектор формы изменился')
 
 # переход на страницу "О проекте - сервисная компания"
-time.sleep(3)
 driver.get("https://moigektar.ru/about/management")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.2 форма "Хотите узнать подробнее о проекте?" на странице "О проекте - сервисная компания" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - сервисная компания" \n       или селектор формы изменился')
+    print('ERROR: 2.2 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - сервисная компания" \n       или селектор формы изменился')
 
 # переход на страницу "О проекте - личный кабинет"
-time.sleep(3)
 driver.get("https://moigektar.ru/about/cabinet")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.3 форма "Хотите узнать подробнее о проекте?" на странице "О проекте - личный кабинет" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - личный кабинет" \n       или селектор формы изменился')
+    print('ERROR: 2.3 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - личный кабинет" \n       или селектор формы изменился')
 
 # переход на страницу "О проекте - партнеры"
-time.sleep(3)
 driver.get("https://moigektar.ru/about/advantages")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.4 форма "Хотите узнать подробнее о проекте?" на странице "О проекте - партнеры" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - партнеры" \n       или селектор формы изменился')
+    print('ERROR: 2.4 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - партнеры" \n       или селектор формы изменился')
 
 # переход на страницу "О проекте - союз садоводов"
-time.sleep(3)
 driver.get("https://moigektar.ru/about/union")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.5 форма "Хотите узнать подробнее о проекте?" на странице "О проекте - союз садоводов" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - союз садоводов" \n       или селектор формы изменился')
+    print('ERROR: 2.5 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - союз садоводов" \n       или селектор формы изменился')
 
 # переход на страницу "О проекте - отзывы"
-time.sleep(3)
 driver.get("https://moigektar.ru/about/reviews")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
     print(' OK: 2.6 форма "Хотите узнать подробнее о проекте?" на странице "О проекте - отзывы" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - отзывы" \n       или селектор формы изменился')
+    print('ERROR: 2.6 нет формы "Хотите узнать подробнее о проекте?" на странице "О проекте - отзывы" \n       или селектор формы изменился')
 
 
 
 
 # переход на страницу "Каталог поселков"
-time.sleep(3)
+# проверка наличия формы, функционал которой уже проверен на главной
 driver.get("https://moigektar.ru/catalogue")
+time.sleep(1)
 if driver.find_element(by=By.XPATH, value="//div[25]/div/div/h1/b").is_displayed():
     print(' OK: 3.1 форма "Хотите узнать подробнее о проекте?" на странице "Каталог посёлков" есть')
 else:
-    print('ERROR: нет формы "Хотите узнать подробнее о проекте?" на странице "Каталог посёлков" \n       или селектор формы изменился')
+    print('ERROR: 3.1 нет формы "Хотите узнать подробнее о проекте?" на странице "Каталог посёлков" \n       или селектор формы изменился')
 
 
 
 
 # переход на страницу "Развитие - развитие поселков"
-time.sleep(3)
 driver.get("https://moigektar.ru/growth")
+time.sleep(1)
 # проверка, что форма есть на странице
 if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
-    print(' OK: 4.1 форма на странице "Развитие - Развитие поселков" есть')
-    # 4.2 раз форма есть, то проверим, что заголовок соответствует шаблону
+    print(' OK: 4.1.1 форма на странице "Развитие - Развитие поселков" есть')
+    # 4.1.2 раз форма есть, то проверим, что заголовок соответствует шаблону
     # (в этой форме костыль в виде частичного сравнения текста из-за того, что название формы разорвано <br>)
     form_5 = driver.find_element(by=By.XPATH, value="//h1/b")
     form_5_text = form_5.text
     if form_5_text.startswith("Хотите узнать подробнее"):
-        print(' OK: 4.2 заголовок формы "Хотите узнать подробнее о проекте?"')
+        print(' OK: 4.1.2 заголовок формы "Хотите узнать подробнее о проекте?"')
     else:
-        print('ERROR: 4.2 заголовок формы не "Хотите узнать подробнее об услугах и развитии?", а ' + form_5_text)
-    # 3.3 проверим, что есть кнопка на форме
+        print('ERROR: 4.1.2 заголовок формы не "Хотите узнать подробнее об услугах и развитии?", а ' + form_5_text)
+    # 4.3 проверим, что есть кнопка на форме
     if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
-        print(' OK: 4.3 на форме есть кнопка')
+        print(' OK: 4.1.3 на форме есть кнопка')
         # 4.4 если кнопка есть, проверим, что её название соответствует шаблону
         button_5 = driver.find_element(by=By.XPATH, value="//div[4]/button")
         button_5_text = button_5.text
         if button_5_text == "ОТПРАВИТЬ":
-            print(' OK: 4.4 кнопка называется "ОТПРАВИТЬ"')
+            print(' OK: 4.1.4 кнопка называется "ОТПРАВИТЬ"')
         else:
-            print("ERROR: 4.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_5_text)
+            print("ERROR: 4.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_5_text)
         # 4.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
         driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
         driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
@@ -285,16 +285,273 @@ if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
         button_5.click()
         time.sleep(3)
         if driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
-            print(" OK: 4.5 данные были отправлены")
+            print(" OK: 4.1.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
-                print("ERROR: 4.5 данные не были отправлены")
+                print("ERROR: 4.1.5 данные не были отправлены")
             else:
                 print("ПАМАГИТИ")
     else:
-        print('ERROR: 4.3 нет кнопки или её селектор изменился')
+        print('ERROR: 4.1.3 нет кнопки или её селектор изменился')
 else:
-    print('ERROR: 4.1 формы "Хотите узнать подробнее о проекте?" нет или её селектор изменился')
+    print('ERROR: 4.1.1 формы "Хотите узнать подробнее об услугах и развитии?" нет или её селектор изменился')
 
-time.sleep(10)
+
+
+# переход на страницу "Развитие - глазами инвестора"
+# далее на шести страницах проверка наличия формы, функционал которой уже проверен на главной
+driver.get("https://moigektar.ru/investment")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.2 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - глазами инвестора" есть')
+else:
+    print('ERROR: 4.2 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - глазами инвестора" \n       или селектор формы изменился')
+
+# переход на страницу "Развитие - капитализация"
+driver.get("https://moigektar.ru/investment/capitalization")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.3 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - капитализация" есть')
+else:
+    print('ERROR: 4.3 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - капитализация" \n       или селектор формы изменился')
+
+# переход на страницу "Развитие - базовая стратегия"
+driver.get("https://moigektar.ru/investment/basic")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.4 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - базовая стратегия" есть')
+else:
+    print('ERROR: 4.4 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - базовая стратегия" \n       или селектор формы изменился')
+
+# переход на страницу "Развитие - предприниматель"
+driver.get("https://moigektar.ru/investment/businessman")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.5 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - предприниматель" есть')
+else:
+    print('ERROR: 4.5 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - предприниматель" \n       или селектор формы изменился')
+
+# переход на страницу "Развитие - фермер-садовод"
+driver.get("https://moigektar.ru/investment/farmer")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.6 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - фермер-садовод" есть')
+else:
+    print('ERROR: 4.6 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - фермер-садовод" \n       или селектор формы изменился')
+
+# переход на страницу "Развитие - фамильная усадьба"
+driver.get("https://moigektar.ru/investment/family")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 4.7 форма "Хотите узнать подробнее о проекте?" на странице "Развитие - фамильная усадьба" есть')
+else:
+    print('ERROR: 4.7 нет формы "Хотите узнать подробнее о проекте?" на странице "Развитие - фамильная усадьба" \n       или селектор формы изменился')
+
+
+
+
+
+# переход на страницу "Меры поддержки - государственная поддержка"
+driver.get("https://moigektar.ru/documents/gos")
+time.sleep(1)
+# проверка, что форма есть на странице
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.1.1 форма на странице "Меры поддержки - господдержка" есть')
+    # 5.1.2 раз форма есть, то проверим, что заголовок соответствует шаблону
+    # (в этой форме костыль в виде частичного сравнения текста из-за того, что название формы разорвано <br>)
+    form_6 = driver.find_element(by=By.XPATH, value="//h1/b")
+    form_6_text = form_6.text
+    if form_6_text.startswith("Хотите узнать подробнее"):
+        print(' OK: 5.1.2 заголовок формы "Хотите узнать подробнее о господдержке?"')
+    else:
+        print('ERROR: 5.1.2 заголовок формы не "Хотите узнать подробнее о господдержке?", а ' + form_6_text)
+    # 5.3 проверим, что есть кнопка на форме
+    if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+        print(' OK: 5.1.3 на форме есть кнопка')
+        # 5.4 если кнопка есть, проверим, что её название соответствует шаблону
+        button_6 = driver.find_element(by=By.XPATH, value="//div[4]/button")
+        button_6_text = button_6.text
+        if button_6_text == "ОТПРАВИТЬ":
+            print(' OK: 5.1.4 кнопка называется "ОТПРАВИТЬ"')
+        else:
+            print("ERROR: 5.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_6_text)
+        # 5.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+            "9999999999")
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        button_6.click()
+        time.sleep(3)
+        if driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
+            print(" OK: 5.1.5 данные были отправлены")
+        else:
+            if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+                print("ERROR: 5.1.5 данные не были отправлены")
+            else:
+                print("ПАМАГИТИ")
+    else:
+        print('ERROR: 5.1.3 нет кнопки или её селектор изменился')
+else:
+    print('ERROR: 5.1.1 формы "Хотите узнать подробнее о господдержке?" нет или её селектор изменился')
+
+# переход на страницу "Меры поддержки - для владельцев земли"
+# далее на пяти страницах проверка наличия формы, функционал которой уже проверен на "Господдержке""
+driver.get("https://moigektar.ru/documents")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.2 форма "Хотите узнать подробнее о господдержке?" на странице "Меры поддержки - для владельцев земли" есть')
+else:
+    print('ERROR: 5.2 нет формы "Хотите узнать подробнее о проекте?" на странице "Меры поддержки - для владельцев земли" \n       или селектор формы изменился')
+
+# переход на страницу "Меры поддержки - для владельцев земли"
+driver.get("https://moigektar.ru/documents/farmer")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.3 форма "Хотите узнать подробнее о господдержке?" на странице "Меры поддержки - грант "Начинающий фермер" есть')
+else:
+    print('ERROR: 5.3 нет формы "Хотите узнать подробнее о проекте?" на странице "Меры поддержки - грант "Начинающий фермер" \n       или селектор формы изменился')
+
+# переход на страницу "Меры поддержки - для владельцев земли"
+driver.get("https://moigektar.ru/documents/startup")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.4 форма "Хотите узнать подробнее о господдержке?" на странице "Меры поддержки - грант "Агростартап" есть')
+else:
+    print('ERROR: 5.4 нет формы "Хотите узнать подробнее о проекте?" на странице "Меры поддержки - грант "Агростартап" \n       или селектор формы изменился')
+
+# переход на страницу "Меры поддержки - для владельцев земли"
+driver.get("https://moigektar.ru/documents/family")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.5 форма "Хотите узнать подробнее о господдержке?" на странице "Меры поддержки - грант на семейную ферму" есть')
+else:
+    print('ERROR: 5.5 нет формы "Хотите узнать подробнее о проекте?" на странице "Меры поддержки - грант на семейную ферму" \n       или селектор формы изменился')
+
+# переход на страницу "Меры поддержки - для владельцев земли"
+driver.get("https://moigektar.ru/documents/ipoteka")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 5.6 форма "Хотите узнать подробнее о господдержке?" на странице "Меры поддержки - сельская ипотека" есть')
+else:
+    print('ERROR: 5.6 нет формы "Хотите узнать подробнее о проекте?" на странице "Меры поддержки - сельская ипотека" \n       или селектор формы изменился')
+
+
+
+
+# переход на страницу "Вопрос-ответ - подробности о проектах"
+driver.get("https://moigektar.ru/faq")
+time.sleep(1)
+# проверка, что форма есть на странице
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 6.1.1 форма на странице "Вопрос-ответ - подробности о проектах" есть')
+    # 6.1.2 раз форма есть, то проверим, что заголовок соответствует шаблону
+    # (в этой форме костыль в виде частичного сравнения текста из-за того, что название формы разорвано <br>)
+    form_7 = driver.find_element(by=By.XPATH, value="//h1/b")
+    form_7_text = form_7.text
+    if form_7_text.startswith("Не нашли нужного ответа"):
+        print(' OK: 6.1.2 заголовок формы "Не нашли нужного ответа на Ваш вопрос?"')
+    else:
+        print('ERROR: 6.1.2 заголовок формы не "Не нашли нужного ответа на Ваш вопрос?", а ' + form_7_text)
+    # 6.3 проверим, что есть кнопка на форме
+    if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+        print(' OK: 6.1.3 на форме есть кнопка')
+        # 6.4 если кнопка есть, проверим, что её название соответствует шаблону
+        button_7 = driver.find_element(by=By.XPATH, value="//div[4]/button")
+        button_7_text = button_7.text
+        if button_7_text == "ОТПРАВИТЬ":
+            print(' OK: 6.1.4 кнопка называется "ОТПРАВИТЬ"')
+        else:
+            print("ERROR: 6.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_7_text)
+        # 6.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
+        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+            "9999999999")
+        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        button_7.click()
+        time.sleep(3)
+        if driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
+            print(" OK: 6.1.5 данные были отправлены")
+        else:
+            if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+                print("ERROR: 6.1.5 данные не были отправлены")
+            else:
+                print("ПАМАГИТИ")
+    else:
+        print('ERROR: 6.1.3 нет кнопки или её селектор изменился')
+else:
+    print('ERROR: 6.1.1 формы "Хотите узнать подробнее о господдержке?" нет или её селектор изменился')
+
+# переход на страницу "Вопрос-ответ - о развитии участка"
+# далее на трёх страницах проверка наличия формы, функционал которой уже проверен на странице "Подробности о проектах"
+driver.get("https://moigektar.ru/faq/growth")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 6.2 форма "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - о развитии участка" есть')
+else:
+    print('ERROR: 6.2 нет формы "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - о развитии участка" \n       или селектор формы изменился')
+
+# переход на страницу "Вопрос-ответ - стоимость земли"
+driver.get("https://moigektar.ru/faq/cost")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 6.2 форма "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - стоимость земли" есть')
+else:
+    print('ERROR: 6.2 нет формы "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - стоимость земли" \n       или селектор формы изменился')
+
+# переход на страницу "Вопрос-ответ - оформление земли"
+driver.get("https://moigektar.ru/faq/own")
+time.sleep(1)
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 6.2 форма "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - оформление земли" есть')
+else:
+    print('ERROR: 6.2 нет формы "Не нашли нужного ответа на свой вопрос?" на странице "Вопрос-ответ - оформление земли" \n       или селектор формы изменился')
+
+
+
+
+
+# переход на страницу "Контакты"
+driver.get("https://moigektar.ru/contacts")
+time.sleep(1)
+# проверка, что форма есть на странице
+if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
+    print(' OK: 7.1 форма на странице "Контакты" есть')
+    # 7.2 раз форма есть, то проверим, что заголовок соответствует шаблону
+    form_6 = driver.find_element(by=By.XPATH, value="//h1/b")
+    form_6_text = form_6.text
+    if form_6_text.startswith("Хотите задать вопрос"):
+        print(' OK: 7.2 заголовок формы "Хотите задать вопрос специалисту?"')
+    else:
+        print('ERROR: 7.2 заголовок формы не "Хотите задать вопрос специалисту?", а ' + form_6_text)
+    # 7.3 проверим, что есть кнопка на форме
+    if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+        print(' OK: 7.3 на форме есть кнопка')
+        # 7.4 если кнопка есть, проверим, что её название соответствует шаблону
+        button_6 = driver.find_element(by=By.XPATH, value="//div[4]/button")
+        button_6_text = button_6.text
+        if button_6_text == "ОТПРАВИТЬ":
+            print(' OK: 7.4 кнопка называется "ОТПРАВИТЬ"')
+        else:
+            print("ERROR: 7.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_6_text)
+        # 7.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+            "9999999999")
+        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        button_6.click()
+        time.sleep(3)
+        if driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
+            print(" OK: 7.5 данные были отправлены")
+        else:
+            if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
+                print("ERROR: 7.5 данные не были отправлены")
+            else:
+                print("ПАМАГИТИ")
+    else:
+        print('ERROR: 7.3 нет кнопки или её селектор изменился')
+else:
+    print('ERROR: 7.1 формы "Хотите задать вопрос специалисту?" нет или её селектор изменился')
+
+
+#time.sleep(10)
 driver.quit()
