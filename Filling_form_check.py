@@ -57,7 +57,7 @@ if driver.find_element(by=By.CSS_SELECTOR, value="div.presentation h1 > b").is_d
             if driver.find_element(by=By.CSS_SELECTOR, value="div.presentation button").is_displayed():
                 print("ERROR: 1.1.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 1.1.3 нет кнопки или её селектор изменилсz')
 else:
@@ -101,7 +101,7 @@ if driver.find_element(by=By.CSS_SELECTOR, value="div.catalogue h1 > b").is_disp
             if driver.find_element(by=By.CSS_SELECTOR, value="div.catalogue button").is_displayed():
                 print("ERROR: 1.2.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 1.2.3 нет кнопки или её селектор изменился')
 else:
@@ -111,10 +111,10 @@ else:
 
 # 1.3. проверка формы "Подпишитесь на рассылку"
 # 1.3.1 убедиться, что есть форма по указанному селектору:
-if driver.find_element(by=By.XPATH, value="//div[47]/div/div/div/h1/b").is_displayed():
+if driver.find_element(by=By.XPATH, value="//div[49]/div/div/div/h1/b").is_displayed():
     print(' OK: 1.3.1 третья форма на главной странице есть')
     # 3.2 раз форма есть, то проверим, что заголовок соответствует шаблону
-    form_3 = driver.find_element(by=By.XPATH, value="//div[47]/div/div/div/h1/b")
+    form_3 = driver.find_element(by=By.XPATH, value="//div[49]/div/div/div/h1/b")
     form_3_text = form_3.text
     if form_3_text == "Подпишитесь на рассылку":
         print(' OK: 1.3.2 заголовок формы "Подпишитесь на рассылку"')
@@ -131,16 +131,16 @@ if driver.find_element(by=By.XPATH, value="//div[47]/div/div/div/h1/b").is_displ
         else:
             print("ERROR: 1.3.4 название кнопки не \"ПОДПИСАТЬСЯ\", а " + button_3_text)
         # 3.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
-        driver.find_element(by=By.XPATH, value="//div[47]/div/div/div/ul/li/form/div/div/input").send_keys("1@1.1")
+        driver.find_element(by=By.XPATH, value="//div[49]/div/div/div/ul/li/form/div/div/input").send_keys("1@1.1")
         button_3.click()
         time.sleep(3)
-        if driver.find_element(by=By.XPATH, value="//div[47]/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
+        if driver.find_element(by=By.XPATH, value="//div[49]/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
             print(" OK: 1.3.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//form/div[2]/button").is_displayed():
                 print("ERROR: 1.3.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
             print('ERROR: 1.3.3 нет кнопки или её селектор изменился')
 else:
@@ -181,7 +181,7 @@ if driver.find_element(by=By.CSS_SELECTOR, value="div.doit h1 > b").is_displayed
             if driver.find_element(by=By.CSS_SELECTOR, value="div.doit button").is_displayed():
                  print("ERROR: 1.4.5 данные не были отправлены")
             else:
-                 print("ПАМАГИТИ")
+                 print("SMTHNG WRNG")
     else:
         print('ERROR: 1.4.3 нет кнопки или её селектор изменился')
 else:
@@ -245,7 +245,7 @@ else:
 # проверка наличия формы, функционал которой уже проверен на главной
 driver.get("https://moigektar.ru/catalogue")
 time.sleep(1)
-if driver.find_element(by=By.XPATH, value="//div[25]/div/div/h1/b").is_displayed():
+if driver.find_element(by=By.XPATH, value="//div[27]/div/div/h1/b").is_displayed():
     print(' OK: 3.1 форма "Хотите узнать подробнее о проекте?" на странице "Каталог посёлков" есть')
 else:
     print('ERROR: 3.1 нет формы "Хотите узнать подробнее о проекте?" на странице "Каталог посёлков" \n       или селектор формы изменился')
@@ -278,19 +278,19 @@ if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
         else:
             print("ERROR: 4.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_5_text)
         # 4.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
             "9999999999")
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div/div/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
         button_5.click()
         time.sleep(3)
-        if driver.find_element(by=By.XPATH, value="//div[22]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
+        if driver.find_element(by=By.XPATH, value="//div[24]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
             print(" OK: 4.1.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
                 print("ERROR: 4.1.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 4.1.3 нет кнопки или её селектор изменился')
 else:
@@ -376,19 +376,19 @@ if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
         else:
             print("ERROR: 5.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_6_text)
         # 5.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div/div/input").send_keys("test")
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div[2]/div/ul[2]/li[1]/form/div[1]/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[1]/form/div[2]/div/div[1]/input").send_keys(
             "9999999999")
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[1]/form/div[3]/div/input").send_keys("1@1.1")
         button_6.click()
         time.sleep(3)
-        if driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
+        if driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
             print(" OK: 5.1.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
                 print("ERROR: 5.1.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 5.1.3 нет кнопки или её селектор изменился')
 else:
@@ -463,19 +463,19 @@ if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
         else:
             print("ERROR: 6.1.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_7_text)
         # 6.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div[2]/div/div/div/div/ul[2]/li/form/div/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div[2]/div/div/div/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
             "9999999999")
-        driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        driver.find_element(by=By.XPATH, value="//div[24]/div/div[2]/div/div/div/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
         button_7.click()
         time.sleep(3)
-        if driver.find_element(by=By.XPATH, value="//div[22]/div/div[2]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
+        if driver.find_element(by=By.XPATH, value="//div[24]/div/div[2]/div/div/div/div/ul[2]/li[2]/div/div[2]").is_displayed():
             print(" OK: 6.1.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
                 print("ERROR: 6.1.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 6.1.3 нет кнопки или её селектор изменился')
 else:
@@ -534,19 +534,19 @@ if driver.find_element(by=By.XPATH, value="//h1/b").is_displayed():
         else:
             print("ERROR: 7.4 название кнопки не \"ОТПРАВИТЬ\", а " + button_6_text)
         # 7.5 раз кнопка есть, проверим, что при корректных данных заявка будет отправлена
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div/div/input").send_keys("test")
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[2]/div/div/input").send_keys(
+        driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[1]/form/div[1]/div/input").send_keys("test")
+        driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[1]/form/div[1]/div/input").send_keys(
             "9999999999")
-        driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li/form/div[3]/div/input").send_keys("1@1.1")
+        driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[1]/form/div[1]/div/input").send_keys("1@1.1")
         button_6.click()
         time.sleep(3)
-        if driver.find_element(by=By.XPATH, value="//div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
+        if driver.find_element(by=By.XPATH, value="/html/body/div[24]/div/div[2]/div/ul[2]/li[2]/div/div[2]").is_displayed():
             print(" OK: 7.5 данные были отправлены")
         else:
             if driver.find_element(by=By.XPATH, value="//div[4]/button").is_displayed():
                 print("ERROR: 7.5 данные не были отправлены")
             else:
-                print("ПАМАГИТИ")
+                print("SMTHNG WRNG")
     else:
         print('ERROR: 7.3 нет кнопки или её селектор изменился')
 else:
