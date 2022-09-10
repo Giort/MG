@@ -21,19 +21,8 @@ driver.get("https://moigektar.ru/")
 
 
 try:
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]/li/form/div/div//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]/li/form/div/div//input[@id='consultationform-phone']").send_keys('9999999999')
-    driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
-        '1@1.1')
-    driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
-    if driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 1.1 данные были отправлены")
-    else:
-        print("ERROR: 1.1 данные не были отправлены")
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
 except NoSuchElementException:
     print("ERROR: Такого элемента нет в DOM")
 
