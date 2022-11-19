@@ -10,6 +10,8 @@ driver.maximize_window()
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # Скрипт последовательно заходит на каждый сервис МГ и проверяет видимость
@@ -20,7 +22,7 @@ import time
 # 1. проверка "МГ" по видимости заголовка "Специальное преложение" на главной
 driver.get("https://moigektar.ru/")
 time.sleep(3)
-block1=driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Специальное предложение')]]")
+block1=driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Гектар под ваши цели')]]")
 if block1.is_displayed():
     print('  |  МГ: OK')
 
@@ -56,8 +58,8 @@ if block5.is_displayed():
 
 # 6. проверка syn_37 по видимости заголовка "Генеральный"
 driver.get("https://syn37.lp.moigektar.ru/")
-time.sleep(3)
-block6=driver.find_element(by=By.XPATH, value="//div[@class='d-none d-xs-block']//span[text()[contains(.,'Генеральный')]]")
+#block6=driver.find_element(by=By.XPATH, value="//div[@class='d-none d-xs-block']//span[text()[contains(.,'Генеральный')]]")
+block6 = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
 if block6.is_displayed():
     print('  |  syn_37: OK')
 

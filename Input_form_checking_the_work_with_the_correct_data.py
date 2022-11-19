@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 options = Options()
-options.add_argument('--headless')
+#options.add_argument('--headless')
 ch_options = Options()
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 driver.maximize_window()
 
@@ -11,6 +11,10 @@ driver.maximize_window()
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import time
+from selenium.webdriver.common.action_chains import ActionChains
+actions = ActionChains(driver)
+from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Скрипт заполняет каждую форму корректными данными
 # В лог выводится сообщение "ОК" если данные были отправлены и отобразилось сообщение об успехе
@@ -62,10 +66,12 @@ except NoSuchElementException:
     print("ERROR: 1.2 такого элемента нет в DOM")
 
 # 1.3 проверка формы "Подпишитесь на рассылку"
+time.sleep(10)
 try:
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Подпишитесь на рассылку')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
+    time.sleep(15)
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Подпишитесь на рассылку')]]//parent::h1//following-sibling::ul[2]//button").click()
     time.sleep(3)
