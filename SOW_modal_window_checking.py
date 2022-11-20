@@ -41,7 +41,7 @@ try:
         print('   OK  1.2: модаль спецпредложений открылась')
     except ElementNotVisibleException:
         print("ERROR:  1.2 модаль СП из блока СП на главной не открылась")
-except NoSuchElementException:
+except TimeoutException:
     print("ERROR:  1.1 не могу найти кнопку, чтобы открыть модаль СП на главной МГ")
 
 
@@ -61,7 +61,7 @@ try:
         closeBtn.click()
     except ElementNotVisibleException:
         print("ERROR:  2.2 модаль спецпредложений из СП каталога не открылась")
-except NoSuchElementException:
+except TimeoutException:
     print("ERROR:  2.1 не могу найти кнопку, чтобы открыть модаль СП в блоке СП каталога МГ")
 
 
@@ -80,7 +80,7 @@ try:
         closeBtn.click()
     except ElementNotVisibleException:
         print("ERROR:  3.2 модаль СП из дачных участков не открылась")
-except NoSuchElementException:
+except TimeoutException:
     print("ERROR:  3.1 не могу найти кнопку, чтобы открыть модаль СП в дачных участках каталога МГ")
 
 
