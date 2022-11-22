@@ -31,7 +31,7 @@ driver.get("https://moigektar.ru/")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -49,7 +49,7 @@ except NoSuchElementException:
 # 1.2 проверка формы "Получите каталог посёлков"
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -87,7 +87,7 @@ except NoSuchElementException:
 # 1.4 проверка формы "Действуйте! Лучшие участки уже бронируют"
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//button").click()
     time.sleep(3)
@@ -109,7 +109,7 @@ driver.get("https://moigektar.ru/about")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -130,7 +130,7 @@ driver.get("https://moigektar.ru/about/management")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -151,7 +151,7 @@ driver.get("https://moigektar.ru/about/cabinet")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -172,7 +172,7 @@ driver.get("https://moigektar.ru/about/advantages")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -193,7 +193,7 @@ driver.get("https://moigektar.ru/about/union")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -214,7 +214,7 @@ driver.get("https://moigektar.ru/about/reviews")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -239,7 +239,7 @@ driver.get("https://moigektar.ru/catalogue")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -262,7 +262,7 @@ driver.get("https://moigektar.ru/growth")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -282,7 +282,7 @@ driver.get("https://moigektar.ru/investment")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -302,7 +302,7 @@ driver.get("https://moigektar.ru/investment/capitalization")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -322,7 +322,7 @@ driver.get("https://moigektar.ru/investment/basic")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -342,7 +342,7 @@ driver.get("https://moigektar.ru/investment/businessman")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -362,7 +362,7 @@ driver.get("https://moigektar.ru/investment/farmer")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -382,7 +382,7 @@ driver.get("https://moigektar.ru/investment/family")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -407,7 +407,7 @@ time.sleep(2)
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -427,7 +427,7 @@ driver.get("https://moigektar.ru/documents")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -447,7 +447,7 @@ driver.get("https://moigektar.ru/documents/farmer")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -467,7 +467,7 @@ driver.get("https://moigektar.ru/documents/startup")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -487,7 +487,7 @@ driver.get("https://moigektar.ru/documents/family")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -507,7 +507,7 @@ driver.get("https://moigektar.ru/documents/ipoteka")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -530,7 +530,7 @@ driver.get("https://moigektar.ru/faq")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -550,7 +550,7 @@ driver.get("https://moigektar.ru/faq/growth")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -570,7 +570,7 @@ driver.get("https://moigektar.ru/faq/cost")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -590,7 +590,7 @@ driver.get("https://moigektar.ru/faq/own")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
@@ -614,7 +614,7 @@ driver.get("https://moigektar.ru/contacts")
 time.sleep(2)
 try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9999999999')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')

@@ -21,37 +21,19 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotVisibleException
 import time
 
+#   wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
 
 
-# 1. проверка "МГ" по видимости заголовка "Специальное преложение" на главной
-driver.get("https://moigektar.ru/")
+# 50. проверка syn_85 по наличию заголовка "Login"
+driver.get("https://syn85.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
-    print('  |  МГ: OK')
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Генеральный')]]")))
+    print('  |  syn_85: OK')
 except NoSuchElementException:
-    print('ERROR: проблема на МГ')
-
-
-# 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
-driver.get("https://cabinet.moigektar.ru/security/login")
-try:
-    btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Попробовать прямо сейчас!')]]")))
-    actions.move_to_element(btn).click(btn).perform()
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//img[@src='/img/polls-banner.jpg']")))
-    print('  |  ЛК: ОК')
-except NoSuchElementException:
-    print('ERROR: проблема на ЛК')
-
-# 3. проверка syn_9 по видимости заголовка "Генеральный"
-driver.get("https://syn9.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_9: OK')
-except NoSuchElementException:
-    print('ERROR: проблема на син_9')
+    print('ERROR: проблема на син_85')
 
 
 
 
-time.sleep(5)
+time.sleep(1)
 driver.quit()
