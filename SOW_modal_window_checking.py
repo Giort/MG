@@ -1,9 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-options = Options()
-#options.add_argument('--headless')
 ch_options = Options()
-#ch_options.add_argument('--headless')
+ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 driver.maximize_window()
 
@@ -16,6 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 wait = WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 actions = ActionChains(driver)
 import time
 
@@ -31,10 +30,12 @@ import time
 driver.get("https://moigektar.ru/")
 # 1.1 проверка, что есть кнопка на карточке участка в блоке "Специальное предложение"
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")))
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК  1.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    time.sleep(5)
+    btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+    actions.move_to_element(btn).click().perform()
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
@@ -52,7 +53,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
     print("   ОК  2.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
@@ -71,7 +72,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")))
     print("   ОК  3.1: блок СП дачные участки на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 3.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
@@ -91,7 +92,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='price']//div[2]//div[1]/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  4.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 4.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -109,7 +110,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  5.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 5.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -127,7 +128,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  6.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 6.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -145,7 +146,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  7.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 7.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -163,7 +164,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  8.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 8.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -181,7 +182,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК  9.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 9.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -199,7 +200,7 @@ try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК 10.1: блок СП на странице есть")
     driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    actions.move_to_element(btn).click(btn).perform()
     # 10.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -214,10 +215,12 @@ except TimeoutException:
 driver.get("https://syn85.lp.moigektar.ru/")
 # 11.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК 11.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    time.sleep(5)
+    btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+    actions.move_to_element(btn).click(btn).perform()
     # 11.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -227,23 +230,41 @@ try:
 except TimeoutException:
     print("ERROR: 11.1 не могу найти кнопку, чтобы открыть модаль СП на син_85")
 
-
-# 12. проверка спецпредложений на син_24
-driver.get("https://syn24.lp.moigektar.ru/")
-# 12.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+# 12. проверка спецпредложений на син_84
+driver.get("https://syn84.lp.moigektar.ru/")
+# 11.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК 12.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
-    ActionChains(driver).move_to_element(btn).click(btn).perform()
+    time.sleep(5)
+    btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+    actions.move_to_element(btn).click(btn).perform()
     # 12.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='consultationform-name']")))
-        print('   OK 12.2: модаль СП на син_24 открылась')
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK 12.2: модаль СП на син_84 открылась')
     except ElementNotVisibleException:
-        print("ERROR: 12.2 модаль СП на син_24 не открылась")
+        print("ERROR: 12.2 модаль СП на син_84 не открылась")
 except TimeoutException:
-    print("ERROR: 12.1 не могу найти кнопку, чтобы открыть модаль СП на син_24")
+    print("ERROR: 12.1 не могу найти кнопку, чтобы открыть модаль СП на син_84")
+
+# 13. проверка спецпредложений на син_24
+driver.get("https://syn24.lp.moigektar.ru/")
+# 13.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+try:
+    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+    print("   ОК 13.1: блок СП на странице есть")
+    driver.implicitly_wait(10)
+    actions.move_to_element(btn).click(btn).perform()
+    # 13.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+    try:
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='consultationform-name']")))
+        print('   OK 13.2: модаль СП на син_24 открылась')
+    except ElementNotVisibleException:
+        print("ERROR: 13.2 модаль СП на син_24 не открылась")
+except TimeoutException:
+    print("ERROR: 13.1 не могу найти кнопку, чтобы открыть модаль СП на син_24")
 
 time.sleep(1)
 driver.quit()

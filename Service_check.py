@@ -1,7 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-options = Options()
-options.add_argument('--headless')
 ch_options = Options()
 ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
@@ -10,6 +8,7 @@ driver.maximize_window()
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -28,6 +27,8 @@ try:
     print('  |  МГ: OK')
 except NoSuchElementException:
     print('ERROR: проблема на МГ')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на МГ')
 
 # 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
 driver.get("https://cabinet.moigektar.ru/security/login")
@@ -38,6 +39,8 @@ try:
     print('  |  ЛК: ОК')
 except NoSuchElementException:
     print('ERROR: проблема на ЛК')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на ЛК')
 
 # 3. проверка syn_9 по видимости заголовка "Генеральный"
 driver.get("https://syn9.lp.moigektar.ru/")
@@ -46,6 +49,8 @@ try:
     print(' / \ syn_9: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_9')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_9')
 
 # 4. проверка syn_33 по видимости заголовка "Генеральный"
 driver.get("https://syn33.lp.moigektar.ru/")
@@ -54,6 +59,8 @@ try:
     print(' \ / syn_33: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_33')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_33')
 
 # 5. проверка syn_34 по видимости заголовка "Генеральный"
 driver.get("https://syn34.lp.moigektar.ru/")
@@ -62,6 +69,8 @@ try:
     print('  |  syn_34: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_34')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_34')
 
 # 6. проверка syn_37 по видимости заголовка "Генеральный"
 driver.get("https://syn37.lp.moigektar.ru/")
@@ -70,6 +79,8 @@ try:
     print('  |  syn_37: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_37')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_37')
 
 # 7. проверка syn_53 по видимости заголовка "Генеральный"
 driver.get("https://syn53.lp.moigektar.ru/")
@@ -78,6 +89,8 @@ try:
     print(' / \ syn_53: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_53')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_53')
 
 # 8. проверка syn_67 по видимости заголовка "Генеральный"
 driver.get("https://syn67.lp.moigektar.ru/")
@@ -86,6 +99,8 @@ try:
     print(' \ / syn_67: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_67')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_67')
 
 # 9. проверка vazuza2 по видимости заголовка "Генеральный"
 driver.get("https://vazuza2.lp.moigektar.ru/")
@@ -94,6 +109,8 @@ try:
     print('  |  vazuza2: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Вазузе')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Вазузе')
 
 # 10. проверка pay.moigektar по видимости заголовка "Платёжные сервисы"
 driver.get("https://pay.moigektar.ru/")
@@ -102,6 +119,8 @@ try:
     print('  |  pay.moigektar: OK')
 except NoSuchElementException:
     print('ERROR: проблема на сервисе оплаты')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Платёжных сервисах')
 
 # 11. проверка сервиса "Вынос границ" по наличию заголовка "Вынос границ участка"
 driver.get("https://points.lp.moigektar.ru/")
@@ -110,6 +129,8 @@ try:
     print(' / \ Вынос границ: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Выносе границ')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Выносе границ')
 
 # 12. проверка сервиса "Инвестиции" по наличию заголовка "Инвестиции"
 driver.get("https://investment.lp.moigektar.ru/")
@@ -118,6 +139,8 @@ try:
     print(' \ / Инвестиции: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Инвестициях')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Инвестициях')
 
 # 13. проверка сервиса "Комплекс услуг" по наличию заголовка "Комплекс услуг"
 driver.get("https://complex.lp.moigektar.ru/")
@@ -126,6 +149,8 @@ try:
     print('  |  Комплекс услуг: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Комплексе услуг')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Комплексе услуг')
 
 # 14. проверка сервиса "Кооперативы" по наличию заголовка "Вступайте в кооператив"
 driver.get("https://cooperative.lp.moigektar.ru/")
@@ -134,6 +159,8 @@ try:
     print('  |  Кооперативы: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Кооперативах')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Кооперативах')
 
 # 15. проверка сервиса "Правовая поддержка" по наличию заголовка "Центр правовой поддержки"
 driver.get("https://law.lp.moigektar.ru/")
@@ -142,6 +169,8 @@ try:
     print(' / \ Правовая поддержка: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Правовой поддержке')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Правовой поддержке')
 
 # 16. проверка сервиса "Разработка проекта" по наличию заголовка "Разработка эскизного проекта"
 driver.get("https://planning.moigektar.ru/")
@@ -150,6 +179,8 @@ try:
     print(' \ / Разработка проекта: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Разработке проекта')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Разработке проекта')
 
 # 17. проверка сервиса "Расчистка участка" по наличию заголовка "Расчистка участка"
 driver.get("https://clearance.lp.moigektar.ru/")
@@ -158,14 +189,18 @@ try:
     print('  |  Расчистка участка: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Расчистке участка')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Расчистке участка')
 
 # 18. проверка сервиса "Строительство въездной группы" по наличию заголовка "Коллективное строительство"
-driver.get("https://syn9.entrance.lp.moigektar.ru/")
+driver.get("http://syn9.entrance.lp.moigektar.ru/")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Коллективное')]]")))
     print('  |  Строительство въездной группы: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Въездной группе')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Въездной группе')
 
 # 19. проверка сервиса "Строительство дорог" по наличию заголовка "Коллективное строительство"
 driver.get("https://syn23.roads.moigektar.ru/")
@@ -174,6 +209,8 @@ try:
     print(' / \ Строительство дорог: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Строительстве дорог')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Строительстве дорог')
 
 # 20. проверка сервиса "Строительство центрального дома" по наличию заголовка "Коллективное строительство"
 driver.get("https://house.lp.moigektar.ru/")
@@ -182,6 +219,8 @@ try:
     print(' \ / Строительство центрального дома: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Строительстве центрального дома')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Строительстве центрального дома')
 
 # 21. проверка сервиса "Установка видеонаблюдения" по наличию заголовка "Установка видеонаблюдения"
 driver.get("https://barrier.lp.moigektar.ru/")
@@ -190,6 +229,8 @@ try:
     print('  |  Установка видеонаблюдения: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Установке видеонаблюдения')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Установке видеонаблюдения')
 
 # 22. проверка сервиса "Электрификация" по наличию заголовка "Коллективное строительство"
 driver.get("https://syn9.electrification.lp.moigektar.ru/")
@@ -198,6 +239,8 @@ try:
     print('  |  Электрификация: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Электрификации')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Электрификации')
 
 # 23. проверка сервиса "GIS" по наличию заголовка "Login"
 driver.get("https://gis.bigland.ru/site/login")
@@ -206,6 +249,8 @@ try:
     print(' / \ GIS: OK')
 except NoSuchElementException:
     print('ERROR: проблема на ГИС')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на ГИС')
 
 # 24. проверка сервиса генерации КП по наличию заголовка "Сервис генерации КП"
 driver.get("https://offers.bigland.ru/")
@@ -214,6 +259,8 @@ try:
     print(' \ / Сервис генерации КП: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Сервисе генерации КП')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Генерации КП')
 
 # 25. проверка syn_6 по видимости заголовка "Выбрать участок"
 driver.get("https://syn6.lp.moigektar.ru/")
@@ -222,6 +269,8 @@ try:
     print('  |  syn_6: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_6')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_6')
 
 # 26. проверка syn_11 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn11.lp.moigektar.ru/")
@@ -230,6 +279,8 @@ try:
     print('  |  syn_11: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_11')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_11')
 
 # 27. проверка syn_12 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn12.lp.moigektar.ru/")
@@ -238,6 +289,8 @@ try:
     print(' / \ syn_12: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_12')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_12')
 
 # 28. проверка syn_13 по видимости заголовка "Выберите поселок"
 driver.get("https://syn13.lp.moigektar.ru/")
@@ -246,6 +299,8 @@ try:
     print(' \ / syn_13: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_13')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_13')
 
 # 29. проверка syn_14 по видимости заголовка "Интерактивный"
 driver.get("https://syn14.lp.moigektar.ru/")
@@ -254,6 +309,8 @@ try:
     print('  |  syn_14: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_14')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_14')
 
 # 30. проверка syn_15 по видимости заголовка "Виртуальные туры"
 driver.get("https://syn15.lp.moigektar.ru/")
@@ -262,6 +319,8 @@ try:
     print('  |  syn_15: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_15')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_15')
 
 # 31. проверка syn_16 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn16.lp.moigektar.ru/")
@@ -270,6 +329,8 @@ try:
     print(' / \ syn_16: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_16')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_16')
 
 # 32. проверка syn_17 по видимости заголовка "Виртуальные туры"
 driver.get("https://syn17.lp.moigektar.ru/")
@@ -278,6 +339,8 @@ try:
     print(' \ / syn_17: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_17')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_17')
 
 # 33. проверка syn_18 по видимости заголовка "Интерактивный"
 driver.get("https://syn18.lp.moigektar.ru/")
@@ -286,6 +349,8 @@ try:
     print('  |  syn_18: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_18')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_18')
 
 # 34. проверка syn_19 по видимости заголовка "Генеральный"
 driver.get("https://syn19.lp.moigektar.ru/")
@@ -294,6 +359,8 @@ try:
     print('  |  syn_19: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_19')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_19')
 
 # 35. проверка syn_21 по видимости заголовка "Генеральный"
 driver.get("https://syn21.lp.moigektar.ru/")
@@ -302,6 +369,8 @@ try:
     print(' / \ syn_21: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_21')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_21')
 
 # 36. проверка syn_22 по видимости заголовка "Генеральный"
 driver.get("https://syn22.lp.moigektar.ru/")
@@ -310,6 +379,8 @@ try:
     print(' \ / syn_22: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_22')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_22')
 
 # 37. проверка syn_23 по видимости заголовка "Генеральный"
 driver.get("https://syn23.lp.moigektar.ru/")
@@ -318,6 +389,8 @@ try:
     print('  |  syn_23: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_23')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_23')
 
 # 38. проверка syn_24 по видимости заголовка "Генеральный"
 driver.get("https://syn24.lp.moigektar.ru/")
@@ -326,6 +399,8 @@ try:
     print('  |  syn_24: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_24')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_24')
 
 # 39. проверка syn_27 по видимости заголовка "Забронировать"
 driver.get("https://syn27.lp.moigektar.ru/")
@@ -334,6 +409,8 @@ try:
     print(' / \ syn_27: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_27')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_27')
 
 # 40. проверка syn_29 по видимости заголовка "Генеральный"
 driver.get("https://syn29.lp.moigektar.ru/")
@@ -342,6 +419,8 @@ try:
     print(' \ / syn_29: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_29')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_29')
 
 # 41. проверка syn_35 по видимости заголовка "Генеральный"
 driver.get("https://syn35.lp.moigektar.ru/")
@@ -350,6 +429,8 @@ try:
     print('  |  syn_35: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_35')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_35')
 
 # 42. проверка syn_36 по видимости заголовка "Генеральный"
 driver.get("https://syn36.lp.moigektar.ru/")
@@ -358,6 +439,8 @@ try:
     print('  |  syn_36: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_36')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_36')
 
 # 44. проверка syn_39 по видимости заголовка "Генеральный"
 driver.get("https://syn39.lp.moigektar.ru/")
@@ -366,6 +449,8 @@ try:
     print(' / \ syn_39: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_39')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_39')
 
 # 45. проверка syn_42 по видимости заголовка "Генеральный"
 driver.get("https://syn42.lp.moigektar.ru/")
@@ -374,6 +459,8 @@ try:
     print(' \ / syn_42: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_42')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_42')
 
 # 46. проверка syn_48 по видимости заголовка "Генеральный"
 driver.get("https://syn48.lp.moigektar.ru/")
@@ -382,6 +469,8 @@ try:
     print('  |  syn_48: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_48')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_48')
 
 # 47. проверка syn_58 по видимости заголовка "Забронировать"
 driver.get("https://syn58.lp.moigektar.ru/")
@@ -390,6 +479,8 @@ try:
     print('  |  syn_58: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_58')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_58')
 
 # 48. проверка syn_61 по видимости заголовка "Генеральный"
 driver.get("https://syn61.lp.moigektar.ru/")
@@ -398,6 +489,8 @@ try:
     print(' / \ syn_61: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_61')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_61')
 
 # 49. проверка сервиса дорог по наличию заголовка "Login"
 driver.get("https://editor.roads.bigland.ru/site/login")
@@ -406,15 +499,38 @@ try:
     print(' \ / Сервис дорог: OK')
 except NoSuchElementException:
     print('ERROR: проблема на Сервисе дорог')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на Сервисе дорог')
 
-# 50. проверка syn_85 по наличию заголовка "Login"
+# 50. проверка syn_85 по наличию заголовка "Генеральный"
 driver.get("https://syn85.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print('  |  syn_85: OK')
 except NoSuchElementException:
     print('ERROR: проблема на син_85')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_85')
 
+# 51. проверка syn_84 по наличию заголовка "Генеральный"
+driver.get("https://syn84.lp.moigektar.ru/")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+    print('  |  syn_84: OK')
+except NoSuchElementException:
+    print('ERROR: проблема на син_84')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_84')
 
-time.sleep(2)
+# 52. проверка syn_8 по наличию заголовка "Генеральный"
+driver.get("https://syn8.lp.moigektar.ru/")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+    print(' / \ syn_8: OK')
+except NoSuchElementException:
+    print('ERROR: проблема на син_8')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_8')
+
+#time.sleep(2)
 driver.quit()
