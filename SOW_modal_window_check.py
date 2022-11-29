@@ -33,7 +33,7 @@ try:
     title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК  1.1: блок СП на странице есть")
-    time.sleep(5)
+    time.sleep(10)
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click().perform()
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
@@ -52,7 +52,7 @@ driver.get("https://moigektar.ru/catalogue")
 try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
     print("   ОК  2.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
+    time.sleep(10)
     actions.move_to_element(btn).click(btn).perform()
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
