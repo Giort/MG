@@ -2,27 +2,24 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
-driver = webdriver.Chrome(options= ch_options)
-from selenium.webdriver.support.ui import WebDriverWait
+driver = webdriver.Chrome(options=ch_options)
+from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
-driver.maximize_window()
-wait = WebDriverWait
-
-
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import ElementNotVisibleException
+from selenium.webdriver.common.keys import Keys
 import time
+driver.maximize_window()
 
 
 # Скрипт проверяет наличие всех блоков на МГ
+
 # 1. Главная
 driver.get("https://moigektar.ru/")
-
 print('Главная')
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))

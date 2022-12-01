@@ -3,28 +3,23 @@ from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
-driver.maximize_window()
-
-
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-wait = WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 actions = ActionChains(driver)
+from selenium.webdriver.common.keys import Keys
 import time
+driver.maximize_window()
 
 
 # Скрипт открывает окна СП и проверяет, что они открылись
 # В лог выводится сообщение "ОК" если окно было открыто
 # В лог выводится сообщение "ERROR", если окно не было открыто
 # В лог выводится сообщение "ERROR" если элемент, открывающий окно, не был найден по селектору
-
-
 
 # 1. проверка слайдера СП на главной странице "МГ"
 driver.get("https://moigektar.ru/")
