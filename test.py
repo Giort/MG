@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-#ch_options.add_argument('--headless')
+ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,30 +13,24 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
-driver.maximize_window()
+#driver.maximize_window()
+driver.set_window_size(1920, 1080)
 
 
 
-
-# 4.4 переход на страницу "Развитие - базовая стратегия"
-driver.get("https://moigektar.ru/investment/basic")
-time.sleep(2)
+# 32. проверка syn_17 по видимости заголовка "Виртуальные туры"
+driver.get("https://syn107.lp.moigektar.ru/")
 try:
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
-        '1@1.1')
-    driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
-    if driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Базовая стратегия"')
-    else:
-        print("ERROR: 4.4 данные не были отправлены")
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные')]]")))
+    print(' \ / syn_17: OK')
 except NoSuchElementException:
-    print('ERROR: не могу найти форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Базовая стратегия"')
+    print('ERROR: проблема на син_17')
+except TimeoutException:
+    print('ERROR: не дождался загрузки элемента на син_17')
 
-time.sleep(1)
+
+
+
+time.sleep(5)
 driver.quit()
+

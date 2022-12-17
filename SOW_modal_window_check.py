@@ -17,9 +17,11 @@ driver.maximize_window()
 
 
 # Скрипт открывает окна СП и проверяет, что они открылись
-# В лог выводится сообщение "ОК" если окно было открыто
+#
+# В лог выводится сообщение "ОК", если окно было открыто
 # В лог выводится сообщение "ERROR", если окно не было открыто
 # В лог выводится сообщение "ERROR" если элемент, открывающий окно, не был найден по селектору
+
 
 # 1. проверка слайдера СП на главной странице "МГ"
 driver.get("https://moigektar.ru/")
@@ -33,7 +35,7 @@ try:
     actions.move_to_element(btn).click().perform()
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
         print('   OK  1.2: модаль спецпредложений открылась')
     except ElementNotVisibleException:
         print("ERROR:  1.2 модаль СП из блока СП на главной не открылась")
@@ -51,9 +53,9 @@ try:
     actions.move_to_element(btn).click(btn).perform()
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
         print('   OK  2.2: модаль спецпредложений открылась')
-        closeBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button")
+        closeBtn = driver.find_element(by=By.XPATH, value="//div[(contains(@class, 'w-modal-description'))]/div/div/button")
         closeBtn.click()
     except ElementNotVisibleException:
         print("ERROR:  2.2 модаль спецпредложений из СП каталога не открылась")
@@ -64,16 +66,16 @@ except TimeoutException:
 # 3. проверка слайдера дачных участков в каталоге "МГ"
 # 3.1 проверка, что есть кнопка на карточке участка в блоке "Дачные участки"
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")))
+    title = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Дачные участки')]]")
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК  3.1: блок СП дачные участки на странице есть")
-    driver.implicitly_wait(10)
-    actions.move_to_element(btn).click(btn).perform()
+    time.sleep(10)
+    btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")
+    actions.move_to_element(btn).click().perform()
     # 3.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
         print('   OK  3.2: модаль спецпредложений открылась')
-        closeBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button")
-        closeBtn.click()
     except ElementNotVisibleException:
         print("ERROR:  3.2 модаль СП из дачных участков не открылась")
 except TimeoutException:
@@ -81,21 +83,21 @@ except TimeoutException:
 
 
 # 4. проверка спецпредложений на син_9
-driver.get("https://syn9.lp.moigektar.ru/")
-# 4.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
-try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='price']//div[2]//div[1]/div/div/div/div[2]/div[2]/div[2]/button")))
-    print("   ОК  4.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
-    actions.move_to_element(btn).click(btn).perform()
-    # 4.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-    try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  4.2: модаль СП на син_9 открылась')
-    except ElementNotVisibleException:
-        print("ERROR:  4.2 модаль СП на син_9 не открылась")
-except TimeoutException:
-    print("ERROR:  4.1 не могу найти кнопку, чтобы открыть модаль СП на син_9")
+# driver.get("https://syn9.lp.moigektar.ru/")
+# # 4.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+# try:
+#     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='price']//div[2]//div[1]/div/div/div/div[2]/div[2]/div[2]/button")))
+#     print("   ОК  4.1: блок СП на странице есть")
+#     driver.implicitly_wait(10)
+#     actions.move_to_element(btn).click(btn).perform()
+#     # 4.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+#     try:
+#         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+#         print('   OK  4.2: модаль СП на син_9 открылась')
+#     except ElementNotVisibleException:
+#         print("ERROR:  4.2 модаль СП на син_9 не открылась")
+# except TimeoutException:
+#     print("ERROR:  4.1 не могу найти кнопку, чтобы открыть модаль СП на син_9")
 
 
 # 5. проверка спецпредложений на син_33
@@ -260,6 +262,25 @@ try:
         print("ERROR: 13.2 модаль СП на син_24 не открылась")
 except TimeoutException:
     print("ERROR: 13.1 не могу найти кнопку, чтобы открыть модаль СП на син_24")
+
+# # 14. проверка спецпредложений на син_84
+# driver.get("https://syn89.lp.moigektar.ru/")
+# # 14.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+# try:
+#     title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+#     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+#     print("   ОК 14.1: блок СП на странице есть")
+#     time.sleep(5)
+#     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+#     actions.move_to_element(btn).click(btn).perform()
+#     # 14.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+#     try:
+#         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+#         print('   OK 14.2: модаль СП на син_89 открылась')
+#     except ElementNotVisibleException:
+#         print("ERROR: 14.2 модаль СП на син_89 не открылась")
+# except TimeoutException:
+#     print("ERROR: 14.1 не могу найти кнопку, чтобы открыть модаль СП на син_89")
 
 time.sleep(1)
 driver.quit()
