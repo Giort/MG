@@ -16,6 +16,7 @@ wait = WebDriverWait
 
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotVisibleException
@@ -25,14 +26,17 @@ import time
 
 # 1. проверка каталога "МГ"
 driver.get("https://moigektar.ru/catalogue")
-#driver.get("https://app-site-moigektar.stage.bug.land/")
-
-# 1.1 проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"
 try:
-    btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
-    print("   ОК 1.1: блок СП на странице есть")
-except TimeoutException:
-    print("ERROR: 1.1 не могу открыть модаль спецпредложений в каталоге МГ")
+    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]")))
+    print('   блок "Дачные участки": OK')
+    try:
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")))
+        print('   карточки в "Дачных участках": OK')
+    except:
+        print('ERROR: проблема с карточками в "Дачных участках"')
+except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
+    print('ERROR: проблема с блоком "Дачные участки"')
 
 #time.sleep(10)
 driver.quit()

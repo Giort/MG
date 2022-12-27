@@ -176,3 +176,8 @@ try:
     print('   OK: syn_89')
 except:
     print('ERROR: не загрузился генплан на син_89')
+
+
+time.sleep(5)
+driver.quit()
+

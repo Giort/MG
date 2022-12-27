@@ -36,16 +36,44 @@ try:
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
         print('   OK  1.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 1.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
+            print('   OK  1.3: заявка была отправлена')
+            time.sleep(3)
+            driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//div[text()[contains(.,'Во время отправки заявки возникли сложности')]]")))
+                print('ERROR: 1.3: заявка из блока СП на главной не была отправлена и отобразилось сообщение об ошибке отправки')
+                driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
+            except TimeoutException:
+                print('ERROR 1.3: заявка из блока СП на главной не была отправлена')
+                driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
     except ElementNotVisibleException:
         print("ERROR:  1.2 модаль СП из блока СП на главной не открылась")
 except TimeoutException:
     print("ERROR:  1.1 не могу найти кнопку, чтобы открыть модаль СП на главной МГ")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на главной МГ")
 
 
 # 2. проверка слайдера СП в каталоге "МГ"
 driver.get("https://moigektar.ru/catalogue")
-# 2.1 проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"
+# 2.1 проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
 try:
     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
     print("   ОК  2.1: блок СП на странице есть")
@@ -54,20 +82,43 @@ try:
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
         print('   OK  2.2: модаль спецпредложений открылась')
-        closeBtn = driver.find_element(by=By.XPATH, value="//div[(contains(@class, 'w-modal-description'))]/div/div/button")
-        closeBtn.click()
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 2.3 проверить, что заявка отправлена, по тому, открылась ли страница благодарности
+        time.sleep(10)
+        url = driver.current_url
+        if url == 'https://moigektar.ru/thanks':
+            print('   OK  2.3: заявка отправлена, открылась страница благодарности')
+        else:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//div[text()[contains(.,'Во время отправки заявки возникли сложности')]]")))
+                print('ERROR: 2.3: заявка из СП каталога не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 2.3: заявка из СП каталога не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  2.2 модаль спецпредложений из СП каталога не открылась")
 except TimeoutException:
     print("ERROR:  2.1 не могу найти кнопку, чтобы открыть модаль СП в блоке СП каталога МГ")
+except:
+    print("ERROR:  что-то не так при проверке работы СП в каталоге МГ")
 
 
 # 3. проверка слайдера дачных участков в каталоге "МГ"
 # 3.1 проверка, что есть кнопка на карточке участка в блоке "Дачные участки"
+driver.get("https://moigektar.ru/catalogue")
 try:
     title = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Дачные участки')]]")
-    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
     print("   ОК  3.1: блок СП дачные участки на странице есть")
     time.sleep(10)
     btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")
@@ -75,11 +126,35 @@ try:
     # 3.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
         print('   OK  3.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 3.3 проверить, что заявка отправлена, по тому, открылась ли страница благодарности
+        time.sleep(10)
+        url = driver.current_url
+        if url == 'https://moigektar.ru/thanks':
+            print('   OK  3.3: заявка отправлена, открылась страница благодарности')
+        else:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//div[text()[contains(.,'Во время отправки заявки возникли сложности')]]")))
+                print('ERROR: 3.3: заявка из дачных участков не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 3.3: заявка из дачных участков не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  3.2 модаль СП из дачных участков не открылась")
 except TimeoutException:
     print("ERROR:  3.1 не могу найти кнопку, чтобы открыть модаль СП в дачных участках каталога МГ")
+except:
+    print("ERROR:  что-то не так при проверке работы СП в дачных участках каталога МГ")
 
 
 # 4. проверка спецпредложений на син_9
@@ -111,11 +186,35 @@ try:
     # 5.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  5.2: модаль СП на син_33 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='modal-select-content']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK  5.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 5.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='modal-select-content']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK  5.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='modal-select-content']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 5.3: заявка из СП на син_33 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 5.3: заявка из СП на син_33 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  5.2 модаль СП на син_33 не открылась")
 except TimeoutException:
     print("ERROR:  5.1 не могу найти кнопку, чтобы открыть модаль СП на син_33")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_33")
 
 
 # 6. проверка спецпредложений на син_34
@@ -129,11 +228,35 @@ try:
     # 6.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  6.2: модаль СП на син_34 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='special-offer-modal']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK  6.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 6.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='special-offer-modal']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK  6.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='special-offer-modal']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 6.3: заявка из СП на син_34 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 6.3: заявка из СП на син_34 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  6.2 модаль СП на син_34 не открылась")
 except TimeoutException:
     print("ERROR:  6.1 не могу найти кнопку, чтобы открыть модаль СП на син_34")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_34")
 
 
 # 7. проверка спецпредложений на син_37
@@ -144,14 +267,38 @@ try:
     print("   ОК  7.1: блок СП на странице есть")
     driver.implicitly_wait(10)
     actions.move_to_element(btn).click(btn).perform()
-    # 7.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+    # 6.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  7.2: модаль СП на син_37 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='special-offer-modal']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK  7.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 6.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='special-offer-modal']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK  7.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='special-offer-modal']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 7.3: заявка из СП на син_37 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 7.3: заявка из СП на син_37 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  7.2 модаль СП на син_37 не открылась")
 except TimeoutException:
     print("ERROR:  7.1 не могу найти кнопку, чтобы открыть модаль СП на син_37")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_37")
 
 
 # 8. проверка спецпредложений на син_39
@@ -165,11 +312,35 @@ try:
     # 8.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  8.2: модаль СП на син_39 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK  8.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 6.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK  8.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 8.3: заявка из СП на син_39 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 8.3: заявка из СП на син_39 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  8.2 модаль СП на син_39 не открылась")
 except TimeoutException:
     print("ERROR:  8.1 не могу найти кнопку, чтобы открыть модаль СП на син_39")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_39")
 
 
 # 9. проверка спецпредложений на син_42
@@ -183,12 +354,36 @@ try:
     # 9.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK  9.2: модаль СП на син_42 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK  9.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 6.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK  9.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 9.3: заявка из СП на син_42 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 9.3: заявка из СП на син_42 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR:  9.2 модаль СП на син_42 не открылась")
 except TimeoutException:
     print("ERROR:  9.1 не могу найти кнопку, чтобы открыть модаль СП на син_42")
-    
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_42")
+
 
 # 10. проверка спецпредложений на син_53
 driver.get("https://syn53.lp.moigektar.ru/")
@@ -201,14 +396,39 @@ try:
     # 10.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK 10.2: модаль СП на син_53 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK 10.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 10.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK 10.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 10.3: заявка из СП на син_53 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 10.3: заявка из СП на син_53 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR: 10.2 модаль СП на син_53 не открылась")
 except TimeoutException:
     print("ERROR: 10.1 не могу найти кнопку, чтобы открыть модаль СП на син_53")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_53")
 
 
 # 11. проверка спецпредложений на син_85
+# ============================== не проверено, так как сейчас нет участков СП на 85-м
 driver.get("https://syn85.lp.moigektar.ru/")
 # 11.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:
@@ -221,15 +441,40 @@ try:
     # 11.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK 11.2: модаль СП на син_85 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK 11.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 11.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            print('   OK 11.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 11.3: заявка из СП на син_85 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 11.3: заявка из СП на син_85 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR: 11.2 модаль СП на син_85 не открылась")
 except TimeoutException:
     print("ERROR: 11.1 не могу найти кнопку, чтобы открыть модаль СП на син_85")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_85")
+
 
 # 12. проверка спецпредложений на син_84
 driver.get("https://syn84.lp.moigektar.ru/")
-# 11.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+# 12.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:
     title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
@@ -240,30 +485,58 @@ try:
     # 12.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK 12.2: модаль СП на син_84 открылась')
+        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
+        print('   OK 11.2: модаль спецпредложений открылась')
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 12.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
+            print('   OK 11.3: заявка была отправлена')
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Произошла ошибка')]]")))
+                print('ERROR: 11.3: заявка из СП на син_84 не была отправлена и отобразилось сообщение об ошибке отправки')
+            except TimeoutException:
+                print('ERROR 11.3: заявка из СП на син_84 не была отправлена')
     except ElementNotVisibleException:
         print("ERROR: 12.2 модаль СП на син_84 не открылась")
 except TimeoutException:
     print("ERROR: 12.1 не могу найти кнопку, чтобы открыть модаль СП на син_84")
+except:
+    print("ERROR:  что-то не так при проверке работы СП на син_84")
 
-# 13. проверка спецпредложений на син_24
-driver.get("https://syn24.lp.moigektar.ru/")
-# 13.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
-try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
-    print("   ОК 13.1: блок СП на странице есть")
-    driver.implicitly_wait(10)
-    actions.move_to_element(btn).click(btn).perform()
-    # 13.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-    try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='consultationform-name']")))
-        print('   OK 13.2: модаль СП на син_24 открылась')
-    except ElementNotVisibleException:
-        print("ERROR: 13.2 модаль СП на син_24 не открылась")
-except TimeoutException:
-    print("ERROR: 13.1 не могу найти кнопку, чтобы открыть модаль СП на син_24")
 
-# # 14. проверка спецпредложений на син_84
+# # 13. проверка спецпредложений на син_24
+# # ============= сейчас на 24 нет ни одного участка СП
+# driver.get("https://syn24.lp.moigektar.ru/")
+# # 13.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
+# try:
+#     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+#     print("   ОК 13.1: блок СП на странице есть")
+#     driver.implicitly_wait(10)
+#     actions.move_to_element(btn).click(btn).perform()
+#     # 13.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+#     try:
+#         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='consultationform-name']")))
+#         print('   OK 13.2: модаль СП на син_24 открылась')
+#     except ElementNotVisibleException:
+#         print("ERROR: 13.2 модаль СП на син_24 не открылась")
+# except TimeoutException:
+#     print("ERROR: 13.1 не могу найти кнопку, чтобы открыть модаль СП на син_24")
+
+
+# # 14. проверка спецпредложений на син_89
+# # ================= пока что нет виджета СП на 89-м
 # driver.get("https://syn89.lp.moigektar.ru/")
 # # 14.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 # try:

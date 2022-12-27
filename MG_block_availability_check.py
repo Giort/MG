@@ -86,6 +86,12 @@ except:
     print('ERROR: проблема с блоком "Видео, которые вам стоит увидеть"')
 
 try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Награды проекта')]]")))
+    print('   блок "Награды проекта": OK')
+except:
+    print('ERROR: проблема с блоком "Награды проекта"')
+
+try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'СМИ о проекте')]]")))
     print('   блок "СМИ о проекте": OK')
 except:
@@ -241,7 +247,7 @@ try:
     title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]")))
     print('   блок "Дачные участки": OK')
     try:
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")))
         print('   карточки в "Дачных участках": OK')
     except:
@@ -275,3 +281,4 @@ except:
 
 time.sleep(1)
 driver.quit()
+
