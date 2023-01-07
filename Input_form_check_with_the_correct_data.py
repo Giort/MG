@@ -17,6 +17,7 @@ driver.maximize_window()
 # В лог выводится сообщение "ERROR", если это сообщение не отобразилось
 # В лог выводится сообщение "ERROR", если форма не была найдена по селектору
 
+
 # 1. проверка главной страницы "МГ"
 driver.get("https://moigektar.ru/")
 
@@ -30,10 +31,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 1.1 данные были отправлены")
+        print(" OK: главная 1/4 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" на Главной')
 except NoSuchElementException:
@@ -48,30 +49,29 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Получите каталог')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 1.2 данные были отправлены")
+            print(" OK: главная 2/4 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Получите каталог" на Главной')
 except NoSuchElementException:
     print('ERROR: не могу найти форму "Получите каталог" на Главной')
 
 # 1.3 проверка формы "Подпишитесь на рассылку"
-time.sleep(10)
 try:
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Подпишитесь на рассылку')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
         '1@1.1')
-    time.sleep(15)
+    time.sleep(1)
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Подпишитесь на рассылку')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Подпишитесь на рассылку')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 1.3 данные были отправлены")
+            print(" OK: главная 3/4 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Подпишитесь на рассылку" на Главной')
 except NoSuchElementException:
@@ -83,11 +83,11 @@ try:
     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Действуйте!')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 1.4 данные были отправлены")
+            print(" OK: главная 4/4 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Действуйте" на Главной')
 except NoSuchElementException:
@@ -107,11 +107,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.1 данные были отправлены")
+            print(" OK: о проекте 1/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте"')
 except NoSuchElementException:
@@ -128,11 +128,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.2 данные были отправлены")
+            print(" OK: о проекте 2/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Сервисная компания"')
 except NoSuchElementException:
@@ -149,11 +149,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.3 данные были отправлены")
+            print(" OK: о проекте 3/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Личный кабинет"')
 except NoSuchElementException:
@@ -170,11 +170,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.4 данные были отправлены")
+            print(" OK: о проекте 4/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Партнеры"')
 except NoSuchElementException:
@@ -191,11 +191,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.5 данные были отправлены")
+            print(" OK: о проекте 5/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Союз садоводов"')
 except NoSuchElementException:
@@ -212,11 +212,11 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     try:
         if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-            print(" OK: 2.6 данные были отправлены")
+            print(" OK: о проекте 6/6 данные были отправлены")
     except NoSuchElementException:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Отзывы"')
 except NoSuchElementException:
@@ -236,10 +236,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[(contains(@class, 'uk-margin-bottom'))]/button").click()
-    time.sleep(3)
+    time.sleep(8)
     url = driver.current_url
     if url == 'https://moigektar.ru/thanks':
-        print('   OK 3.1: заявка отправлена, открылась страница благодарности')
+        print(' OK: заявка из каталога отправлена, открылась страница благодарности')
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в Каталоге')
 except NoSuchElementException:
@@ -259,10 +259,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.1 данные были отправлены")
+        print(" OK: развитие 1/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее об услугах и развитии?" в "Развитие" - "Развитие поселков"')
 except NoSuchElementException:
@@ -279,10 +279,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.2 данные были отправлены")
+        print(" OK: развитие 2/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Глазами инвестора"')
 except NoSuchElementException:
@@ -299,10 +299,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.3 данные были отправлены")
+        print(" OK: развитие 3/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Капитализация"')
 except NoSuchElementException:
@@ -319,10 +319,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.4 данные были отправлены")
+        print(" OK: развитие 4/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Базовая стратегия"')
 except NoSuchElementException:
@@ -339,10 +339,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.5 данные были отправлены")
+        print(" OK: развитие 5/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Предприниматель"')
 except NoSuchElementException:
@@ -359,10 +359,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.6 данные были отправлены")
+        print(" OK: развитие 6/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Фермер-садовод"')
 except NoSuchElementException:
@@ -379,10 +379,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 4.7 данные были отправлены")
+        print(" OK: развитие 7/7 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Фамильная усадьба"')
 except NoSuchElementException:
@@ -403,10 +403,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.1 данные были отправлены")
+        print(" OK: меры поддержки 1/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Государственная поддержка"')
 except NoSuchElementException:
@@ -423,10 +423,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.2 данные были отправлены")
+        print(" OK: меры поддержки 2/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Для владельцев земли"')
 except NoSuchElementException:
@@ -443,10 +443,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.3 данные были отправлены")
+        print(" OK: меры поддержки 3/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Грант "Фермер"')
 except NoSuchElementException:
@@ -463,10 +463,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.4 данные были отправлены")
+        print(" OK: меры поддержки 4/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Агростартап"')
 except NoSuchElementException:
@@ -483,10 +483,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.5 данные были отправлены")
+        print(" OK: меры поддержки 5/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Грант на семейную ферму"')
 except NoSuchElementException:
@@ -503,10 +503,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 5.6 данные были отправлены")
+        print(" OK: меры поддержки 6/6 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Сельская ипотека"')
 except NoSuchElementException:
@@ -526,10 +526,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 6.1 данные были отправлены")
+        print(" OK: вопросы 1/4 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Подробности о проектах"')
 except NoSuchElementException:
@@ -546,10 +546,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 6.2 данные были отправлены")
+        print(" OK: вопросы 2/4 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "О развитии участков"')
 except NoSuchElementException:
@@ -566,10 +566,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 6.3 данные были отправлены")
+        print(" OK: вопросы 3/4 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Стоимость земли"')
 except NoSuchElementException:
@@ -586,10 +586,10 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 6.4 данные были отправлены")
+        print(" OK: вопросы 4/4 данные были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Оформление земли"')
 except NoSuchElementException:
@@ -609,16 +609,16 @@ try:
         '1@1.1')
     driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//button").click()
-    time.sleep(3)
+    time.sleep(8)
     if driver.find_element(by=By.XPATH,
                         value="//h1/*[text()[contains(.,'Хотите задать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]").is_displayed():
-        print(" OK: 7.1 данные были отправлены")
+        print(" OK: данные из контактов были отправлены")
     else:
         print('ERROR: не отправлены данные в форму "Хотите задать вопрос специалисту?" в "Контактах"')
 except NoSuchElementException:
     print('ERROR: не могу найти форму "Хотите задать вопрос специалисту?" в "Контактах"')
 
 
-#time.sleep(10)
+#time.sleep(8)
 driver.quit()
 
