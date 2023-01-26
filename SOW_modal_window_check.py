@@ -13,7 +13,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
-driver.maximize_window()
+#driver.maximize_window()
+driver.set_window_size(1920, 1080)
 
 
 # Скрипт открывает окна СП и проверяет, что они открылись
@@ -36,10 +37,10 @@ try:
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        print('   OK: модаль СП на главной МГ открылась')
         phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
         email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
-        print('   OK: модаль СП на главной МГ открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -82,10 +83,10 @@ try:
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        print('   OK: модаль СП в каталоге открылась')
         phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
         email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
-        print('   OK: модаль СП в каталоге открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -126,10 +127,10 @@ try:
     # 3.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
+        print('   OK: модаль СП дачных участков открылась')
         phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
         email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
-        print('   OK: модаль СП дачных участков открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -186,10 +187,10 @@ try:
     # 5.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='modal-select-content']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -228,10 +229,10 @@ try:
     # 6.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='special-offer-modal']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -270,10 +271,10 @@ try:
     # 6.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='special-offer-modal']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -312,10 +313,10 @@ try:
     # 8.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -354,10 +355,10 @@ try:
     # 9.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -396,10 +397,10 @@ try:
     # 10.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -441,10 +442,10 @@ try:
     # 11.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -456,7 +457,7 @@ try:
         # 11.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         driver.implicitly_wait(10)
         try:
-            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
             print('   OK: заявка из СП син_85 была отправлена')
         except TimeoutException:
             try:
@@ -485,10 +486,10 @@ try:
     # 12.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+        print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
-        print('   OK: модаль СП открылась')
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
