@@ -390,9 +390,11 @@ except:
 driver.get("https://syn53.lp.moigektar.ru/")
 # 10.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК: блок СП на странице син_53 есть")
-    driver.implicitly_wait(10)
+    time.sleep(5)
+    btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
     # 10.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
@@ -400,7 +402,7 @@ try:
         print('   OK: модаль СП открылась')
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -412,7 +414,7 @@ try:
         # 10.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         driver.implicitly_wait(10)
         try:
-            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
             print('   OK: заявка из СП син_53 была отправлена')
         except TimeoutException:
             try:
@@ -429,7 +431,6 @@ except:
 
 
 # 11. проверка спецпредложений на син_85
-# ============================== не проверено, так как сейчас нет участков СП на 85-м
 driver.get("https://syn85.lp.moigektar.ru/")
 # 11.1 проверка, что есть слайдер СП, по наличию кнопки на карточке
 try:

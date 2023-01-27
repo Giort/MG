@@ -23,12 +23,16 @@ driver.get("https://moigektar.ru/batches/special")
 list_len = 50
 sum = 0
 i = 1
+qty_sp = 0
+
 while i < list_len:
     # написать порядковый номер страницы / общее количество страниц, на которых выполнен подсчёт
     # c косяком на первой итерации, но я не буду трогать, потому что и так работает
-    print('  ' + str(i) + ' / ' + str(list_len))
+    #print('  ' + str(i) + ' / ' + str(list_len))
     # посчитать количество карточек СП на странице
     len_sp = len(driver.find_elements(by=By.XPATH, value='//*[@id="batchSpecialOffers"]/div/div/ul/li'))
+    if i == 1:
+        qty_sp = len_sp
     sum = sum + len_sp
     # занести в переменную текущую надпись в окне дропдауна
     drop = driver.find_element(by=By.XPATH, value='//*[@id="main"]/div[2]/div/div/div/div[1]/ul/li/a')
@@ -48,12 +52,13 @@ while i < list_len:
     i += 1
 # для последнего пункта списка посёлков
 if i == list_len:
-    print('  ' + str(i) + ' / ' + str(list_len))
+    #print('  ' + str(i) + ' / ' + str(list_len))
     drop = driver.find_element(by=By.XPATH, value='//*[@id="main"]/div[2]/div/div/div/div[1]/ul/li/a')
     drop_text = drop.text
     print('  Количество СП на странице "' + drop_text + '" = ' + str(len_sp))
     if len_sp <= 2:
         print('ERROR: ' + str(len_sp) + ' СП в посёлке "' + drop_text + '"')
+    print('    Всего ' + str(list_len) + ' страниц и ' + str(qty_sp) + ' СП')
 
 
 #time.sleep(5)

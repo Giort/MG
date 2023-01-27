@@ -74,7 +74,7 @@ except:
 # 7. проверка syn_53 по видимости заголовка "Генеральный"
 driver.get("https://syn53.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print(' / \ syn_53: OK')
 except:
     print('ERROR: не дождался загрузки элемента на син_53')
