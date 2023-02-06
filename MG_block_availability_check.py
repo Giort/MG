@@ -56,7 +56,7 @@ except:
     print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
 
 try:
-    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@class, 'uk-visible'))]//h1[text()[contains(.,'Специальное предложение')]]")))
+    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
     print('   блок "Специальное предложение": OK')
     try:
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()

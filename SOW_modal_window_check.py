@@ -28,11 +28,11 @@ driver.set_window_size(1920, 1080)
 driver.get("https://moigektar.ru/")
 # 1.1 проверка, что есть кнопка на карточке участка в блоке "Специальное предложение"
 try:
-    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'uk-visible'))]//h1[text()[contains(.,'Специальное')]]")))
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК: блок СП на главной МГ есть")
     time.sleep(10)
-    btn = driver.find_element(by=By.XPATH, value="//div[(contains(@class, 'uk-visible'))]//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+    btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click().perform()
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
@@ -86,7 +86,7 @@ try:
         print('   OK: модаль СП в каталоге открылась')
         phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
         email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
