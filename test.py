@@ -17,48 +17,21 @@ import time
 driver.set_window_size(1920, 1080)
 
 
+# 1. Главная
+driver.get("https://moigektar.ru/")
+print('Главная')
 
-# 2. проверка слайдера СП в каталоге "МГ"
-driver.get("https://moigektar.ru/catalogue")
-# 2.1 проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
 try:
-    btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
-    print("   ОК: блок СП в каталоге есть")
-    time.sleep(10)
-    actions.move_to_element(btn).click(btn).perform()
-    # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
+    print('   блок "Специальное предложение": OK')
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
-        print('   OK: модаль СП в каталоге открылась')
-        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
-        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
-        time.sleep(1)
-        name.send_keys('test')
-        time.sleep(1)
-        phone.send_keys('9127777777')
-        time.sleep(1)
-        email.send_keys('test@test.test')
-        time.sleep(1)
-        submitBtn.click()
-        # 2.3 проверить, что заявка отправлена, по тому, открылась ли страница благодарности
-        time.sleep(10)
-        url = driver.current_url
-        if url == 'https://moigektar.ru/thanks':
-            print('   OK: заявка из СП в каталоге отправлена, открылась страница благодарности')
-        else:
-            try:
-                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//div[text()[contains(.,'Во время отправки заявки возникли сложности')]]")))
-                print('ERROR: заявка из СП каталога не была отправлена и отобразилось сообщение об ошибке отправки')
-            except TimeoutException:
-                print('ERROR: заявка из СП каталога не была отправлена')
-    except ElementNotVisibleException:
-        print("ERROR:  модаль из СП каталога не открылась")
-except TimeoutException:
-    print("ERROR: не могу найти кнопку, чтобы открыть модаль СП в каталоге")
-except:
-    print("ERROR: что-то не так при проверке работы СП в каталоге")
-
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
+        print('   карточки в СП: OK')
+    except:
+        print('ERROR: проблема с карточками СП на главной МГ')
+except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
+    print('ERROR: проблема с блоком "Специальное предложение" на главной МГ')
 
 
 time.sleep(5)
