@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -36,11 +36,11 @@ try:
     actions.move_to_element(btn).click().perform()
     # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='buybatchform-username']")))
         print('   OK: модаль СП на главной МГ открылась')
-        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
-        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
         time.sleep(1)
         name.send_keys('test')
         time.sleep(1)
@@ -66,6 +66,8 @@ try:
                 driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
     except ElementNotVisibleException:
         print("ERROR: модаль из СП на главной МГ не открылась")
+    except TimeoutException:
+        print("ERROR: не вижу элемент в модали СП на главной")
 except TimeoutException:
     print("ERROR: не могу найти кнопку, чтобы открыть модаль СП на главной МГ")
 except:
@@ -82,10 +84,10 @@ try:
     actions.move_to_element(btn).click(btn).perform()
     # 2.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='consultationform-name']")))
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
         print('   OK: модаль СП в каталоге открылась')
-        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
-        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
         time.sleep(1)
         name.send_keys('test')
@@ -106,6 +108,8 @@ try:
                 print('ERROR: заявка из СП каталога не была отправлена и отобразилось сообщение об ошибке отправки')
             except TimeoutException:
                 print('ERROR: заявка из СП каталога не была отправлена')
+    except TimeoutException:
+        print("ERROR: не вижу элемент в модали СП каталога")
     except ElementNotVisibleException:
         print("ERROR:  модаль из СП каталога не открылась")
 except TimeoutException:
@@ -126,10 +130,10 @@ try:
     actions.move_to_element(btn).click().perform()
     # 3.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
-        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-name']")))
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
         print('   OK: модаль СП дачных участков открылась')
-        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-phone']")
-        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='consultationform-email']")
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//button[@type='submit']")
         time.sleep(1)
         name.send_keys('test')
@@ -152,6 +156,8 @@ try:
                 print('ERROR: заявка из СП дачных участков не была отправлена')
     except ElementNotVisibleException:
         print("ERROR: модаль СП из дачных участков не открылась")
+    except TimeoutException:
+        print("ERROR: не вижу элемент в модали Дачных каталога")
 except TimeoutException:
     print("ERROR: не могу найти кнопку, чтобы открыть модаль СП в дачных участках каталога МГ")
 except:
