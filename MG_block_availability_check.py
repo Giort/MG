@@ -61,7 +61,7 @@ try:
     try:
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
-        print('   карточки в СП: OK')
+        print('   карточки в СП на главной: OK')
     except:
         print('ERROR: проблема с карточками СП на главной МГ')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
@@ -70,12 +70,31 @@ except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Виртуальный тур')]]")))
     print('   блок "Виртуальный тур": OK')
+    try:
+        t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]")
+        actions.move_to_element(t_btn).click().perform()
+        try:
+            iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
+            driver.switch_to.frame(iframe)
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']/div[1]/div[2]/div[(contains(@style, 'z-index: 3101'))]")))
+            print('   блок "Виртуальный тур": тур загрузился, OK')
+            driver.switch_to.default_content()
+        except:
+            print('ERROR: не загрузился "Виртуальный тур" на главной МГ')
+    except:
+        print('ERROR: что-то с кнопкой в блоке "Виртуальный тур" на главной МГ')
 except:
     print('ERROR: проблема с блоком "Виртуальный тур" на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
+    l_title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
+    try:
+        actions.move_to_element(l_title).send_keys(Keys.PAGE_DOWN).perform()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='catalogue']//div[1]/div/div[1]//li[1]//button")))
+        print('   карточки в Лучших посёлках на главной: OK')
+    except:
+        print('ERROR: проблема с карточками Лучшие посёлки на главной МГ')
 except:
     print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
 
@@ -188,8 +207,14 @@ except:
     print('ERROR: проблема с формой "Подпишитесь на рассылку" на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'на новости проекта')]]")))
+    title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости проекта')]]")
     print('   блок "Подпишитесь на новости проекта": OK')
+    try:
+        actions.move_to_element(title_n).send_keys(Keys.PAGE_DOWN).perform()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@data-app='eapps-vk-feed']/div/div/div[1]/div/div[1]/div/div")))
+        print('   блок "Подпишитесь на новости проекта": OK, новости ВК отображаются')
+    except:
+        print('ERROR: проблема с новостями ВК на главной МГ')
 except:
     print('ERROR: проблема с блоком "Подпишитесь на новости проекта" на главной МГ')
 
