@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
-driver = webdriver.Chrome(options=ch_options)
+driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -13,7 +13,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
-driver.maximize_window()
+#driver.maximize_window()
+driver.set_window_size(1920, 1080)
 
 
 # Скрипт проверяет наличие всех блоков на МГ по заголовкам или (реже) другим элементам
@@ -25,15 +26,46 @@ driver.maximize_window()
 # 1. Главная
 driver.get("https://moigektar.ru/")
 print('Главная')
+
+
+
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   хедер: OK')
+    try:
+        m_btn = driver.find_element(by=By.XPATH, value="//*[@id='main']//a[@class='btn-mquiz']")
+        actions.move_to_element(m_btn).click().perform()
+        try:
+            m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+            driver.switch_to.frame(m_iframe)
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+            print('   маркиз в хедере: OK')
+            driver.switch_to.default_content()
+            driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+        except:
+            print('ERROR: не загрузился маркиз в хедере МГ')
+    except:
+        print('ERROR: что-то с кнопкой маркиза в хедере МГ')
 except:
     print('ERROR: проблема с хедером на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Гектар')]]")))
+    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   баннер под хедером: OK')
+    try:
+        m2_btn = driver.find_element(by=By.XPATH, value="//*[text()[contains(., 'Подобрать гектар')]]")
+        actions.move_to_element(m2_btn).click().perform()
+        try:
+            m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+            driver.switch_to.frame(m_iframe)
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+            print('   маркиз в баннере под хедером на главной МГ: OK')
+            driver.switch_to.default_content()
+            driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+        except:
+            print('ERROR: не загрузился маркиз в баннере под хедером на главной МГ')
+    except:
+        print('ERROR: что-то с кнопкой маркиза в баннере под хедером на главной МГ')
 except:
     print('ERROR: проблема с баннером под хедером на главной МГ')
 
@@ -68,25 +100,6 @@ except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Специальное предложение" на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Виртуальный тур')]]")))
-    print('   блок "Виртуальный тур": OK')
-    try:
-        t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]")
-        actions.move_to_element(t_btn).click().perform()
-        try:
-            iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
-            driver.switch_to.frame(iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']/div[1]/div[2]/div[(contains(@style, 'z-index: 3101'))]")))
-            print('   блок "Виртуальный тур": тур загрузился, OK')
-            driver.switch_to.default_content()
-        except:
-            print('ERROR: не загрузился "Виртуальный тур" на главной МГ')
-    except:
-        print('ERROR: что-то с кнопкой в блоке "Виртуальный тур" на главной МГ')
-except:
-    print('ERROR: проблема с блоком "Виртуальный тур" на главной МГ')
-
-try:
     l_title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
     try:
@@ -97,6 +110,26 @@ try:
         print('ERROR: проблема с карточками Лучшие посёлки на главной МГ')
 except:
     print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
+
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Виртуальный тур')]]")))
+    print('   блок "Виртуальный тур": OK')
+    try:
+        t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]//img")
+        actions.move_to_element(t_btn).click().perform()
+        try:
+            iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
+            driver.switch_to.frame(iframe)
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']/div[1]/div[2]/div[(contains(@style, 'z-index: 3101'))]")))
+            print('   блок "Виртуальный тур": тур загрузился, OK')
+            driver.switch_to.default_content()
+        except:
+            driver.switch_to.default_content()
+            print('ERROR: не загрузился "Виртуальный тур" на главной МГ')
+    except:
+        print('ERROR: что-то с кнопкой в блоке "Виртуальный тур" на главной МГ')
+except:
+    print('ERROR: проблема с блоком "Виртуальный тур" на главной МГ')
 
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Видео, которые')]]")))
@@ -212,7 +245,7 @@ try:
     try:
         actions.move_to_element(title_n).send_keys(Keys.PAGE_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@data-app='eapps-vk-feed']/div/div/div[1]/div/div[1]/div/div")))
-        print('   блок "Подпишитесь на новости проекта": OK, новости ВК отображаются')
+        print('   блок "Подпишитесь на новости проекта": новости ВК отображаются, ОК')
     except:
         print('ERROR: проблема с новостями ВК на главной МГ')
 except:

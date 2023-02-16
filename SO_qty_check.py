@@ -20,7 +20,7 @@ driver.set_window_size(1920, 1080)
 
 driver.get("https://moigektar.ru/batches/special")
 
-list_len = 50
+list_len = 100
 sum = 0
 i = 1
 qty_sp = 0
@@ -53,6 +53,7 @@ while i < list_len:
 # для последнего пункта списка посёлков
 if i == list_len:
     #print('  ' + str(i) + ' / ' + str(list_len))
+    len_sp = len(driver.find_elements(by=By.XPATH, value='//*[@id="batchSpecialOffers"]/div/div/ul/li'))
     drop = driver.find_element(by=By.XPATH, value='//*[@id="main"]/div[2]/div/div/div/div[1]/ul/li/a')
     drop_text = drop.text
     print('  Количество СП на странице "' + drop_text + '" = ' + str(len_sp))

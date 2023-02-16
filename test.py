@@ -17,20 +17,22 @@ import time
 driver.set_window_size(1920, 1080)
 
 
-# 1. проверка слайдера СП на главной странице "МГ"
-driver.get("https://moigektar.ru/")
-
+# 15. syn_87
+driver.get("https://mt.lp.moigektar.ru/")
 try:
-    title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости проекта')]]")
-    print('   блок "Подпишитесь на новости проекта": OK')
-    try:
-        actions.move_to_element(title_n).send_keys(Keys.PAGE_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@data-app='eapps-vk-feed']/div/div/div[1]/div/div[1]/div/div")))
-        print('   блок "Подпишитесь на новости проекта": OK, новости ВК отображаются')
-    except:
-        print('ERROR: проблема с новостями ВК на главной МГ')
+    wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@class="js-select-map"]')))
+    title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
+    actions.move_to_element(title).perform()
+    time.sleep(3)
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
+    wait(driver, 14).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+    print('   OK: syn_87')
 except:
-    print('ERROR: проблема с блоком "Подпишитесь на новости проекта" на главной МГ')
+    print('ERROR: не загрузился генплан на син_87')
+
+
+
+
 
 
 
