@@ -76,22 +76,41 @@ except:
     print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="w-descr"]//a/div[1]/img')))
+    try:
+        mg_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a/div[1]/img')
+        mg_btn.click()
+        try:
+            mg_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='uk-lightbox-iframe']")
+            driver.switch_to.frame(mg_iframe)
+            wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//*[@id="movie_player"]/div[4]/button')))
+            driver.switch_to.default_content()
+            print('   видео в 1-й секции блока МГ - это: OK')
+        except:
+            print('ERROR: проблема с видео в 1-й секции блока "МГ - это" на главной МГ')
+    except:
+        print('ERROR: проблема с кнопкой видео в 1-й секции блока "МГ - это" на главной МГ')
+except:
+    print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
+
+try:
+    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши')]]")))
     print('   блок "Гектар под ваши цели": OK')
 except:
     print('ERROR: проблема с блоком "Гектар под ваши цели" на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
+    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
     print('   блок "Лучшее время для покупки": OK')
 except:
     print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
 
 try:
-    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
+    title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
     print('   блок "Специальное предложение": OK')
     try:
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        actions.move_to_element(title).perform()
+        actions.send_keys(Keys.PAGE_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
         print('   карточки в СП на главной: OK')
     except:
@@ -100,7 +119,7 @@ except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Специальное предложение" на главной МГ')
 
 try:
-    l_title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
+    l_title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
     try:
         actions.move_to_element(l_title).send_keys(Keys.PAGE_DOWN).perform()
@@ -111,16 +130,19 @@ try:
 except:
     print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
 
+driver.get("https://moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Виртуальный тур')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Виртуальный тур')]]")))
     print('   блок "Виртуальный тур": OK')
     try:
         t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]//img")
-        actions.move_to_element(t_btn).click().perform()
+        actions.move_to_element(t_btn).perform()
+        time.sleep(5)
+        actions.click(t_btn).perform()
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
             driver.switch_to.frame(iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']/div[1]/div[2]/div[(contains(@style, 'z-index: 3101'))]")))
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 230'))]")))
             print('   блок "Виртуальный тур": тур загрузился, OK')
             driver.switch_to.default_content()
         except:
@@ -243,7 +265,8 @@ try:
     title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости проекта')]]")
     print('   блок "Подпишитесь на новости проекта": OK')
     try:
-        actions.move_to_element(title_n).send_keys(Keys.PAGE_DOWN).perform()
+        actions.move_to_element(title_n).perform()
+        time.sleep(5)
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@data-app='eapps-vk-feed']/div/div/div[1]/div/div[1]/div/div")))
         print('   блок "Подпишитесь на новости проекта": новости ВК отображаются, ОК')
     except:

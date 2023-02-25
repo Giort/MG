@@ -2,7 +2,7 @@ from time import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,16 +21,54 @@ import time
 
 
 
-# 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
-driver.get("https://cabinet.moigektar.ru/security/login")
+# 1. проверка слайдера СП на главной странице "МГ"
+driver.get("https://moigektar.ru/")
+# 1.1 проверка, что есть кнопка на карточке участка в блоке "Специальное предложение"
 try:
-    btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Попробовать прямо сейчас!')]]")))
-    actions.move_to_element(btn).click().perform()
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//img[@src='/img/polls-banner.jpg']")))
-    print('  |  ЛК: ОК')
+    title = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    driver.execute_script("return arguments[0].scrollIntoView(true);", title)
+    print("   ОК: блок СП на главной МГ есть")
+    time.sleep(10)
+    driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button").click()
+    # 1.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+    try:
+        name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='buybatchform-username']")))
+        print('   OK: модаль СП на главной МГ открылась')
+        phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+        email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
+        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
+        time.sleep(1)
+        name.send_keys('test')
+        time.sleep(1)
+        phone.send_keys('9127777777')
+        time.sleep(1)
+        email.send_keys('test@test.test')
+        time.sleep(1)
+        submitBtn.click()
+        # 1.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
+        driver.implicitly_wait(10)
+        try:
+            successText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
+            print('   OK: заявка была отправлена')
+            time.sleep(3)
+            driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
+        except TimeoutException:
+            try:
+                failText = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//div[text()[contains(.,'Во время отправки заявки возникли сложности')]]")))
+                print('ERROR: заявка из СП на главной МГ не была отправлена и отобразилось сообщение об ошибке отправки')
+                driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
+            except TimeoutException:
+                print('ERROR: заявка из СП на главной МГ не была отправлена')
+                driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']/div/div/button").click()
+    except ElementNotVisibleException:
+        print("ERROR: модаль из СП на главной МГ не открылась")
+    except TimeoutException:
+        print("ERROR: не вижу элемент в модали СП на главной")
+except TimeoutException:
+    print("ERROR: не могу найти кнопку, чтобы открыть модаль СП на главной МГ")
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на ЛК')
+    print("ERROR: что-то не так при проверке работы СП на главной МГ")
 
 
-#time.sleep(10)
+time.sleep(10)
 driver.quit()
