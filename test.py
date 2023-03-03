@@ -21,46 +21,20 @@ driver.set_window_size(1920, 1080)
 
 
 
-driver.get("https://moigektar.ru/")
-
+# 7. подсчёт СП на син_39
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши')]]")))
-    print('   блок "Гектар под ваши цели": OK')
+    driver.get("https://syn39.lp.moigektar.ru/")
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h2[text()[contains(.,'Специальная')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-special-slider-card div div div.slick-slide'))
+    if SO_qty >= 3:
+        print("   OK: количество СП на син_39 Лесная усадьба = " + str(SO_qty))
+    else:
+        print("ERROR: количество СП на син_39 Лесная усадьба = " + str(SO_qty))
 except:
-    print('ERROR: проблема с блоком "Гектар под ваши цели" на главной МГ')
-
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
-    print('   блок "Лучшее время для покупки": OK')
-except:
-    print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
-
-try:
-    title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
-    print('   блок "Специальное предложение": OK')
-    try:
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
-        print('   карточки в СП на главной: OK')
-    except:
-        print('ERROR: проблема с карточками СП на главной МГ')
-except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
-    print('ERROR: проблема с блоком "Специальное предложение" на главной МГ')
-
-try:
-    l_title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
-    print('   блок "Лучшие поселки": OK')
-    try:
-        actions.move_to_element(l_title).send_keys(Keys.PAGE_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='catalogue']//div[1]/div/div[1]//li[1]//button")))
-        print('   карточки в Лучших посёлках на главной: OK')
-    except:
-        print('ERROR: проблема с карточками Лучшие посёлки на главной МГ')
-except:
-    print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
+    print("ERROR: не получилось посчитать СП на син_39")
 
 
-
-time.sleep(5)
+time.sleep(2)
 driver.quit()
 

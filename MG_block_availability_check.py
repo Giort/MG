@@ -21,7 +21,7 @@ driver.set_window_size(1920, 1080)
 #
 # В лог выводится сообщение "ОК", если блок был найден
 # В лог выводится сообщение "ERROR", если элемент не загрузился
-
+#
 
 # 1. Главная
 driver.get("https://moigektar.ru/")
@@ -85,6 +85,7 @@ try:
             driver.switch_to.frame(mg_iframe)
             wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//*[@id="movie_player"]/div[4]/button')))
             driver.switch_to.default_content()
+            driver.find_element(by=By.XPATH, value='//div[@style="z-index: 1011;"]//button').click()
             print('   видео в 1-й секции блока МГ - это: OK')
         except:
             print('ERROR: проблема с видео в 1-й секции блока "МГ - это" на главной МГ')
@@ -137,7 +138,7 @@ try:
     try:
         t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]//img")
         actions.move_to_element(t_btn).perform()
-        time.sleep(5)
+        time.sleep(3)
         actions.click(t_btn).perform()
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
