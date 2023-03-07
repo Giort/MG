@@ -27,7 +27,17 @@ driver.set_window_size(1920, 1080)
 driver.get("https://moigektar.ru/")
 print('Главная')
 
-
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
+    print('   блок "Проект МГ - это": OK')
+except:
+    driver.get("https://moigektar.ru/")
+    print('Главная (вторая загрузка)')
+    try:
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
+        print('   блок "Проект МГ - это": OK')
+    except:
+        print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
 
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
@@ -70,12 +80,6 @@ except:
     print('ERROR: проблема с баннером под хедером на главной МГ')
 
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
-    print('   блок "Проект МГ - это": OK')
-except:
-    print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
-
-try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="w-descr"]//a/div[1]/img')))
     try:
         mg_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a/div[1]/img')
@@ -110,8 +114,7 @@ try:
     title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное предложение')]]")))
     print('   блок "Специальное предложение": OK')
     try:
-        actions.move_to_element(title).perform()
-        actions.send_keys(Keys.PAGE_DOWN).perform()
+        actions.move_to_element(title).pause(2).send_keys(Keys.PAGE_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
         print('   карточки в СП на главной: OK')
     except:
@@ -131,15 +134,12 @@ try:
 except:
     print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
 
-driver.get("https://moigektar.ru/")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Виртуальный тур')]]")))
     print('   блок "Виртуальный тур": OK')
     try:
         t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]//img")
-        actions.move_to_element(t_btn).perform()
-        time.sleep(3)
-        actions.click(t_btn).perform()
+        actions.move_to_element(t_btn).pause(3).click(t_btn).perform()
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
             driver.switch_to.frame(iframe)
@@ -268,7 +268,7 @@ try:
     try:
         actions.move_to_element(title_n).perform()
         time.sleep(5)
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@data-app='eapps-vk-feed']/div/div/div[1]/div/div[1]/div/div")))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-news-wrapper']/div/ul/li[1]/a/div[1]/div/div[1]")))
         print('   блок "Подпишитесь на новости проекта": новости ВК отображаются, ОК')
     except:
         print('ERROR: проблема с новостями ВК на главной МГ')

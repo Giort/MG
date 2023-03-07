@@ -133,7 +133,20 @@ try:
 except:
     print('ERROR: не загрузился генплан на син_53')
 
-# 11. syn_67
+# 11. vazuza2
+driver.get("https://vazuza2.lp.moigektar.ru/")
+try:
+    wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//img[@data-src="/img/vazuza/select/overlay-touch.png"]')))
+    title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(3)
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
+    wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//canvas[4]')))
+    print('   OK: vazuza2')
+except:
+    print('ERROR: не загрузился генплан на Вазузе')
+
+# 12. syn_67
 driver.get("https://syn67.lp.moigektar.ru/")
 try:
     wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-select-play')))
@@ -143,7 +156,7 @@ try:
 except:
     print('ERROR: не загрузился генплан на син_67')
 
-# 12. syn_84
+# 13. syn_84
 driver.get("https://syn84.lp.moigektar.ru/")
 try:
     wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@class="js-select-map"]')))
@@ -156,7 +169,7 @@ try:
 except:
     print('ERROR: не загрузился генплан на син_84')
 
-# 13. syn_85
+# 14. syn_85
 driver.get("https://syn85.lp.moigektar.ru/")
 try:
     wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@class="js-select-map"]')))
@@ -168,19 +181,6 @@ try:
     print('   OK: syn_85')
 except:
     print('ERROR: не загрузился генплан на син_85')
-
-# 14. syn_89
-driver.get("https://syn89.lp.moigektar.ru/")
-try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@class="js-select-map"]')))
-    title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
-    actions.move_to_element(title).perform()
-    time.sleep(3)
-    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
-    wait(driver, 14).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
-    print('   OK: syn_89')
-except:
-    print('ERROR: не загрузился генплан на син_89')
 
 # 15. syn_87
 driver.get("https://mt.lp.moigektar.ru/")
@@ -194,6 +194,21 @@ try:
     print('   OK: syn_87')
 except:
     print('ERROR: не загрузился генплан на син_87')
+
+# 16. syn_89
+driver.get("https://syn89.lp.moigektar.ru/")
+try:
+    wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@class="js-select-map"]')))
+    title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
+    actions.move_to_element(title).perform()
+    time.sleep(3)
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
+    wait(driver, 14).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+    print('   OK: syn_89')
+except:
+    print('ERROR: не загрузился генплан на син_89')
+
+
 
 
 time.sleep(5)
