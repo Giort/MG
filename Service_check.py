@@ -471,7 +471,7 @@ except:
 driver.get("https://mt.lp.moigektar.ru/")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_87: OK')
+    print(' / \ syn_87: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_87')
 

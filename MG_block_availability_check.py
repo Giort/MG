@@ -143,7 +143,7 @@ try:
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
             driver.switch_to.frame(iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 230'))]")))
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 228'))]")))
             print('   блок "Виртуальный тур": тур загрузился, OK')
             driver.switch_to.default_content()
         except:

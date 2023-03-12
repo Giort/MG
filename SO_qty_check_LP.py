@@ -20,7 +20,8 @@ driver.set_window_size(1920, 1080)
 # В лог выводится сообщение "OK" + количество СП, если СП на странице 3 или больше
 # В лог выводится сообщение "ERROR" + количество СП, если СП на странице меньше 3
 #
-
+# Прогон теста занимает примерно одну минуту
+#
 
 # # 1. подсчёт СП на син_9
 # try:
@@ -57,9 +58,9 @@ try:
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-special-slider-card div div div.slick-slide'))
     if SO_qty >= 3:
-        print("   OK: количество СП на странице син_33 Лесная усадьба = " + str(SO_qty))
+        print("   OK: количество СП на странице син_33 Лисицыно = " + str(SO_qty))
     else:
-        print("ERROR: количество СП на странице син_33 Лесная усадьба = " + str(SO_qty))
+        print("ERROR: количество СП на странице син_33 Лисицыно = " + str(SO_qty))
 except:
     print("ERROR: не получилось посчитать СП на странице син_33")
 

@@ -537,7 +537,6 @@ except:
 
 
 # # 11. проверка спецпредложений на vazuza2
-# не работает в хэдлесс, работает в обычном. Пока что не удалось разобраться, отложил
 # driver.get("https://vazuza2.lp.moigektar.ru/")
 # # 11.1 так как на вазузе нет слайдера СП, буду вызывать карточки СП с Генплана
 # try:
@@ -548,7 +547,11 @@ except:
 #     driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
 #     print("   ОК: генплан на Вазузе присутствует")
 #     time.sleep(14)
+#     # клик в центр общего большого элемента. После этого стрнет возможно нажимать непосредственно на точки на плане
 #     driver.find_element(by=By.CLASS_NAME, value='ymaps-2-1-79-events-pane').click()
+#     time.sleep(4)
+#     # в хедлесс клик в эту область попадает на шар, поэтому надо сместиться
+#     actions.send_keys(Keys.ARROW_UP).perform()
 #     actions.click()
 #     # 11.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
 #     try:
