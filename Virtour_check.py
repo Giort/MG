@@ -14,7 +14,8 @@ actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
 #driver.maximize_window()
-driver.set_window_size(1920, 1080) # иначе падает тест на 48
+driver.set_window_size(1920, 1080)
+driver.implicitly_wait(10)
 
 
 # Скрипт заходит на сайты посёлков, запускает загрузку Виртуального тура
@@ -28,8 +29,8 @@ driver.set_window_size(1920, 1080) # иначе падает тест на 48
 # syn_9
 driver.get("https://syn9.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3056'))][1]")))
@@ -40,8 +41,8 @@ except:
 # syn_24
 driver.get("https://syn24.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -52,8 +53,8 @@ except:
 # syn_33
 driver.get("https://syn33.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -64,8 +65,8 @@ except:
 # syn_34
 driver.get("https://syn34.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -76,8 +77,8 @@ except:
 # syn_37
 driver.get("https://syn37.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -88,8 +89,8 @@ except:
 # syn_39
 driver.get("https://syn39.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -100,8 +101,8 @@ except:
 # syn_42
 driver.get("https://syn42.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    driver.find_element(by=By.ID, value='w-tour-play').click()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -110,19 +111,16 @@ except:
     print('ERROR: не загрузился виртур на син_42')
 
 # syn_48
-# не получается сделать нормально - таргет за пределами окна; не разобрался, пока что отложил
+# не получается переместиться к элементам обычным образом - таргет за пределами окна; не разобрался, пока что отложил
 driver.get("https://syn48.lp.moigektar.ru/")
 try:
     i = 0
-    while i < 7:
+    while i < 6:
         actions.send_keys(Keys.PAGE_DOWN).perform()
         i += 1
     time.sleep(1)
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    btn = driver.find_element(by=By.ID, value='w-tour-play')
-    actions.move_to_element(btn).perform()
-    time.sleep(1)
-    actions.click(btn).perform()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
@@ -135,7 +133,7 @@ try:
     driver.get("https://syn53.lp.moigektar.ru/")
     title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    time.sleep(1)
+    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
     btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
@@ -148,11 +146,8 @@ except:
 # syn_67
 driver.get("https://syn67.lp.moigektar.ru/")
 try:
-    wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'w-tour-play')))
-    btn = driver.find_element(by=By.ID, value='w-tour-play')
-    actions.move_to_element(btn).perform()
-    time.sleep(1)
-    actions.click(btn).perform()
+    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    actions.click(tour_btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))

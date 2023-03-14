@@ -43,7 +43,7 @@ try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   хедер: OK')
     try:
-        m_btn = driver.find_element(by=By.XPATH, value="//*[@id='main']//a[@class='btn-mquiz']")
+        m_btn = driver.find_element(by=By.XPATH, value="//*[@id='main']//ul//a[@class='btn-mquiz']")
         actions.move_to_element(m_btn).click().perform()
         try:
             m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
@@ -63,7 +63,7 @@ try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   баннер под хедером: OK')
     try:
-        m2_btn = driver.find_element(by=By.XPATH, value="//*[text()[contains(., 'Подобрать гектар')]]")
+        m2_btn = driver.find_element(by=By.XPATH, value="//li/div/*[text()[contains(., 'Подобрать участок')]]")
         actions.move_to_element(m2_btn).click().perform()
         try:
             m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")

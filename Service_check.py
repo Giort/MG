@@ -24,7 +24,7 @@ driver.maximize_window()
 # 1. проверка "МГ" по видимости заголовка "Специальное преложение" на главной
 driver.get("https://moigektar.ru/")
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
     print('  |  МГ: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на МГ')
@@ -46,7 +46,7 @@ driver.get("https://cabinet.moigektar.ru/security/login")
 try:
     btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Попробовать прямо сейчас!')]]")))
     actions.move_to_element(btn).click(btn).perform()
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//img[@src='/img/polls-banner.jpg']")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//img[@src='/img/polls-banner.jpg']")))
     print('  |  ЛК: ОК')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на ЛК')
@@ -54,7 +54,7 @@ except:
 # 3. проверка syn_9 по видимости заголовка "Генеральный"
 driver.get("https://syn9.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
     print(' / \ syn_9: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_9')
