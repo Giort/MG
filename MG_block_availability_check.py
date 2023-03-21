@@ -115,7 +115,7 @@ try:
     print('   блок "Специальное предложение": OK')
     try:
         actions.move_to_element(title).pause(2).send_keys(Keys.PAGE_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true; center: true']//li[1]//div/button/span")))
         print('   карточки в СП на главной: OK')
     except:
         print('ERROR: проблема с карточками СП на главной МГ')

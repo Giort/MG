@@ -19,23 +19,29 @@ driver.set_window_size(1920, 1080)
 driver.implicitly_wait(10)
 
 
+# form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Подпишитесь на рассылку")]]//ancestor::div[2]').get_attribute('id')
+# //div[@id='"+ form_id +"']
 
-# 7 проверка раздела "Вакансии"
 
-# 7.1 переход на страницу "Вакансии"
-driver.get("https://moigektar.ru/hr")
+# 2.2 переход на страницу "О проекте - сервисная компания"
+driver.get("https://moigektar.ru/about/management")
 try:
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Оставьте анкету')]]//parent::h1//following-sibling::ul[2]//input[@id='hrform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Оставьте анкету')]]//parent::h1//following-sibling::ul[2]//input[@id='hrform-phone']").send_keys('9127777777')
+    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Подпишитесь на рассылку")]]//ancestor::div[2]').get_attribute('id')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
+    driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
     driver.find_element(by=By.XPATH,
-                        value="//h1/*[text()[contains(.,'Оставьте анкету')]]//parent::h1//following-sibling::ul[2]/li[1]//button").click()
+                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
+        '1@1.1')
+    driver.find_element(by=By.XPATH,
+                        value="//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//h1/*[text()[contains(.,'Оставьте анкету')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print(" OK: данные из вакансий были отправлены")
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]")))
+        print(" OK: о проекте 2/6 данные были отправлены")
     except:
-        print('ERROR: не отправлены данные в форму "Оставьте анкету" в "Вакансиях"')
+        print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Сервисная компания"')
 except:
-    print('ERROR: не могу найти форму "Оставьте анкету" в "Вакансиях"')
+    print('ERROR: не могу найти форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Сервисная компания"')
 
-time.sleep(5)
+
+time.sleep(1)
 driver.quit()

@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -33,6 +33,7 @@ try:
     print("   ОК: блок СП на главной МГ есть")
     btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")))
     actions.move_to_element(btn).click().perform()
+    time.sleep(3) # пробовал по-разному, но только при явном ожидании драйвер стабильно переключается на окно
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='buybatchform-username']")))
@@ -74,6 +75,7 @@ try:
     btn = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
     print("   ОК: блок СП в каталоге есть")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
@@ -115,6 +117,7 @@ try:
     print("   ОК: блок СП на странице СП есть")
     btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//*[@class='w-catalog-projects']//li[1]/div/div[2]/div[3]/button")))
     actions.move_to_element(btn).click().perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
@@ -157,6 +160,7 @@ try:
     print("   ОК: блок СП на странице Дачных есть")
     btn = driver.find_element(by=By.XPATH, value="//ul/li[1]/div//button")
     actions.move_to_element(btn).click().perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
@@ -201,6 +205,7 @@ try:
     print("   ОК: блок СП дачные участки на странице есть")
     btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")
     actions.move_to_element(btn).click().perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
@@ -269,6 +274,7 @@ try:
         phone.send_keys('9127777777')
         email.send_keys('test@test.test')
         submitBtn.click()
+        time.sleep(3)
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='modal-select-content']//p[text()[contains(., 'Спасибо за заявку')]]")))
@@ -294,6 +300,7 @@ try:
     btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК: блок СП на странице син_34 есть")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -330,6 +337,7 @@ try:
     btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК: блок СП на странице син_37 есть")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -366,6 +374,7 @@ try:
     btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК: блок СП на странице син_39 есть")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -402,6 +411,7 @@ try:
     btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
     print("   ОК: блок СП на странице син_42 есть")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -440,6 +450,7 @@ try:
     print("   ОК: блок СП на странице син_53 есть")
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-name']")
@@ -471,7 +482,8 @@ except:
 
 # # 11. проверка спецпредложений на vazuza2
 # driver.get("https://vazuza2.lp.moigektar.ru/")
-# # 11.1 так как на вазузе нет слайдера СП, буду вызывать карточки СП с Генплана
+# # 11.1 так как на вазузе нет слайдера СП, буду вызывать карточки СП с Генплана // так и не смог добиться чтобы работало
+# # в хедлесс нажимает не туда, а в обычном режиме работает, как задумано
 # try:
 #     title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
 #     actions.move_to_element(title).perform()
@@ -530,6 +542,7 @@ try:
     print("   ОК: блок СП на странице син_84 есть")
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -568,6 +581,7 @@ try:
     print("   ОК: блок СП на странице син_85 есть")
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -628,6 +642,7 @@ try:
     print("   ОК: блок СП на странице син_89 есть")
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
@@ -667,6 +682,7 @@ try:
     time.sleep(3)
     btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
     actions.move_to_element(btn).click(btn).perform()
+    time.sleep(3)
     # 15.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
     try:
         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
