@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
 from selenium.webdriver.common.by import By
 import time
+#driver.maximize_window()
 driver.set_window_size(1600, 800)
 
 driver.implicitly_wait(10)
@@ -43,6 +44,14 @@ try:
     danger_text = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Портальный пароль")]]//ancestor::div[1]//img').is_displayed()
     if danger_text == False:
         driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Портальный пароль")]]//preceding::span[2]').click()
+        driver.find_element(by=By.XPATH, value='//*[text()[contains(., "сохранить изменения")]]').click()
+        print("Пользователь " + login + ": чекбокс установлен, изменения сохранены")
+        time.sleep(1)
+    elif danger_text:
+        print("Пользователь " + login + ": чекбокс уже был включён")
+    driver.find_element(by=By.XPATH, value='//a[@href="https://passport.yandex.ru"]').click()
+    driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Выйти из сервисов Яндекса")]]').click()
+
 except:
     print("ERROR: что-то не так, пользователь " + login)
 
