@@ -40,13 +40,11 @@ try:
     driver.find_element(by=By.XPATH, value='//a[@href="#setup/client"]').click()
     # установка чекбокса
     wait(driver, 15).until(EC.presence_of_element_located((By.NAME, 'enable_imap_auth_plain')))
-    portal_passw = driver.find_element(by=By.NAME, value='enable_imap_auth_plain')
     danger_text = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Портальный пароль")]]//ancestor::div[1]//img').is_displayed()
     if danger_text == False:
         driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Портальный пароль")]]//preceding::span[2]').click()
         driver.find_element(by=By.XPATH, value='//*[text()[contains(., "сохранить изменения")]]').click()
         print("Пользователь " + login + ": чекбокс установлен, изменения сохранены")
-        time.sleep(1)
     elif danger_text:
         print("Пользователь " + login + ": чекбокс уже был включён")
     driver.find_element(by=By.XPATH, value='//a[@href="https://passport.yandex.ru"]').click()
