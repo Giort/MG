@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
+ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)

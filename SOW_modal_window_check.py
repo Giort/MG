@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
+ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -13,7 +14,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
-#driver.maximize_window()
+import json
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(10)
 
@@ -24,14 +25,17 @@ driver.implicitly_wait(10)
 # В лог выводится сообщение "ERROR" если элемент, открывающий окно, не был найден по селектору
 #
 
+with open('locators.json', 'r') as file:
+    locator = json.load(file)
+
 # проверка слайдера СП на главной странице "МГ"
 driver.get("https://moigektar.ru/")
 # проверка, что есть кнопка на карточке участка в блоке "Специальное предложение"
 try:
-    title = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Специальное')]]")
+    title = driver.find_element(by=By.XPATH, value="" + str(locator["mg"]["mg_main_sow_title"]))
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК: блок СП на главной МГ есть")
-    btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")))
+    btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "" + str(locator["mg"]["mg_main_sow_btn"]))))
     actions.move_to_element(btn).click().perform()
     time.sleep(3) # пробовал по-разному, но только при явном ожидании драйвер стабильно переключается на окно
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
@@ -72,7 +76,8 @@ except:
 driver.get("https://moigektar.ru/catalogue")
 # проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
 try:
-    btn = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//div[@uk-slider='sets: true']//li[1]//div/button/span")))
+    #btn = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Специальное предложение')]]//parent::div//ul/li[1]//div/button")))
+    btn = driver.find_element(by=By.XPATH, value="" + str(locator['mg']['mg_catalog_sow_btn']))
     print("   ОК: блок СП в каталоге есть")
     actions.move_to_element(btn).click(btn).perform()
     time.sleep(3)
@@ -112,10 +117,10 @@ except:
 driver.get("https://moigektar.ru/batches")
 # проверка, что есть кнопка на первой карточке участка
 try:
-    title = driver.find_element(by=By.XPATH, value='//h1[text()[contains(.,"Специальное")]]')
+    title = driver.find_element(by=By.XPATH, value='//h2[text()[contains(.,"Подобрать участок")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     print("   ОК: блок СП на странице СП есть")
-    btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//*[@class='w-catalog-projects']//li[1]/div/div[2]/div[3]/button")))
+    btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//li[@class='uk-first-column uk-scrollspy-inview ']//button")))
     actions.move_to_element(btn).click().perform()
     time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали

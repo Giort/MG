@@ -1,0 +1,15 @@
+
+
+{
+    "mg":
+    {
+        "mg_main_sow_title" : "Блок 'Специальная цена', заголовок",
+                            "mg_main_sow_title" : "//h1[text()[contains(.,'Специальная цена')]]",
+        "mg_main_sow_btn" : "Блок 'Специальная цена', кнопка на первой карточке",
+                            "mg_main_sow_btn" : "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button",
+        "mg_catalog_sow_title" : "Блок 'Специальная цена' в Каталоге, заголовок",
+                            "mg_catalog_sow_title" : "//h1[text()[contains(.,'Специальное предложение')]]",
+        "mg_catalog_sow_btn" : "Блок 'Специальная цена' в Каталоге, кнопка на первой карточке",
+                            "mg_catalog_sow_btn" : "//*[text()[contains(., 'Специальное предложение')]]//parent::div//ul/li[1]//div/button"
+    }
+}

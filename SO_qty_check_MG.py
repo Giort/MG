@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 #ch_options.add_argument('--headless')
+ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
@@ -28,7 +29,7 @@ qty_withoutSold = 0
 
 while i < list_len:
     # посчитать количество карточек СП на странице
-    len_sp = len(driver.find_elements(by=By.XPATH, value='//*[@id="batchSpecialOffers"]/div/div/ul/li'))
+    len_sp = len(driver.find_elements(by=By.XPATH, value='//*[@id="batchSpecialOffers"]/div/div/div/ul/li'))
     if i == 1:
         qty_sp = len_sp
     # откидываю из результата карточки проданных СП: это каждый пятый в списке у одного посёлка
