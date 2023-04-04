@@ -18,25 +18,35 @@ import json
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(10)
 
-# vazuza2
-driver.get("https://vazuza2.lp.moigektar.ru/")
+
+# syn_67
 try:
-    #wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//img[@data-src="/img/vazuza/select/overlay-touch.png"]')))
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+    driver.get("https://syn67.lp.moigektar.ru/")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
-    print('   OK: vazuza2')
+    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
+    btn = driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-tour__icon animated-fast"))]/img')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+    driver.switch_to.frame(iframe)
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+    print('   OK: syn_67')
 except:
-    try:
-        #wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//img[@data-src="/img/vazuza/select/overlay-touch.png"]')))
-        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-        driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
-        wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
-        print('   OK: vazuza2')
-    except:
-        print('ERROR: не загрузился генплан на Вазузе')
+    print('ERROR: не загрузился виртур на син_67')
+
+
+
+# # syn_67
+# try:
+#     driver.get("https://syn67.lp.moigektar.ru/")
+#     tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+#     actions.click(tour_btn).perform()
+#     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+#     driver.switch_to.frame(iframe)
+#     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+#     print('   OK: syn_67')
+# except:
+#     print('ERROR: не загрузился виртур на син_67')
 
 
 time.sleep(1)

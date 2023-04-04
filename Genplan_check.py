@@ -130,9 +130,8 @@ try:
     print('   OK: vazuza2')
 except:
     try:
-        driver.get("https://vazuza2.lp.moigektar.ru/")
+        driver.refresh()
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
         driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
         wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
         print('   OK: vazuza2')
@@ -142,8 +141,9 @@ except:
 # syn_67
 try:
     driver.get("https://syn67.lp.moigektar.ru/")
-    play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
-    play_btn.click()
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+    actions.move_to_element(title).perform()
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
     print('   OK: syn_67')
 except:
@@ -196,9 +196,6 @@ try:
     print('   OK: syn_89')
 except:
     print('ERROR: не загрузился генплан на син_89')
-
-
-
 
 
 time.sleep(5)
