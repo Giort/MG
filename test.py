@@ -15,39 +15,31 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
-driver.set_window_size(1920, 1080)
+driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
 
-# syn_67
+driver.get("https://syn85.lp.moigektar.ru/")
+
+
+# модалка в хедере
 try:
-    driver.get("https://syn67.lp.moigektar.ru/")
-    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
-    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
-    btn = driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-tour__icon animated-fast"))]/img')
-    actions.click(btn).perform()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
-    driver.switch_to.frame(iframe)
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-    print('   OK: syn_67')
+    time.sleep(2)
+    btn = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
+    btn.click()
+    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="callbackform-name"]')))
+    name.send_keys('test')
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="callbackform-phone"]').send_keys('9127777777')
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
+    print('   OK: syn_85 модалка в хедере]')
 except:
-    print('ERROR: не загрузился виртур на син_67')
+    print('ERROR: что-то не так с модалкой в хедере на син_85')
 
 
 
-# # syn_67
-# try:
-#     driver.get("https://syn67.lp.moigektar.ru/")
-#     tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
-#     actions.click(tour_btn).perform()
-#     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
-#     driver.switch_to.frame(iframe)
-#     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-#     print('   OK: syn_67')
-# except:
-#     print('ERROR: не загрузился виртур на син_67')
 
 
-time.sleep(1)
+time.sleep(3)
 driver.quit()

@@ -20,6 +20,7 @@ driver.set_window_size(1920, 1080)
 #
 
 
+# ВЫВОДИТ НОЛЬ УЧАСТКОВ для 53 и 89. Починить
 driver.get("https://moigektar.ru/batches/special")
 
 list_len = 100

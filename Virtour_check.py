@@ -127,7 +127,21 @@ try:
     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
     print('   OK: syn_48')
 except:
-    print('ERROR: не загрузился виртур на син_48')
+    try:
+        driver.get("https://syn48.lp.moigektar.ru/")
+        i = 0
+        while i < 6:
+            actions.send_keys(Keys.PAGE_DOWN).perform()
+            i += 1
+        time.sleep(1)
+        tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+        actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+        driver.switch_to.frame(iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        print('   OK: syn_48')
+    except:
+        print('ERROR: не загрузился виртур на син_48')
 
 # syn_53
 try:
