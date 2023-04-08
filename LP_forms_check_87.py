@@ -50,27 +50,6 @@ try:
 except:
     print('ERROR: что-то не так с модалкой в хедере на син_87')
 
-# модалка "Обратная связь" в блоке "Москва Тверская - это"
-try:
-    time.sleep(2)
-    driver.refresh()
-    btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Показать еще')]]")))
-    actions.move_to_element(btn_1).perform()
-    btn_1.click()
-    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
-    btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='uk-visible@m uk-width-1-1']/*[text()[contains(., 'Узнать подробности')]]")))
-    btn_2.click()
-    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-name"]')))
-    name.send_keys('test')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-phone"]').send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys('test@test.test')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
-    print('   OK: syn_87 модалка в блоке "МТ - это"')
-except:
-    print('ERROR: что-то не так с модалкой в блоке "МТ - это" на син_87')
-
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:
     time.sleep(2)
