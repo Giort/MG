@@ -47,7 +47,7 @@ driver.get("https://cabinet.moigektar.ru/security/login")
 try:
     btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Попробовать прямо сейчас!')]]")))
     actions.move_to_element(btn).click(btn).perform()
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//img[@src='/img/polls-banner.jpg']")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()='Остаться в Демо-версии']")))
     print('  |  ЛК: ОК')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на ЛК')

@@ -18,7 +18,6 @@ driver.set_window_size(1660, 1080)
 driver.implicitly_wait(10)
 
 
-
 # модалка в 1-м баннере
 try:
     driver.get("https://syn85.lp.moigektar.ru/")

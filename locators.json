@@ -7,9 +7,13 @@
                             "mg_main_sow_title" : "//h1[text()[contains(.,'Специальная цена')]]",
         "mg_main_sow_btn" : "Блок 'Специальная цена', кнопка на первой карточке",
                             "mg_main_sow_btn" : "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button",
-        "mg_catalog_sow_title" : "Блок 'Специальная цена' в Каталоге, заголовок",
+        "mg_catalog_sow_title" : "Блок 'Специальная цена' в Каталоге посёлков, заголовок",
                             "mg_catalog_sow_title" : "//h1[text()[contains(.,'Специальное предложение')]]",
-        "mg_catalog_sow_btn" : "Блок 'Специальная цена' в Каталоге, кнопка на первой карточке",
-                            "mg_catalog_sow_btn" : "//*[text()[contains(., 'Специальное предложение')]]//parent::div//ul/li[1]//div/button"
+        "mg_catalog_country_sow_btn" : "Блок 'Специальная цена' в Каталоге посёлков, кнопка на первой карточке",
+                            "mg_catalog_country_sow_btn" : "//*[text()[contains(., 'Специальное предложение')]]//parent::div//ul/li[1]//div/button",
+        "mg_catalog_country_country_btn" : "Блок 'Дачные участки' в Каталоге посёлков, кнопка на первой карточке",
+                            "mg_catalog_country_country_btn" : "//*[text()[contains(., 'Дачные ')]]//parent::div//ul/li[1]//div/button",
+        "mg_catalog_plot_btn" : "Карточки в Каталоге участков, кнопка на первой карточке",
+                            "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]"
     }
 }

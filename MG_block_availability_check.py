@@ -15,7 +15,7 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
-driver.set_window_size(1920, 1080)
+driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
 # Скрипт проверяет наличие всех блоков на МГ по заголовкам или (реже) другим элементам
@@ -31,6 +31,7 @@ with open('locators.json', 'r') as file:
 driver.get("https://moigektar.ru/")
 print('Главная')
 
+# блок "Проект МГ - это"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
     print('   блок "Проект МГ - это": OK')
@@ -43,6 +44,7 @@ except:
     except:
         print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
 
+# блок Хедер + квиз
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   хедер: OK')
@@ -63,6 +65,7 @@ try:
 except:
     print('ERROR: проблема с хедером на главной МГ')
 
+# блок первый баннер (первый экран) + квиз
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   баннер под хедером: OK')
@@ -83,37 +86,40 @@ try:
 except:
     print('ERROR: проблема с баннером под хедером на главной МГ')
 
+# блок "МГ - это" + видео в нём
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="w-descr"]//a/div[1]/img')))
+    play_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-descr']//a/div[1]/img")
+    actions.move_to_element(play_btn).perform()
+    mg_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a/div[1]/img')
+    print('   блок МГ - это: OK')
+    mg_btn.click()
     try:
-        mg_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a/div[1]/img')
-        mg_btn.click()
-        try:
-            mg_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='uk-lightbox-iframe']")
-            driver.switch_to.frame(mg_iframe)
-            wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//*[@id="movie_player"]/div[4]/button')))
-            driver.switch_to.default_content()
-            driver.find_element(by=By.XPATH, value='//div[@style="z-index: 1011;"]//button').click()
-            print('   видео в 1-й секции блока МГ - это: OK')
-        except:
-            print('ERROR: проблема с видео в 1-й секции блока "МГ - это" на главной МГ')
+        mg_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='uk-lightbox-iframe']")
+        driver.switch_to.frame(mg_iframe)
+        wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//*[@id="movie_player"]/div[4]/button')))
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value='//div[@style="z-index: 1011;"]//button').click()
+        print('   видео в 1-й секции блока МГ - это: OK')
     except:
-        print('ERROR: проблема с кнопкой видео в 1-й секции блока "МГ - это" на главной МГ')
+        print('ERROR: проблема с видео в 1-й секции блока "МГ - это" на главной МГ')
 except:
-    print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
+    print('ERROR: проблема с кнопкой видео в 1-й секции блока "МГ - это" на главной МГ')
 
+# блок "Гектар под ваши цели"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши')]]")))
     print('   блок "Гектар под ваши цели": OK')
 except:
     print('ERROR: проблема с блоком "Гектар под ваши цели" на главной МГ')
 
+# блок "Лучшее время"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
     print('   блок "Лучшее время для покупки": OK')
 except:
     print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
 
+# блок "Специальная цена"
 try:
     title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "" + str(locator["mg"]["mg_main_sow_title"]))))
     print('   блок "Специальная цена": OK')
@@ -126,6 +132,7 @@ try:
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Специальная цена" на главной МГ')
 
+# блок "Лучшие посёлки"
 try:
     l_title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
@@ -138,6 +145,7 @@ try:
 except:
     print('ERROR: проблема с блоком "Лучшие поселки проекта" на главной МГ')
 
+# блок "Виртуальный тур"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Виртуальный тур')]]")))
     print('   блок "Виртуальный тур": OK')
@@ -147,7 +155,7 @@ try:
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
             driver.switch_to.frame(iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 228'))]")))
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 3101'))]")))
             print('   блок "Виртуальный тур": тур загрузился, OK')
             driver.switch_to.default_content()
         except:
@@ -158,114 +166,133 @@ try:
 except:
     print('ERROR: проблема с блоком "Виртуальный тур" на главной МГ')
 
+# блок "Видео, которые"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Видео, которые')]]")))
     print('   блок "Видео, которые": OK')
 except:
     print('ERROR: проблема с блоком "Видео, которые вам стоит увидеть" на главной МГ')
 
+# блок "Награды проекта"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Награды проекта')]]")))
     print('   блок "Награды проекта": OK')
 except:
     print('ERROR: проблема с блоком "Награды проекта" на главной МГ')
 
+# блок "СМИ о проекте"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'СМИ о проекте')]]")))
     print('   блок "СМИ о проекте": OK')
 except:
     print('ERROR: проблема с блоком "СМИ о проекте" на главной МГ')
 
+# блок "Развитие вашего участка"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Развитие вашего участка')]]")))
     print('   блок "Развитие вашего участка": OK')
 except:
     print('ERROR: проблема с блоком "Развитие вашего участка" на главной МГ')
 
+# блок "Быстрый старт"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Быстрый старт')]]")))
     print('   блок "Быстрый старт": OK')
 except:
     print('ERROR: проблема с блоком "Быстрый старт" на главной МГ')
 
+# блок "Время вкладывать"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Время вкладывать')]]")))
     print('   блок "Время вкладывать": OK')
 except:
     print('ERROR: проблема с блоком "Время вкладывать" на главной МГ')
 
+# блок "Сохраните свои"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Сохраните свои')]]")))
     print('   блок "Сохраните свои": OK')
 except:
     print('ERROR: проблема с блоком "Сохраните свои" на главной МГ')
 
+# блок "Почему нам доверяют"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Почему нам')]]")))
     print('   блок "Почему нам доверяют": OK')
 except:
     print('ERROR: проблема с блоком "Почему нам доверяют" на главной МГ')
 
+# блок "Господдержка"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Государственная поддержка')]]")))
     print('   блок "Государственная поддержка": OK')
 except:
     print('ERROR: проблема с блоком "Государственная поддержка" на главной МГ')
 
+# форма "Хотите узнать"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Хотите узнать ')]]")))
     print('   форма "Хотите узнать подробнее": OK')
 except:
     print('ERROR: проблема с формой "Хотите узнать подробнее о проекте?" на главной МГ')
 
+# блок "ЦПП"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Центр')]]")))
     print('   блок "Центр правовой поддержки": OK')
 except:
     print('ERROR: проблема с блоком "Центр правовой поддержки" на главной МГ')
 
+# блок "Варианты строительства"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Варианты')]]")))
     print('   блок "Варианты строительства": OK')
 except:
     print('ERROR: проблема с блоком "Варианты строительства" на главной МГ')
 
+# блок "Получте каталог"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Получите каталог')]]")))
     print('   форма "Получите каталог": OK')
 except:
     print('ERROR: проблема с формой "Получите каталог" на главной МГ')
 
+# блок "Отзывы о проекте"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Отзывы о проекте')]]")))
     print('   блок "Отзывы о проекте": OK')
 except:
     print('ERROR: проблема с блоком "Отзывы о проекте" на главной МГ')
 
+# блок "Бизнес-планы"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Бизнес-планы')]]")))
     print('   блок "Бизнес-планы": OK')
 except:
     print('ERROR: проблема с блоком "Бизнес-планы" на главной МГ')
 
+# блок "ЛК"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Личный кабинет')]]")))
     print('   блок "Личный кабинет": OK')
 except:
     print('ERROR: проблема с блоком "Личный кабинет" на главной МГ')
 
+# блок "Подпишитесь в соцсетях"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'в соцсетях')]]")))
     print('   блок "Подпишитесь в соцсетях": OK')
 except:
     print('ERROR: проблема с блоком "Подпишитесь в соцсетях" на главной МГ')
 
+# форма "Подпишитесь на рассылку"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Подпишитесь на рассылку')]]")))
     print('   форма "Подпишитесь на рассылку": OK')
 except:
     print('ERROR: проблема с формой "Подпишитесь на рассылку" на главной МГ')
 
+# блок "Подпишитесь на новости"
 try:
     title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости проекта')]]")
     print('   блок "Подпишитесь на новости проекта": OK')
@@ -279,24 +306,28 @@ try:
 except:
     print('ERROR: проблема с блоком "Подпишитесь на новости проекта" на главной МГ')
 
+# блок "От сохи"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'От сохи')]]")))
     print('   блок "От сохи до сохи": OK')
 except:
     print('ERROR: проблема с блоком "Проект "От сохи до сохи" на главной МГ')
 
+# форма "Действуйте"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Действуйте')]]")))
     print('   форма "Действуйте": OK')
 except:
     print('ERROR: проблема с формой "Действуйте" на главной МГ')
 
+# блок "Приглашаем на встречу"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Приглашаем на встречу')]]")))
     print('   блок "Приглашаем на встречу": OK')
 except:
     print('ERROR: проблема с блоком "Приглашаем на встречу" на главной МГ')
 
+# блок Футер
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//div[@class='w-footer']/div/div/div/div/button[text()[contains(.,'Связаться')]]")))
     print('   футер: OK\n')
@@ -308,59 +339,68 @@ except:
 # 2. Каталог
 driver.get('https://moigektar.ru/catalogue')
 print("Каталог")
+
+#блок "Специальное предложение"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(locator['mg']['mg_catalog_sow_title']))))
     print('   блок "Специальное предложение": OK')
     try:
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, ""  + str(locator['mg']['mg_catalog_sow_btn']))))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, ""  + str(locator['mg']['mg_catalog_country_sow_btn']))))
         print('   карточки в СП: OK')
     except:
         print('ERROR: проблема с карточками СП в каталоге')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Специальное предложение" в каталоге')
 
+# блок "Лучшие поселки"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
 except:
     print('ERROR: проблема с блоком "Лучшие поселки" в каталоге')
 
+# блок "Поселки в развитии"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Поселки в развитии')]]")))
     print('   блок "Поселки в развитии": OK')
 except:
     print('ERROR: проблема с блоком "Поселки в развитии" в каталоге')
 
+# блок "Дачные участки"
 try:
     title = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]")))
     print('   блок "Дачные участки": OK')
     try:
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]//parent::div//div[1]/div/div//li[1]//button/span")))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(locator['mg']['mg_catalog_country_country_btn']))))
         print('   карточки в "Дачных участках": OK')
     except:
         print('ERROR: проблема с карточками в "Дачных участках" в каталоге')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Дачные участки" в каталоге')
 
+# блок "Подберите ваш идеальный"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Подберите ваш')]]")))
     print('   баннер "Подберите ваш ...": OK')
 except:
     print('ERROR: проблема с баннером "Подберите ваш идеальный гектар" в каталоге')
 
+# блок "Инвестиционные проекты"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Инвестиционные')]]")))
     print('   блок "Инвестпроекты": OK')
 except:
     print('ERROR: проблема с блоком "Инвестиционные проекты" в каталоге')
 
+# блок "Долина Вазузы"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Долина')]]")))
     print('   баннер "Долина Вазузы": OK')
 except:
     print('ERROR: проблема с баннером "Долина Вазузы" в каталоге')
 
+# форма "Хотите узнать"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Хотите узнать ')]]")))
     print('   форма "Хотите узнать подробнее": OK\n')

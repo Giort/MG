@@ -15,7 +15,7 @@ actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
 #driver.maximize_window()
-driver.set_window_size(1920, 1080)
+driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
 
@@ -118,8 +118,8 @@ try:
     i = 0
     while i < 6:
         actions.send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
         i += 1
-    time.sleep(1)
     tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
     actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
@@ -129,10 +129,6 @@ try:
 except:
     try:
         driver.get("https://syn48.lp.moigektar.ru/")
-        i = 0
-        while i < 6:
-            actions.send_keys(Keys.PAGE_DOWN).perform()
-            i += 1
         time.sleep(1)
         tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
         actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
