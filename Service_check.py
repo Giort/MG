@@ -375,7 +375,7 @@ except:
 # 44. проверка syn_39 по видимости заголовка "Генеральный"
 driver.get("https://syn39.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print(' / \ syn_39: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_39')
