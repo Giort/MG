@@ -18,24 +18,44 @@ import json
 driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
-with open('locators.json', 'r') as file:
-    locator = json.load(file)
+with open('data.json', 'r') as file:
+    data = json.load(file)
 
-
-# подсчёт СП на син_39
-driver.get("https://syn39.lp.moigektar.ru/")
+# модалка 'Оставьте анкету' в 'Вакансии'
 try:
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
-    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
-    if SO_qty >= 3:
-        print("   OK: количество СП на странице син_39 Лесная усадьба = " + str(SO_qty))
-    else:
-        print("ERROR: количество СП на странице син_39 Лесная усадьба = " + str(SO_qty))
+    driver.get("https://moigektar.ru/hr")
+    driver.find_element(by=By.XPATH, value="//div/div[1]/div/div/div/*[@uk-toggle='target: #modal-main1']").click()
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//button[text()[contains(.,'Отправить')]]").click()
+    try:
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        print("   OK: модалка 'Оставьте анкету' в 'Вакансии'")
+        driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
+    except:
+        print("ERROR: не отправлены данные: модалка 'Оставьте анкету' в 'Вакансии'")
 except:
-    print("ERROR: не получилось посчитать СП на странице син_39")
+    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' в 'Вакансии'")
 
-
+# проверка вызова этой мод. с первой кнопки "Запишитесь на собеседование"
+try:
+    btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Построй')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']")
+    actions.move_to_element(btn).perform()
+    btn.click()
+    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+    print("   OK: модалка 'Оставьте анкету' по первой красной кнопке в 'Вакансии'")
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
+except:
+    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' по первой красной кнопке в 'Вакансии'")
+# проверка вызова этой мод. со второй кнопки "Запишитесь на собеседование"
+try:
+    driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Мы предлагаем')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']").click()
+    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+    print("   OK: модалка 'Оставьте анкету' по второй красной кнопке в 'Вакансии'")
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
+except:
+    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' по второй красной кнопке в 'Вакансии'")
 
 time.sleep(3)
 driver.quit()

@@ -1,7 +1,7 @@
 
 
 {
-    "mg":
+    "mg_loc":
     {
         "mg_main_sow_title" : "Блок 'Специальная цена', заголовок",
                             "mg_main_sow_title" : "//h1[text()[contains(.,'Специальная цена')]]",
@@ -15,5 +15,12 @@
                             "mg_catalog_country_country_btn" : "//*[text()[contains(., 'Дачные ')]]//parent::div//ul/li[1]//div/button",
         "mg_catalog_plot_btn" : "Карточки в Каталоге участков, кнопка на первой карточке",
                             "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]"
+    },
+
+    "test_data_valid":
+    {
+        "name" : "Селен Тестович",
+        "phone" : "9127777777",
+        "email" : "test@bugland.ru"
     }
 }

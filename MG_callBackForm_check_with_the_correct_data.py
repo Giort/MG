@@ -9,13 +9,15 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as wait
 import time
+import json
 from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
-#driver.maximize_window()
 driver.implicitly_wait(10)
-driver.set_window_size(1920, 1080)
+driver.set_window_size(1660, 1000)
 
-
+with open('data.json', 'r') as file:
+    data = json.load(file)
+    
 # Скрипт заполняет каждую форму корректными данными
 #
 # В лог выводится сообщение "ОК", если данные были отправлены и отобразилось сообщение об успехе
@@ -33,9 +35,9 @@ try:
     # сохраняю текущий динамический id формы в переменную для того, чтобы последующие локаторы не были такого вида:
     # //h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -48,9 +50,9 @@ except:
 # 1.2 проверка формы "Получите каталог посёлков"
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Получите каталог")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Получить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -63,7 +65,7 @@ except:
 # 1.3 проверка формы "Подпишитесь на рассылку"
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Подпишитесь на рассылку")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Подписаться')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -76,8 +78,8 @@ except:
 # 1.4 проверка формы "Действуйте! Лучшие участки уже бронируют"
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Действуйте!")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Узнать')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -93,9 +95,9 @@ except:
 driver.get("https://moigektar.ru/about")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -109,9 +111,9 @@ except:
 driver.get("https://moigektar.ru/about/management")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -125,9 +127,9 @@ except:
 driver.get("https://moigektar.ru/about/cabinet")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -141,9 +143,9 @@ except:
 driver.get("https://moigektar.ru/about/advantages")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -157,9 +159,9 @@ except:
 driver.get("https://moigektar.ru/about/union")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -173,9 +175,9 @@ except:
 driver.get("https://moigektar.ru/about/reviews")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -191,9 +193,9 @@ except:
 driver.get("https://moigektar.ru/catalogue")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     time.sleep(8)
     url = driver.current_url
@@ -210,9 +212,9 @@ except NoSuchElementException:
 driver.get("https://moigektar.ru/growth")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -226,9 +228,9 @@ except:
 driver.get("https://moigektar.ru/investment")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -242,9 +244,9 @@ except:
 driver.get("https://moigektar.ru/investment/capitalization")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -258,9 +260,9 @@ except:
 driver.get("https://moigektar.ru/investment/basic")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -274,9 +276,9 @@ except:
 driver.get("https://moigektar.ru/investment/businessman")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -290,9 +292,9 @@ except:
 driver.get("https://moigektar.ru/investment/farmer")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -306,9 +308,9 @@ except:
 driver.get("https://moigektar.ru/investment/family")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -324,9 +326,9 @@ except:
 driver.get("https://moigektar.ru/documents/gos")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -340,9 +342,9 @@ except:
 driver.get("https://moigektar.ru/documents")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -356,9 +358,9 @@ except:
 driver.get("https://moigektar.ru/documents/farmer")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -372,9 +374,9 @@ except:
 driver.get("https://moigektar.ru/documents/startup")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -388,9 +390,9 @@ except:
 driver.get("https://moigektar.ru/documents/family")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -404,9 +406,9 @@ except:
 driver.get("https://moigektar.ru/documents/ipoteka")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -422,9 +424,9 @@ except:
 driver.get("https://moigektar.ru/faq")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Не нашли")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -434,68 +436,14 @@ try:
 except:
     print('ERROR: не могу найти форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ"')
 
-# # 6.2 переход на страницу "Вопрос-ответ - о развитии участка"
-# driver.get("https://moigektar.ru/faq/growth")
-# try:
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
-#         '1@1.1')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-#     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]")))
-#         print(" OK: вопросы 2/4 данные были отправлены")
-#     except:
-#         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "О развитии участков"')
-# except:
-#     print('ERROR: не могу найти форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "О развитии"')
-#
-# # 6.3 переход на страницу "Вопрос-ответ - стоимость земли"
-# driver.get("https://moigektar.ru/faq/cost")
-# try:
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
-#         '1@1.1')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-#     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]")))
-#         print(" OK: вопросы 3/4 данные были отправлены")
-#     except:
-#         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Стоимость земли"')
-# except:
-#     print('ERROR: не могу найти форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Стоимость земли"')
-#
-# # 6.4 переход на страницу "Вопрос-ответ - оформление земли"
-# driver.get("https://moigektar.ru/faq/own")
-# try:
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-name']").send_keys('test')
-#     driver.find_element(by=By.XPATH, value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']").send_keys('9127777777')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-email']").send_keys(
-#         '1@1.1')
-#     driver.find_element(by=By.XPATH,
-#                         value="//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//button").click()
-#     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//h1/*[text()[contains(.,'Не нашли')]]//parent::h1//following-sibling::ul[2]//div[text()[contains(.,'Заявка успешно отправлена')]]")))
-#         print(" OK: вопросы 4/4 данные были отправлены")
-#     except:
-#         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Оформление земли"')
-# except:
-#     print('ERROR: не могу найти форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ" - "Оформление земли"')
-
 
 # 7 проверка раздела "Вакансии"
 # 7.1 переход на страницу "Вакансии"
 driver.get("https://moigektar.ru/hr")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Оставьте анкету")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys('9127777777')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
@@ -511,9 +459,9 @@ except:
 driver.get("https://moigektar.ru/contacts")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите задать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys('test')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys('9127777777')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys('1@1.1')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))

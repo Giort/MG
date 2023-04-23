@@ -24,8 +24,8 @@ driver.implicitly_wait(10)
 # В лог выводится сообщение "ERROR", если элемент не загрузился
 #
 
-with open('locators.json', 'r') as file:
-    locator = json.load(file)
+with open('data.json', 'r') as file:
+    data = json.load(file)
 
 # 1. Главная
 driver.get("https://moigektar.ru/")
@@ -121,11 +121,11 @@ except:
 
 # блок "Специальная цена"
 try:
-    title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "" + str(locator["mg"]["mg_main_sow_title"]))))
+    title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "" + str(data["mg_loc"]["mg_main_sow_title"]))))
     print('   блок "Специальная цена": OK')
     try:
         actions.move_to_element(title).pause(2).send_keys(Keys.PAGE_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(locator["mg"]["mg_main_sow_btn"]))))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(data["mg_loc"]["mg_main_sow_btn"]))))
         print('   карточки в СП на главной: OK')
     except:
         print('ERROR: проблема с карточками СП на главной МГ')
@@ -336,35 +336,35 @@ except:
 
 
 
-# 2. Каталог
+# 2. Каталог посёлков
 driver.get('https://moigektar.ru/catalogue')
-print("Каталог")
+print("Каталог поселков")
 
 #блок "Специальное предложение"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(locator['mg']['mg_catalog_sow_title']))))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(data["mg_loc"]["mg_catalog_sow_title"]))))
     print('   блок "Специальное предложение": OK')
     try:
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, ""  + str(locator['mg']['mg_catalog_country_sow_btn']))))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, ""  + str(data["mg_loc"]["mg_catalog_country_sow_btn"]))))
         print('   карточки в СП: OK')
     except:
-        print('ERROR: проблема с карточками СП в каталоге')
+        print('ERROR: проблема с карточками СП в Каталоге поселков')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
-    print('ERROR: проблема с блоком "Специальное предложение" в каталоге')
+    print('ERROR: проблема с блоком "Специальное предложение" в Каталоге поселков')
 
 # блок "Лучшие поселки"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
     print('   блок "Лучшие поселки": OK')
 except:
-    print('ERROR: проблема с блоком "Лучшие поселки" в каталоге')
+    print('ERROR: проблема с блоком "Лучшие поселки" в Каталоге поселков')
 
 # блок "Поселки в развитии"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Поселки в развитии')]]")))
     print('   блок "Поселки в развитии": OK')
 except:
-    print('ERROR: проблема с блоком "Поселки в развитии" в каталоге')
+    print('ERROR: проблема с блоком "Поселки в развитии" в Каталоге поселков')
 
 # блок "Дачные участки"
 try:
@@ -372,40 +372,40 @@ try:
     print('   блок "Дачные участки": OK')
     try:
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(locator['mg']['mg_catalog_country_country_btn']))))
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "" + str(data["mg_loc"]['mg_catalog_country_country_btn']))))
         print('   карточки в "Дачных участках": OK')
     except:
-        print('ERROR: проблема с карточками в "Дачных участках" в каталоге')
+        print('ERROR: проблема с карточками в "Дачных участках" в Каталоге поселков')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
-    print('ERROR: проблема с блоком "Дачные участки" в каталоге')
+    print('ERROR: проблема с блоком "Дачные участки" в Каталоге поселков')
 
 # блок "Подберите ваш идеальный"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Подберите ваш')]]")))
     print('   баннер "Подберите ваш ...": OK')
 except:
-    print('ERROR: проблема с баннером "Подберите ваш идеальный гектар" в каталоге')
+    print('ERROR: проблема с баннером "Подберите ваш идеальный гектар" в Каталоге поселков')
 
 # блок "Инвестиционные проекты"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Инвестиционные')]]")))
     print('   блок "Инвестпроекты": OK')
 except:
-    print('ERROR: проблема с блоком "Инвестиционные проекты" в каталоге')
+    print('ERROR: проблема с блоком "Инвестиционные проекты" в Каталоге поселков')
 
 # блок "Долина Вазузы"
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Долина')]]")))
     print('   баннер "Долина Вазузы": OK')
 except:
-    print('ERROR: проблема с баннером "Долина Вазузы" в каталоге')
+    print('ERROR: проблема с баннером "Долина Вазузы" в Каталоге поселков')
 
 # форма "Хотите узнать"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Хотите узнать ')]]")))
     print('   форма "Хотите узнать подробнее": OK\n')
 except:
-    print('ERROR: проблема с формой "Хотите узнать подробнее о проекте?" в каталоге\n')
+    print('ERROR: проблема с формой "Хотите узнать подробнее о проекте?" в Каталоге поселков\n')
 
 time.sleep(1)
 driver.quit()
