@@ -22,5 +22,12 @@
         "name" : "Селен Тестович",
         "phone" : "9127777777",
         "email" : "test@bugland.ru"
+    },
+
+  "pay_cred":
+    {
+        "name" : "иванов иван тест",
+        "passport" : "4005665382",
+        "email" : "test@bigland.ru"
     }
 }
