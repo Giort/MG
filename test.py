@@ -21,41 +21,28 @@ driver.implicitly_wait(10)
 with open('data.json', 'r') as file:
     data = json.load(file)
 
-# модалка 'Оставьте анкету' в 'Вакансии'
-try:
-    driver.get("https://moigektar.ru/hr")
-    driver.find_element(by=By.XPATH, value="//div/div[1]/div/div/div/*[@uk-toggle='target: #modal-main1']").click()
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//button[text()[contains(.,'Отправить')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: модалка 'Оставьте анкету' в 'Вакансии'")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
-    except:
-        print("ERROR: не отправлены данные: модалка 'Оставьте анкету' в 'Вакансии'")
-except:
-    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' в 'Вакансии'")
+driver.get("https://syn53.lp.moigektar.ru/")
 
-# проверка вызова этой мод. с первой кнопки "Запишитесь на собеседование"
+# модалка "Обратная связь" в блоке "Новая жизнь - это"
 try:
-    btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Построй')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']")
-    actions.move_to_element(btn).perform()
-    btn.click()
-    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-    print("   OK: модалка 'Оставьте анкету' по первой красной кнопке в 'Вакансии'")
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
+    time.sleep(2)
+    driver.refresh()
+    btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[text()[contains(., 'Показать еще')]]")))
+    actions.move_to_element(btn_1).perform()
+    btn_1.click()
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//div[@class='uk-visible@m uk-width-1-1']/*[text()[contains(., 'Узнать подробности')]]")))
+    btn_2.click()
+    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-name"]')))
+    name.send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-phone"]').send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
+    print('   OK: syn_53 модалка в блоке "НЖ - это"')
 except:
-    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' по первой красной кнопке в 'Вакансии'")
-# проверка вызова этой мод. со второй кнопки "Запишитесь на собеседование"
-try:
-    driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Мы предлагаем')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']").click()
-    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-    print("   OK: модалка 'Оставьте анкету' по второй красной кнопке в 'Вакансии'")
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
-except:
-    print("ERROR: не могу взаимодействовать: модалка 'Оставьте анкету' по второй красной кнопке в 'Вакансии'")
+    print('ERROR: что-то не так с модалкой в блоке "НЖ - это" на син_53')
 
 time.sleep(3)
 driver.quit()

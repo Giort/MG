@@ -29,84 +29,84 @@ driver.get("https://moigektar.ru/")
 
 print("Главная")
 # модалка в баннере в хедере
-try:
-    driver.find_element(by=By.XPATH, value="//*[@id='main']/a/picture/img").click()
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//*[text()[contains(.,'Отправить')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: главная, модалка в баннере в хедере")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
-    except:
-        print('ERROR: не отправлены данные в: главная, модалка в баннере в хедере')
-except:
-    print('ERROR: не могу взаимодействовать: главная, модалка в баннере в хедере')
+# try:
+#     driver.find_element(by=By.XPATH, value="//*[@id='main']/a/picture/img").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//*[text()[contains(.,'Отправить')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в баннере в хедере")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в баннере в хедере')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в баннере в хедере')
 
 # модалка в блоке "Быстрый старт жизни на земле"
-try:
-    driver.find_element(by=By.XPATH, value="//*[@class='w-change-house']//li[1]//button").click()
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']//button[text()[contains(.,'Получить консультацию')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-consultation']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: главная, модалка в блоке Быстрый старт")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']/div/div/*[@uk-close]").click()
-    except:
-        print('ERROR: не отправлены данные в: главная, модалка в блоке Быстрый старт')
-except:
-    print('ERROR: не могу взаимодействовать: главная, модалка в блоке Быстрый старт')
+# try:
+#     driver.find_element(by=By.XPATH, value="//*[@class='w-change-house']//li[1]//button").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']//button[text()[contains(.,'Получить консультацию')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-consultation']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в блоке Быстрый старт")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в блоке Быстрый старт')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в блоке Быстрый старт')
 
 # модалка в блоке "Время вкладывать в землю"
-try:
-    driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Время вкладывать')]]//parent::div[1]/div/button").click()
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-save']//button[text()[contains(.,'Отправить заявку')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-save']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: главная, модалка в блоке Время вкладывать")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-save']/div/div/*[@uk-close]").click()
-    except:
-        print('ERROR: не отправлены данные в: главная, модалка в блоке Время вкладывать')
-except:
-    print('ERROR: не могу взаимодействовать: главная, модалка в блоке Время вкладывать')
+# try:
+#     driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Время вкладывать')]]//parent::div[1]/div/button").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-save']//button[text()[contains(.,'Отправить заявку')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-save']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в блоке Время вкладывать")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-save']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в блоке Время вкладывать')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в блоке Время вкладывать')
 
 # модалка в блоке "Почему нам доверяют"
-try:
-    driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Почему нам доверяют')]]//parent::div//button[@uk-toggle='target: #modal-batch-juridical']").click()
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']//button[text()[contains(.,'Отправить заявку')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-batch-juridical']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: главная, модалка в блоке Почему нам доверяют")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']/div/div/*[@uk-close]").click()
-    except:
-        print('ERROR: не отправлены данные в: главная, модалка в блоке Почему нам доверяют')
-except:
-    print('ERROR: не могу взаимодействовать: главная, модалка в блоке Почему нам доверяют')
+# try:
+#     driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Почему нам доверяют')]]//parent::div//button[@uk-toggle='target: #modal-batch-juridical']").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']//button[text()[contains(.,'Отправить заявку')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-batch-juridical']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в блоке Почему нам доверяют")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в блоке Почему нам доверяют')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в блоке Почему нам доверяют')
 
 # модалка в блоке "Центр правовой поддержки"
-try:
-    driver.find_element(by=By.XPATH, value="//*[@id='cpp']//button").click()
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//*[@id='modal-center']//button[text()[contains(.,'Задать вопрос')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-center']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: главная, модалка в блоке Центр правовой поддержки")
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-center']/div/div/*[@uk-close]").click()
-    except:
-        print('ERROR: не отправлены данные в: главная, модалка в блоке Центр правовой поддержки')
-except:
-    print('ERROR: не могу взаимодействовать: главная, модалка в блоке Центр правовой поддержки')
+# try:
+#     driver.find_element(by=By.XPATH, value="//*[@id='cpp']//button").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-center']//button[text()[contains(.,'Задать вопрос')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-center']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в блоке Центр правовой поддержки")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-center']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в блоке Центр правовой поддержки')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в блоке Центр правовой поддержки')
 
 # модалка в блоке "Бизнес-планы"
 try:

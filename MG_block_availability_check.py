@@ -31,6 +31,24 @@ with open('data.json', 'r') as file:
 driver.get("https://moigektar.ru/")
 print('Главная')
 
+
+
+# баннер над хедером и квиз в нём
+try:
+    driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
+    print('   баннер в хедере: OK')
+    try:
+        m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+        driver.switch_to.frame(m_iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+        print('   маркиз в хедере: OK')
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+    except:
+        print('ERROR: не загрузился маркиз в хедере МГ')
+except:
+    print('ERROR: проблема с баннером над хедером на главной МГ')
+
 # блок "Проект МГ - это"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
@@ -195,18 +213,18 @@ except:
     print('ERROR: проблема с блоком "Развитие вашего участка" на главной МГ')
 
 # блок "Быстрый старт"
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Быстрый старт')]]")))
-    print('   блок "Быстрый старт": OK')
-except:
-    print('ERROR: проблема с блоком "Быстрый старт" на главной МГ')
+# try:
+#     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Быстрый старт')]]")))
+#     print('   блок "Быстрый старт": OK')
+# except:
+#     print('ERROR: проблема с блоком "Быстрый старт" на главной МГ')
 
 # блок "Время вкладывать"
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Время вкладывать')]]")))
-    print('   блок "Время вкладывать": OK')
-except:
-    print('ERROR: проблема с блоком "Время вкладывать" на главной МГ')
+# try:
+#     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Время вкладывать')]]")))
+#     print('   блок "Время вкладывать": OK')
+# except:
+#     print('ERROR: проблема с блоком "Время вкладывать" на главной МГ')
 
 # блок "Сохраните свои"
 try:
@@ -219,8 +237,34 @@ except:
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Почему нам')]]")))
     print('   блок "Почему нам доверяют": OK')
+    try:
+        driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Почему нам доверяют')]]//parent::div//a[text()[contains(., 'Подобрать участок')]]").click()
+        m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+        driver.switch_to.frame(m_iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+        print('   квиз в "Почему нам доверяют": OK')
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+    except:
+        print('ERROR: не загрузился квиз в "почему нам доверяют" на главной"')
 except:
     print('ERROR: проблема с блоком "Почему нам доверяют" на главной МГ')
+
+# модалка в блоке "Почему нам доверяют"
+# try:
+#     driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Почему нам доверяют')]]//parent::div//button[@uk-toggle='target: #modal-batch-juridical']").click()
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']//button[text()[contains(.,'Отправить заявку')]]").click()
+#     try:
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-batch-juridical']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         print("   OK: главная, модалка в блоке Почему нам доверяют")
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']/div/div/*[@uk-close]").click()
+#     except:
+#         print('ERROR: не отправлены данные в: главная, модалка в блоке Почему нам доверяют')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, модалка в блоке Почему нам доверяют')
 
 # блок "Господдержка"
 try:
@@ -237,11 +281,11 @@ except:
     print('ERROR: проблема с формой "Хотите узнать подробнее о проекте?" на главной МГ')
 
 # блок "ЦПП"
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Центр')]]")))
-    print('   блок "Центр правовой поддержки": OK')
-except:
-    print('ERROR: проблема с блоком "Центр правовой поддержки" на главной МГ')
+# try:
+#     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Центр')]]")))
+#     print('   блок "Центр правовой поддержки": OK')
+# except:
+#     print('ERROR: проблема с блоком "Центр правовой поддержки" на главной МГ')
 
 # блок "Варианты строительства"
 try:

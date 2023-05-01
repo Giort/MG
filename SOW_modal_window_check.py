@@ -207,6 +207,7 @@ try:
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
     print("   ОК: блок 'Дачные участки' на странице Каталог поселков есть")
     btn = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_catalog_country_country_btn"]))
+    time.sleep(1)
     actions.move_to_element(btn).click().perform()
     time.sleep(3)
     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
@@ -231,12 +232,8 @@ try:
                 print('ERROR: заявка из карточки блока "Дачные" на странице Каталог поселков не была отправлена и отобразилось сообщение об ошибке отправки')
             except TimeoutException:
                 print('ERROR: заявка из карточки блока "Дачные" на странице Каталог поселков не была отправлена')
-    except ElementNotVisibleException:
+    except:
         print('ERROR: модаль карточки блока "Дачные" на странице Каталог поселков не открылась')
-    except TimeoutException:
-        print('ERROR: не вижу элемент в модали карточки блока "Дачные" на странице Каталог поселков')
-except TimeoutException:
-    print('ERROR: не могу найти кнопку, чтобы открыть модаль карточки блока "Дачные" на странице Каталог поселков')
 except:
     print('ERROR: что-то не так при проверке работы карточки блока "Дачные" на странице Каталог поселков')
 

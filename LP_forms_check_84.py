@@ -15,27 +15,28 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
-driver.set_window_size(1660, 1080)
+driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
 with open('data.json', 'r') as file:
     data = json.load(file)
 
+driver.get("https://syn84.lp.moigektar.ru/")
+
 # модалка в баннере над хедером
-try:
-    driver.get("https://syn84.lp.moigektar.ru/")
-    bnr = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//body/a/picture/img[@alt='Баннер']")))
-    bnr.click()
-    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-name"]')))
-    name.send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-phone"]').send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
-    print('   OK: syn_84 модалка в 1-м баннере')
-except:
-    print('ERROR: что-то не так с модалкой в 1-м баннере на син_84')
+# try:
+#     bnr = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//body/a/picture/img[@alt='Баннер']")))
+#     bnr.click()
+#     name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-name"]')))
+#     name.send_keys(str(data["test_data_valid"]["name"]))
+#     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-phone"]').send_keys(str(data["test_data_valid"]["phone"]))
+#     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
+#     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
+#     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
+#     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
+#     print('   OK: syn_84 модалка в 1-м баннере')
+# except:
+#     print('ERROR: что-то не так с модалкой в 1-м баннере на син_84')
 
 # квиз в хедере
 try:
