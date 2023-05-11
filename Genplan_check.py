@@ -45,7 +45,14 @@ try:
     wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
     print('   OK: syn_24')
 except:
-    print('ERROR: не загрузился генплан на син_24')
+    try:
+        driver.refresh()
+        play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
+        play_btn.click()
+        wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+        print('   OK: syn_24')
+    except:
+        print('ERROR: не загрузился генплан на син_24')
 
 # syn_33
 try:

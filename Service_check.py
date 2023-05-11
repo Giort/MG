@@ -22,10 +22,10 @@ driver.maximize_window()
 #
 
 
-# 1. проверка "МГ" по видимости заголовка "Специальное преложение" на главной
+# 1. проверка "МГ" по видимости заголовка "Ваши возможности" на главной
 driver.get("https://moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Ваши возможности на гектаре')]]")))
     print('  |  МГ: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на МГ')
@@ -386,7 +386,12 @@ try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
     print(' \ / syn_42: OK')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_42')
+    try:
+        driver.refresh()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        print(' \ / syn_42: OK')
+    except:
+        print('ERROR (service_check): не дождался загрузки элемента на син_42')
 
 # 46. проверка syn_48 по видимости заголовка "Генеральный"
 driver.get("https://syn48.lp.moigektar.ru/")
@@ -475,6 +480,14 @@ try:
     print(' / \ syn_87: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_87')
+
+# 58. проверка "Бесконечных Знаний"" по наличию заголовка "Бесконечные знания"
+driver.get("https://wiki.bug.land/login")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
+    print(' \ / Бесконечные Знания: OK')
+except:
+    print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
 
 
 

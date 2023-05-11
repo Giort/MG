@@ -20,7 +20,7 @@ driver.implicitly_wait(10)
 
 
 try:
-    driver.get("https://moigektar.ru/batches")
+    driver.get("https://moigektar.ru/batches?sortId=-special")
     # нужно зайти в окно фильтра и раскрыть дропдаун, иначе список не инициализируется
     driver.find_element(by=By.XPATH, value='//*[text()="Все фильтры"]').click()
     driver.find_element(by=By.XPATH, value='//*[@id="containerciw_w2"]//button').click()
@@ -37,10 +37,9 @@ try:
 
     # закрыть окно фильтра
     driver.find_element(by=By.XPATH, value="//a//following-sibling::*[@href='#offcanvas-special-filter']").click()
-    # включить фильтр по СП и отметить, сколько их всего
-    driver.find_element(by=By.XPATH, value="//div/div/label/*[text()[contains(., 'Специальное')]]").click()
+    # отметить, сколько всего СП
     time.sleep(2)
-    cur_num_text = driver.find_element(by=By.XPATH, value="//div[@class='uk-first-column']/*[text()[contains(., 'Найдено ')]]").text
+    cur_num_text = driver.find_element(by=By.XPATH, value="//div[@class='uk-first-column']/*[text()[contains(., 'Найден ')]]").text
     cur_num = int(''.join(filter(str.isdigit, cur_num_text)))
     print('Всего участков СП: ' + str(cur_num))
 

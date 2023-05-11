@@ -500,7 +500,7 @@ except:
 #     driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
 #     print("   ОК: генплан на Вазузе присутствует")
 #     time.sleep(14)
-#     # клик в центр общего большого элемента. После этого стрнет возможно нажимать непосредственно на точки на плане
+#     # клик в центр общего большого элемента. После этого станет возможно нажимать непосредственно на точки на плане
 #     driver.find_element(by=By.CLASS_NAME, value='ymaps-2-1-79-events-pane').click()
 #     time.sleep(4)
 #     # в хедлесс клик в эту область попадает на шар, поэтому надо сместиться

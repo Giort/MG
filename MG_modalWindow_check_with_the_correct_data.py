@@ -28,21 +28,25 @@ with open('data.json', 'r') as file:
 driver.get("https://moigektar.ru/")
 
 print("Главная")
-# модалка в баннере в хедере
-# try:
-#     driver.find_element(by=By.XPATH, value="//*[@id='main']/a/picture/img").click()
-#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-#     driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-#     driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//*[text()[contains(.,'Отправить')]]").click()
-#     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-#         print("   OK: главная, модалка в баннере в хедере")
-#         driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
-#     except:
-#         print('ERROR: не отправлены данные в: главная, модалка в баннере в хедере')
-# except:
-#     print('ERROR: не могу взаимодействовать: главная, модалка в баннере в хедере')
+# баннер над хедером и модалка в нём
+try:
+    driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
+    print('   OK: баннер над хедером')
+    try:
+        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+        driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//button[text()[contains(.,'Отправить заявку')]]").click()
+        try:
+            wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+            print("   OK: главная, модалка в баннере над хедером")
+            driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
+        except:
+            print('ERROR: не отправлены данные в: главная, модалка в баннере над хедером')
+    except:
+        print('ERROR: не могу ввести данные в: главная, модалка в баннере над хедером')
+except:
+    print('ERROR: не могу взаимодействовать: главная, баннер над хедером')
 
 # модалка в блоке "Быстрый старт жизни на земле"
 # try:
@@ -309,7 +313,7 @@ try:
     driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist1']//button[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-specialist1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-        print("   OK: модалка 'Получить консультацию' в 'Коллективное строительство ЛЭП'")
+        print("   OK: модалка 'Получить консультацию' в 'Коллективное строительство ЛЭП'\n")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist1']/div/div/*[@uk-close]\n").click()
     except:
         print("ERROR: не отправлены данные: модалка 'Получить консультацию' в 'Коллективное строительство ЛЭП'\n")

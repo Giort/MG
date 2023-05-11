@@ -30,7 +30,7 @@ try:
     time.sleep(1)
     input = wait(driver,10).until(EC.visibility_of_element_located((By.ID, 'select2-homeredirectform-batcharticle-container')))
     input.click()
-    batch = wait(driver,10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'span ul li:nth-child(5)')))
+    batch = wait(driver,10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'span ul li:nth-child(6)')))
     batch.click()
     driver.find_element(by=By.TAG_NAME, value='button').click()
     print('    ОК: страница выбора участка')
@@ -66,7 +66,11 @@ try:
 # driver.find_element(by=By.ID, value='phone').send_keys(tel_num)
     driver.find_element(by=By.ID, value='phone').send_keys('+79317065113')
     driver.find_element(by=By.ID, value='sendSms').click()
-    time.sleep(30)
+    # вручную ввести код и ничего не нажимать
+    time.sleep(20)
+    driver.find_element(by=By.ID, value='sendResolve').click()
+    time.sleep(4)
+    driver.find_element(by=By.ID, value='credentialsform-fullname')
     print('    ОК: страница ввода номера телефона')
 except:
     print('ERROR: страница ввода номера телефона')
