@@ -37,15 +37,15 @@ print('Главная')
 try:
     driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
     print('   баннер в хедере: OK')
-    # try:
-    #     m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-    #     driver.switch_to.frame(m_iframe)
-    #     wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-    #     print('   маркиз в хедере: OK')
-    #     driver.switch_to.default_content()
-    #     driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-    # except:
-    #     print('ERROR: не загрузился маркиз в хедере МГ')
+    try:
+        m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+        driver.switch_to.frame(m_iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+        print('   маркиз в хедере: OK')
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+    except:
+        print('ERROR: не загрузился маркиз в хедере МГ')
 except:
     print('ERROR: проблема с баннером над хедером на главной МГ')
 

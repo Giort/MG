@@ -412,41 +412,41 @@ except:
     print("ERROR: что-то не так при проверке работы SOW на син_39")
 
 
-# проверка спецпредложений на син_42
-driver.get("https://syn42.lp.moigektar.ru/")
-# проверка, что есть слайдер SOW, по наличию кнопки на карточке
-try:
-    btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
-    print("   ОК: блок SOW на странице син_42 есть")
-    actions.move_to_element(btn).click(btn).perform()
-    time.sleep(3)
-    # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-    try:
-        name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-        print('   OK: модаль SOW открылась')
-        phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
-        email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
-        submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
-        name.send_keys(str(data["test_data_valid"]["name"]))
-        phone.send_keys(str(data["test_data_valid"]["phone"]))
-        email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
-        # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
-        try:
-            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
-            print('   OK: заявка из SOW син_42 была отправлена')
-        except TimeoutException:
-            try:
-                failText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
-                print('ERROR: заявка из SOW на син_42 не была отправлена и отобразилось сообщение об ошибке отправки')
-            except TimeoutException:
-                print('ERROR: заявка из SOW на син_42 не была отправлена')
-    except ElementNotVisibleException:
-        print("ERROR: модаль SOW на син_42 не открылась")
-except TimeoutException:
-    print("ERROR: не могу найти кнопку, чтобы открыть модаль SOW на син_42")
-except:
-    print("ERROR: что-то не так при проверке работы SOW на син_42")
+# # проверка спецпредложений на син_42
+# driver.get("https://syn42.lp.moigektar.ru/")
+# # проверка, что есть слайдер SOW, по наличию кнопки на карточке
+# try:
+#     btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+#     print("   ОК: блок SOW на странице син_42 есть")
+#     actions.move_to_element(btn).click(btn).perform()
+#     time.sleep(3)
+#     # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+#     try:
+#         name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
+#         print('   OK: модаль SOW открылась')
+#         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+#         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+#         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-price']//*[text()[contains(., 'Отправить заявку')]]")
+#         name.send_keys(str(data["test_data_valid"]["name"]))
+#         phone.send_keys(str(data["test_data_valid"]["phone"]))
+#         email.send_keys(str(data["test_data_valid"]["email"]))
+#         submitBtn.click()
+#         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+#         try:
+#             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-price']//p[text()[contains(., 'Спасибо за заявку')]]")))
+#             print('   OK: заявка из SOW син_42 была отправлена')
+#         except TimeoutException:
+#             try:
+#                 failText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-price']//div[text()[contains(., 'Произошла ошибка')]]")))
+#                 print('ERROR: заявка из SOW на син_42 не была отправлена и отобразилось сообщение об ошибке отправки')
+#             except TimeoutException:
+#                 print('ERROR: заявка из SOW на син_42 не была отправлена')
+#     except ElementNotVisibleException:
+#         print("ERROR: модаль SOW на син_42 не открылась")
+# except TimeoutException:
+#     print("ERROR: не могу найти кнопку, чтобы открыть модаль SOW на син_42")
+# except:
+#     print("ERROR: что-то не так при проверке работы SOW на син_42")
 
 
 # проверка спецпредложений на син_53

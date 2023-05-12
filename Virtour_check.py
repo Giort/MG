@@ -30,12 +30,15 @@ driver.implicitly_wait(10)
 # syn_9
 try:
     driver.get("https://syn9.lp.moigektar.ru/")
-    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
-    tour_btn.click()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(1)
+    btn = driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-tour__icon animated-fast"))]/img')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
-    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3056'))][1]")))
-    print('   ОК: syn_9')
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div/div/div[1]/div[2]")))
+    print('   OK: syn_9')
 except:
     print('ERROR: не загрузился виртур на син_9')
 

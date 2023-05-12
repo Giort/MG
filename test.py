@@ -23,13 +23,19 @@ with open('data.json', 'r') as file:
 
 #driver.get("https://moigektar.ru/")
 
-# 58. проверка "Бесконечных Знаний"" по наличию заголовка "Бесконечные знания"
-driver.get("https://wiki.bug.land/login")
+
+driver.get("https://syn9.lp.moigektar.ru/")
+
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
-    print(' \ / Бесконечные Знания: OK')
+    time.sleep(2)
+    btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
+    btn_1.click()
+    m_frame = driver.find_element(by=By.XPATH, value='//iframe[@class="marquiz__frame marquiz__frame_open"]')
+    driver.switch_to.frame(m_frame)
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Ответьте на 6 вопросов')]]")))
+    print('   OK: syn_9 квиз в хедере')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
+    print('ERROR: что-то не так с квизом в хедере на син_9')
 
 time.sleep(3)
 driver.quit()

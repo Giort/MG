@@ -55,7 +55,7 @@ except:
 # 3. проверка syn_9 по видимости заголовка "Генеральный"
 driver.get("https://syn9.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print(' / \ syn_9: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_9')
