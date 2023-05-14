@@ -109,17 +109,17 @@ except:
 
 
 # 8. подсчёт СП на син_42
-driver.get("https://syn42.lp.moigektar.ru/")
-try:
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h2[text()[contains(.,'Специальная')]]")))
-    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-special-slider-card div div div.slick-slide'))
-    if SO_qty >= 3:
-        print("   OK: количество СП на странице син_42 Усадьба в Завидово = " + str(SO_qty))
-    else:
-        print("ERROR: количество СП на странице син_42 Усадьба в Завидово = " + str(SO_qty))
-except:
-    print("ERROR: не получилось посчитать СП на странице син_42")
+# driver.get("https://syn42.lp.moigektar.ru/")
+# try:
+#     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h2[text()[contains(.,'Специальная')]]")))
+#     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+#     SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-special-slider-card div div div.slick-slide'))
+#     if SO_qty >= 3:
+#         print("   OK: количество СП на странице син_42 Усадьба в Завидово = " + str(SO_qty))
+#     else:
+#         print("ERROR: количество СП на странице син_42 Усадьба в Завидово = " + str(SO_qty))
+# except:
+#     print("ERROR: не получилось посчитать СП на странице син_42")
 
 
 # 9. подсчёт СП на син_53

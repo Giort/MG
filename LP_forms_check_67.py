@@ -34,7 +34,7 @@ try:
     m_frame = driver.find_element(by=By.XPATH, value='//iframe[@class="marquiz__frame marquiz__frame_open"]')
     driver.switch_to.frame(m_frame)
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Ответьте на несколько')]]")))
-    print('   OK: ин_67 квиз в баннере над хедером')
+    print('   OK: син_67 квиз в баннере над хедером')
 except:
     print('ERROR: что-то не так: квиз в баннере над хедером на син_67')
 

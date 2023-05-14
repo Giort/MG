@@ -1,26 +1,22 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-#ch_options.add_argument('--headless')
+ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(options= ch_options)
-from selenium.webdriver.support.ui import WebDriverWait as wait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-actions = ActionChains(driver)
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementNotVisibleException
-from selenium.webdriver.common.keys import Keys
 import time
-import json
 driver.set_window_size(1660, 1000)
 driver.implicitly_wait(10)
 
-with open('data.json', 'r') as file:
-    data = json.load(file)
 
+# Скрипт проверяет, сколько участков СП есть у посёлка на странице Каталог участков на сайте МГ
+# и сообщает, если их осталось меньше 3
+#
+# В лог выводится сообщение с количеством посёлков и названия этих посёлков с количеством
+# участков СП для каждого из них
+# В этом списке выводится сообщение "ERROR" + количество СП, если СП у посёлка меньше 3
+#
 
 driver.get("https://moigektar.ru/batches?sortId=-special")
 # нужно зайти в окно фильтра и раскрыть дропдаун, иначе список не инициализируется
@@ -55,7 +51,6 @@ while n < list_len:
     else:
         print('       ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
     n += 1
-
 
 
 time.sleep(3)
