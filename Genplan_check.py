@@ -99,7 +99,8 @@ except:
 # syn_42
 try:
     driver.get("https://syn42.lp.moigektar.ru/")
-    play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
+    play_btn = wait(driver, 14).until(EC.element_to_be_clickable((By.ID, 'w-select-play')))
+    time.sleep(2)
     play_btn.click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
     print('   OK: syn_42')
@@ -134,6 +135,7 @@ try:
     driver.get("https://vazuza2.lp.moigektar.ru/")
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(3)
     driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
     print('   OK: vazuza2')
@@ -142,6 +144,7 @@ except:
         driver.refresh()
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
+        time.sleep(3)
         wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
         print('   OK: vazuza2')
     except:

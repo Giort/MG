@@ -40,7 +40,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: главная 1/4 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" на Главной')
@@ -55,7 +55,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Получить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: главная 2/4 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Получите каталог" на Главной')
@@ -68,21 +68,21 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Подписаться')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: главная 3/4 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Подпишитесь на рассылку" на Главной')
 except:
     print('ERROR: не могу найти форму "Подпишитесь на рассылку" на Главной')
 
-# 1.4 проверка формы "Действуйте! Лучшие участки уже бронируют"
+# 1.4 проверка формы "Узнайте все подробности"
 try:
-    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Действуйте!")]]//ancestor::div[2]').get_attribute('id')
+    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Узнайте все")]]//ancestor::div[2]').get_attribute('id')
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Узнать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: главная 4/4 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Действуйте" на Главной')
@@ -100,7 +100,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 1/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте"')
@@ -116,7 +116,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 2/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Сервисная компания"')
@@ -132,7 +132,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 3/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Личный кабинет"')
@@ -148,7 +148,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 4/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Партнеры"')
@@ -164,7 +164,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 5/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Союз садоводов"')
@@ -180,7 +180,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: о проекте 6/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Отзывы"')
@@ -217,7 +217,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 1/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее об услугах и развитии?" в "Развитие" - "Развитие поселков"')
@@ -233,7 +233,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 2/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Глазами инвестора"')
@@ -249,7 +249,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 3/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Капитализация"')
@@ -265,7 +265,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 4/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Базовая стратегия"')
@@ -281,7 +281,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 5/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Предприниматель"')
@@ -297,7 +297,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 6/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Фермер-садовод"')
@@ -313,7 +313,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: развитие 7/7 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в "Развитие" - "Фамильная усадьба"')
@@ -331,7 +331,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 1/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Государственная поддержка"')
@@ -347,7 +347,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 2/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Для владельцев земли"')
@@ -363,7 +363,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 3/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Грант "Фермер"')
@@ -379,7 +379,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 4/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Агростартап"')
@@ -395,7 +395,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 5/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Грант на семейную ферму"')
@@ -411,7 +411,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: меры поддержки 6/6 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о господдержке?" в "Меры поддержки" - "Сельская ипотека"')
@@ -429,7 +429,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: данные из вопросов были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Не нашли ответа на свой вопрос?" в "Вопрос-ответ"')
@@ -446,7 +446,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: данные из вакансий были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Оставьте анкету" в "Вакансиях"')
@@ -464,7 +464,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: данные из контактов были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Хотите задать вопрос специалисту?" в "Контактах"')

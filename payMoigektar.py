@@ -67,7 +67,8 @@ try:
     driver.find_element(by=By.ID, value='phone').send_keys('+79317065113')
     driver.find_element(by=By.ID, value='sendSms').click()
     # вручную ввести код и ничего не нажимать
-    time.sleep(20)
+    # но если нажать "Отправить", то ничего страшного, просто будет собщение про ошибку на этом этапе
+    time.sleep(30)
     driver.find_element(by=By.ID, value='sendResolve').click()
     time.sleep(4)
     driver.find_element(by=By.ID, value='credentialsform-fullname')

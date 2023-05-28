@@ -31,86 +31,87 @@ with open('data.json', 'r') as file:
 driver.get("https://moigektar.ru/")
 print('Главная')
 
-
-
-# баннер над хедером и квиз в нём
+# баннер над хедером
 try:
-    driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
-    print('   баннер в хедере: OK')
-    try:
-        m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-        driver.switch_to.frame(m_iframe)
-        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-        print('   маркиз в хедере: OK')
-        driver.switch_to.default_content()
-        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-    except:
-        print('ERROR: не загрузился маркиз в хедере МГ')
+    assert driver.find_element(by=By.CLASS_NAME, value='w-banner').is_displayed()
+    print('   баннер над хедером: OK')
 except:
     print('ERROR: проблема с баннером над хедером на главной МГ')
 
-# блок "Проект МГ - это"
+# хедер + квиз!!!
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
-    print('   блок "Проект МГ - это": OK')
-except:
-    driver.get("https://moigektar.ru/")
-    print('Главная (вторая загрузка)')
-    try:
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Проект')]]")))
-        print('   блок "Проект МГ - это": OK')
-    except:
-        print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
-
-# блок Хедер + квиз
-try:
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   хедер: OK')
-    try:
-        m_btn = driver.find_element(by=By.XPATH, value="//*[@id='main']//ul//a[@class='btn-mquiz']")
-        actions.move_to_element(m_btn).click().perform()
-        try:
-            m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-            driver.switch_to.frame(m_iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-            print('   маркиз в хедере: OK')
-            driver.switch_to.default_content()
-            driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-        except:
-            print('ERROR: не загрузился маркиз в хедере МГ')
-    except:
-        print('ERROR: что-то с кнопкой маркиза в хедере МГ')
+    # отключил, так как сейчас там модалка
+    # try:
+    #     m2_btn = driver.find_element(by=By.XPATH, value="//li/div/*[text()[contains(., 'Подобрать участок')]]")
+    #     actions.move_to_element(m2_btn).click().perform()
+    #     try:
+    #         m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+    #         driver.switch_to.frame(m_iframe)
+    #         wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+    #         print('   квиз в хедере на главной МГ: OK')
+    #         driver.switch_to.default_content()
+    #         driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+    #     except:
+    #         print('ERROR: не загрузился квиз в хедере на главной МГ')
+    # except:
+    #     print('ERROR: что-то с кнопкой квиз в хедере на главной МГ')
 except:
     print('ERROR: проблема с хедером на главной МГ')
 
-# блок первый баннер (первый экран) + квиз
+# блок первый баннер (первый экран)
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
+    wait(driver,14).until(EC.presence_of_element_located((By.CLASS_NAME, "w-main-bg")))
     print('   баннер под хедером: OK')
-    try:
-        m2_btn = driver.find_element(by=By.XPATH, value="//li/div/*[text()[contains(., 'Подобрать участок')]]")
-        actions.move_to_element(m2_btn).click().perform()
-        try:
-            m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-            driver.switch_to.frame(m_iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-            print('   маркиз в баннере под хедером на главной МГ: OK')
-            driver.switch_to.default_content()
-            driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-        except:
-            print('ERROR: не загрузился маркиз в баннере под хедером на главной МГ')
-    except:
-        print('ERROR: что-то с кнопкой маркиза в баннере под хедером на главной МГ')
 except:
     print('ERROR: проблема с баннером под хедером на главной МГ')
+
+# блок первый баннер (первый экран) + квиз
+try:
+    m2_btn = driver.find_element(by=By.CSS_SELECTOR, value=".uk-first-column .btn-mquiz")
+    actions.move_to_element(m2_btn).click().perform()
+    try:
+        m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+        driver.switch_to.frame(m_iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.CLASS_NAME, "start-page__button")))
+        print('   квиз в баннере под хедером на главной МГ: OK')
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+    except:
+        print('ERROR: не загрузился квиз в баннере под хедером на главной МГ')
+except:
+    print('ERROR: что-то с кнопкой квиза в баннере под хедером на главной МГ')
+
+# блок первый баннер (первый экран) + видео
+try:
+    video_btn = driver.find_element(by=By.CLASS_NAME, value="w-main__video-wrapper")
+    actions.move_to_element(video_btn).click().perform()
+    try:
+        v_iframe = driver.find_element(by=By.XPATH, value="//iframe[@src='https://www.youtube.com/embed/HYCRL4TCeCA']")
+        driver.switch_to.frame(v_iframe)
+        wait(driver,20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button[aria-label="Смотреть"]')))
+        print('   видео на первом экране на главной МГ: OK')
+        driver.switch_to.default_content()
+        driver.find_element(by=By.XPATH, value='//button[(contains(@class, "uk-lightbox-toolbar-icon uk-close"))]').click()
+    except:
+        print('ERROR: не загрузилось видео на первом экране на главной МГ')
+except:
+    print('ERROR: что-то с кнопкой видео на первом экране на главной МГ')
+
+# блок "Проект МГ - это"
+try:
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]/div/div[1]//div[@class="w-descr__img"]//ul[@class="uk-slider-items"]').is_displayed()
+    print('   блок "Проект МГ - это": OK')
+except:
+    print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
 
 # блок "МГ - это" + видео в нём
 try:
     play_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-descr']//a/div[1]/img")
     actions.move_to_element(play_btn).perform()
-    mg_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a/div[1]/img')
-    print('   блок МГ - это: OK')
-    mg_btn.click()
+    play_btn.click()
     try:
         mg_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='uk-lightbox-iframe']")
         driver.switch_to.frame(mg_iframe)
@@ -123,19 +124,45 @@ try:
 except:
     print('ERROR: проблема с кнопкой видео в 1-й секции блока "МГ - это" на главной МГ')
 
+# блок "Проект МГ - это", раскрытие и сворачивание
+try:
+    driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Показать еще")]').click()
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').is_displayed()
+    driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').click()
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Показать еще")]').is_displayed()
+    print('   блок "Проект МГ - это", раскрытие/сворачивание: OK')
+except:
+    print('ERROR: проблема с раскрытием пунктов в "Проект МГ - это" на главной МГ')
+
 # блок "Ваши возможности на гектаре"
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Ваши возможности')]]")))
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]/ul/li[1]').is_displayed()
     print('   блок "Гектар под ваши цели": OK')
 except:
     print('ERROR: проблема с блоком "Ваши возможности на гектаре" на главной МГ')
 
-# блок "Лучшее время"
+# блок "Ваши возможности на гектаре" + открытие квиза
 try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
-    print('   блок "Лучшее время для покупки": OK')
+    m4_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]/ul/li[1]')
+    actions.move_to_element(m4_btn).click().perform()
+    m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+    driver.switch_to.frame(m_iframe)
+    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+    print('   квиз в "Ваши возможности" на главной МГ: OK')
+    driver.switch_to.default_content()
+    driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
 except:
-    print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
+    print('ERROR: не загрузился квиз в "Ваши возможности" на главной МГ')
+
+# блок "Ваши возможности на гектаре", раскрытие/сворачивание
+try:
+    driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').click()
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').is_displayed()
+    driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').click()
+    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').is_displayed()
+    print('   блок "Ваши возможности" на главной МГ, раскрытие/сворачивание: OK')
+except:
+    print('ERROR: проблема с раскрытием пунктов в "Ваши возможности" на главной МГ')
 
 # блок "Специальная цена"
 try:
@@ -149,6 +176,15 @@ try:
         print('ERROR: проблема с карточками СП на главной МГ')
 except (TimeoutException, NoSuchElementException, ElementNotVisibleException):
     print('ERROR: проблема с блоком "Специальная цена" на главной МГ')
+
+# блок "Специальная цена", переход в Каталог участков
+try:
+    driver.find_element(by=By.XPATH, value='//*[@id="catalogueSpecial"]//div[3]/a[contains(text(), "Перейти в каталог")]').click()
+    assert driver.find_element(by=By.CSS_SELECTOR, value='.uk-breadcrumb a[href="/batches"]')
+    driver.execute_script("window.history.go(-1)")
+    print('   блок Спеццена, переход в Каталог: OK')
+except:
+    print('ERROR: проблема с переходом в Каталог из блока "Специальная цена" на главной МГ')
 
 # блок "Лучшие посёлки"
 try:
@@ -183,6 +219,13 @@ try:
         print('ERROR: что-то с кнопкой в блоке "Виртуальный тур" на главной МГ')
 except:
     print('ERROR: проблема с блоком "Виртуальный тур" на главной МГ')
+
+# блок "Лучшее время"
+try:
+    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшее время')]]")))
+    print('   блок "Лучшее время для покупки": OK')
+except:
+    print('ERROR: проблема с блоком "Лучшее время для покупки" на главной МГ')
 
 # блок "Видео, которые"
 try:
@@ -322,7 +365,7 @@ except:
 
 # форма "Действуйте"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Действуйте')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Узнайте все')]]")))
     print('   форма "Действуйте": OK')
 except:
     print('ERROR: проблема с формой "Действуйте" на главной МГ')

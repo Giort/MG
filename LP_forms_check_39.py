@@ -40,7 +40,7 @@ driver.get("https://syn39.lp.moigektar.ru/")
 
 # модалка в хедере
 try:
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
     btn.click()
     name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="callbackform-name"]')))
@@ -55,7 +55,8 @@ except:
 
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:
-    time.sleep(2)
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//li[1]//button[text()[contains(., "Подобрать участок")]]')
     actions.move_to_element(btn).perform()
     btn.click()
@@ -72,7 +73,8 @@ except:
 
 # форма "Получите схему проезда"
 try:
-    time.sleep(2)
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     name = driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Получите схему")]]//parent::div//*[@id="consultationform-name"]')
     actions.move_to_element(name).perform()
     name.send_keys(str(data["test_data_valid"]["name"]))
@@ -87,7 +89,7 @@ except:
 # модалка в "Бизнес-планах"
 try:
     driver.refresh()
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Бизнес-планы")]]//parent::div//li[1]//*[text()[contains(., "Подробнее")]]')
     actions.move_to_element(btn).perform()
     btn.click()
@@ -119,7 +121,7 @@ except:
 # модалка в "Господдержке"
 try:
     driver.refresh()
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Господдержка для")]]//parent::div//*[text()[contains(., "подробнее")]]')
     actions.move_to_element(btn).perform()
     btn.click()

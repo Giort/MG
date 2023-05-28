@@ -66,7 +66,11 @@ try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
     print(' \ / syn_33: OK')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_33')
+    try:
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        print(' \ / syn_33: OK')
+    except:
+        print('ERROR (service_check): не дождался загрузки элемента на син_33')
 
 # 5. проверка syn_34 по видимости заголовка "Генеральный"
 driver.get("https://syn34.lp.moigektar.ru/")
@@ -82,7 +86,12 @@ try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
     print('  |  syn_37: OK')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_37')
+    try:
+        driver.refresh()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        print('  |  syn_37: OK')
+    except:
+        print('ERROR (service_check): не дождался загрузки элемента на син_37')
 
 # 7. проверка syn_53 по видимости заголовка "Генеральный"
 driver.get("https://syn53.lp.moigektar.ru/")
@@ -106,7 +115,12 @@ try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print('  |  vazuza2: OK')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на Вазузе')
+    try:
+        driver.refresh()
+        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        print('  |  vazuza2: OK')
+    except:
+        print('ERROR (service_check): не дождался загрузки элемента на Вазузе')
 
 # 10. проверка pay.moigektar по видимости заголовка "Платёжные сервисы"
 driver.get("https://pay.moigektar.ru/")

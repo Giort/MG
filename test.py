@@ -22,41 +22,30 @@ with open('data.json', 'r') as file:
     data = json.load(file)
 
 
-driver.get("https://moigektar.ru/batches?sortId=-special")
-# нужно зайти в окно фильтра и раскрыть дропдаун, иначе список не инициализируется
-driver.find_element(by=By.XPATH, value='//*[text()="Все фильтры"]').click()
-driver.find_element(by=By.XPATH, value='//*[@id="containerciw_w2"]//button').click()
-# узнать количество посёлков в списке
-list_len = len(driver.find_elements(by=By.XPATH, value="//li//input[@data-select-id='select_ciw_w2']//following-sibling::span[@class='uk-text-small']"))
-print('Всего посёлков в списке: ' + str(list_len))
-# получить названия всех посёлков, которые сейчас есть в списке, и создать список
-villages = []
-i = 1
-while i <= list_len:
-    village = driver.find_element(by=By.XPATH, value="//li//div[" + str(i) + "]/label/input[@data-select-id='select_ciw_w2']//following-sibling::span[@class='uk-text-small']").text
-    villages.append(village)
-    i += 1
 
-# закрыть окно фильтра
-driver.find_element(by=By.XPATH, value="//a//following-sibling::*[@href='#offcanvas-special-filter']").click()
+# 7 проверка раздела "Вакансии"
+# 7.1 переход на страницу "Вакансии"
+driver.get("https://moigektar.ru/hr")
+try:
+    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Оставьте анкету")]]//ancestor::div[2]').get_attribute('id')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+    try:
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
+        print(" OK: данные из вакансий были отправлены")
+    except:
+        print('ERROR: не отправлены данные в форму "Оставьте анкету" в "Вакансиях"')
+except:
+    print('ERROR: не могу найти форму "Оставьте анкету" в "Вакансиях"')
 
-# подставить последовательно в поле ввода все элементы списка и посмотреть, сколько есть участков СП для каждого посёлка
-n = 0
-while n < list_len:
-    inp_field = driver.find_element(by=By.XPATH, value="//form//*[(contains(@placeholder, 'Поиск по'))]")
-    inp_field.clear()
-    inp_field.send_keys(str(villages[n]))
-    time.sleep(4)
-    # подсчёт участков СП по атрибуту карточки "звёздочка".
-    # предполагается, что СП одного посёлка всегда помещаются на одной странице
-    sp_count = len(driver.find_elements(by=By.CSS_SELECTOR, value='span[uk-icon="star"]'))
-    if sp_count <= 2:
-        print('ERROR: ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
-    else:
-        print('       ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
-    n += 1
+# блок "Проект МГ - это"
+# try:
+#     assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]/div/div[1]//div[@class="w-descr__img"]//ul[@class="uk-slider-items"]').is_displayed()
+#     print('   блок "Проект МГ - это": OK')
+# except:
+#     print('ERROR: проблема с блоком "Проект МГ - это" на главной МГ')
 
 
-
-time.sleep(3)
+time.sleep(1)
 driver.quit()

@@ -49,7 +49,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
         try:
             successText = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
@@ -91,7 +94,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, открылась ли страница благодарности
         time.sleep(10)
         url = driver.current_url
@@ -131,7 +137,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
@@ -174,7 +183,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
@@ -220,7 +232,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, открылась ли страница благодарности
         time.sleep(10)
         url = driver.current_url
@@ -273,7 +288,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         time.sleep(3)
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
@@ -311,7 +329,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='special-offer-modal']//p[text()[contains(., 'Спасибо за заявку')]]")))
@@ -348,7 +369,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='special-offer-modal']//p[text()[contains(., 'Спасибо за заявку')]]")))
@@ -385,14 +409,13 @@ try:
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
-        time.sleep(1)
         name.send_keys(str(data["test_data_valid"]["name"]))
-        time.sleep(1)
         phone.send_keys(str(data["test_data_valid"]["phone"]))
-        time.sleep(1)
         email.send_keys(str(data["test_data_valid"]["email"]))
-        time.sleep(1)
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         driver.implicitly_wait(10)
         try:
@@ -430,6 +453,7 @@ except:
 #         name.send_keys(str(data["test_data_valid"]["name"]))
 #         phone.send_keys(str(data["test_data_valid"]["phone"]))
 #         email.send_keys(str(data["test_data_valid"]["email"]))
+#         time.sleep(2)
 #         submitBtn.click()
 #         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
 #         try:
@@ -469,7 +493,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
@@ -520,7 +547,7 @@ except:
 #         phone.send_keys(str(data["test_data_valid"]["phone"]))
 #         time.sleep(1)
 #         email.send_keys(str(data["test_data_valid"]["email"]))
-#         time.sleep(1)
+#         time.sleep(2)
 #         submitBtn.click()
 #         # 11.3 проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
 #         driver.implicitly_wait(10)
@@ -559,14 +586,13 @@ try:
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
-        time.sleep(1)
         name.send_keys(str(data["test_data_valid"]["name"]))
-        time.sleep(1)
         phone.send_keys(str(data["test_data_valid"]["phone"]))
-        time.sleep(1)
         email.send_keys(str(data["test_data_valid"]["email"]))
-        time.sleep(1)
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         driver.implicitly_wait(10)
         try:
@@ -606,7 +632,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
@@ -645,7 +674,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
@@ -682,14 +714,13 @@ try:
         phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
         email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
         submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
-        time.sleep(1)
         name.send_keys(str(data["test_data_valid"]["name"]))
-        time.sleep(1)
         phone.send_keys(str(data["test_data_valid"]["phone"]))
-        time.sleep(1)
         email.send_keys(str(data["test_data_valid"]["email"]))
-        time.sleep(1)
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         driver.implicitly_wait(10)
         try:
@@ -729,7 +760,10 @@ try:
         name.send_keys(str(data["test_data_valid"]["name"]))
         phone.send_keys(str(data["test_data_valid"]["phone"]))
         email.send_keys(str(data["test_data_valid"]["email"]))
-        submitBtn.click()
+        try:
+            submitBtn.click()
+        except:
+            submitBtn.click()
         # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
         try:
             successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))

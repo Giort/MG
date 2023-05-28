@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as wait
 import json
+import time
 from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
 driver.implicitly_wait(10)
@@ -23,30 +24,30 @@ with open('data.json', 'r') as file:
 # В лог выводится сообщение "ERROR", если окно не было открыто или не было найдено
 #
 
-
-# 1. проверка главной страницы "МГ"
 driver.get("https://moigektar.ru/")
 
+# 1. проверка главной страницы "МГ"
 print("Главная")
+
 # баннер над хедером и модалка в нём
-try:
-    driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
-    print('   OK: баннер над хедером')
-    try:
-        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-        driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-        driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//button[text()[contains(.,'Отправить заявку')]]").click()
-        try:
-            wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
-            print("   OK: главная, модалка в баннере над хедером")
-            driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
-        except:
-            print('ERROR: не отправлены данные в: главная, модалка в баннере над хедером')
-    except:
-        print('ERROR: не могу ввести данные в: главная, модалка в баннере над хедером')
-except:
-    print('ERROR: не могу взаимодействовать: главная, баннер над хедером')
+# try:
+#     driver.find_element(by=By.CLASS_NAME, value="w-banner").click()
+#     print('   OK: баннер над хедером')
+#     try:
+#         driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+#         driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+#         driver.find_element(by=By.CSS_SELECTOR, value="#modal-invest #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+#         driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']//button[text()[contains(.,'Отправить заявку')]]").click()
+#         try:
+#             wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-invest']//*[text()[contains(.,'Заявка отправлена')]]")))
+#             print("   OK: главная, модалка в баннере над хедером")
+#             driver.find_element(by=By.XPATH, value="//*[@id='modal-invest']/div/div/*[@uk-close]").click()
+#         except:
+#             print('ERROR: не отправлены данные в: главная, модалка в баннере над хедером')
+#     except:
+#         print('ERROR: не могу ввести данные в: главная, модалка в баннере над хедером')
+# except:
+#     print('ERROR: не могу взаимодействовать: главная, баннер над хедером')
 
 # модалка в блоке "Быстрый старт жизни на земле"
 # try:
@@ -56,7 +57,7 @@ except:
 #     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-consultation #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
 #     driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']//button[text()[contains(.,'Получить консультацию')]]").click()
 #     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-consultation']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-consultation']//*[text()[contains(.,'Заявка отправлена')]]")))
 #         print("   OK: главная, модалка в блоке Быстрый старт")
 #         driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-consultation']/div/div/*[@uk-close]").click()
 #     except:
@@ -72,7 +73,7 @@ except:
 #     driver.find_element(by=By.CSS_SELECTOR, value="#modal-save #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
 #     driver.find_element(by=By.XPATH, value="//*[@id='modal-save']//button[text()[contains(.,'Отправить заявку')]]").click()
 #     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-save']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-save']//*[text()[contains(.,'Заявка отправлена')]]")))
 #         print("   OK: главная, модалка в блоке Время вкладывать")
 #         driver.find_element(by=By.XPATH, value="//*[@id='modal-save']/div/div/*[@uk-close]").click()
 #     except:
@@ -88,7 +89,7 @@ except:
 #     driver.find_element(by=By.CSS_SELECTOR, value="#modal-batch-juridical #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
 #     driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']//button[text()[contains(.,'Отправить заявку')]]").click()
 #     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-batch-juridical']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-batch-juridical']//*[text()[contains(.,'Заявка отправлена')]]")))
 #         print("   OK: главная, модалка в блоке Почему нам доверяют")
 #         driver.find_element(by=By.XPATH, value="//*[@id='modal-batch-juridical']/div/div/*[@uk-close]").click()
 #     except:
@@ -104,7 +105,7 @@ except:
 #     driver.find_element(by=By.CSS_SELECTOR, value="#modal-center #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
 #     driver.find_element(by=By.XPATH, value="//*[@id='modal-center']//button[text()[contains(.,'Задать вопрос')]]").click()
 #     try:
-#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-center']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+#         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-center']//*[text()[contains(.,'Заявка отправлена')]]")))
 #         print("   OK: главная, модалка в блоке Центр правовой поддержки")
 #         driver.find_element(by=By.XPATH, value="//*[@id='modal-center']/div/div/*[@uk-close]").click()
 #     except:
@@ -114,13 +115,14 @@ except:
 
 # модалка в блоке "Бизнес-планы"
 try:
+    driver.refresh()
     driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Бизнес-планы')]]//parent::div/div/div//ul/li[1]//a").click()
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main']//button[text()[contains(.,'Отправить заявку')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: главная, модалка в блоке Бизнес-планы")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-main']/div/div/*[@uk-close]").click()
     except:
@@ -136,7 +138,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-meeting #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-meeting']//button[text()[contains(.,'Отправить заявку')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-meeting']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-meeting-meeting']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: главная, модалка в блоке Приглашаем на встречу\n")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-meeting-meeting']/div/div/*[@uk-close]").click()
     except:
@@ -157,7 +159,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main']//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Получить консультацию' в 'Развитие - Развитие поселка'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-main']/div/div/*[@uk-close]").click()
     except:
@@ -174,7 +176,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-calculation #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-calculation']//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-calculation']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-calculation']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Глазами инвестора'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-calculation']/div/div/*[@uk-close]").click()
     except:
@@ -190,7 +192,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-select #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-select']//button[text()[contains(.,'Подобрать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Подобрать участок' в 'Развитие - Глазами инвестора'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-select']/div/div/*[@uk-close]").click()
     except:
@@ -207,7 +209,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-capitalization #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-capitalization']//button[text()[contains(.,'Заказать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-capitalization']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-capitalization']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Капитализация'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-capitalization']/div/div/*[@uk-close]").click()
     except:
@@ -224,7 +226,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-select #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-select']//button[text()[contains(.,'Заказать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Базовая'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-select']/div/div/*[@uk-close]").click()
     except:
@@ -241,7 +243,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-select #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-select']//button[text()[contains(.,'Задать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Предприниматель'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-select']/div/div/*[@uk-close]").click()
     except:
@@ -258,7 +260,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-select #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-select']//button[text()[contains(.,'Получить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Фермер'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-select']/div/div/*[@uk-close]").click()
     except:
@@ -275,7 +277,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-select #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-select']//button[text()[contains(.,'Получить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-select']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Развитие - Фамильная'\n")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-select']/div/div/*[@uk-close]").click()
     except:
@@ -296,7 +298,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-specialist #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist']//button[text()[contains(.,'Заказать')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-specialist']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-specialist']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Заказать услугу' в 'Коллективное строительство ЛЭП'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist']/div/div/*[@uk-close]").click()
     except:
@@ -312,7 +314,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-specialist1 #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist1']//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-specialist1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-specialist1']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Получить консультацию' в 'Коллективное строительство ЛЭП'\n")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-specialist1']/div/div/*[@uk-close]\n").click()
     except:
@@ -333,7 +335,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main']//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Получить консультацию' в 'Бизнес-планы'\n")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-main']/div/div/*[@uk-close]").click()
     except:
@@ -353,7 +355,7 @@ try:
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main1 #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']//button[text()[contains(.,'Отправить')]]").click()
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка отправлена')]]")))
         print("   OK: модалка 'Оставьте анкету' в 'Вакансии'")
         driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
     except:
@@ -366,7 +368,7 @@ try:
     btn = driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Построй')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']")
     actions.move_to_element(btn).perform()
     btn.click()
-    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка отправлена')]]")))
     print("   OK: модалка 'Оставьте анкету' по первой красной кнопке в 'Вакансии'")
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
 except:
@@ -374,7 +376,7 @@ except:
 # проверка вызова этой мод. со второй кнопки "Запишитесь на собеседование"
 try:
     driver.find_element(by=By.XPATH, value="//h1[text()[contains(., 'Мы предлагаем')]]//parent::div//div[@class='uk-text-center@s']//*[@uk-toggle='target: #modal-main1']").click()
-    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка успешно отправлена')]]")))
+    wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='modal-main1']//*[text()[contains(.,'Заявка отправлена')]]")))
     print("   OK: модалка 'Оставьте анкету' по второй красной кнопке в 'Вакансии'")
     driver.find_element(by=By.XPATH, value="//*[@id='modal-main1']/div/div/*[@uk-close]").click()
 except:

@@ -52,7 +52,7 @@ driver.get("https://syn9.lp.moigektar.ru/")
 
 # квиз в хедере
 try:
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
     btn_1.click()
     m_frame = driver.find_element(by=By.XPATH, value='//iframe[@class="marquiz__frame marquiz__frame_open"]')
@@ -65,7 +65,7 @@ except:
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:
     driver.refresh()
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//li[1]//button[text()[contains(., "Подобрать участок")]]')
     actions.move_to_element(btn).perform()
     btn.click()
@@ -97,7 +97,7 @@ except:
 # модалка в "Бизнес-планах"
 try:
     driver.refresh()
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Бизнес-планы")]]//parent::div//li[1]//*[text()[contains(., "Подробнее")]]')
     actions.move_to_element(btn).perform()
     btn.click()
@@ -129,7 +129,7 @@ except:
 # модалка в "Господдержке"
 try:
     driver.refresh()
-    time.sleep(2)
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Господдержка для")]]//parent::div//*[text()[contains(., "подробнее")]]')
     actions.move_to_element(btn).perform()
     btn.click()

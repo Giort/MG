@@ -15,7 +15,7 @@ actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
 #driver.maximize_window()
-driver.set_window_size(1660, 1000)
+driver.set_window_size(1600, 1000)
 driver.implicitly_wait(10)
 
 
@@ -45,7 +45,8 @@ except:
 # syn_24
 try:
     driver.get("https://syn24.lp.moigektar.ru/")
-    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
+    tour_btn = wait(driver, 14).until(EC.element_to_be_clickable((By.ID, 'w-tour-play')))
+    time.sleep(2)
     tour_btn.click()
     iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
     driver.switch_to.frame(iframe)

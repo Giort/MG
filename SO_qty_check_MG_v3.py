@@ -42,7 +42,7 @@ while n < list_len:
     inp_field = driver.find_element(by=By.XPATH, value="//form//*[(contains(@placeholder, 'Поиск по'))]")
     inp_field.clear()
     inp_field.send_keys(str(villages[n]))
-    time.sleep(4)
+    time.sleep(8)
     # подсчёт участков СП по атрибуту карточки "звёздочка".
     # предполагается, что СП одного посёлка всегда помещаются на одной странице
     sp_count = len(driver.find_elements(by=By.CSS_SELECTOR, value='span[uk-icon="star"]'))
