@@ -132,7 +132,7 @@ except:
 
 # модалка в блоке "Приглашаем на встречу"
 try:
-    driver.find_element(by=By.XPATH, value="//*[@class='w-meeting']//a[text()[contains(.,'Записаться')]]//parent::div").click()
+    driver.find_element(by=By.XPATH, value="//*[@class='w-meeting']//a[text()[contains(.,'Записаться')]]//parent::div/a").click()
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-meeting #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-meeting #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-meeting-meeting #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))

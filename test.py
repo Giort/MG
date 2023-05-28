@@ -23,21 +23,48 @@ with open('data.json', 'r') as file:
 
 
 
-# 7 проверка раздела "Вакансии"
-# 7.1 переход на страницу "Вакансии"
-driver.get("https://moigektar.ru/hr")
-try:
-    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Оставьте анкету")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-name']").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+# проверка слайдера SOW на главной странице "МГ"
+count = 0
+driver.get("https://moigektar.ru/")
+while count < 3:
+    # проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
     try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: данные из вакансий были отправлены")
+        title = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_main_sow_title"]))
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+        btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "" + str(data["mg_loc"]["mg_main_sow_btn"]))))
+        print("   ОК: блок SOW на Главной МГ есть")
+        actions.move_to_element(btn).click(btn).perform()
+        time.sleep(3)
+        # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+        try:
+            name = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='buybatchform-username']")))
+            print('   OK: модаль SOW на главной МГ открылась')
+            phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+            email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
+            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
+            name.send_keys(str(data["test_data_valid"]["name"]))
+            phone.send_keys(str(data["test_data_valid"]["phone"]))
+            email.send_keys(str(data["test_data_valid"]["email"]))
+            time.sleep(1)
+            submitBtn.click()
+            # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
+            successText = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
+            print('   OK: заявка из SOW на главной МГ была отправлена')
+            if successText:
+                break
+        except:
+            count += 1
+            if count == 3:
+                print('ERROR: SOW на Главной МГ: модаль открылась, но заявка не отправлена')
+            else:
+                driver.refresh()
     except:
-        print('ERROR: не отправлены данные в форму "Оставьте анкету" в "Вакансиях"')
-except:
-    print('ERROR: не могу найти форму "Оставьте анкету" в "Вакансиях"')
+        count += 1
+        if count == 3:
+            print("ERROR: SOW на Главной МГ: не могу нажать кнопку на карточке СП")
+        else:
+            driver.refresh()
+
 
 # блок "Проект МГ - это"
 # try:
