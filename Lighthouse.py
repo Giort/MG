@@ -29,16 +29,12 @@ csv_file_des = join(relative_path, 'lighthouse_desktop_' + getdate + '.csv')
 
 ws_mob = wb1.active
 ws_des = wb2.active
+
 def last_row_mob(): return len(ws_mob['A'])
 def last_row_des(): return len(ws_des['A'])
 
 urls = [
-"https://www.enfluencive.com/collections/tricouri-topuri-barbati/products/tricou-urban-white",
-"https://www.enfluencive.com/collections/barbati/products/trening-urban-negru-barbati",
-"https://www.enfluencive.com/collections/barbati/products/hanorac-gri-barbati",
-"https://www.enfluencive.com/collections/barbati/products/sc",
-"https://www.enfluencive.com/collections/barbati/products/bcn?variant=39289170165921",
-"https://www.enfluencive.com/collections/barbati/products/cc",
+"https://moigektar.ru"
 ]
 
 base = { 1: 'First Run', 2: 'Second Run', 3: 'Third Run', 4: 'Fourth Run', 5: 'Fifth Run', 6: 'Sixth Run'}
@@ -57,6 +53,7 @@ for i in range(1, num_of_call+1):
 
 wb1.save(csv_file_mob)  ### save the results for mobile in an EXCEL FILE
 wb2.save(csv_file_des) ### save the results for desktop in an EXCEL FILE
+
 # performance - средневзвешенная оценка метрик
 # first contetntful paint - время, за которое пользователь увидит какое-то содержимое веб-страницы, например, текст
 # total blocking time - суммарное время абсолютно всех интервалов от первой отрисовки контента до полной загрузки страницы

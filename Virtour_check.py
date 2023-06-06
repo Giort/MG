@@ -186,7 +186,7 @@ try:
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 206'))]")))
     print('   OK: syn_84')
 except:
     print('ERROR: не загрузился виртур на син_84')

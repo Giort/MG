@@ -44,29 +44,29 @@ try:
     wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//li[@class='uk-active']/a[@href='/']")))
     print('   хедер: OK')
     # отключил, так как сейчас там модалка
-    # try:
-    #     m2_btn = driver.find_element(by=By.XPATH, value="//li/div/*[text()[contains(., 'Подобрать участок')]]")
-    #     actions.move_to_element(m2_btn).click().perform()
-    #     try:
-    #         m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-    #         driver.switch_to.frame(m_iframe)
-    #         wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-    #         print('   квиз в хедере на главной МГ: OK')
-    #         driver.switch_to.default_content()
-    #         driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-    #     except:
-    #         print('ERROR: не загрузился квиз в хедере на главной МГ')
-    # except:
-    #     print('ERROR: что-то с кнопкой квиз в хедере на главной МГ')
+    try:
+        m2_btn = driver.find_element(by=By.XPATH, value="//li/div/*[text()[contains(., 'Подобрать участок')]]")
+        actions.move_to_element(m2_btn).click().perform()
+        try:
+            m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
+            driver.switch_to.frame(m_iframe)
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
+            print('   квиз в хедере на главной МГ: OK')
+            driver.switch_to.default_content()
+            driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
+        except:
+            print('ERROR: не загрузился квиз в хедере на главной МГ')
+    except:
+        print('ERROR: что-то с кнопкой квиз в хедере на главной МГ')
 except:
     print('ERROR: проблема с хедером на главной МГ')
 
 # блок первый баннер (первый экран)
 try:
     wait(driver,14).until(EC.presence_of_element_located((By.CLASS_NAME, "w-main-bg")))
-    print('   баннер под хедером: OK')
+    print('   первый экран, фото: OK')
 except:
-    print('ERROR: проблема с баннером под хедером на главной МГ')
+    print('ERROR: проблема с первым экраном МГ')
 
 # блок первый баннер (первый экран) + квиз
 try:
