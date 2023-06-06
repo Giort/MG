@@ -86,6 +86,7 @@ except:
 
 # блок первый баннер (первый экран) + видео
 try:
+    driver.refresh()
     video_btn = driver.find_element(by=By.CLASS_NAME, value="w-main__video-wrapper")
     actions.move_to_element(video_btn).click().perform()
     try:

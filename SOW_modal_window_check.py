@@ -117,6 +117,16 @@ while count < 3:
 # проверка работы карточек SOW на странице Каталога участков
 count = 0
 driver.get("https://moigektar.ru/batches")
+
+# избавляемся от модалки
+if count == 0:
+    time.sleep(5)
+    driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
+    driver.find_element(by=By.XPATH, value="//*[@id='modal-auth-batches']//button[text()[contains(.,'Отправить заявку')]]").click()
+    time.sleep(2)
+
 while count < 3:
     # проверка, что есть кнопка на первой карточке участка
     try:
