@@ -32,57 +32,20 @@ with open('data.json', 'r') as file:
 # В этом списке выводится сообщение "ERROR" + количество СП, если СП у посёлка меньше 3
 #
 
-#driver.get("https://moigektar.ru/batches?sortId=-special")
-
-# временные изменения
-
-driver.get("https://moigektar.ru")
-
+# syn_84
 try:
-    link = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//li[3]/a[@href="/batches"]')))
-    if link:
-        actions.click(link).perform()
+    driver.get("https://syn84.lp.moigektar.ru/")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(6)
+    btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+    driver.switch_to.frame(iframe)
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 204'))]")))
+    print('   OK: syn_84')
 except:
-    driver.quit()
-
-driver.find_element(by=By.XPATH, value='//div[@class="special-filter-button-dropdown"]/a[@href="#filter-sort-by-modal"]//parent::div').click()
-driver.find_element(by=By.XPATH, value='//*[@id="desktop_sort_popup"]/div/div/div/div/div/div[1]').click()
-
-# конец
-
-# нужно зайти в окно фильтра и раскрыть дропдаун, иначе список не инициализируется
-driver.find_element(by=By.XPATH, value='//*[text()="Все фильтры"]').click()
-driver.find_element(by=By.XPATH, value='//*[@id="containerciw_w2"]//button').click()
-# узнать количество посёлков в списке
-list_len = len(driver.find_elements(by=By.XPATH, value="//li//input[@data-select-id='select_ciw_w2']//following-sibling::span[@class='uk-text-small']"))
-print('Всего посёлков в списке: ' + str(list_len))
-# получить названия всех посёлков, которые сейчас есть в списке, и создать список
-villages = []
-i = 1
-while i <= list_len:
-    village = driver.find_element(by=By.XPATH, value="//li//div[" + str(i) + "]/label/input[@data-select-id='select_ciw_w2']//following-sibling::span[@class='uk-text-small']").text
-    villages.append(village)
-    i += 1
-
-# закрыть окно фильтра
-driver.find_element(by=By.XPATH, value="//div[@class='uk-flex uk-flex-center uk-flex-middle uk-position-relative']/a//following-sibling::*[@href='#offcanvas-special-filter']").click()
-
-# подставить последовательно в поле ввода все элементы списка и посмотреть, сколько есть участков СП для каждого посёлка
-n = 0
-while n < list_len:
-    inp_field = driver.find_element(by=By.XPATH, value="//div[(contains(@uk-sticky, 'show-on-up'))]//*[(contains(@placeholder, 'Поиск по'))]")
-    inp_field.click()
-    inp_field.clear()
-    inp_field.send_keys(str(villages[n]))
-    time.sleep(20)
-    # подсчёт участков СП по атрибуту карточки - метке "Специальное предложение".
-    # предполагается, что СП одного посёлка всегда помещаются на одной странице (т. е. не больше 20 штук)
-    sp_count = len(driver.find_elements(by=By.XPATH, value='//*[text()[contains(., "Специальное предложение")]]'))
-    if sp_count <= 2:
-        print('ERROR: ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
-    else:
-        print('       ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
-    n += 1
+    print('ERROR: не загрузился виртур на син_84')
 
 
 time.sleep(1)

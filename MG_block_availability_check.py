@@ -102,6 +102,7 @@ except:
 
 # блок "Проект МГ - это"
 try:
+    driver.refresh()
     assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]/div/div[1]//div[@class="w-descr__img"]//ul[@class="uk-slider-items"]').is_displayed()
     print('   блок "Проект МГ - это": OK')
 except:
@@ -134,35 +135,22 @@ try:
 except:
     print('ERROR: проблема с раскрытием пунктов в "Проект МГ - это" на главной МГ')
 
-# блок "Ваши возможности на гектаре"
+# блок "Гектар под ваши цели"
 try:
     assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]/ul/li[1]').is_displayed()
     print('   блок "Гектар под ваши цели": OK')
 except:
-    print('ERROR: проблема с блоком "Ваши возможности на гектаре" на главной МГ')
+    print('ERROR: проблема с блоком "Гектар под ваши цели" на главной МГ')
 
-# блок "Ваши возможности на гектаре" + открытие квиза
-try:
-    m4_btn = driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]/ul/li[1]')
-    actions.move_to_element(m4_btn).click().perform()
-    m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
-    driver.switch_to.frame(m_iframe)
-    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
-    print('   квиз в "Ваши возможности" на главной МГ: OK')
-    driver.switch_to.default_content()
-    driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
-except:
-    print('ERROR: не загрузился квиз в "Ваши возможности" на главной МГ')
-
-# блок "Ваши возможности на гектаре", раскрытие/сворачивание
+# блок "Гектар под ваши цели", раскрытие/сворачивание
 try:
     driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').click()
     assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').is_displayed()
     driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').click()
     assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').is_displayed()
-    print('   блок "Ваши возможности" на главной МГ, раскрытие/сворачивание: OK')
+    print('   блок "Гектар под ваши цели" на главной МГ, раскрытие/сворачивание: OK')
 except:
-    print('ERROR: проблема с раскрытием пунктов в "Ваши возможности" на главной МГ')
+    print('ERROR: проблема с раскрытием пунктов в "Гектар под ваши цели" на главной МГ')
 
 # блок "Специальная цена"
 try:
@@ -209,7 +197,7 @@ try:
         try:
             iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='embed-responsive-item']")
             driver.switch_to.frame(iframe)
-            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 3101'))]")))
+            wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='krpanoSWFObject']//div[(contains(@style, 'z-index: 205'))]")))
             print('   блок "Виртуальный тур": тур загрузился, OK')
             driver.switch_to.default_content()
         except:
@@ -286,12 +274,12 @@ try:
 except:
     print('ERROR: проблема с блоком "Государственная поддержка" на главной МГ')
 
-# форма "Хотите узнать"
+# форма "Узнайте все подробности"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Хотите узнать ')]]")))
-    print('   форма "Хотите узнать подробнее": OK')
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Узнайте все подробности')]]")))
+    print('   форма "Узнайте все подробности": OK')
 except:
-    print('ERROR: проблема с формой "Хотите узнать подробнее о проекте?" на главной МГ')
+    print('ERROR: проблема с формой "Узнайте все подробности" на главной МГ')
 
 # блок "Варианты строительства"
 try:

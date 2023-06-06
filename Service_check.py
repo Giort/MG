@@ -22,10 +22,10 @@ driver.maximize_window()
 #
 
 
-# 1. проверка "МГ" по видимости заголовка "Ваши возможности" на главной
+# 1. проверка "МГ" по видимости заголовка "Гектар под ваши цели" на главной
 driver.get("https://moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Ваши возможности на гектаре')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
     print('  |  МГ: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на МГ')
