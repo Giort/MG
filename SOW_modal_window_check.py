@@ -316,8 +316,10 @@ driver.get("https://syn34.lp.moigektar.ru/")
 while count < 3:
     # проверка, что есть слайдер SOW, по наличию кнопки на карточке
     try:
-        btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//*[@data-slick-index='0']/div/div/div/div[2]/div[2]/div[2]/button")))
+        title = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Специальное')]]")
+        ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
         print("   ОК: блок SOW на странице син_34 есть")
+        btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
         actions.move_to_element(btn).click(btn).perform()
         time.sleep(3)
         # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
@@ -326,14 +328,14 @@ while count < 3:
             print('   OK: модаль SOW открылась')
             phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
             email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
-            submitBtn = driver.find_element(by=By.XPATH, value="//div[@id='special-offer-modal']//*[text()[contains(., 'Отправить заявку')]]")
+            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
             name.send_keys(str(data["test_data_valid"]["name"]))
             phone.send_keys(str(data["test_data_valid"]["phone"]))
             email.send_keys(str(data["test_data_valid"]["email"]))
             time.sleep(1)
             submitBtn.click()
             # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
-            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='special-offer-modal']//p[text()[contains(., 'Спасибо за заявку')]]")))
+            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
             print('   OK: заявка из SOW син_34 была отправлена')
             if successText:
                 break

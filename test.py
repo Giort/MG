@@ -23,24 +23,18 @@ with open('data.json', 'r') as file:
 
 
 
-driver.get("https://syn89.lp.moigektar.ru")
+#driver.get("https://moigektar.ru/")
 
-# модалка "Получить консультацию" в блоке "Зона интенсивного развития"
+# syn_34
 try:
-    time.sleep(2)
-    btn = driver.find_element(by=By.XPATH, value='//button[@uk-toggle="target: #modal-zir"]')
-    actions.move_to_element(btn).perform()
-    btn.click()
-    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="modal-zir"]//*[@id="consultationform-name"]')))
-    name.send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value='//*[@id="modal-zir"]//*[@id="consultationform-phone"]').send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value='//*[@id="modal-zir"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value='//*[@id="modal-zir"]//*[@type="submit"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="modal-zir"]//*[text()[contains(., "Заявка отправлена")]]')))
-    driver.find_element(by=By.XPATH, value='//*[@id="modal-zir"]/div/div/div[1]/button').click()
-    print('   OK: syn_89 модалка в блоке "Зона интенсивного развития"')
+    driver.get("https://syn34.lp.moigektar.ru/")
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+    actions.move_to_element(title).perform()
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+    print('   OK: syn_34')
 except:
-    print('ERROR: что-то не так с модалкой в блоке "Зона интенсивного развития" на син_89')
+    print('ERROR: не загрузился генплан на син_34')
 
 
 time.sleep(1)

@@ -66,12 +66,12 @@ except:
     print("ERROR: не получилось посчитать СП на странице син_33")
 
 
-# 4. подсчёт СП на син_34
+# подсчёт СП на син_34
 driver.get("https://syn34.lp.moigektar.ru/")
 try:
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//div[text()[contains(.,'Специальное')]]")))
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-special-slider-card div div div.slick-slide'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_34 Усадьба в подмосковье = " + str(SO_qty))
     else:

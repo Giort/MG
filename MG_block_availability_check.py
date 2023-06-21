@@ -87,6 +87,7 @@ except:
 # блок первый баннер (первый экран) + видео
 try:
     driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     video_btn = driver.find_element(by=By.CLASS_NAME, value="w-main__video-wrapper")
     actions.move_to_element(video_btn).click().perform()
     try:
@@ -94,8 +95,6 @@ try:
         driver.switch_to.frame(v_iframe)
         wait(driver,20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button[aria-label="Смотреть"]')))
         print('   видео на первом экране на главной МГ: OK')
-        driver.switch_to.default_content()
-        driver.find_element(by=By.XPATH, value='//button[(contains(@class, "uk-lightbox-toolbar-icon uk-close"))]').click()
     except:
         print('ERROR: не загрузилось видео на первом экране на главной МГ')
 except:
@@ -118,8 +117,6 @@ try:
         mg_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='uk-lightbox-iframe']")
         driver.switch_to.frame(mg_iframe)
         wait(driver,14).until(EC.presence_of_element_located((By.XPATH, '//*[@id="movie_player"]/div[4]/button')))
-        driver.switch_to.default_content()
-        driver.find_element(by=By.XPATH, value='//div[@style="z-index: 1011;"]//button').click()
         print('   видео в 1-й секции блока МГ - это: OK')
     except:
         print('ERROR: проблема с видео в 1-й секции блока "МГ - это" на главной МГ')
@@ -128,6 +125,7 @@ except:
 
 # блок "Проект МГ - это", раскрытие и сворачивание
 try:
+    driver.refresh()
     driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Показать еще")]').click()
     assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').is_displayed()
     driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').click()
@@ -177,10 +175,13 @@ except:
 
 # блок "Лучшие посёлки"
 try:
-    l_title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]")))
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    l_title = driver.find_element(by=By.XPATH, value='//h1[text()[contains(.,"Лучшие поселки")]]')
+    ActionChains(driver).move_to_element(l_title).send_keys(Keys.PAGE_DOWN).perform()
+    assert EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Лучшие поселки')]]"))
     print('   блок "Лучшие поселки": OK')
     try:
-        actions.move_to_element(l_title).send_keys(Keys.PAGE_DOWN).perform()
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='catalogue']//div[1]/div/div[1]//li[1]//button")))
         print('   карточки в Лучших посёлках на главной: OK')
     except:
@@ -232,20 +233,30 @@ except:
 
 # блок "СМИ о проекте"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'СМИ о проекте')]]")))
+    smi = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'СМИ о проекте')]]")
+    ActionChains(driver).move_to_element(smi).send_keys(Keys.PAGE_DOWN).perform()
+    assert EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'СМИ о проекте')]]"))
     print('   блок "СМИ о проекте": OK')
 except:
     print('ERROR: проблема с блоком "СМИ о проекте" на главной МГ')
 
 # блок "Развитие вашего участка"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Развитие вашего участка')]]")))
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    growth = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Развитие вашего участка')]]")
+    ActionChains(driver).move_to_element(growth).send_keys(Keys.PAGE_DOWN).perform()
+    assert EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Развитие вашего участка')]]"))
     print('   блок "Развитие вашего участка": OK')
 except:
     print('ERROR: проблема с блоком "Развитие вашего участка" на главной МГ')
 
 # блок "Сохраните свои"
 try:
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    save = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Сохраните свои')]]")
+    ActionChains(driver).move_to_element(save).send_keys(Keys.PAGE_DOWN).perform()
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Сохраните свои')]]")))
     print('   блок "Сохраните свои": OK')
 except:
@@ -253,16 +264,17 @@ except:
 
 # блок "Почему нам доверяют"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Почему нам')]]")))
+    why = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Почему нам')]]")
+    ActionChains(driver).move_to_element(why).send_keys(Keys.PAGE_DOWN).perform()
+    assert EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Почему нам')]]"))
     print('   блок "Почему нам доверяют": OK')
     try:
+        time.sleep(3)
         driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Почему нам доверяют')]]//parent::div//a[text()[contains(., 'Подобрать участок')]]").click()
         m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
         driver.switch_to.frame(m_iframe)
         wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='start']/div/div[2]/div[1]/button")))
         print('   квиз в "Почему нам доверяют": OK')
-        driver.switch_to.default_content()
-        driver.find_element(by=By.XPATH, value="//*[@id='marquiz__close']").click()
     except:
         print('ERROR: не загрузился квиз в "почему нам доверяют" на главной"')
 except:
@@ -270,6 +282,10 @@ except:
 
 # блок "Господдержка"
 try:
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    gos = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Государственная поддержка')]]")
+    ActionChains(driver).move_to_element(gos).send_keys(Keys.PAGE_DOWN).perform()
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Государственная поддержка')]]")))
     print('   блок "Государственная поддержка": OK')
 except:
@@ -310,9 +326,9 @@ try:
 except:
     print('ERROR: проблема с блоком "Бизнес-планы" на главной МГ')
 
-# блок "ЛК"
+# блок "Личный кабинет"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Личный кабинет')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="w-community-content"]/div[text()[contains(.,"Личный кабинет")]]')))
     print('   блок "Личный кабинет": OK')
 except:
     print('ERROR: проблема с блоком "Личный кабинет" на главной МГ')
