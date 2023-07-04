@@ -26,7 +26,7 @@ with open('data.json', 'r') as file:
 try:
     driver.get("https://pay.moigektar.ru/booking/home/index")
     driver.find_element(by=By.ID, value='select2-project-article-container').click()
-    driver.find_element(by=By.CSS_SELECTOR, value='span ul li:first-child').click()
+    driver.find_element(by=By.CSS_SELECTOR, value='span ul li:nth-child(2)').click()
     time.sleep(1)
     input = wait(driver,10).until(EC.visibility_of_element_located((By.ID, 'select2-homeredirectform-batcharticle-container')))
     input.click()

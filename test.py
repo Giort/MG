@@ -15,7 +15,7 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
-driver.set_window_size(1660, 1000)
+driver.set_window_size(1680, 1000)
 driver.implicitly_wait(10)
 
 with open('data.json', 'r') as file:
@@ -24,18 +24,16 @@ with open('data.json', 'r') as file:
 
 
 #driver.get("https://moigektar.ru/")
+#driver.get("https://syn67.lp.moigektar.ru/")
 
-# syn_34
+# 59. проверка syn_92 по наличию заголовка "Генеральный"
+driver.get("https://syn92.lp.moigektar.ru/")
 try:
-    driver.get("https://syn34.lp.moigektar.ru/")
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
-    actions.move_to_element(title).perform()
-    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
-    print('   OK: syn_34')
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+    print(' \ / syn_92: OK')
 except:
-    print('ERROR: не загрузился генплан на син_34')
+    print('ERROR (service_check): не дождался загрузки элемента на син_92')
 
 
-time.sleep(1)
+time.sleep(6)
 driver.quit()

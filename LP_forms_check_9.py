@@ -89,7 +89,7 @@ try:
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//div[text()[contains(., "Получите схему")]]//parent::div//*[text()[contains(., "Заявка отправлена")]]')))
     print('   OK: syn_9 форма "Получите схему проезда"')
 except:
-    print('ERROR: что-то не так с формой "Получите схему проезда" на син_89')
+    print('ERROR: что-то не так с формой "Получите схему проезда" на син_9')
 
 # модалка в "Бизнес-планах"
 try:

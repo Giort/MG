@@ -205,6 +205,18 @@ try:
 except:
     print("ERROR: не получилось посчитать СП на странице син_89")
 
+# 14. подсчёт СП на син_92
+driver.get("http://syn92.lp.moigektar.ru/")
+try:
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    if SO_qty >= 3:
+        print("   OK: количество СП на странице син_92 Долина озёр = " + str(SO_qty))
+    else:
+        print("ERROR: количество СП на странице син_92 Долина озёр = " + str(SO_qty))
+except:
+    print("ERROR: не получилось посчитать СП на странице син_92")
 
 time.sleep(1)
 driver.quit()

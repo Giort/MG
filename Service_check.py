@@ -503,7 +503,13 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
 
-
+# 59. проверка syn_92 по наличию заголовка "Генеральный"
+driver.get("https://syn92.lp.moigektar.ru/")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+    print(' \ / syn_92: OK')
+except:
+    print('ERROR (service_check): не дождался загрузки элемента на син_92')
 
 
 

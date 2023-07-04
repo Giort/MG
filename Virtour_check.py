@@ -185,7 +185,7 @@ try:
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
-    wait(driver, 25).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 204'))]")))
+    wait(driver, 25).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 182'))]")))
     print('   OK: syn_84')
 except:
     print('ERROR: не загрузился виртур на син_84')
@@ -246,7 +246,20 @@ try:
 except:
     print('ERROR: не загрузился виртур на син_89')
 
-
+# syn_92
+try:
+    driver.get("http://syn92.lp.moigektar.ru/")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(1)
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+    driver.switch_to.frame(iframe)
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 189'))]")))
+    print('   OK: syn_92')
+except:
+    print('ERROR: не загрузился виртур на син_92')
 
 
 time.sleep(5)

@@ -210,6 +210,17 @@ try:
 except:
     print('ERROR: не загрузился генплан на син_89')
 
+# syn_92
+try:
+    driver.get("http://syn92.lp.moigektar.ru/")
+    title = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'Генеральный')]]")
+    actions.move_to_element(title).perform()
+    time.sleep(3)
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+    print('   OK: syn_92')
+except:
+    print('ERROR: не загрузился генплан на син_92')
 
 time.sleep(5)
 driver.quit()
