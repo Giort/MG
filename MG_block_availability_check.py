@@ -342,7 +342,7 @@ except:
 
 # форма "Подпишитесь на рассылку"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Подпишитесь на рассылку')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Подпишитесь на рассылку')]]")))
     print('   форма "Подпишитесь на рассылку": OK')
 except:
     print('ERROR: проблема с формой "Подпишитесь на рассылку" на главной МГ')

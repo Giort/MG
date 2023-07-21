@@ -137,17 +137,17 @@ except:
 
 
 # подсчёт СП на син_67
-# driver.get("https://syn67.lp.moigektar.ru/")
-# try:
-#     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
-#     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-#     SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
-#     if SO_qty >= 3:
-#         print("   OK: количество СП на странице син_67 Мое поместье = " + str(SO_qty))
-#     else:
-#         print("ERROR: количество СП на странице син_67 Мое поместье = " + str(SO_qty))
-# except:
-#     print("ERROR: не получилось посчитать СП на странице син_67")
+driver.get("https://syn67.lp.moigektar.ru/")
+try:
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    if SO_qty >= 3:
+        print("   OK: количество СП на странице син_67 Мое поместье = " + str(SO_qty))
+    else:
+        print("ERROR: количество СП на странице син_67 Мое поместье = " + str(SO_qty))
+except:
+    print("ERROR: не получилось посчитать СП на странице син_67")
 
 
 # 10. подсчёт СП на син_84

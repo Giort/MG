@@ -33,15 +33,27 @@ with open('data.json', 'r') as file:
 #
 
 driver.get("https://moigektar.ru/batches?sortId=-special")
-
 # избавляемся от модалки
-time.sleep(5)
-driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
-driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
-driver.find_element(by=By.CSS_SELECTOR, value="#modal-auth-batches #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
-driver.find_element(by=By.XPATH, value="//*[@id='modal-auth-batches']//button[text()[contains(.,'Отправить заявку')]]").click()
-time.sleep(2)
+try:
+    time.sleep(6)
+    auth_win = driver.find_element(by=By.ID, value='modal-auth-batches')
+    driver.execute_script("""
+    var auth_win = arguments[0];
+    auth_win.remove();
+    """, auth_win)
+except:
+    print('ERROR: не получилось закрыть модалку авторизации в Каталоге участков')
 
+# избавляемся от квиза
+try:
+    time.sleep(180)
+    quiz = driver.find_element(by=By.CSS_SELECTOR, value='.marquiz__bg.marquiz__bg_open')
+    driver.execute_script("""
+    var quiz = arguments[0];
+    quiz.remove();
+    """, quiz)
+except:
+    print('ERROR: не получилось закрыть квиз в Каталоге участков')
 
 # нужно зайти в окно фильтра и раскрыть дропдаун, иначе список не инициализируется
 driver.find_element(by=By.XPATH, value='//*[text()="Все фильтры"]').click()
@@ -70,12 +82,15 @@ while n < list_len:
     time.sleep(5)
     # подсчёт участков СП по атрибуту карточки - метке "Специальное предложение".
     # предполагается, что СП одного посёлка всегда помещаются на одной странице (т. е. не больше 20 штук)
-    sp_count = len(driver.find_elements(by=By.XPATH, value='//*[text()[contains(., "Специальное предложение")]]'))
-    if sp_count <= 2:
-        print('ERROR: ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
+    sp_count = len(driver.find_elements(by=By.XPATH, value='//span[text()[contains(., "Специальное предложение")]]'))
+    if sp_count:
+        if sp_count <= 2:
+            print('ERROR: ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
+        else:
+            print('       ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
+        n += 1
     else:
-        print('       ' + str(villages[n]) + ': ' + str(sp_count) + ' СП')
-    n += 1
+        n += 1
 
 
 time.sleep(3)

@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(options= ch_options)
 from selenium.webdriver.common.by import By
@@ -507,7 +507,7 @@ except:
 driver.get("https://syn92.lp.moigektar.ru/")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_92: OK')
+    print('  |   syn_92: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_92')
 

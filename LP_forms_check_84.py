@@ -99,6 +99,23 @@ try:
 except:
     print('ERROR: что-то не так с модалкой в блоке "Категории участков" на син_84')
 
+# модалка "Узнать подробнее" в блоке "Посетите усадьбу"
+try:
+    time.sleep(2)
+    btn = driver.find_element(by=By.XPATH, value='//div[@class="uk-first-column"]/button[@uk-toggle="target: #modal-stay"]')
+    actions.move_to_element(btn).perform()
+    btn.click()
+    name = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="modal-stay"]//*[@id="consultationform-name"]')))
+    name.send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value='//*[@id="modal-stay"]//*[@id="consultationform-phone"]').send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value='//*[@id="modal-stay"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
+    driver.find_element(by=By.XPATH, value='//*[@id="modal-stay"]//*[@type="submit"]').click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="modal-stay"]//*[text()[contains(., "Заявка отправлена")]]')))
+    driver.find_element(by=By.XPATH, value='//*[@id="modal-stay"]/div/div/div/button').click()
+    print('   OK: syn_84 модалка в блоке "Посетите усадьбу"')
+except:
+    print('ERROR: что-то не так с модалкой в блоке "Посетите усадьбу" на син_84')
+
 # модалка "Получить консультацию" в блоке "Зона интенсивного развития"
 try:
     time.sleep(2)

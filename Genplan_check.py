@@ -111,10 +111,9 @@ except:
 # syn_48
 try:
     driver.get("https://syn48.lp.moigektar.ru/")
-    play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.CLASS_NAME, 'w-select-icon')))
-    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
-    time.sleep(5)
-    play_btn.click()
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+    actions.move_to_element(title).perform()
+    driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
     print('   OK: syn_48')
 except:

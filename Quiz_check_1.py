@@ -120,43 +120,33 @@ try:
     m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
     driver.switch_to.frame(m_iframe)
     driver.find_element(by=By.CLASS_NAME, value="start-page__button").click()
-    # 1. Тип поселка
+    # 1. Площадь участка
     time.sleep(2)
     check1 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check1.click()
-    driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-    # 2. Цели использования
+    # 2. Выберите цели использования
     time.sleep(2)
     check2 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check2.click()
     driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-    # 3. Направление
+    # 3. Выберите расположение участка
     time.sleep(2)
     check3 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check3.click()
-    # 4. Удаленность от МКАД
+    driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
+    # 4. Бюджет
     time.sleep(2)
     check4 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check4.click()
     driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-    # 5. Транспортная доступность
+    # 5. Когда планируете начать строительство?
     time.sleep(2)
     check5 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check5.click()
-    # 6. Площадь участка
+    # 6. Что интересно из досуга поселка?
     time.sleep(2)
     check6 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
     check6.click()
-    driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-    # 7. Выберите местность и окружение
-    time.sleep(2)
-    check7 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
-    check7.click()
-    driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-    # 8. Бюджет
-    time.sleep(2)
-    check8 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
-    check8.click()
     driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
     # заполнить поля ввода
     time.sleep(2)
@@ -171,10 +161,6 @@ try:
     print('   OK: syn_34 квиз в хедере')
 except:
     print('ERROR: квиз в хедере на syn_34')
-
-
-
-
 
 
 

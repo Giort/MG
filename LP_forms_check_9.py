@@ -54,10 +54,24 @@ try:
     btn_1.click()
     m_frame = driver.find_element(by=By.XPATH, value='//iframe[@class="marquiz__frame marquiz__frame_open"]')
     driver.switch_to.frame(m_frame)
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Ответьте на 6 вопросов')]]")))
+    btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='start']// button")))
+    btn_2.click()
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Площадь участка')]]")))
     print('   OK: syn_9 квиз в хедере')
 except:
-    print('ERROR: что-то не так с квизом в хедере на син_9')
+    try:
+        driver.refresh()
+        wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+        btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
+        btn_1.click()
+        m_frame = driver.find_element(by=By.XPATH, value='//iframe[@class="marquiz__frame marquiz__frame_open"]')
+        driver.switch_to.frame(m_frame)
+        btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='start']// button")))
+        btn_2.click()
+        wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Площадь участка')]]")))
+        print('   OK: syn_9 квиз в хедере')
+    except:
+        print('ERROR: что-то не так с квизом в хедере на син_9')
 
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:

@@ -24,32 +24,49 @@ driver.implicitly_wait(10)
 
 
 # syn_9
-try:
-    driver.get("https://syn9.lp.moigektar.ru/")
-    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
-    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    time.sleep(1)
-    btn = driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-tour__icon animated-fast"))]/img')
-    actions.click(btn).perform()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
-    driver.switch_to.frame(iframe)
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div/div/div[1]/div[2]")))
-    print('   OK: syn_9')
-except:
-    print('ERROR: не загрузился виртур на син_9')
+count = 0
+driver.get("https://syn9.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-tour__icon animated-fast"))]/img')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div/div/div[1]/div[2]")))
+        if elem:
+            print('   OK: syn_9')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_9')
+        else:
+            driver.refresh()
 
 # syn_24
-try:
-    driver.get("https://syn24.lp.moigektar.ru/")
-    tour_btn = wait(driver, 14).until(EC.element_to_be_clickable((By.ID, 'w-tour-play')))
-    time.sleep(2)
-    tour_btn.click()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
-    driver.switch_to.frame(iframe)
-    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-    print('   OK: syn_24')
-except:
-    print('ERROR: не загрузился виртур на син_24')
+count = 0
+driver.get("https://syn24.lp.moigektar.ru/")
+while count < 3:
+    try:
+        driver.get("https://syn24.lp.moigektar.ru/")
+        tour_btn = wait(driver, 14).until(EC.element_to_be_clickable((By.ID, 'w-tour-play')))
+        time.sleep(2)
+        tour_btn.click()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        if elem:
+            print('   OK: syn_24')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_24')
+        else:
+            driver.refresh()
 
 # syn_33
 try:
@@ -63,7 +80,7 @@ try:
 except:
     print('ERROR: не загрузился виртур на син_33')
 
-# syn_4
+# syn_34
 try:
     driver.get("https://syn34.lp.moigektar.ru/")
     title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
@@ -91,19 +108,27 @@ except:
     print('ERROR: не загрузился виртур на син_37')
 
 # syn_39
-try:
-    driver.get("https://syn39.lp.moigektar.ru/")
-    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
-    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
-    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
-    actions.click(btn).perform()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
-    driver.switch_to.frame(iframe)
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-    print('   OK: syn_39')
-except:
-    print('ERROR: не загрузился виртур на син_39')
+count = 0
+driver.get("https://syn39.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        if elem:
+            print('   OK: syn_39')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_39')
+        else:
+            driver.refresh()
 
 # syn_42
 try:
@@ -118,32 +143,19 @@ except:
     print('ERROR: не загрузился виртур на син_42')
 
 # syn_48
-# не получается переместиться к элементам обычным образом - таргет за пределами окна; не разобрался, пока что отложил
 try:
     driver.get("https://syn48.lp.moigektar.ru/")
-    i = 0
-    while i < 6:
-        actions.send_keys(Keys.PAGE_DOWN).perform()
-        time.sleep(1)
-        i += 1
-    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
-    actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
-    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 330'))]")))
     print('   OK: syn_48')
 except:
-    try:
-        driver.get("https://syn48.lp.moigektar.ru/")
-        time.sleep(1)
-        tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
-        actions.move_to_element(tour_btn).pause(1).click(tour_btn).perform()
-        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
-        driver.switch_to.frame(iframe)
-        wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-        print('   OK: syn_48')
-    except:
-        print('ERROR: не загрузился виртур на син_48')
+    print('ERROR: не загрузился виртур на син_48')
 
 # syn_53
 try:
@@ -151,7 +163,7 @@ try:
     title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
-    btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
@@ -181,7 +193,7 @@ try:
     title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(5)
-    btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
@@ -196,7 +208,7 @@ try:
     title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(1)
-    btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)
@@ -234,10 +246,10 @@ except:
 # syn_89
 try:
     driver.get("https://syn89.lp.moigektar.ru/")
-    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальные туры")]]')
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(1)
-    btn = driver.find_element(by=By.XPATH, value='//img[@class="w-tour__icon animated-fast"]')
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
     actions.click(btn).perform()
     iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
     driver.switch_to.frame(iframe)

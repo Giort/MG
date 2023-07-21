@@ -19,7 +19,7 @@
 
     "test_data_valid":
     {
-        "name" : "Селен Тестович",
+        "name" : "Селен Релизович",
         "phone" : "9127777777",
         "email" : "test@bugland.ru"
     },

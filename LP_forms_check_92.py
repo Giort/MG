@@ -56,10 +56,11 @@ try:
     driver.switch_to.frame(m_frame)
     btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='start']// button")))
     btn_2.click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Выберите цели')]]")))
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Тип поселка')]]")))
     print('   OK: syn_92 квиз в хедере')
 except:
     try:
+        driver.refresh()
         wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
         btn_1 = wait(driver, 14).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav > div > div > .btn-mquiz")))
         btn_1.click()
@@ -67,14 +68,15 @@ except:
         driver.switch_to.frame(m_frame)
         btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='start']// button")))
         btn_2.click()
-        wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Выберите цели')]]")))
+        wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Тип поселка')]]")))
         print('   OK: syn_92 квиз в хедере')
     except:
         print('ERROR: что-то не так с квизом в хедере на син_92')
 
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:
-    time.sleep(2)
+    driver.refresh()
+    wait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
     btn = driver.find_element(by=By.XPATH, value='//li[1]//button[text()[contains(., "Подобрать участок")]]')
     actions.move_to_element(btn).perform()
     btn.click()
