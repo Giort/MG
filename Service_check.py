@@ -487,7 +487,7 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на сервисе статей')
 
-# 57. проверка MT-3 по наличию заголовка "Генеральный"
+# 57. проверка syn_87 по наличию заголовка "Генеральный"
 driver.get("https://mt.lp.moigektar.ru/")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
@@ -495,7 +495,7 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_87')
 
-# 58. проверка "Бесконечных Знаний"" по наличию заголовка "Бесконечные знания"
+# 58. проверка "Бесконечных Знаний" по наличию заголовка "Бесконечные знания"
 driver.get("https://wiki.bug.land/login")
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
@@ -511,7 +511,21 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_92')
 
+# 60. проверка syn_99 по наличию заголовка "Генеральный"
+driver.get("https://syn99.lp.moigektar.ru/")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+    print('  |   syn_99: OK')
+except:
+    print('ERROR (service_check): не дождался загрузки элемента на син_99')
 
+# 61. проверка "Полевых работ" по наличию заголовка "Полевые работы"
+driver.get("https://fields.bigland.ru/site/login")
+try:
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
+    print(' / \ Полевые работы: OK')
+except:
+    print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
 
 #time.sleep(2)
 driver.quit()

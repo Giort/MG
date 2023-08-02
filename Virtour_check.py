@@ -96,16 +96,27 @@ except:
     print('ERROR: не загрузился виртур на син_34')
 
 # syn_37
-try:
-    driver.get("https://syn37.lp.moigektar.ru/")
-    tour_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-tour-play')))
-    tour_btn.click()
-    iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
-    driver.switch_to.frame(iframe)
-    wait(driver,20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-    print('   OK: syn_37')
-except:
-    print('ERROR: не загрузился виртур на син_37')
+count = 0
+driver.get("https://syn37.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        if elem:
+            print('   OK: syn_37')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_37')
+        else:
+            driver.refresh()
 
 # syn_39
 count = 0
@@ -273,6 +284,20 @@ try:
 except:
     print('ERROR: не загрузился виртур на син_92')
 
+# syn_99
+try:
+    driver.get("https://syn99.lp.moigektar.ru/")
+    title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+    actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(1) # без таймслип не работает, драйверВейт и пауза в экшнс не помогают
+    btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+    actions.click(btn).perform()
+    iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+    driver.switch_to.frame(iframe)
+    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 264'))]")))
+    print('   OK: syn_99')
+except:
+    print('ERROR: не загрузился виртур на син_99')
 
 time.sleep(5)
 driver.quit()
