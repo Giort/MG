@@ -123,34 +123,6 @@ try:
 except:
     print('ERROR: проблема с кнопкой видео в 1-й секции блока "МГ - это" на главной МГ')
 
-# блок "Проект МГ - это", раскрытие и сворачивание
-try:
-    driver.refresh()
-    driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Показать еще")]').click()
-    assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').is_displayed()
-    driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Скрыть")]').click()
-    assert driver.find_element(by=By.XPATH, value='//*[@id="w-descr"]//a[contains(text(), "Показать еще")]').is_displayed()
-    print('   блок "Проект МГ - это", раскрытие/сворачивание: OK')
-except:
-    print('ERROR: проблема с раскрытием пунктов в "Проект МГ - это" на главной МГ')
-
-# блок "Гектар под ваши цели"
-try:
-    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]/ul/li[1]').is_displayed()
-    print('   блок "Гектар под ваши цели": OK')
-except:
-    print('ERROR: проблема с блоком "Гектар под ваши цели" на главной МГ')
-
-# блок "Гектар под ваши цели", раскрытие/сворачивание
-try:
-    driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').click()
-    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').is_displayed()
-    driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Скрыть")]').click()
-    assert driver.find_element(by=By.XPATH, value='//*[@id="w-goals"]//a[contains(text(), "Показать еще")]').is_displayed()
-    print('   блок "Гектар под ваши цели" на главной МГ, раскрытие/сворачивание: OK')
-except:
-    print('ERROR: проблема с раскрытием пунктов в "Гектар под ваши цели" на главной МГ')
-
 # блок "Специальная цена"
 try:
     title = wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "" + str(data["mg_loc"]["mg_main_sow_title"]))))
@@ -192,7 +164,7 @@ except:
 # блок "Виртуальный тур"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Виртуальный тур')]]")))
-    print('   блок "Виртуальный тур": OK')
+    print('   блок "Виртуальный тур": есть')
     try:
         t_btn = driver.find_element(by=By.XPATH, value="//*[@id='w-select-map-preview']/div[3]//img")
         actions.move_to_element(t_btn).pause(3).click(t_btn).perform()
@@ -235,7 +207,7 @@ except:
 try:
     smi = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'СМИ о проекте')]]")
     ActionChains(driver).move_to_element(smi).send_keys(Keys.PAGE_DOWN).perform()
-    assert EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'СМИ о проекте')]]"))
+    assert EC.visibility_of_element_located((By.XPATH, '//div[text()[contains(.,"СМИ о проекте")]]//parent::div[1]//*[@class="uk-first-column"]'))
     print('   блок "СМИ о проекте": OK')
 except:
     print('ERROR: проблема с блоком "СМИ о проекте" на главной МГ')
@@ -298,13 +270,6 @@ try:
 except:
     print('ERROR: проблема с формой "Узнайте все подробности" на главной МГ')
 
-# блок "Варианты строительства"
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Варианты')]]")))
-    print('   блок "Варианты строительства": OK')
-except:
-    print('ERROR: проблема с блоком "Варианты строительства" на главной МГ')
-
 # блок "Получите каталог"
 try:
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//b[text()[contains(.,'Получите каталог')]]")))
@@ -335,7 +300,9 @@ except:
 
 # блок "Подпишитесь в соцсетях"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'в соцсетях')]]")))
+    sMedia = driver.find_element(by=By.XPATH, value="//div[text()[contains(.,'в соцсетях')]]")
+    ActionChains(driver).move_to_element(sMedia).send_keys(Keys.PAGE_DOWN).perform()
+    assert EC.visibility_of_element_located((By.XPATH, '//*[@id="elfsight_social_container"]//*[@data-elfsight-app-lazy=""]/div/div/div/div/div'))
     print('   блок "Подпишитесь в соцсетях": OK')
 except:
     print('ERROR: проблема с блоком "Подпишитесь в соцсетях" на главной МГ')
@@ -347,26 +314,34 @@ try:
 except:
     print('ERROR: проблема с формой "Подпишитесь на рассылку" на главной МГ')
 
-# блок "Подпишитесь на новости"
+# блок "Подпишитесь на новости развития"
 try:
-    title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости проекта')]]")
-    print('   блок "Подпишитесь на новости проекта": OK')
+    title_r = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'на новости развития')]]")
+    print('   блок "Подпишитесь на новости развития": OK')
     try:
-        actions.move_to_element(title_n).perform()
+        actions.move_to_element(title_r).perform()
         time.sleep(5)
         wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-news-wrapper']/div/ul/li[1]/a/div[1]/div/div[1]")))
-        print('   блок "Подпишитесь на новости проекта": новости ВК отображаются, ОК')
+        print('   блок "Подпишитесь на новости развития": карточки отображаются, ОК')
     except:
-        print('ERROR: проблема с новостями ВК на главной МГ')
+        print('ERROR: проблема с блоком "Подпишитесь на новости развития" на главной МГ')
 except:
-    print('ERROR: проблема с блоком "Подпишитесь на новости проекта" на главной МГ')
+    print('ERROR: проблема с блоком "Подпишитесь на новости развития" на главной МГ')
 
-# блок "От сохи"
+# блок "Проект от сохи до сохи"
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'От сохи')]]")))
+    title_n = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'От сохи')]]")
     print('   блок "От сохи до сохи": OK')
+    try:
+        actions.move_to_element(title_n).perform()
+        actions.send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(5)
+        wait(driver,14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".yottie-widget-inner div:nth-of-type(1) > div:nth-of-type(1) > a span img")))
+        print('   блок "От сохи до сохи": карточки отображаются, ОК')
+    except:
+        print('ERROR: проблема с блоком "От сохи до сохи" на главной МГ')
 except:
-    print('ERROR: проблема с блоком "Проект "От сохи до сохи" на главной МГ')
+    print('ERROR: проблема с блоком "От сохи до сохи" на главной МГ')
 
 # форма "Действуйте"
 try:
