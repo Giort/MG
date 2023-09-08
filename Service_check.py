@@ -45,7 +45,7 @@ except:
 # 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
 driver.get("https://cabinet.moigektar.ru/security/login")
 try:
-    btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Попробовать прямо сейчас!')]]")))
+    btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Войти в демо-версию')]]")))
     actions.move_to_element(btn).click(btn).perform()
     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()='Остаться в Демо-версии']")))
     print('  |  ЛК: ОК')
@@ -83,7 +83,7 @@ except:
 # 6. проверка syn_37 по видимости заголовка "Генеральный"
 driver.get("https://syn37.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print('  |  syn_37: OK')
 except:
     try:
@@ -362,13 +362,13 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_27')
 
-# 40. проверка syn_29 по видимости заголовка "Генеральный"
-driver.get("https://syn29.lp.moigektar.ru/")
+# 40. проверка "Полевых работ" по наличию заголовка "Полевые работы"
+driver.get("https://fields.bigland.ru/site/login")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_29: OK')
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
+    print(' \ / Полевые работы: OK')
 except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_29')
+    print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
 
 # 41. проверка syn_35 по видимости заголовка "Генеральный"
 driver.get("https://syn35.lp.moigektar.ru/")
@@ -410,7 +410,7 @@ except:
 # 46. проверка syn_48 по видимости заголовка "Генеральный"
 driver.get("https://syn48.lp.moigektar.ru/")
 try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Генеральный')]]")))
+    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
     print('  |  syn_48: OK')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_48')
@@ -519,13 +519,7 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_99')
 
-# 61. проверка "Полевых работ" по наличию заголовка "Полевые работы"
-driver.get("https://fields.bigland.ru/site/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
-    print(' / \ Полевые работы: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
+
 
 #time.sleep(2)
 driver.quit()

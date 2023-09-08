@@ -236,25 +236,6 @@ except:
     print('ERROR: не могу найти форму "Хотите узнать подробнее о проекте?" в "О проекте" - "Отзывы"')
 
 
-# проверка страницы "Каталог поселков"
-# переход на страницу "Каталог поселков"
-driver.get("https://moigektar.ru/catalogue")
-try:
-    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Хотите узнать")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
-    time.sleep(8)
-    url = driver.current_url
-    if url == 'https://moigektar.ru/thanks':
-        print(' OK: заявка из каталога отправлена, открылась страница благодарности')
-    else:
-        print('ERROR: не отправлены данные в форму "Хотите узнать подробнее о проекте?" в Каталоге')
-except NoSuchElementException:
-    print('ERROR: не могу найти форму "Хотите узнать подробнее о проекте?" в Каталоге')
-
-
 # 4 проверка раздела "Развитие"
 # 4.1 переход на страницу "Развитие - развитие поселков"
 driver.get("https://moigektar.ru/growth")
@@ -471,12 +452,11 @@ except:
 # 6.1 переход на страницу "Вопрос-ответ - подробности о проектах"
 driver.get("https://moigektar.ru/faq")
 try:
-    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Не нашли")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Оставьте ")]]//ancestor::div[5]').get_attribute('id')
     try:
+        driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+        driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+        driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
         print(" OK: данные из вопросов были отправлены")
     except:

@@ -29,11 +29,11 @@ driver.implicitly_wait(10)
 with open('data.json', 'r') as file:
     data = json.load(file)
 
-# проверка слайдера SOW на главной странице "МГ"
+# проверка виджета "Специальная цена" на главной странице "МГ"
 count = 0
 driver.get("https://moigektar.ru/")
 while count < 3:
-    # проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
+    # проверка, что есть кнопка на карточке участка в блоке "Специальная цена"
     try:
         title = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_main_sow_title"]))
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
@@ -71,62 +71,9 @@ while count < 3:
         else:
             driver.refresh()
 
-
-# проверка карточек в виджете SOW в Каталоге поселков
-count = 0
-driver.get("https://moigektar.ru/catalogue")
-while count < 3:
-    # избавляемся от модалки
-    try:
-        time.sleep(6)
-        auth_win = driver.find_element(by=By.ID, value='modal-auth-batches')
-        driver.execute_script("""
-        var auth_win = arguments[0];
-        auth_win.remove();
-        """, auth_win)
-    except:
-        print('ERROR: не получилось закрыть модалку авторизации в Каталоге посёлков')
-    # проверка, что есть кнопка на карточке участка в блоке "Тотальная распродажа"/"Специальное предложение"
-    try:
-        btn = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_catalog_country_sow_btn"]))
-        print("   ОК: блок SOW в Каталоге поселков есть")
-        actions.move_to_element(btn).click(btn).perform()
-        time.sleep(3)
-        # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-        try:
-            name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
-            print('   OK: модаль SOW открылась')
-            phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
-            email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
-            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
-            name.send_keys(str(data["test_data_valid"]["name"]))
-            phone.send_keys(str(data["test_data_valid"]["phone"]))
-            email.send_keys(str(data["test_data_valid"]["email"]))
-            time.sleep(1)
-            submitBtn.click()
-            # проверить, что заявка отправлена, по тому, открылась ли страница благодарности
-            time.sleep(7)
-            url = driver.current_url
-            if url == 'https://moigektar.ru/thanks':
-                print('   OK: заявка из SOW в Каталоге поселков отправлена, открылась страница благодарности')
-                break
-        except:
-            count += 1
-            if count == 3:
-                print('ERROR: SOW на странице Каталога поселков: модаль открылась, но заявка не отправлена')
-            else:
-                driver.refresh()
-    except:
-        count += 1
-        if count == 3:
-            print("ERROR: SOW на странице Каталога поселков: не могу нажать кнопку на карточке СП")
-        else:
-            driver.refresh()
-
-
 # проверка работы карточек SOW на странице Каталога участков
 count = 0
-driver.get("https://moigektar.ru/batches")
+driver.get("https://moigektar.ru/catalogue")
 while count < 3:
     # избавляемся от модалки
     try:
@@ -157,9 +104,13 @@ while count < 3:
             time.sleep(1)
             submitBtn.click()
             # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
-            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
-            print('   OK: заявка была отправлена')
-            if successText:
+            # successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
+            # print('   OK: заявка была отправлена')
+            # if successText:
+            time.sleep(7)
+            url = driver.current_url
+            if url == 'https://moigektar.ru/thanks':
+                print('   OK: заявка из SOW в Каталоге участков отправлена')
                 break
         except:
             count += 1
@@ -171,60 +122,6 @@ while count < 3:
         count += 1
         if count == 3:
             print("ERROR: SOW на странице Каталога участков: не могу нажать кнопку на карточке СП")
-        else:
-            driver.refresh()
-
-
-# проверка карточек дачных участков в Каталоге поселков
-count = 0
-driver.get("https://moigektar.ru/catalogue")
-while count < 3:
-    # избавляемся от модалки
-    try:
-        time.sleep(6)
-        auth_win = driver.find_element(by=By.ID, value='modal-auth-batches')
-        driver.execute_script("""
-        var auth_win = arguments[0];
-        auth_win.remove();
-        """, auth_win)
-    except:
-        print('ERROR: не получилось закрыть модалку авторизации в Каталоге участков')
-    # проверка, что есть кнопка на карточке участка в блоке "Дачные поселки"
-    try:
-        title = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(., 'Дачные участки')]]")))
-        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
-        btn = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_catalog_country_country_btn"]))
-        print("   ОК: блок Дачных в Каталоге поселков есть")
-        actions.move_to_element(btn).click(btn).perform()
-        time.sleep(3)
-        # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-        try:
-            name = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-username']")))
-            print('   OK: модаль SOW открылась')
-            phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
-            email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
-            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
-            name.send_keys(str(data["test_data_valid"]["name"]))
-            phone.send_keys(str(data["test_data_valid"]["phone"]))
-            email.send_keys(str(data["test_data_valid"]["email"]))
-            time.sleep(1)
-            submitBtn.click()
-            # проверить, что заявка отправлена, по тому, открылась ли страница благодарности
-            time.sleep(7)
-            url = driver.current_url
-            if url == 'https://moigektar.ru/thanks':
-                print('   OK: заявка из Дачных в Каталоге поселков отправлена, открылась страница благодарности')
-                break
-        except:
-            count += 1
-            if count == 3:
-                print('ERROR: Дачные на странице Каталога поселков: модаль открылась, но заявка не отправлена')
-            else:
-                driver.refresh()
-    except:
-        count += 1
-        if count == 3:
-            print("ERROR: Дачные на странице Каталога поселков: не могу нажать кнопку на карточке СП")
         else:
             driver.refresh()
 
