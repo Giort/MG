@@ -317,7 +317,8 @@ print("Бизнес-планы")
 # модалка 'Получить консультацию' в 'Бизнес-планы' на первой карточке
 try:
     driver.get("https://moigektar.ru/business-plans")
-    driver.find_element(by=By.XPATH, value="//div[@data-key='1']//*[@uk-toggle='target: #modal-main']").click()
+    btn = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//div[@data-key='1']//*[@uk-toggle='target: #modal-main']")))
+    btn.click()
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))
@@ -337,7 +338,8 @@ print("Вакансии")
 # модалка 'Оставьте анкету' в 'Вакансии'
 try:
     driver.get("https://moigektar.ru/hr")
-    driver.find_element(by=By.XPATH, value="//div/div[1]/div/div/div/*[@uk-toggle='target: #modal-main1']").click()
+    btn = wait(driver, 14).until(EC.element_to_be_clickable((By.XPATH, "//div/div[1]/div/div/div/*[@uk-toggle='target: #modal-main1']")))
+    btn.click()
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main1 #consultationform-name").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main1 #consultationform-phone").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.CSS_SELECTOR, value="#modal-main1 #consultationform-email").send_keys(str(data["test_data_valid"]["email"]))

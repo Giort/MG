@@ -52,11 +52,6 @@ while count < 3:
         time.sleep(2)
         check5 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check5.click()
-        # 6. Что интересно из досуга поселка?
-        time.sleep(2)
-        check6 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
-        check6.click()
-        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
         # заполнить поля ввода
         time.sleep(2)
         name = wait(driver,15).until(EC.element_to_be_clickable((By.ID, 'name')))

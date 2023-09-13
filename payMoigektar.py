@@ -110,5 +110,5 @@ try:
 except:
     print('ERROR: страница оплаты')
 
-time.sleep(10)
+time.sleep(3)
 driver.quit()
