@@ -24,11 +24,19 @@ driver.maximize_window()
 
 # 1. проверка "МГ" по видимости заголовка "Гектар под ваши цели" на главной
 driver.get("https://moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
-    print('  |  МГ: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на МГ')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
+        if elem:
+            print(' \ / МГ: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на МГ')
+        else:
+            driver.refresh()
 
 
 # 54. проверка сервиса генерации опросов по наличию поля "Логин"
@@ -36,11 +44,19 @@ except:
 # выбран в качестве селектора для сервиса опросов
 # опять эта странная проблема с actionchains
 driver.get("https://polls.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div/section/div/div/div/h1")))
-    print('  |  сервис генерации опросов: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на сервисе генерации опросов')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div/section/div/div/div/h1")))
+        if elem:
+            print('  |  сервис генерации опросов: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сервисе генерации опросов')
+        else:
+            driver.refresh()
 
 # 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
 driver.get("https://cabinet.moigektar.ru/security/login")
@@ -54,305 +70,579 @@ except:
 
 # 3. проверка syn_9 по видимости заголовка "Генеральный"
 driver.get("https://syn9.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_9: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_9')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_9: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_9')
+        else:
+            driver.refresh()
 
 # 4. проверка syn_33 по видимости заголовка "Генеральный"
 driver.get("https://syn33.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_33: OK')
-except:
+count = 0
+while count < 3:
     try:
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-        print(' \ / syn_33: OK')
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' \ / syn_33: OK')
+            break
     except:
-        print('ERROR (service_check): не дождался загрузки элемента на син_33')
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_33')
+        else:
+            driver.refresh()
 
 # 5. проверка syn_34 по видимости заголовка "Генеральный"
 driver.get("https://syn34.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_34: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_34')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_34: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_34')
+        else:
+            driver.refresh()
 
 # 6. проверка syn_37 по видимости заголовка "Генеральный"
 driver.get("https://syn37.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_37: OK')
-except:
+count = 0
+while count < 3:
     try:
-        driver.refresh()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-        print('  |  syn_37: OK')
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_37: OK')
+            break
     except:
-        print('ERROR (service_check): не дождался загрузки элемента на син_37')
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_37')
+        else:
+            driver.refresh()
 
 # 7. проверка syn_53 по видимости заголовка "Генеральный"
 driver.get("https://syn53.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_53: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_53')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_53: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_53')
+        else:
+            driver.refresh()
 
 # 8. проверка syn_67 по видимости заголовка "Генеральный"
 driver.get("https://syn67.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_67: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_67')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' \ / syn_67: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_67')
+        else:
+            driver.refresh()
 
 # 9. проверка vazuza2 по видимости заголовка "Генеральный"
 driver.get("https://vazuza2.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  vazuza2: OK')
-except:
+count = 0
+while count < 3:
     try:
-        driver.refresh()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-        print('  |  vazuza2: OK')
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  vazuza2: OK')
+            break
     except:
-        print('ERROR (service_check): не дождался загрузки элемента на Вазузе')
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Вазузе')
+        else:
+            driver.refresh()
 
 # 10. проверка pay.moigektar по видимости заголовка "Платёжные сервисы"
 driver.get("https://pay.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Платежные сервисы')]]")))
-    print('  |  pay.moigektar: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Платёжных сервисах')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Платежные сервисы')]]")))
+        if elem:
+            print('  |  pay.moigektar: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Платёжных сервисах')
+        else:
+            driver.refresh()
 
 # 11. проверка сервиса "Вынос границ" по наличию заголовка "Вынос границ участка"
 driver.get("https://points.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ВЫНОС ГРАНИЦ')]]")))
-    print(' / \ Вынос границ: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Выносе границ')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ВЫНОС ГРАНИЦ')]]")))
+        if elem:
+            print(' / \ Вынос границ: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Выносе границ')
+        else:
+            driver.refresh()
 
 # 12. проверка сервиса "Инвестиции" по наличию заголовка "Инвестиции"
 driver.get("https://investment.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Инвестиции')]]")))
-    print(' \ / Инвестиции: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Инвестициях')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Инвестиции')]]")))
+        if elem:
+            print(' \ / Инвестиции: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Инвестициях')
+        else:
+            driver.refresh()
 
 # 13. проверка сервиса "Комплекс услуг" по наличию заголовка "Комплекс услуг"
 driver.get("https://complex.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'комплекс услуг')]]")))
-    print('  |  Комплекс услуг: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Комплексе услуг')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'комплекс услуг')]]")))
+        if elem:
+            print('  |  Комплекс услуг: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Комплексе услуг')
+        else:
+            driver.refresh()
 
 # 14. проверка сервиса "Кооперативы" по наличию заголовка "Вступайте в кооператив"
 driver.get("https://cooperative.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Вступайте')]]")))
-    print('  |  Кооперативы: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Кооперативах')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Вступайте')]]")))
+        if elem:
+            print('  |  Кооперативы: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Кооперативах')
+        else:
+            driver.refresh()
 
 # 15. проверка сервиса "Правовая поддержка" по наличию заголовка "Центр правовой поддержки"
 driver.get("https://law.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'центр правовой поддержки')]]")))
-    print(' / \ Правовая поддержка: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Правовой поддержке')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'центр правовой поддержки')]]")))
+        if elem:
+            print(' / \ Правовая поддержка: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Правовой поддержке')
+        else:
+            driver.refresh()
 
 # 16. проверка сервиса "Разработка проекта" по наличию заголовка "Этапы работы по онлайн-показам"
 driver.get("https://planning.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ЭТАПЫ РАБОТЫ')]]")))
-    print(' \ / Разработка проекта: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Разработке проекта')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ЭТАПЫ РАБОТЫ')]]")))
+        if elem:
+            print(' \ / Разработка проекта: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Разработке проекта')
+        else:
+            driver.refresh()
 
 # 17. проверка сервиса "Расчистка участка" по наличию заголовка "Расчистка участка"
 driver.get("https://clearance.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'РАСЧИСТКА УЧАСТКА')]]")))
-    print('  |  Расчистка участка: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Расчистке участка')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'РАСЧИСТКА УЧАСТКА')]]")))
+        if elem:
+            print('  |  Расчистка участка: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Расчистке участка')
+        else:
+            driver.refresh()
 
 # 18. проверка сервиса "Строительство въездной группы" по наличию заголовка "Коллективное строительство"
 driver.get("http://syn9.entrance.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Коллективное')]]")))
-    print('  |  Строительство въездной группы: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Въездной группе')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Коллективное')]]")))
+        if elem:
+            print('  |  Строительство въездной группы: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Въездной группе')
+        else:
+            driver.refresh()
 
 # 19. проверка сервиса "Строительство дорог" по наличию заголовка "Коллективное строительство"
 driver.get("https://syn23.roads.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'КОЛЛЕКТИВНОЕ')]]")))
-    print(' / \ Строительство дорог: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Строительстве дорог')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'КОЛЛЕКТИВНОЕ')]]")))
+        if elem:
+            print(' / \ Строительство дорог: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Строительстве дорог')
+        else:
+            driver.refresh()
 
 # 20. проверка сервиса "Строительство центрального дома" по наличию заголовка "Коллективное строительство"
 driver.get("https://house.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное строительство')]]")))
-    print(' \ / Строительство центрального дома: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Строительстве центрального дома')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное строительство')]]")))
+        if elem:
+            print(' \ / Строительство центрального дома: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Строительстве центрального дома')
+        else:
+            driver.refresh()
 
 # 21. проверка сервиса "Установка видеонаблюдения" по наличию заголовка "Установка видеонаблюдения"
 driver.get("https://barrier.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'установка видеонаблюдения')]]")))
-    print('  |  Установка видеонаблюдения: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Установке видеонаблюдения')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'установка видеонаблюдения')]]")))
+        if elem:
+            print('  |  Установка видеонаблюдения: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Установке видеонаблюдения')
+        else:
+            driver.refresh()
 
 # 22. проверка сервиса "Электрификация" по наличию заголовка "Коллективное строительство"
 driver.get("https://syn9.electrification.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное')]]")))
-    print('  |  Электрификация: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Электрификации')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное')]]")))
+        if elem:
+            print('  |  Электрификация: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Электрификации')
+        else:
+            driver.refresh()
 
 # 23. проверка сервиса "GIS" по наличию заголовка "Login"
 driver.get("https://gis.bigland.ru/site/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
-    print(' / \ GIS: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на ГИС')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
+        if elem:
+            print(' / \ GIS: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на ГИС')
+        else:
+            driver.refresh()
 
 # 24. проверка сервиса генерации КП по наличию заголовка "Сервис генерации КП"
 driver.get("https://offers.bigland.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Сервис генерации КП')]]")))
-    print(' \ / Сервис генерации КП: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Генерации КП')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Сервис генерации КП')]]")))
+        if elem:
+            print(' \ / Сервис генерации КП: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Генерации КП')
+        else:
+            driver.refresh()
 
-# 25. проверка syn_6 по видимости заголовка "Выбрать участок"
-driver.get("https://syn6.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Выбрать участок')]]")))
-    print('  |  syn_6: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_6')
+# 25. проверка syn_99 по наличию заголовка "Генеральный"
+driver.get("https://syn99.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_99: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_99')
+        else:
+            driver.refresh()
 
 # 26. проверка syn_11 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn11.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-    print('  |  syn_11: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_11')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
+        if elem:
+            print('  |  syn_11: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_11')
+        else:
+            driver.refresh()
 
 # 27. проверка syn_12 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn12.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-    print(' / \ syn_12: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_12')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
+        if elem:
+            print(' / \ syn_12: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_12')
+        else:
+            driver.refresh()
 
-# 28. проверка syn_13 по видимости заголовка "Выберите поселок"
-driver.get("https://syn13.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'Выберите поселок')]]")))
-    print(' \ / syn_13: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_13')
+# 28. проверка syn_6 по видимости заголовка "Выбрать участок"
+driver.get("https://syn6.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Выбрать участок')]]")))
+        if elem:
+            print(' \ / syn_6: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_6')
+        else:
+            driver.refresh()
 
 # 29. проверка syn_14 по видимости заголовка "Интерактивный"
 driver.get("https://syn14.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-    print('  |  syn_14: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_14')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
+        if elem:
+            print('  |  syn_14: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_14')
+        else:
+            driver.refresh()
 
 # 30. проверка syn_15 по видимости заголовка "Виртуальные туры"
 driver.get("https://syn15.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные туры')]]")))
-    print('  |  syn_15: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_15')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные туры')]]")))
+        if elem:
+            print('  |  syn_15: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_15')
+        else:
+            driver.refresh()
 
 # 31. проверка syn_16 по видимости заголовка "Интерактивный выбор"
 driver.get("https://syn16.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-    print(' / \ syn_16: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_16')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
+        if elem:
+            print(' / \ syn_16: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_16')
+        else:
+            driver.refresh()
 
 # 32. проверка syn_17 по видимости заголовка "Виртуальные туры"
 driver.get("https://syn17.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные')]]")))
-    print(' \ / syn_17: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_17')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные')]]")))
+        if elem:
+            print(' \ / syn_17: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_17')
+        else:
+            driver.refresh()
 
 # 33. проверка syn_18 по видимости заголовка "Интерактивный"
 driver.get("https://syn18.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-    print('  |  syn_18: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_18')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
+        if elem:
+            print('  |  syn_18: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_18')
+        else:
+            driver.refresh()
 
 # 34. проверка syn_19 по видимости заголовка "Генеральный"
 driver.get("https://syn19.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_19: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_19')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_19: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_19')
+        else:
+            driver.refresh()
 
 # 35. проверка syn_21 по видимости заголовка "Генеральный"
 driver.get("https://syn21.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_21: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_21')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_21: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_21')
+        else:
+            driver.refresh()
 
 # 36. проверка syn_22 по видимости заголовка "Генеральный"
 driver.get("https://syn22.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_22: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_22')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' \ / syn_22: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_22')
+        else:
+            driver.refresh()
 
 # 37. проверка syn_23 по видимости заголовка "Генеральный"
 driver.get("https://syn23.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_23: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_23')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_23: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_23')
+        else:
+            driver.refresh()
 
 # 38. проверка syn_24 по видимости заголовка "Генеральный"
 driver.get("https://syn24.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_24: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_24')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_23: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_24')
+        else:
+            driver.refresh()
 
 # 39. проверка syn_27 по видимости заголовка "Забронировать"
 driver.get("https://syn27.lp.moigektar.ru/")
@@ -364,160 +654,294 @@ except:
 
 # 40. проверка "Полевых работ" по наличию заголовка "Полевые работы"
 driver.get("https://fields.bigland.ru/site/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
-    print(' \ / Полевые работы: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
+        if elem:
+            print(' \ / Полевые работы: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
+        else:
+            driver.refresh()
 
 # 41. проверка syn_35 по видимости заголовка "Генеральный"
 driver.get("https://syn35.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_35: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_35')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_35: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_35')
+        else:
+            driver.refresh()
 
 # 42. проверка syn_36 по видимости заголовка "Генеральный"
 driver.get("https://syn36.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_36: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_36')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_36: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_36')
+        else:
+            driver.refresh()
 
 # 44. проверка syn_39 по видимости заголовка "Генеральный"
 driver.get("https://syn39.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_39: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_39')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_39: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_39')
+        else:
+            driver.refresh()
 
 # 45. проверка syn_42 по видимости заголовка "Генеральный"
 driver.get("https://syn42.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_42: OK')
-except:
+count = 0
+while count < 3:
     try:
-        driver.refresh()
-        wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-        print(' \ / syn_42: OK')
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' \ / syn_42: OK')
+            break
     except:
-        print('ERROR (service_check): не дождался загрузки элемента на син_42')
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_42')
+        else:
+            driver.refresh()
 
 # 46. проверка syn_48 по видимости заголовка "Генеральный"
 driver.get("https://syn48.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_48: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_48')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_48: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_48')
+        else:
+            driver.refresh()
 
 # 47. проверка syn_58 по видимости заголовка "Забронировать"
 driver.get("https://syn58.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
-    print('  |  syn_58: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_58')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
+        if elem:
+            print('  |  syn_58: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_58')
+        else:
+            driver.refresh()
 
 # 48. проверка syn_61 по видимости заголовка "Генеральный"
 driver.get("https://syn61.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_61: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_61')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_61: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_61')
+        else:
+            driver.refresh()
 
 # 49. проверка сервиса редактирования дорог по наличию заголовка "Login"
 driver.get("https://editor.roads.bigland.ru/site/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
-    print(' \ / Сервис дорог: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на Сервисе дорог')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
+        if elem:
+            print(' \ / Сервис дорог: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Сервисе дорог')
+        else:
+            driver.refresh()
 
 # 50. проверка syn_85 по наличию заголовка "Генеральный"
 driver.get("https://syn85.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_85: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_85')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_85: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_85')
+        else:
+            driver.refresh()
 
 # 51. проверка syn_84 по наличию заголовка "Генеральный"
 driver.get("https://syn84.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |  syn_84: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_84')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_84: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_84')
+        else:
+            driver.refresh()
 
 # 52. проверка syn_8 по наличию заголовка "Генеральный"
 driver.get("https://syn8.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_8: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_8')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_8: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_8')
+        else:
+            driver.refresh()
 
 # 53. проверка syn_89 по наличию заголовка "Генеральный"
 driver.get("https://syn89.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' \ / syn_89: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_89')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' \ / syn_89: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_89')
+        else:
+            driver.refresh()
 
 # 55. проверка сервиса по работе с портал ТП по наличию поля "Логин"
 driver.get("https://electrification.bigland.ru/site/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginparams-username']")))
-    print('  |  сервис по работе с портал ТП: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на сервисе по работе с портал ТП')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginparams-username']")))
+        if elem:
+            print('  |  сервис по работе с портал ТП: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сервисе по работе с портал ТП')
+        else:
+            driver.refresh()
+
 
 # 56. проверка сервиса статей по наличию поля "Логин"
 driver.get("https://a.bigland.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginform-username']")))
-    print('  |   сервис статей: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на сервисе статей')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginform-username']")))
+        if elem:
+            print('  |  сервис статей: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сервисе статей')
+        else:
+            driver.refresh()
 
 # 57. проверка syn_87 по наличию заголовка "Генеральный"
 driver.get("https://mt.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print(' / \ syn_87: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_87')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print(' / \ syn_87: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_92')
+        else:
+            driver.refresh()
 
 # 58. проверка "Бесконечных Знаний" по наличию заголовка "Бесконечные знания"
 driver.get("https://wiki.bug.land/login")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
-    print(' \ / Бесконечные Знания: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
+        if elem:
+            print(' \ / Бесконечные Знания: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
+        else:
+            driver.refresh()
 
 # 59. проверка syn_92 по наличию заголовка "Генеральный"
 driver.get("https://syn92.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |   syn_92: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_92')
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        if elem:
+            print('  |  syn_92: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_92')
+        else:
+            driver.refresh()
 
-# 60. проверка syn_99 по наличию заголовка "Генеральный"
-driver.get("https://syn99.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
-    print('  |   syn_99: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_99')
+
 
 
 

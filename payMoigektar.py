@@ -30,7 +30,7 @@ try:
     time.sleep(1)
     input = wait(driver,10).until(EC.visibility_of_element_located((By.ID, 'select2-homeredirectform-batcharticle-container')))
     input.click()
-    batch = wait(driver,10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'span ul li:nth-child(5)')))
+    batch = wait(driver,10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'span ul li:nth-child(7)')))
     batch.click()
     driver.find_element(by=By.TAG_NAME, value='button').click()
     print('    ОК: страница выбора участка')

@@ -70,7 +70,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в баннере над хедером в МГ')
+            print('ERROR (quiz_check): квиз в баннере над хедером в МГ')
         else:
             driver.refresh()
 
@@ -125,7 +125,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в хедере на syn_9')
+            print('ERROR (quiz_check): квиз в хедере на syn_9')
         else:
             driver.refresh()
 
@@ -162,11 +162,6 @@ while count < 3:
         time.sleep(2)
         check5 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check5.click()
-        # 6. Что интересно из досуга поселка?
-        time.sleep(2)
-        check6 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
-        check6.click()
-        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
         # заполнить поля ввода
         time.sleep(2)
         name = wait(driver,15).until(EC.element_to_be_clickable((By.ID, 'name')))
@@ -183,7 +178,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в хедере на syn_34')
+            print('ERROR (quiz_check): квиз в хедере на syn_34')
         else:
             driver.refresh()
 

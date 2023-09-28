@@ -198,19 +198,19 @@ while count < 3:
 # vazuza2
 try:
     driver.get("https://vazuza2.lp.moigektar.ru/")
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@id="select-b"]/div[1]')))
     actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(3)
     driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
-    wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
+    wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
     print('   OK: vazuza2')
 except:
     try:
         driver.refresh()
-        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@id="select-b"]/div[1]')))
         driver.find_element(by=By.XPATH, value='//img[@data-src="/img/vazuza/select/overlay-touch.png"]').click()
         time.sleep(3)
-        wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//canvas[4]')))
+        wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         print('   OK: vazuza2')
     except:
         print('ERROR: не загрузился генплан на Вазузе')

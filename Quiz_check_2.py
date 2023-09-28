@@ -69,7 +69,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в хедере на syn_37')
+            print('ERROR (quiz_check): квиз в хедере на syn_37')
         else:
             driver.refresh()
 
@@ -123,7 +123,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в хедере на syn_53')
+            print('ERROR (quiz_check): квиз в хедере на syn_53')
         else:
             driver.refresh()
 
@@ -182,7 +182,7 @@ while count < 3:
     except:
         count += 1
         if count == 3:
-            print('ERROR: квиз в хедере на syn_67')
+            print('ERROR (quiz_check): квиз в хедере на syn_67')
         else:
             driver.refresh()
 

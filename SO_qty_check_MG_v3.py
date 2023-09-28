@@ -50,12 +50,6 @@ try:
     var quiz = arguments[0];
     quiz.remove();
     """, quiz)
-    # time.sleep(180)
-    # quiz = driver.find_element(by=By.CSS_SELECTOR, value='.marquiz__bg.marquiz__bg_open')
-    # driver.execute_script("""
-    # var quiz = arguments[0];
-    # quiz.remove();
-    # """, quiz)
 except:
     print('ERROR: не получилось удалить квиз в Каталоге участков')
 
@@ -67,12 +61,6 @@ try:
     var roi = arguments[0];
     roi.remove();
     """, roi)
-    # time.sleep(180)
-    # quiz = driver.find_element(by=By.CSS_SELECTOR, value='.marquiz__bg.marquiz__bg_open')
-    # driver.execute_script("""
-    # var quiz = arguments[0];
-    # quiz.remove();
-    # """, quiz)
 except:
     print('ERROR: не получилось удалить модалку роистат в Каталоге участков')
 
@@ -91,6 +79,7 @@ while i <= list_len:
     villages.append(village)
     i += 1
 
+print(villages)
 # закрыть окно фильтра
 driver.find_element(by=By.XPATH, value="//div[@class='uk-flex uk-flex-center uk-flex-middle uk-position-relative']/a//following-sibling::*[@href='#offcanvas-special-filter']").click()
 

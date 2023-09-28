@@ -470,7 +470,8 @@ except:
 driver.get("https://moigektar.ru/hr")
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Оставьте анкету")]]//ancestor::div[2]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    name = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='"+ form_id +"']//*[@id='hrform-name']")))
+    name.send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='hrform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
