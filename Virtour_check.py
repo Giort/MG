@@ -1,3 +1,4 @@
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
@@ -146,7 +147,7 @@ while count < 3:
         actions.click(btn).perform()
         iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
         driver.switch_to.frame(iframe)
-        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 267'))]")))
         if elem:
             print('   OK: syn_39')
             break
@@ -162,10 +163,12 @@ count = 0
 driver.get("https://syn42.lp.moigektar.ru/")
 while count < 3:
     try:
-        btn = driver.find_element(by=By.ID, value='w-tour-play')
-        actions.move_to_element(btn).perform()
+        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
         actions.click(btn).perform()
-        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
         driver.switch_to.frame(iframe)
         elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
         if elem:

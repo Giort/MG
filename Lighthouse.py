@@ -1,5 +1,5 @@
 # https://medium.com/@olimpiuseulean/use-python-to-automate-google-lighthouse-reports-and-keep-a-historical-record-of-these-65f378325d64
-
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()

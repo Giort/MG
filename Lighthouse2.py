@@ -1,5 +1,5 @@
 # https://importsem.com/use-python-to-automate-lighthouse-reports/
-
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()

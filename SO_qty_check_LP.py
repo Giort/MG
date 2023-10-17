@@ -1,3 +1,4 @@
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
@@ -71,7 +72,7 @@ driver.get("https://syn34.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_34 Усадьба в подмосковье = " + str(SO_qty))
     else:
@@ -79,34 +80,18 @@ try:
 except:
     print("ERROR: не получилось посчитать СП на странице син_34")
 
-
-# подсчёт СП на син_56
-driver.get("https://syn37.lp.moigektar.ru/")
-try:
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
-    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
-    if SO_qty >= 3:
-        print("   OK: количество СП на странице син_56 Усадьба на Волге = " + str(SO_qty))
-    else:
-        print("ERROR: количество СП на странице син_56 Усадьба на Волге = " + str(SO_qty))
-except:
-    print("ERROR: не получилось посчитать СП на странице син_56")
-
-
 # подсчёт СП на син_39
 driver.get("https://syn39.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_39 Лесная усадьба = " + str(SO_qty))
     else:
         print("ERROR: количество СП на странице син_39 Лесная усадьба = " + str(SO_qty))
 except:
     print("ERROR: не получилось посчитать СП на странице син_39")
-
 
 # 8. подсчёт СП на син_42
 # driver.get("https://syn42.lp.moigektar.ru/")
@@ -121,25 +106,12 @@ except:
 # except:
 #     print("ERROR: не получилось посчитать СП на странице син_42")
 
-# подсчёт СП на син_97
-driver.get("https://syn48.lp.moigektar.ru/")
-try:
-    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
-    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
-    if SO_qty >= 3:
-        print("   OK: количество СП на странице син_97 Парк Патриот = " + str(SO_qty))
-    else:
-        print("ERROR: количество СП на странице син_97 Парк Патриот = " + str(SO_qty))
-except:
-    print("ERROR: не получилось посчитать СП на странице син_97")
-
 # 9. подсчёт СП на син_53
 driver.get("https://syn53.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_53 Новая жизнь = " + str(SO_qty))
     else:
@@ -147,13 +119,25 @@ try:
 except:
     print("ERROR: не получилось посчитать СП на странице син_53")
 
+# подсчёт СП на син_56
+driver.get("https://syn37.lp.moigektar.ru/")
+try:
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
+    if SO_qty >= 3:
+        print("   OK: количество СП на странице син_56 Усадьба на Волге = " + str(SO_qty))
+    else:
+        print("ERROR: количество СП на странице син_56 Усадьба на Волге = " + str(SO_qty))
+except:
+    print("ERROR: не получилось посчитать СП на странице син_56")
 
 # подсчёт СП на син_67
 driver.get("https://syn67.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_67 Мое поместье = " + str(SO_qty))
     else:
@@ -167,7 +151,7 @@ driver.get("https://syn84.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_84 Малая родина = " + str(SO_qty))
     else:
@@ -181,7 +165,7 @@ driver.get("https://syn85.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_85 Междуречье = " + str(SO_qty))
     else:
@@ -195,7 +179,7 @@ driver.get("https://syn87.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_87 Москва Тверская = " + str(SO_qty))
     else:
@@ -209,7 +193,7 @@ driver.get("https://syn89.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_89 Долина озёр = " + str(SO_qty))
     else:
@@ -222,7 +206,7 @@ driver.get("http://syn92.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_92 Долина озёр = " + str(SO_qty))
     else:
@@ -230,12 +214,25 @@ try:
 except:
     print("ERROR: не получилось посчитать СП на странице син_92")
 
+# подсчёт СП на син_97
+driver.get("https://syn48.lp.moigektar.ru/")
+try:
+    title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
+    ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
+    if SO_qty >= 3:
+        print("   OK: количество СП на странице син_97 Парк Патриот = " + str(SO_qty))
+    else:
+        print("ERROR: количество СП на странице син_97 Парк Патриот = " + str(SO_qty))
+except:
+    print("ERROR: не получилось посчитать СП на странице син_97")
+
 # подсчёт СП на син_99
 driver.get("https://syn99.lp.moigektar.ru/")
 try:
     title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, "//h1[text()[contains(.,'Специальное')]]")))
     ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
-    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.card-special > li'))
+    SO_qty = len(driver.find_elements(by=By.CSS_SELECTOR, value='.w-catalog-projects ul.uk-grid > li'))
     if SO_qty >= 3:
         print("   OK: количество СП на странице син_99 Лесные озера = " + str(SO_qty))
     else:

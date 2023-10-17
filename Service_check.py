@@ -1,3 +1,4 @@
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
@@ -721,7 +722,7 @@ driver.get("https://syn42.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
         if elem:
             print(' \ / syn_42: OK')
             break

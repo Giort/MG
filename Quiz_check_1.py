@@ -1,3 +1,4 @@
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
@@ -27,32 +28,32 @@ driver.get("https://moigektar.ru/")
 while count < 3:
     try:
         wait(driver, 30).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-        driver.find_element(by=By.XPATH, value="//*[@id='main']/a//img").click()
+        driver.find_element(by=By.XPATH, value="//*[@id='main']/div/a//img").click()
         m_iframe = driver.find_element(by=By.XPATH, value="//iframe[@class='marquiz__frame marquiz__frame_open']")
         driver.switch_to.frame(m_iframe)
         driver.find_element(by=By.CLASS_NAME, value="start-page__button").click()
-        # 1. Расскажите, для чего хотите ...
+        # 1. Площадь участка
         check1 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check1.click()
-        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-        # 2. Выберите бюджет
+        # 2. Выберите цели использования
         time.sleep(2)
         check2 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check2.click()
         driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
-        # 3. Площадь участка
+        # 3. Выберите расположение участка
         time.sleep(2)
         check3 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check3.click()
-        # 4. Какую локацию вы бы предпочли ...
+        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
+        # 4. Бюджет
         time.sleep(2)
         check4 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check4.click()
+        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
         # Когда планируете начать строительство?
         time.sleep(2)
         check5 = wait(driver,15).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'div[data-element-index="0"]')))
         check5.click()
-        driver.find_element(by=By.CLASS_NAME, value="quiz-navbar__button_next-text").click()
         # заполнить поля ввода
         time.sleep(2)
         name = wait(driver,15).until(EC.element_to_be_clickable((By.ID, 'name')))

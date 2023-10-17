@@ -1,3 +1,4 @@
+import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
@@ -120,7 +121,7 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
     print('   OK: syn_34 модалка в "Бизнес-планах"')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/button').click()
 except:
     print('ERROR: что-то не так с модалкой в "Бизнес-планах" на син_34')
 
@@ -152,7 +153,7 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
     print('   OK: syn_34 модалка в "Господдержке"')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/div/button').click()
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/button').click()
 except:
     print('ERROR: что-то не так с модалкой в "Господдержке" на син_34')
 
@@ -170,7 +171,7 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
     print('   OK: syn_34 модалка в "Сохраните сбережения"')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]/div/div/div/button').click()
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]/div/div/button').click()
 except:
     print('ERROR: что-то не так с модалкой в "Сохраните сбережения" на син_34')
 
@@ -187,7 +188,7 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-uk-form uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
     print('   OK: syn_34 модалка в "Не упусти свой шанс"')
-    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]/div/div/div/button').click()
+    driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]/div/div/button').click()
 except:
     print('ERROR: что-то не так с модалкой в "Не упусти свой шанс" на син_34')
 
