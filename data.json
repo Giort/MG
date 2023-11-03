@@ -6,20 +6,18 @@
         "mg_main_sow_title" : "Блок 'Специальная цена', заголовок",
                             "mg_main_sow_title" : "//h1[text()[contains(.,'Специальная цена')]]",
         "mg_main_sow_btn" : "Блок 'Специальная цена', кнопка на первой карточке",
-                            "mg_main_sow_btn" : "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button",
-        "mg_catalog_sow_title" : "Блок 'Специальная цена' в Каталоге посёлков, заголовок",
-                            "mg_catalog_sow_title" : "//h1[text()[contains(.,'Специальное предложение')]]",
-        "mg_catalog_country_sow_btn" : "Блок 'Специальная цена' в Каталоге посёлков, кнопка на первой карточке",
-                            "mg_catalog_country_sow_btn" : "//*[text()[contains(., 'Специальное предложение')]]//parent::div//ul/li[1]//div/button",
-        "mg_catalog_country_country_btn" : "Блок 'Дачные участки' в Каталоге посёлков, кнопка на первой карточке",
-                            "mg_catalog_country_country_btn" : "//*[text()[contains(., 'Дачные ')]]//parent::div//ul/li[1]//div/button",
+                            "mg_main_sow_btn" : "//div[@id='catalogueSpecial']/descendant::*[text()[contains(., \"Узнать больше\")]][1]",
         "mg_catalog_plot_btn" : "Карточки в Каталоге участков, кнопка на первой карточке",
-                            "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]"
+                            "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]",
+        "mg_cur_release_1" : "кука для текущего релиза А/Б-теста",
+                            "mg_cur_release_1" : "/?mg_20231024_15=version_1",
+        "mg_cur_release_2" : "кука для текущего релиза А/Б-теста",
+                            "mg_cur_release_2" : "/?mg_20231024_15=version_2"
     },
 
     "test_data_valid":
     {
-        "name" : "Селен Релизович",
+        "name" : "Селен Вечерний",
         "phone" : "9127777777",
         "email" : "test@bugland.ru"
     },

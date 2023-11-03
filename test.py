@@ -31,50 +31,50 @@ with open('data.json', 'r') as file:
 
 
 #driver.get("https://moigektar.ru/")
-#driver.get("https://syn37.lp.moigektar.ru/")
+#driver.get("https://syn84.lp.moigektar.ru/")
 
 
-# проверка спецпредложений на син_42
+# проверка виджета "Специальная цена" на главной странице "МГ"
 count = 0
-driver.get("https://syn42.lp.moigektar.ru/")
+driver.get("https://moigektar.ru/")
 while count < 3:
-    # проверка, что есть слайдер SOW, по наличию кнопки на карточке
+    # проверка, что есть кнопка на карточке участка в блоке "Специальная цена"
     try:
-        btn = wait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")))
-        print("   ОК: блок SOW на странице син_42 есть")
+        title = driver.find_element(by=By.XPATH, value="" + str(data["mg_loc"]["mg_main_sow_title"]))
+        actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+        btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "" + str(data["mg_loc"]["mg_main_sow_btn"]))))
+        print("   ОК: блок SOW на Главной МГ есть")
         actions.move_to_element(btn).click(btn).perform()
         time.sleep(3)
         # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
         try:
-            name = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-name']")
+            name = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@class, 'w-modal-description'))]//input[@id='buybatchform-username']")))
             print('   OK: модаль SOW открылась')
-            phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
-            email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
-            submitBtn = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-name']//ancestor::form//*[text()[contains(., 'Отправить заявку')]]")
+            phone = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-userphonenumber']")
+            email = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//input[@id='buybatchform-useremail']")
+            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description uk-modal uk-open']//form/div/button[@type='submit']")
             name.send_keys(str(data["test_data_valid"]["name"]))
             phone.send_keys(str(data["test_data_valid"]["phone"]))
             email.send_keys(str(data["test_data_valid"]["email"]))
             time.sleep(1)
             submitBtn.click()
-            # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
-            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']//ancestor::form//*[text()[contains(., 'Заявка отправлена')]]")))
-            print('   OK: заявка из SOW син_42 была отправлена')
+            # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Выберите дату визита"
+            successText = wait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Выберите дату визита')]]")))
+            print('   OK: заявка из SOW на главной МГ была отправлена')
             if successText:
                 break
         except:
             count += 1
             if count == 3:
-                print('ERROR: SOW на син_42: модаль открылась, но заявка не отправлена')
+                print('ERROR: SOW на Главной МГ: модаль открылась, но заявка не отправлена')
             else:
                 driver.refresh()
     except:
         count += 1
         if count == 3:
-            print("ERROR: SOW на син_42: не могу нажать кнопку на карточке СП")
+            print("ERROR: SOW на Главной МГ: не могу нажать кнопку на карточке СП")
         else:
             driver.refresh()
-
-
 
 
 time.sleep(5)

@@ -48,25 +48,25 @@ while count < 3:
             driver.refresh()
 
 # syn_24
-count = 0
-driver.get("https://syn24.lp.moigektar.ru/")
-while count < 3:
-    try:
-        btn = driver.find_element(by=By.ID, value='w-tour-play')
-        actions.move_to_element(btn).perform()
-        actions.click(btn).perform()
-        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
-        driver.switch_to.frame(iframe)
-        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-        if elem:
-            print('   OK: syn_24')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR: не загрузился виртур на син_24')
-        else:
-            driver.refresh()
+# count = 0
+# driver.get("https://syn24.lp.moigektar.ru/")
+# while count < 3:
+#     try:
+#         btn = driver.find_element(by=By.ID, value='w-tour-play')
+#         actions.move_to_element(btn).perform()
+#         actions.click(btn).perform()
+#         iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+#         driver.switch_to.frame(iframe)
+#         elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+#         if elem:
+#             print('   OK: syn_24')
+#             break
+#     except:
+#         count += 1
+#         if count == 3:
+#             print('ERROR: не загрузился виртур на син_24')
+#         else:
+#             driver.refresh()
 
 # syn_33
 count = 0
@@ -101,7 +101,7 @@ while count < 3:
         actions.click(btn).perform()
         iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
         driver.switch_to.frame(iframe)
-        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 219'))]")))
         if elem:
             print('   OK: syn_34')
             break

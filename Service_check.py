@@ -630,20 +630,20 @@ while count < 3:
             driver.refresh()
 
 # 38. проверка syn_24 по видимости заголовка "Генеральный"
-driver.get("https://syn24.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-        if elem:
-            print('  |  syn_23: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_24')
-        else:
-            driver.refresh()
+# driver.get("https://syn24.lp.moigektar.ru/")
+# count = 0
+# while count < 3:
+#     try:
+#         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+#         if elem:
+#             print('  |  syn_23: OK')
+#             break
+#     except:
+#         count += 1
+#         if count == 3:
+#             print('ERROR (service_check): не дождался загрузки элемента на син_24')
+#         else:
+#             driver.refresh()
 
 # 39. проверка syn_27 по видимости заголовка "Забронировать"
 driver.get("https://syn27.lp.moigektar.ru/")

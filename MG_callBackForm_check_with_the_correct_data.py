@@ -28,42 +28,26 @@ with open('data.json', 'r') as file:
 
 
 # 1. проверка главной страницы "МГ"
-driver.get("https://moigektar.ru/")
-# 1.1 проверка формы "Оставьте заявку", Снежанна
+driver.get("http://moigektar.ru")
+# 1.1 проверка формы "Оставьте заявку", Снежанна[1]
 try:
-    title = driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Снежанна')]]")
+    title = driver.find_element(by=By.XPATH, value="/descendant::*[text()[contains(.,'Снежанна')]][1]")
     actions.move_to_element(title).click().perform()
     # сохраняю текущий динамический id формы в переменную для того, чтобы последующие локаторы не были такого вида:
     # //h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']
-    form_id = driver.find_element(by=By.XPATH, value='//*[text()[contains(.,"Снежанна")]]//ancestor::div[5]').get_attribute('id')
+    form_id = driver.find_element(by=By.XPATH, value='/descendant::*[text()[contains(.,"Снежанна")]][1]//ancestor::div[5]').get_attribute('id')
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 1/7 данные были отправлены")
+        print(" OK: главная 1/8 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Оставьте заявку", Снежанна на Главной')
 except:
     print('ERROR: не могу найти форму "Оставьте заявку", Снежанна на Главной')
 
-# 1.2 проверка формы "Оставьте заявку", Юлий
-try:
-    title = driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Юлий')]]")
-    actions.move_to_element(title).click().perform()
-    form_id = driver.find_element(by=By.XPATH, value='//*[text()[contains(.,"Юлий")]]//ancestor::div[5]').get_attribute('id')
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
-    try:
-        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 2/7 данные были отправлены")
-    except:
-        print('ERROR: не отправлены данные в форму "Оставьте заявку", Юлий на Главной')
-except:
-    print('ERROR: не могу найти форму "Оставьте заявку", Юлий на Главной')
-
-# 1.3 проверка формы "Оставьте заявку", Юлия
+# 1.2 проверка формы "Оставьте заявку", Юлия
 try:
     title = driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Юлия')]]")
     actions.move_to_element(title).click().perform()
@@ -73,43 +57,60 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 3/7 данные были отправлены")
+        print(" OK: главная 2/8 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Оставьте заявку", Юлия на Главной')
 except:
     print('ERROR: не могу найти форму "Оставьте заявку", Юлия на Главной')
 
-# 1.4 проверка формы "Оставьте заявку", Олег
+# 1.3 проверка формы "Оставьте заявку", Снежанна (2)
 try:
-    title = driver.find_element(by=By.XPATH, value="//p[text()[contains(.,'Олег')]]")
+    title = driver.find_element(by=By.XPATH, value="/descendant::*[text()[contains(.,'Снежанна')]][2]")
     actions.move_to_element(title).click().perform()
-    form_id = driver.find_element(by=By.XPATH, value='//p[text()[contains(.,"Олег")]]//ancestor::div[5]').get_attribute('id')
+    # сохраняю текущий динамический id формы в переменную для того, чтобы последующие локаторы не были такого вида:
+    # //h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']
+    form_id = driver.find_element(by=By.XPATH, value='/descendant::*[text()[contains(.,"Снежанна")]][2]//ancestor::div[5]').get_attribute('id')
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 4/7 данные были отправлены")
+        print(" OK: главная 3/8 данные были отправлены")
+    except:
+        print('ERROR: не отправлены данные в форму "Оставьте заявку", Снежанна на Главной')
+except:
+    print('ERROR: не могу найти форму "Оставьте заявку", Снежанна на Главной')
+
+# 1.4 проверка формы "Оставьте заявку", Олег Якунин
+try:
+    title = driver.find_element(by=By.XPATH, value="//*[text()[contains(., 'Олег Якунин')]]")
+    actions.move_to_element(title).click().perform()
+    form_id = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Олег Якунин")]]//ancestor::div[5]').get_attribute('id')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+    try:
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
+        print(" OK: главная 4/8 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Оставьте заявку", Олег на Главной')
 except:
     print('ERROR: не могу найти форму "Оставьте заявку", Олег на Главной')
 
-# 1.5 проверка формы "Отвечу на ваши вопросы ...", Игорь
+# 1.5 проверка формы "Получите каталог"
 try:
-    title = driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'Игорь Калинин,')]]")
-    actions.move_to_element(title).click().perform()
-    form_id = driver.find_element(by=By.XPATH, value='//*[text()[contains(.,"Игорь Калинин,")]]//ancestor::div[5]').get_attribute('id')
+    form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Получите каталог")]]//ancestor::div[2]').get_attribute('id')
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
-    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-email']").send_keys(str(data["test_data_valid"]["email"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Получить')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 5/7 данные были отправлены")
+        print(" OK: главная 5/8 данные были отправлены")
     except:
-        print('ERROR: не отправлены данные в форму "Отвечу на ваши вопросы ...", Игорь на Главной')
+        print('ERROR: не отправлены данные в форму "Получите каталог" на Главной')
 except:
-    print('ERROR: не могу найти форму "Отвечу на ваши вопросы ...", Игорь на Главной')
+    print('ERROR: не могу найти форму "Узнайте все подробности" на Главной')
 
 # 1.6 проверка формы "Подпишитесь на рассылку"
 try:
@@ -124,7 +125,23 @@ try:
 except:
     print('ERROR: не могу найти форму "Подпишитесь на рассылку" на Главной')
 
-# 1.7 проверка формы "Узнайте все подробности"
+# 1.7 проверка формы "Оставьте заявку", Кирилл Андреев
+try:
+    title = driver.find_element(by=By.XPATH, value="//*[text()[contains(., 'Кирилл Андреев')]]")
+    actions.move_to_element(title).click().perform()
+    form_id = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Кирилл Андреев")]]//ancestor::div[5]').get_attribute('id')
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-phone']").send_keys(str(data["test_data_valid"]["phone"]))
+    driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]]").click()
+    try:
+        wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
+        print(" OK: главная 7/8 данные были отправлены")
+    except:
+        print('ERROR: не отправлены данные в форму "Оставьте заявку", Кирилл на Главной')
+except:
+    print('ERROR: не могу найти форму "Оставьте заявку", Кирилл на Главной')
+
+# 1.8 проверка формы "Узнайте все подробности"
 try:
     form_id = driver.find_element(by=By.XPATH, value='//b[text()[contains(.,"Узнайте все")]]//ancestor::div[2]').get_attribute('id')
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[@id='consultationform-name']").send_keys(str(data["test_data_valid"]["name"]))
@@ -132,7 +149,7 @@ try:
     driver.find_element(by=By.XPATH, value="//div[@id='"+ form_id +"']//*[text()[contains(.,'Узнать')]]").click()
     try:
         wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@id='"+ form_id +"']//*[text()[contains(.,'Заявка отправлена')]]")))
-        print(" OK: главная 7/7 данные были отправлены")
+        print(" OK: главная 8/8 данные были отправлены")
     except:
         print('ERROR: не отправлены данные в форму "Узнайте все подробности" на Главной')
 except:

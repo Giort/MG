@@ -22,9 +22,9 @@ driver.implicitly_wait(10)
 # Скрипт отправляет заявки через мод. окна Спецпредложений
 #
 # В лог выводится сообщение "ОК", если: найдена кнопка на карточке SOW; отобразился
-#   элемент, подтверждающий успешную отправку данных 
+#   элемент, подтверждающий успешную отправку данных
 # В лог выводится сообщение "ERROR", если: кнопка на карточке SOW не была найдена;
-#   не был найден подтверждающий элемент 
+#   не был найден подтверждающий элемент
 #
 
 with open('data.json', 'r') as file:
@@ -76,16 +76,16 @@ while count < 3:
 count = 0
 driver.get("https://moigektar.ru/catalogue")
 while count < 3:
-    # избавляемся от модалки
-    try:
-        time.sleep(6)
-        auth_win = driver.find_element(by=By.ID, value='modal-auth-batches')
-        driver.execute_script("""
-        var auth_win = arguments[0];
-        auth_win.remove();
-        """, auth_win)
-    except:
-        print('ERROR: не получилось закрыть модалку авторизации в Каталоге участков')
+    # избавляемся от модалки авторизации
+    # try:
+    #     time.sleep(6)
+    #     auth_win = driver.find_element(by=By.ID, value='modal-auth-batches')
+    #     driver.execute_script("""
+    #     var auth_win = arguments[0];
+    #     auth_win.remove();
+    #     """, auth_win)
+    # except:
+    #     print('ERROR: не получилось закрыть модалку авторизации в Каталоге участков')
     # проверка, что есть кнопка на первой карточке участка
     try:
         btn = wait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "" + str(data["mg_loc"]["mg_catalog_plot_btn"]))))
@@ -127,22 +127,47 @@ while count < 3:
             driver.refresh()
 
 
-# 4. проверка спецпредложений на син_9
-# driver.get("https://syn9.lp.moigektar.ru/")
-# # 4.1 проверка, что есть слайдер SOW, по наличию кнопки на карточке
-# try:
-#     btn = wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='price']//div[2]//div[1]/div/div/div/div[2]/div[2]/div[2]/button")))
-#     print("   ОК  4.1: блок SOW на странице есть")
-#     driver.implicitly_wait(10)
-#     actions.move_to_element(btn).click(btn).perform()
-#     # 4.2 проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
-#     try:
-#         name = wait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//*[@id='buyconcreteform-name']")))
-#         print('   OK  4.2: модаль SOW на син_9 открылась')
-#     except ElementNotVisibleException:
-#         print("ERROR:  4.2 модаль SOW на син_9 не открылась")
-# except TimeoutException:
-#     print("ERROR:  4.1 не могу найти кнопку, чтобы открыть модаль SOW на син_9")
+# проверка спецпредложений на син_9
+count = 0
+driver.get("https://syn9.lp.moigektar.ru/")
+while count < 3:
+    # проверка, что есть слайдер SOW, по наличию кнопки на карточке
+    try:
+        title = driver.find_element(by=By.XPATH, value="//h1[text()[contains(.,'Специальное')]]")
+        ActionChains(driver).move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
+        print("   ОК: блок SOW на странице син_9 есть")
+        btn = driver.find_element(by=By.XPATH, value="//div[@id='catalogueSpecial']/div/div/div/div[1]//li[1]//button")
+        actions.move_to_element(btn).click(btn).perform()
+        time.sleep(3)
+        # проверка, что модаль открыта, по тому, есть ли на странице поле ввода этой модали
+        try:
+            name = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-name']")
+            print('   OK: модаль SOW открылась')
+            phone = driver.find_element(by=By.XPATH, value="//*[@name='BuyConcreteForm[phone]']")
+            email = driver.find_element(by=By.XPATH, value="//*[@id='buyconcreteform-email']")
+            submitBtn = driver.find_element(by=By.XPATH, value="//div[@class='w-modal-description concrete-modal uk-modal uk-open']//*[text()[contains(., 'Отправить заявку')]]")
+            name.send_keys(str(data["test_data_valid"]["name"]))
+            phone.send_keys(str(data["test_data_valid"]["phone"]))
+            email.send_keys(str(data["test_data_valid"]["email"]))
+            time.sleep(1)
+            submitBtn.click()
+            # проверить, что заявка отправлена, по тому, отобразилась ли надпись "Спасибо за заявку"
+            successText = wait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='w-modal-description concrete-modal uk-modal uk-open']//div[text()[contains(., 'Заявка отправлена')]]")))
+            print('   OK: заявка из SOW син_9 была отправлена')
+            if successText:
+                break
+        except:
+            count += 1
+            if count == 3:
+                print('ERROR: SOW на син_9: модаль открылась, но заявка не отправлена')
+            else:
+                driver.refresh()
+    except:
+        count += 1
+        if count == 3:
+            print("ERROR: SOW на син_9: не могу нажать кнопку на карточке СП")
+        else:
+            driver.refresh()
 
 
 # проверка спецпредложений на син_33
@@ -753,4 +778,3 @@ while count < 3:
 
 time.sleep(1)
 driver.quit()
-

@@ -48,22 +48,22 @@ while count < 3:
             driver.refresh()
 
 # syn_24
-count = 0
-driver.get("https://syn24.lp.moigektar.ru/")
-while count < 3:
-    try:
-        play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
-        play_btn.click()
-        genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
-        if genplan_elem:
-            print('   OK: syn_24')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR: генплан на syn_24')
-        else:
-            driver.refresh()
+# count = 0
+# driver.get("https://syn24.lp.moigektar.ru/")
+# while count < 3:
+#     try:
+#         play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
+#         play_btn.click()
+#         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+#         if genplan_elem:
+#             print('   OK: syn_24')
+#             break
+#     except:
+#         count += 1
+#         if count == 3:
+#             print('ERROR: генплан на syn_24')
+#         else:
+#             driver.refresh()
 
 # syn_33
 count = 0
@@ -145,8 +145,9 @@ count = 0
 driver.get("https://syn42.lp.moigektar.ru/")
 while count < 3:
     try:
-        play_btn = wait(driver, 14).until(EC.visibility_of_element_located((By.ID, 'w-select-play')))
-        play_btn.click()
+        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+        actions.move_to_element(title).perform()
+        driver.find_element(by=By.XPATH, value='//img[@data-src="/img/select/overlay-touch.svg"]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_42')

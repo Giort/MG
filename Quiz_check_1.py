@@ -24,7 +24,7 @@ with open('data.json', 'r') as file:
 
 # Мой гектар
 count = 0
-driver.get("https://moigektar.ru/")
+driver.get("https://moigektar.ru"+ str(data["mg_loc"]["mg_cur_release_1"]))
 while count < 3:
     try:
         wait(driver, 30).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
