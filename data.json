@@ -34,5 +34,11 @@
         "name" : "иванов иван тест",
         "passport" : "4005665382",
         "email" : "test@bigland.ru"
+    },
+
+    "111_cred":
+    {
+        "login" : "demo",
+        "password" : "moigektar"
     }
 }

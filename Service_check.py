@@ -30,7 +30,7 @@ while count < 3:
     try:
         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
         if elem:
-            print(' \ / МГ: OK')
+            print(' \:/ МГ: OK')
             break
     except:
         count += 1

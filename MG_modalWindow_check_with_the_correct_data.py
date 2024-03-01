@@ -26,7 +26,8 @@ with open('data.json', 'r') as file:
 # В лог выводится сообщение "ERROR", если окно не было открыто или не было найдено
 #
 
-driver.get("https://moigektar.ru"+ str(data["mg_loc"]["mg_cur_release_2"]))
+# driver.get("https://moigektar.ru"+ str(data["mg_loc"]["mg_cur_release_2"]))
+driver.get("https://moigektar.ru")
 
 # 1. проверка главной страницы "МГ"
 print("Главная")

@@ -1,10 +1,12 @@
-import chromedriver_binary
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
-driver = webdriver.Chrome(options= ch_options)
+service = ChromeService(executable_path=ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=ch_options)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -23,6 +25,30 @@ driver.implicitly_wait(10)
 # В лог выводится сообщение "ERROR", если элемент не загрузился
 #
 
+
+
+# Мой гектар
+count = 0
+driver.get("https://moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='w-select-map')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-select__tour-icon"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.XPATH, value='//iframe[@class="embed-responsive-item"]')
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3099'))]")))
+        if elem:
+            print('   OK: МГ')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на МГ')
+        else:
+            driver.refresh()
 
 # syn_9
 count = 0
@@ -73,10 +99,12 @@ count = 0
 driver.get("https://syn33.lp.moigektar.ru/")
 while count < 3:
     try:
-        btn = driver.find_element(by=By.ID, value='w-tour-play')
-        actions.move_to_element(btn).perform()
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon"))]')
         actions.click(btn).perform()
-        iframe = driver.find_element(by=By.CLASS_NAME, value="fancybox-iframe")
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
         driver.switch_to.frame(iframe)
         elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
         if elem:
@@ -112,35 +140,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# syn_37
-count = 0
-driver.get("https://syn37.lp.moigektar.ru/")
-while count < 3:
-    try:
-        title = driver.find_element(by=By.ID, value='tour')
-        actions.move_to_element(title).perform()
-        time.sleep(1)
-        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
-        actions.click(btn).perform()
-        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
-        driver.switch_to.frame(iframe)
-        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
-        if elem:
-            print('   OK: syn_37')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR: не загрузился виртур на син_37')
-        else:
-            driver.refresh()
-
 # syn_39
 count = 0
 driver.get("https://syn39.lp.moigektar.ru/")
 while count < 3:
     try:
-        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        title = driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Виртуальный тур")]]')
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
         time.sleep(1)
         btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
@@ -163,7 +168,7 @@ count = 0
 driver.get("https://syn42.lp.moigektar.ru/")
 while count < 3:
     try:
-        title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Виртуальный тур")]]')
+        title = driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Виртуальный тур")]]')
         actions.move_to_element(title).send_keys(Keys.PAGE_DOWN).perform()
         time.sleep(1)
         btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
@@ -204,6 +209,29 @@ while count < 3:
         else:
             driver.refresh()
 
+# syn_52
+count = 0
+driver.get("https://syn52.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 245'))]")))
+        if elem:
+            print('   OK: syn_52')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_52')
+        else:
+            driver.refresh()
+
 # syn_53
 count = 0
 driver.get("https://syn53.lp.moigektar.ru/")
@@ -226,6 +254,30 @@ while count < 3:
             print('ERROR: не загрузился виртур на син_53')
         else:
             driver.refresh()
+
+# syn_56
+count = 0
+driver.get("https://syn56.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        if elem:
+            print('   OK: syn_56')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_56')
+        else:
+            driver.refresh()
+
 # syn_67
 count = 0
 driver.get("https://syn67.lp.moigektar.ru/")
@@ -364,6 +416,29 @@ while count < 3:
         else:
             driver.refresh()
 
+# syn_95
+count = 0
+driver.get("https://syn95.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon-btn"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 227'))]")))
+        if elem:
+            print('   OK: syn_95')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_95')
+        else:
+            driver.refresh()
+
 # syn_99
 count = 0
 driver.get("https://syn99.lp.moigektar.ru/")
@@ -372,11 +447,11 @@ while count < 3:
         title = driver.find_element(by=By.ID, value='tour')
         actions.move_to_element(title).perform()
         time.sleep(1)
-        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon animated-fast"))]')
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon"))]')
         actions.click(btn).perform()
         iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
         driver.switch_to.frame(iframe)
-        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 222'))]")))
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 201'))]")))
         if elem:
             print('   OK: syn_99')
             break

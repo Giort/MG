@@ -18,7 +18,7 @@ driver.implicitly_wait(10)
 with open('data.json', 'r') as file:
     data = json.load(file)
 
-driver.get("https://syn37.lp.moigektar.ru/")
+driver.get("https://syn56.lp.moigektar.ru/")
 
 # квиз в хедере
 try:
@@ -30,7 +30,7 @@ try:
     btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.CLASS_NAME, "start-page__button")))
     btn_2.click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Площадь участка')]]")))
-    print('   OK: syn_37 квиз в хедере')
+    print('   OK: syn_56 квиз в хедере')
 except:
     try:
         driver.refresh()
@@ -42,9 +42,9 @@ except:
         btn_2 = wait(driver, 14).until(EC.element_to_be_clickable((By.CLASS_NAME, "start-page__button")))
         btn_2.click()
         wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(., 'Площадь участка')]]")))
-        print('   OK: syn_37 квиз в хедере')
+        print('   OK: syn_56 квиз в хедере')
     except:
-        print('ERROR: что-то не так с квизом в хедере на син_37')
+        print('ERROR: что-то не так с квизом в хедере на син_56')
 
 # модалка "Подобрать участок" в блоке "Категории участков"
 try:
@@ -60,10 +60,10 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="w-modal-description uk-modal uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//*[@class="w-modal-description uk-modal uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="w-modal-description uk-modal uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 модалка в блоке "Категории участков"')
+    print('   OK: syn_56 модалка в блоке "Категории участков"')
     driver.find_element(by=By.XPATH, value='//*[@class="w-modal-description uk-modal uk-open"]/div/div/button').click()
 except:
-    print('ERROR: что-то не так с модалкой в блоке "Категории участков" на син_37')
+    print('ERROR: что-то не так с модалкой в блоке "Категории участков" на син_56')
 
 # форма "Получите схему проезда"
 try:
@@ -75,9 +75,9 @@ try:
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Получите схему")]]//parent::div//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Получите схему")]]//parent::div//*[text()[contains(., "Отправить заявку")]]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//div[text()[contains(., "Получите схему")]]//parent::div//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 форма "Получите схему проезда"')
+    print('   OK: syn_56 форма "Получите схему проезда"')
 except:
-    print('ERROR: что-то не так с формой "Получите схему проезда" на син_37')
+    print('ERROR: что-то не так с формой "Получите схему проезда" на син_56')
 
 # модалка в "Бизнес-планах"
 try:
@@ -92,10 +92,10 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 модалка в "Бизнес-планах"')
+    print('   OK: syn_56 модалка в "Бизнес-планах"')
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/button').click()
 except:
-    print('ERROR: что-то не так с модалкой в "Бизнес-планах" на син_37')
+    print('ERROR: что-то не так с модалкой в "Бизнес-планах" на син_56')
 
 # форма "Получите презентацию"
 try:
@@ -107,9 +107,9 @@ try:
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Получите презентацию")]]//parent::div//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Получите презентацию")]]//parent::div//*[text()[contains(., "Отправить")]]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//div[text()[contains(., "Получите презентацию")]]//parent::div//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 форма "Получите презентацию"')
+    print('   OK: syn_56 форма "Получите презентацию"')
 except:
-    print('ERROR: что-то не так с формой "Получите презентацию" на син_37')
+    print('ERROR: что-то не так с формой "Получите презентацию" на син_56')
 
 # модалка в "Господдержке"
 try:
@@ -124,10 +124,10 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-modal-callback uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 модалка в "Господдержке"')
+    print('   OK: syn_56 модалка в "Господдержке"')
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-modal-callback uk-open"]/div/div/button').click()
 except:
-    print('ERROR: что-то не так с модалкой в "Господдержке" на син_37')
+    print('ERROR: что-то не так с модалкой в "Господдержке" на син_56')
 
 # модалка в "Сохраните сбережения"
 try:
@@ -142,10 +142,10 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 модалка в "Сохраните сбережения"')
+    print('   OK: syn_56 модалка в "Сохраните сбережения"')
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal uk-open"]/div/div/button').click()
 except:
-    print('ERROR: что-то не так с модалкой в "Сохраните сбережения" на син_37')
+    print('ERROR: что-то не так с модалкой в "Сохраните сбережения" на син_56')
 
 # модалка в "Не упусти свой шанс"
 try:
@@ -159,10 +159,10 @@ try:
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]//*[@type="submit"]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//*[@class="uk-modal w-uk-form uk-open"]//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 модалка в "Не упусти свой шанс"')
+    print('   OK: syn_56 модалка в "Не упусти свой шанс"')
     driver.find_element(by=By.XPATH, value='//*[@class="uk-modal w-uk-form uk-open"]/div/div/button').click()
 except:
-    print('ERROR: что-то не так с модалкой в "Не упусти свой шанс" на син_37')
+    print('ERROR: что-то не так с модалкой в "Не упусти свой шанс" на син_56')
 
 # форма "Действуйте"
 try:
@@ -174,9 +174,9 @@ try:
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Действуйте")]]//parent::div//*[@id="consultationform-email"]').send_keys(str(data["test_data_valid"]["email"]))
     driver.find_element(by=By.XPATH, value='//div[text()[contains(., "Действуйте")]]//parent::div//*[text()[contains(., "Отправить")]]').click()
     wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, '//div[text()[contains(., "Действуйте")]]//parent::div//*[text()[contains(., "Заявка отправлена")]]')))
-    print('   OK: syn_37 форма "Действуйте"')
+    print('   OK: syn_56 форма "Действуйте"')
 except:
-    print('ERROR: что-то не так с формой "Действуйте" на син_37')
+    print('ERROR: что-то не так с формой "Действуйте" на син_56')
 
 time.sleep(5)
 driver.quit()
