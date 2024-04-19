@@ -128,6 +128,25 @@ while count < 3:
         else:
             driver.refresh()
 
+# syn_47
+count = 0
+driver.get("https://syn47.lp.moigektar.ru/")
+while count < 3:
+    try:
+        block = wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'gen-plan')))
+        actions.move_to_element(block).perform()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+        if genplan_elem:
+            print('   OK: syn_47')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: генплан на syn_47')
+        else:
+            driver.refresh()
+
 # syn_48
 count = 0
 driver.get("https://syn48.lp.moigektar.ru/")
@@ -239,6 +258,25 @@ while count < 3:
         count += 1
         if count == 3:
             print('ERROR: генплан на syn_67')
+        else:
+            driver.refresh()
+
+# syn_73
+count = 0
+driver.get("https://syn73.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
+        actions.move_to_element(title).perform()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
+        if genplan_elem:
+            print('   OK: syn_73')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: генплан на syn_73')
         else:
             driver.refresh()
 

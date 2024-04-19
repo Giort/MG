@@ -1,19 +1,27 @@
 import chromedriver_binary
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
-driver = webdriver.Chrome(options= ch_options)
+service = ChromeService(executable_path=ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=ch_options)
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+import time
+import json
 actions = ActionChains(driver)
-driver.maximize_window()
-#driver.set_window_size(1920, 1080)
+#driver.maximize_window()
+driver.set_window_size(1680, 1000)
+
+with open('data.json', 'r') as file:
+    data = json.load(file)
 
 # Скрипт последовательно заходит на каждый сервис МГ и проверяет видимость
 # одного элемента на странице
@@ -69,12 +77,12 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на ЛК')
 
-# 3. проверка syn_9 по видимости заголовка "Генеральный"
+# 3. проверка syn_9 по видимости элемента "стрелка"
 driver.get("https://syn9.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' / \ syn_9: OK')
             break
@@ -85,12 +93,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 4. проверка syn_33 по видимости заголовка "Генеральный"
+# 4. проверка syn_33 по видимости элемента "стрелка"
 driver.get("https://syn33.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' \ / syn_33: OK')
             break
@@ -101,12 +109,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 5. проверка syn_34 по видимости заголовка "Генеральный"
+# 5. проверка syn_34 по видимости элемента "стрелка"
 driver.get("https://syn34.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_34: OK')
             break
@@ -117,12 +125,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 6. проверка syn_37 по видимости заголовка "Генеральный"
+# 6. проверка syn_37 по видимости элемента "стрелка"
 driver.get("https://syn37.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_37: OK')
             break
@@ -133,12 +141,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 7. проверка syn_53 по видимости заголовка "Генеральный"
+# 7. проверка syn_53 по видимости элемента "стрелка"
 driver.get("https://syn53.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' / \ syn_53: OK')
             break
@@ -149,12 +157,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 8. проверка syn_67 по видимости заголовка "Генеральный"
+# 8. проверка syn_67 по видимости элемента "стрелка"
 driver.get("https://syn67.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' \ / syn_67: OK')
             break
@@ -165,12 +173,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 9. проверка vazuza2 по видимости заголовка "Генеральный"
+# 9. проверка vazuza2 по видимости фразы "10 поселков на одной территории"
 driver.get("https://vazuza2.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//p[text()[contains(., "10 поселков на одной территории")]]')))
         if elem:
             print('  |  vazuza2: OK')
             break
@@ -426,7 +434,7 @@ driver.get("https://syn99.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_99: OK')
             break
@@ -565,12 +573,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 34. проверка syn_19 по видимости заголовка "Генеральный"
+# 34. проверка syn_19 по видимости элемента "стрелка"
 driver.get("https://syn19.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_19: OK')
             break
@@ -586,7 +594,7 @@ driver.get("https://syn21.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print(' / \ syn_21: OK')
             break
@@ -602,7 +610,7 @@ driver.get("https://syn22.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print(' \ / syn_22: OK')
             break
@@ -618,7 +626,7 @@ driver.get("https://syn23.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print('  |  syn_23: OK')
             break
@@ -630,20 +638,20 @@ while count < 3:
             driver.refresh()
 
 # 38. проверка syn_24 по видимости заголовка "Генеральный"
-# driver.get("https://syn24.lp.moigektar.ru/")
-# count = 0
-# while count < 3:
-#     try:
-#         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
-#         if elem:
-#             print('  |  syn_23: OK')
-#             break
-#     except:
-#         count += 1
-#         if count == 3:
-#             print('ERROR (service_check): не дождался загрузки элемента на син_24')
-#         else:
-#             driver.refresh()
+driver.get("https://syn24.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
+        if elem:
+            print('  |  syn_24: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_24')
+        else:
+            driver.refresh()
 
 # 39. проверка syn_27 по видимости заголовка "Забронировать"
 driver.get("https://syn27.lp.moigektar.ru/")
@@ -653,12 +661,12 @@ try:
 except:
     print('ERROR (service_check): не дождался загрузки элемента на син_27')
 
-# 40. проверка "Полевых работ" по наличию заголовка "Полевые работы"
+# 40. проверка "Полевых работ" по наличию текста "Запомнить"
 driver.get("https://fields.bigland.ru/site/login")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Полевые работы')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Запомнить')]]")))
         if elem:
             print(' \ / Полевые работы: OK')
             break
@@ -674,7 +682,7 @@ driver.get("https://syn35.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print('  |  syn_35: OK')
             break
@@ -690,7 +698,7 @@ driver.get("https://syn36.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print('  |  syn_36: OK')
             break
@@ -701,12 +709,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 44. проверка syn_39 по видимости заголовка "Генеральный"
+# 44. проверка syn_39 по видимости элемента "стрелка"
 driver.get("https://syn39.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' / \ syn_39: OK')
             break
@@ -717,12 +725,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 45. проверка syn_42 по видимости заголовка "Генеральный"
+# 45. проверка syn_42 по видимости элемента "стрелка"
 driver.get("https://syn42.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' \ / syn_42: OK')
             break
@@ -733,12 +741,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 46. проверка syn_48 по видимости заголовка "Генеральный"
+# 46. проверка syn_48 по видимости элемента "стрелка"
 driver.get("https://syn48.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_48: OK')
             break
@@ -770,7 +778,7 @@ driver.get("https://syn61.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print(' / \ syn_61: OK')
             break
@@ -802,7 +810,7 @@ driver.get("https://syn85.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_85: OK')
             break
@@ -818,7 +826,7 @@ driver.get("https://syn84.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print('  |  syn_84: OK')
             break
@@ -834,7 +842,7 @@ driver.get("https://syn8.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
         if elem:
             print(' / \ syn_8: OK')
             break
@@ -850,7 +858,7 @@ driver.get("https://syn89.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' \ / syn_89: OK')
             break
@@ -899,7 +907,7 @@ driver.get("https://mt.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
             print(' / \ syn_87: OK')
             break
@@ -910,30 +918,14 @@ while count < 3:
         else:
             driver.refresh()
 
-# 58. проверка "Бесконечных Знаний" по наличию заголовка "Бесконечные знания"
-driver.get("https://wiki.bug.land/login")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Бесконечные')]]")))
-        if elem:
-            print(' \ / Бесконечные Знания: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на "Бесконечных Знаниях"')
-        else:
-            driver.refresh()
-
-# 59. проверка syn_92 по наличию заголовка "Генеральный"
+# 58. проверка syn_92 по наличию заголовка "Генеральный"
 driver.get("https://syn92.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//div[text()[contains(.,'Генеральный')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
         if elem:
-            print('  |  syn_92: OK')
+            print(' \ / syn_92: OK')
             break
     except:
         count += 1
@@ -942,10 +934,125 @@ while count < 3:
         else:
             driver.refresh()
 
+# 59. проверка syn_95 по видимости текста "«Усадьба Императрицы»"
+driver.get("https://syn95.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "«Усадьба Императрицы»")]]')))
+        if elem:
+            print('  |  syn_95: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_95')
+        else:
+            driver.refresh()
 
+# 60. проверка syn_47 по видимости фразы "Клубный поселок"
+driver.get("https://syn47.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Клубный поселок")]]')))
+        if elem:
+            print('  |  syn_47: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_47')
+        else:
+            driver.refresh()
 
+# 61. проверка syn_111 по видимости элемента "стрелка"
+driver.get("https://syn111.lp.moigektar.ru/")
+login = driver.find_element(by=By.ID, value='loginconfig-username')
+password = driver.find_element(by=By.ID, value='loginconfig-password')
+submit = driver.find_element(by=By.CSS_SELECTOR, value='div button')
+login.send_keys(str(data["111_cred"]["login"]))
+password.send_keys(str(data["111_cred"]["password"]))
+submit.click()
+time.sleep(2)
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
+        if elem:
+            print(' / \ syn_111: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_111')
+        else:
+            driver.refresh()
 
+# 62. проверка сайта СК по видимости заголовка "Наша цель"
+driver.get("https://sc.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Наша цель")]]')))
+        if elem:
+            print(' \ / сайт СК: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте СК')
+        else:
+            driver.refresh()
 
-#time.sleep(2)
+# 63. проверка syn_73 по наличию заголовка "Генеральный"
+driver.get("https://syn73.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
+        if elem:
+            print('  |  syn_73: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_73')
+        else:
+            driver.refresh()
+
+# 65. проверка сайта "Барская Усадьба" по видимости ссылки "Меню завтраков"
+driver.get("https://xn--80aacl7dl0e.xn--p1ai/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(., "Меню завтраков")]]')))
+        if elem:
+            print('  |  Барская усадьба: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на Барской усадьбе')
+        else:
+            driver.refresh()
+
+# 66. проверка сайта "Онлайн-показ" по видимости текста "онлайн-показ"
+driver.get("https://presentation.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(., "онлайн-показ")]]')))
+        if elem:
+            print(' / \ сайт "Онлайн-показ": OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте "Онлайн-показ"')
+        else:
+            driver.refresh()
+
+time.sleep(2)
 driver.quit()
 

@@ -26,27 +26,57 @@ with open('data.json', 'r') as file:
 
 
 
-#driver.get("https://moigektar.ru/")
-#driver.get("https://syn33.lp.moigektar.ru/")
+driver.get("https://moigektar.ru")
+#driver.get("https://syn73.lp.moigektar.ru/")
 
-# vazuza2
-count = 0
-driver.get("https://vazuza2.lp.moigektar.ru/")
-while count < 3:
+
+# форма со Снежанной
+# поле ввода / кнопка / фото
+count_sf_1 = 0
+while count_sf_1 < 3:
     try:
-        title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[@id="plan"]/div/div/div/div/div[text()[contains(.,"Генеральный")]]')))
-        actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
-        genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
-        if genplan_elem:
-            print('   OK: генплан на Вазузе')
-            break
+        sf_field = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "snezh"))]//*[@id="consultationform-name"])[1]')
+        if sf_field.is_displayed():
+            print('   OK: поле ввода в 1-й форме со Снежанной')
+            count_sf_1 = 3
+            count_sf_2 = 0 # кнопка
+            while count_sf_2 < 3:
+                try:
+                    actions.move_to_element(sf_field).perform()
+                    sf_button = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "snezh"))]//button)[1]')
+                    if sf_button.is_displayed():
+                        print('     OK: кнопка в форме со Снежанной')
+                        count_sf_2 = 3
+                        break
+                except:
+                    count_sf_2 += 1
+                    if count_sf_2 == 3:
+                        print('ERROR: не отображается кнопка в форме со Снежанной')
+                    else:
+                        driver.refresh()
+            count_sf_3 = 0 # фото
+            while count_sf_3 < 3:
+                try:
+                    sf_img = driver.find_element(by=By.XPATH, value='//*[@id="catalogueSpecial"]//*[@class="uk-text-center"]/a')
+                    if sf_img.is_displayed():
+                        print('     OK: отображается фото в форме со Снежанной')
+                        count_sf_3 = 3
+                        break
+                except:
+                    count_sf_3 += 1
+                    if count_sf_3 == 3:
+                        print('ERROR: не отображается фото в форме со Снежанной')
+                    else:
+                        driver.refresh()
     except:
-        count += 1
-        if count == 3:
-            print('ERROR: генплан на Вазузе')
+        count_sf_1 += 1
+        if count_sf_1 == 3:
+            print('ERROR: не отображается поле ввода в форме со Снежанной')
         else:
             driver.refresh()
+
+
+
 
 
 time.sleep(5)

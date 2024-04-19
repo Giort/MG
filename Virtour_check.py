@@ -14,8 +14,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 actions = ActionChains(driver)
 from selenium.webdriver.common.keys import Keys
 import time
+import json
 driver.set_window_size(1600, 1000)
 driver.implicitly_wait(10)
+
+with open('data.json', 'r') as file:
+    data = json.load(file)
 
 
 # Скрипт заходит на сайты посёлков, запускает загрузку Виртуального тура
@@ -25,9 +29,7 @@ driver.implicitly_wait(10)
 # В лог выводится сообщение "ERROR", если элемент не загрузился
 #
 
-
-
-# Мой гектар
+# Мой гектар, тур на главной
 count = 0
 driver.get("https://moigektar.ru/")
 while count < 3:
@@ -39,14 +41,39 @@ while count < 3:
         actions.click(btn).perform()
         iframe = driver.find_element(by=By.XPATH, value='//iframe[@class="embed-responsive-item"]')
         driver.switch_to.frame(iframe)
-        elem = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3099'))]")))
+        elem = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 231'))]")))
         if elem:
-            print('   OK: МГ')
+            print('   OK: МГ, тур на главной')
             break
     except:
         count += 1
         if count == 3:
-            print('ERROR: не загрузился виртур на МГ')
+            print('ERROR: не загрузился виртур на главной МГ')
+        else:
+            driver.refresh()
+
+# Мой гектар, тур на странице актива
+# добавляю запись, чтобы не было модалки авторизации
+driver.get("https://moigektar.ru/cert")
+script = "localStorage.setItem('catalogueAuthWall', 'true');"
+driver.execute_script(script)
+# перехожу на страницу участка, который вряд ли купят в ближайшее время
+count = 0
+driver.get("https://moigektar.ru/batches/29305")
+while count < 3:
+    try:
+        btn = driver.find_element(by=By.XPATH, value='(//a[@data-type="iframe"])[2]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.XPATH, value='//iframe[@class="uk-lightbox-iframe"]')
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3101'))]")))
+        if elem:
+            print('   OK: тур на странице актива')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на странице актива')
         else:
             driver.refresh()
 
@@ -186,6 +213,29 @@ while count < 3:
         else:
             driver.refresh()
 
+# syn_47
+driver.get("https://syn47.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 159'))]")))
+        if elem:
+            print('   OK: syn_47')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_47')
+        else:
+            driver.refresh()
+
 # syn_48
 count = 0
 driver.get("https://syn48.lp.moigektar.ru/")
@@ -298,6 +348,29 @@ while count < 3:
         count += 1
         if count == 3:
             print('ERROR: не загрузился виртур на син_67')
+        else:
+            driver.refresh()
+
+# syn_73
+count = 0
+driver.get("https://syn73.lp.moigektar.ru/")
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(3)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon uk-padding-small animated-fast"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 227'))]")))
+        if elem:
+            print('   OK: syn_73')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_73')
         else:
             driver.refresh()
 
@@ -459,6 +532,36 @@ while count < 3:
         count += 1
         if count == 3:
             print('ERROR: не загрузился виртур на син_99')
+        else:
+            driver.refresh()
+
+# syn_111
+driver.get("https://syn111.lp.moigektar.ru/")
+login = driver.find_element(by=By.ID, value='loginconfig-username')
+password = driver.find_element(by=By.ID, value='loginconfig-password')
+submit = driver.find_element(by=By.CSS_SELECTOR, value='div button')
+login.send_keys(str(data["111_cred"]["login"]))
+password.send_keys(str(data["111_cred"]["password"]))
+submit.click()
+time.sleep(2)
+count = 0
+while count < 3:
+    try:
+        title = driver.find_element(by=By.ID, value='tour')
+        actions.move_to_element(title).perform()
+        time.sleep(1)
+        btn = driver.find_element(by=By.XPATH, value='//*[(contains(@class, "w-tour__icon"))]')
+        actions.click(btn).perform()
+        iframe = driver.find_element(by=By.CLASS_NAME, value="uk-lightbox-iframe")
+        driver.switch_to.frame(iframe)
+        elem = wait(driver, 14).until(EC.visibility_of_element_located((By.XPATH, "//div[(contains(@style, 'z-index: 3099'))]")))
+        if elem:
+            print('   OK: syn_111')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR: не загрузился виртур на син_111')
         else:
             driver.refresh()
 

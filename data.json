@@ -10,9 +10,9 @@
         "mg_catalog_plot_btn" : "Карточки в Каталоге участков, кнопка на первой карточке",
                             "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]",
         "mg_cur_release_1" : "кука для текущего релиза А/Б-теста",
-                            "mg_cur_release_1" : "/?mg_20231024_15=version_1",
+                            "mg_cur_release_1" : "/?mg_20240417_41=version_1",
         "mg_cur_release_2" : "кука для текущего релиза А/Б-теста",
-                            "mg_cur_release_2" : "/?mg_20231024_15=version_2"
+                            "mg_cur_release_2" : "/?mg_20240417_41=version_2"
     },
 
     "test_data_valid":
