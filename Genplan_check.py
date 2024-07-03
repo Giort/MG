@@ -40,7 +40,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_9')
@@ -59,7 +59,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='(//div[(contains(@class, "w-plan__btn"))])[2]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_33')
@@ -78,7 +78,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_34')
@@ -97,7 +97,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_39')
@@ -116,7 +116,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_42')
@@ -135,7 +135,7 @@ while count < 3:
     try:
         block = wait(driver, 14).until(EC.presence_of_element_located((By.ID, 'gen-plan')))
         actions.move_to_element(block).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_47')
@@ -154,7 +154,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_48')
@@ -173,7 +173,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_52')
@@ -192,7 +192,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_53')
@@ -211,7 +211,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_56')
@@ -249,7 +249,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_67')
@@ -268,7 +268,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_73')
@@ -287,7 +287,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_84')
@@ -306,7 +306,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_85')
@@ -325,7 +325,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_87')
@@ -363,7 +363,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_92')
@@ -382,7 +382,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_95')
@@ -401,7 +401,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_99')
@@ -427,7 +427,7 @@ while count < 3:
     try:
         title = wait(driver, 14).until(EC.presence_of_element_located((By.XPATH, '//div[text()[contains(.,"Генеральный")]]')))
         actions.move_to_element(title).perform()
-        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__video-btn"))]').click()
+        driver.find_element(by=By.XPATH, value='//div[(contains(@class, "w-plan__btn"))]').click()
         genplan_elem = wait(driver, 14).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ymaps.ymaps-2-1-79-inner-panes')))
         if genplan_elem:
             print('   OK: syn_111')

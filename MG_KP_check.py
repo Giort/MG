@@ -26,7 +26,7 @@ driver.implicitly_wait(10)
 
 driver.get("https://moigektar.ru/catalogue-no-auth")
 window_before = driver.window_handles[0]
-btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-analytics-catalog-batch-presentation-download"))])[1]')
+btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-analytics-catalog-batch-presentation-download"))])[2]')
 btn.click()
 window_after = driver.window_handles[1]
 driver.switch_to.window(window_after)
@@ -35,7 +35,7 @@ driver.switch_to.window(window_after)
 count_1 = 0
 while count_1 < 3:
     try:
-        look_btn = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[@title="Посмотреть"]')))
+        look_btn = wait(driver,40).until(EC.visibility_of_element_located((By.XPATH, '//*[@title="Посмотреть"]')))
         if look_btn:
             print('    OK: КП сгенерировано')
             break

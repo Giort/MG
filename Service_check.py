@@ -67,12 +67,10 @@ while count < 3:
         else:
             driver.refresh()
 
-# 2. проверка ЛК по видимости баннера, который отображается при первом входе в ЛК
-driver.get("https://cabinet.moigektar.ru/security/login")
+# 2. проверка ЛК по видимости окна, который отображается при первом входе в ЛК
+driver.get("https://cabinet.moigektar.ru")
 try:
-    btn=wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//a[text()[contains(.,'Войти в демо-версию')]]")))
-    actions.move_to_element(btn).click(btn).perform()
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()='Остаться в Демо-версии']")))
+    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(.,'Вы находитесь в демо-версии личного кабинета')]]")))
     print('  |  ЛК: ОК')
 except:
     print('ERROR (service_check): не дождался загрузки элемента на ЛК')
@@ -858,7 +856,7 @@ driver.get("https://syn89.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"Озерный край: ")]]')))
         if elem:
             print(' \ / syn_89: OK')
             break

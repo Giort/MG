@@ -30,45 +30,59 @@ driver.get("https://moigektar.ru")
 #driver.get("https://syn33.lp.moigektar.ru/")
 
 
-
-# форма со Снежанной
-# поле ввода / кнопка / фото
-count_sf_1 = 0
-while count_sf_1 < 3:
+# "Видео, которые вам ..." - 1-я карточка / видео / дотсы
+count_vw_1 = 0
+while count_vw_1 < 3:
     try:
-        assert EC.visibility_of_element_located((By.XPATH, '(//*[(contains(@class, "snezh"))]//*[@id="consultationform-name"])[1]'))
-        print('   OK: поле ввода в 1-й форме со Снежанной')
-        count_sf_1 = 3
-        count_sf_2 = 0 # кнопка
-        while count_sf_2 < 3:
+        vw_title = driver.find_element(by=By.XPATH, value='//*[text()[contains(., "Видео, которые")]]')
+        actions.move_to_element(vw_title).perform()
+        assert EC.visibility_of_element_located((By.XPATH, '(//*[@id="b-video"]//*[@class="uk-object-cover"])[1]'))
+        count_vw_1 = 3
+        print('   OK: 1-я карточка в "Видео, которые вам ..."')
+        count_vw_2 = 0 # видео
+        while count_vw_2 < 3:
             try:
-                assert EC.visibility_of_element_located((By.XPATH, '(//*[(contains(@class, "snezh"))]//button)[1]'))
-                print('     OK: кнопка в форме со Снежанной')
-                count_sf_2 = 3
+                driver.find_element(by=By.XPATH, value='(//*[@id="b-video"]//*[@class="uk-object-cover"])[1]').click()
+                vw_video = driver.find_element(by=By.XPATH, value='//iframe[@class="uk-lightbox-iframe"]')
+                driver.switch_to.frame(vw_video)
+                vw_video_title = driver.find_element(by=By.CSS_SELECTOR, value='#player a.ytp-title-link')
+                if vw_video_title.is_displayed():
+                    driver.switch_to.default_content()
+                    lb_btn = driver.find_element(by=By.CSS_SELECTOR, value = '.uk-lightbox.uk-overflow-hidden.uk-lightbox-panel.uk-open button')
+                    lightbox = driver.find_element(by=By.XPATH, value='//*[@class="uk-lightbox uk-overflow-hidden uk-lightbox-panel uk-open"]')
+                    driver.execute_script("arguments[0].setAttribute('class','uk-lightbox uk-overflow-hidden uk-lightbox-panel uk-open uk-active uk-transition-active')", lightbox)
+                    lb_btn.click()
+                    count_vw_2 = 3
+                    print('     OK: видео в 1-й карточке')
+                    break
             except:
-                count_sf_2 += 1
-                if count_sf_2 == 3:
-                    print('ERROR: не отображается кнопка в форме со Снежанной')
+                driver.refresh()
+                count_vw_2 += 1
+                if count_vw_2 == 3:
+                    print('ERROR: не отображается видео в 1-й карточке')
                 else:
                     driver.refresh()
-            count_sf_3 = 0 # фото
-            while count_sf_3 < 3:
-                try:
-                    assert EC.visibility_of_element_located((By.XPATH, '//*[@id="catalogueSpecial"]//*[@class="uk-text-center"]/a'))
-                    print('     OK: отображается фото в форме со Снежанной')
-                    count_sf_3 = 3
-                except:
-                    count_sf_3 += 1
-                    if count_sf_3 == 3:
-                        print('ERROR: не отображается фото в форме со Снежанной')
-                    else:
-                        driver.refresh()
+        count_vw_3 = 0 # дотсы
+        while count_vw_3 < 3:
+            try:
+                assert EC.visibility_of_element_located((By.XPATH, '(//*[@id="b-video"]//*[(contains(@class, "uk-dotnav"))]/li)[1]'))
+                count_vw_3 = 3
+                print('     OK: дотсы')
+                break
+            except:
+                count_vw_3 += 1
+                if count_vw_3 == 3:
+                    print('ERROR: не отображаются дотсы в "Видео, которые вам ..."')
+                else:
+                    driver.refresh()
     except:
-        count_sf_1 += 1
-        if count_sf_1 == 3:
-            print('ERROR: не отображается поле ввода в форме со Снежанной')
+        count_vw_1 += 1
+        if count_vw_1 == 3:
+            print('ERROR: не отображается 1-я карточка в "Видео, которые вам ..."')
         else:
             driver.refresh()
 
-time.sleep(5)
+
+
+time.sleep(3)
 driver.quit()
