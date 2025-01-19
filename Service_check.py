@@ -1,4 +1,3 @@
-import chromedriver_binary
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -17,8 +16,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
 actions = ActionChains(driver)
-#driver.maximize_window()
 driver.set_window_size(1680, 1000)
+driver.implicitly_wait(10)
 
 with open('data.json', 'r') as file:
     data = json.load(file)
@@ -36,7 +35,7 @@ driver.get("https://moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Гектар под ваши цели')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Описание проекта')]]")))
         if elem:
             print(' \:/ МГ: OK')
             break
@@ -171,12 +170,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 9. проверка vazuza2 по видимости фразы "10 поселков на одной территории"
+# 9. проверка vazuza2 по видимости фразы "Уникальный экокурорт"
 driver.get("https://vazuza2.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//p[text()[contains(., "10 поселков на одной территории")]]')))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h3[text()[contains(., "Уникальный экокурорт")]]')))
         if elem:
             print('  |  vazuza2: OK')
             break
@@ -251,12 +250,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 14. проверка сервиса "Кооперативы" по наличию заголовка "Вступайте в кооператив"
-driver.get("https://cooperative.lp.moigektar.ru/")
+# 14. проверка сервиса "Кооперативы" по наличию заголовка "Зачем нужен кооператив"
+driver.get("https://cooperative.lp.moigektar.ru")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Вступайте')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Кооператив собственников')]]")))
         if elem:
             print('  |  Кооперативы: OK')
             break
@@ -652,12 +651,12 @@ while count < 3:
             driver.refresh()
 
 # 39. проверка syn_27 по видимости заголовка "Забронировать"
-driver.get("https://syn27.lp.moigektar.ru/")
-try:
-    wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
-    print(' / \ syn_27: OK')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на син_27')
+# driver.get("https://syn27.lp.moigektar.ru/")
+# try:
+#     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
+#     print(' / \ syn_27: OK')
+# except:
+#     print('ERROR (service_check): не дождался загрузки элемента на син_27')
 
 # 40. проверка "Полевых работ" по наличию текста "Запомнить"
 driver.get("https://fields.bigland.ru/site/login")
@@ -1019,12 +1018,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 65. проверка сайта "Барская Усадьба" по видимости ссылки "Меню завтраков"
-driver.get("https://xn--80aacl7dl0e.xn--p1ai/")
+# 65. проверка сайта "Барская Усадьба" по видимости текста "Ждем вас в гости!"
+driver.get("https://xn--80aacl7dl0e.xn--p1ai")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(., "Меню завтраков")]]')))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h2[text()[contains(., "Ждем вас в гости!")]]')))
         if elem:
             print('  |  Барская усадьба: OK')
             break
@@ -1048,6 +1047,38 @@ while count < 3:
         count += 1
         if count == 3:
             print('ERROR (service_check): не дождался загрузки элемента на сайте "Онлайн-показ"')
+        else:
+            driver.refresh()
+
+# 67. проверка сайта mail.bug.land по видимости текста "Имя пользователя"
+driver.get("https://mail.bug.land")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.ID, 'userNameLabel')))
+        if elem:
+            print(' \ / сайт "mail.bug.land": OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте "mail.bug.land"')
+        else:
+            driver.refresh()
+
+# 68. проверка syn_74 по наличию текста "Концепция"
+driver.get("https://syn74.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Концепция")]]')))
+        if elem:
+            print('  |   syn_74: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на син_74')
         else:
             driver.refresh()
 

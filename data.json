@@ -10,15 +10,15 @@
         "mg_catalog_plot_btn" : "Карточки в Каталоге участков, кнопка на первой карточке",
                             "mg_catalog_plot_btn" : "//li[1]//*[text()[contains(., 'Узнать больше')]]",
         "mg_cur_release_1" : "кука для текущего релиза А/Б-теста",
-                            "mg_cur_release_1" : "/?mg_20240417_41=version_1",
+                            "mg_cur_release_1" : "/?mg_20241204_75=version_1",
         "mg_cur_release_2" : "кука для текущего релиза А/Б-теста",
-                            "mg_cur_release_2" : "/?mg_20240417_41=version_2"
+                            "mg_cur_release_2" : "/?mg_20241204_75=version_2"
     },
 
     "test_data_valid":
     {
-        "name" : "Селен Вечерний",
-        "phone" : "9127777777",
+        "name" : "Тест",
+        "phone" : "9533527075",
         "email" : "test@bugland.ru"
     },
 
@@ -36,9 +36,14 @@
         "email" : "test@bigland.ru"
     },
 
-    "111_cred":
+  "111_cred":
     {
         "login" : "demo",
         "password" : "moigektar"
+    },
+  "LK_cred":
+    {
+        "login" : "igor.frolov.1@yandex.ru",
+        "password" : "KsyaHvCIUXxSLvqCFq_pl0pVT4ik3514UzrC8gSn1y_XwoehHIN3nLSXyxWWj_3v"
     }
 }
