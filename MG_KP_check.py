@@ -3,6 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
+
 ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = ch_options)
@@ -18,7 +19,7 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
-driver.set_window_size(1680, 1000)
+driver.set_window_size(1600, 1000)
 driver.implicitly_wait(10)
 
 
@@ -29,19 +30,28 @@ with open('data.json', 'r') as file:
 driver.get("https://cabinet.moigektar.ru/")
 time.sleep(5)
 
+# ЛК: закрыть видео, открыть мод. авторизации, переключить вкладки, залогиниться
+b_close = driver.find_element(by=By.CSS_SELECTOR, value='#lesson_main > div > div > div > div > img')
+auth_link = driver.find_element(by=By.CSS_SELECTOR, value='#navbar-notification a')
 btn_1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-default"]//a[@href="#!"]')
-tab = driver.find_element(by=By.XPATH, value='//*[@id="uk-switcher-33-tabpanel-1"]//*[text()="Ввести пароль"]')
+tab1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Войти в аккаунт"]')
+tab2 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Ввести пароль"]')
 login = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-login')
 password = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-password')
 btn_2 = driver.find_element(by=By.XPATH, value='//*[@action="/security/login"]/*[@name="login-button"]')
 
+b_close.click()
+auth_link.click()
 btn_1.click()
-tab.click()
+tab1.click()
+tab2.click()
 login.send_keys(str(data["LK_cred"]["login"]))
 password.send_keys(str(data["LK_cred"]["password"]))
 btn_2.click()
 time.sleep(5)
 
+# МГ: сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
+# на странице КП дождаться отображения иконки "Смотреть КП"
 driver.get("https://moigektar.ru/catalogue?purposeUseIds%5B%5D=5&purposeUseIds%5B%5D=2&purposeUseIds%5B%5D=7&purposeUseIds%5B%5D=3&purposeUseIds%5B%5D=6&purposeUseIds%5B%5D=4&purposeUseIds%5B%5D=8")
 actions.send_keys(Keys.PAGE_DOWN).perform()
 time.sleep(2)
