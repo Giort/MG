@@ -18,7 +18,7 @@
     "test_data_valid":
     {
         "name" : "Тест",
-        "phone" : "9533527075",
+        "phone" : "9127777777",
         "email" : "test@bugland.ru"
     },
 
@@ -44,6 +44,6 @@
   "LK_cred":
     {
         "login" : "igor.frolov.1@yandex.ru",
-        "password" : "KsyaHvCIUXxSLvqCFq_pl0pVT4ik3514UzrC8gSn1y_XwoehHIN3nLSXyxWWj_3v"
+        "password" : "Prostoparol`"
     }
 }

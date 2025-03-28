@@ -1082,6 +1082,39 @@ while count < 3:
         else:
             driver.refresh()
 
+# 69. проверка сайта родовых поселений по наличию текста "Концепция"
+driver.get("https://settlements.lp.moigektar.ru/")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "участником")]]')))
+        if elem:
+            print('  |   "Родовые поселения": OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на "Родовых поселениях"')
+        else:
+            driver.refresh()
+
+# 70. проверка сайта syn_447 по наличию текста "Усадьба на Байкале» — это:"
+driver.get("https://syn447.lp.moigektar.ru")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Усадьба на Байкале» — это:")]]')))
+        if elem:
+            print(' / \ syn_447: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на syn_447 ')
+        else:
+            driver.refresh()
+
+
 time.sleep(2)
 driver.quit()
 

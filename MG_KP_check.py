@@ -30,9 +30,10 @@ with open('data.json', 'r') as file:
 driver.get("https://cabinet.moigektar.ru/")
 time.sleep(5)
 
-# ЛК: закрыть видео, открыть мод. авторизации, переключить вкладки, залогиниться
+# ЛК: в мод. авторизации переключить вкладки, залогиниться
 b_close = driver.find_element(by=By.CSS_SELECTOR, value='#lesson_main > div > div > div > div > img')
 auth_link = driver.find_element(by=By.CSS_SELECTOR, value='#navbar-notification a')
+# title = driver.find_element(by=By.CSS_SELECTOR, value='#login-modal')
 btn_1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-default"]//a[@href="#!"]')
 tab1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Войти в аккаунт"]')
 tab2 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Ввести пароль"]')
@@ -40,8 +41,13 @@ login = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-login')
 password = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-password')
 btn_2 = driver.find_element(by=By.XPATH, value='//*[@action="/security/login"]/*[@name="login-button"]')
 
+actions.move_by_offset(100, 100).click().perform()
+time.sleep(5)
 b_close.click()
+time.sleep(5)
 auth_link.click()
+time.sleep(5)
+# title.click()
 btn_1.click()
 tab1.click()
 tab2.click()
@@ -52,7 +58,8 @@ time.sleep(5)
 
 # МГ: сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
-driver.get("https://moigektar.ru/catalogue?purposeUseIds%5B%5D=5&purposeUseIds%5B%5D=2&purposeUseIds%5B%5D=7&purposeUseIds%5B%5D=3&purposeUseIds%5B%5D=6&purposeUseIds%5B%5D=4&purposeUseIds%5B%5D=8")
+driver.get("https://moigektar.ru/catalogue?clusterIds%5B%5D=88")
+time.sleep(2)
 actions.send_keys(Keys.PAGE_DOWN).perform()
 time.sleep(2)
 btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-analytics-catalog-batch-presentation-download"))])[2]')
