@@ -28,24 +28,38 @@ with open('data.json', 'r') as file:
 #driver.get("https://moigektar.ru")
 #driver.get("https://syn73.lp.moigektar.ru/")
 
-# 1. проверка главной страницы "МГ"
-driver.get("http://moigektar.ru")
+driver.get("https://cabinet.moigektar.ru/")
+time.sleep(5)
 
-# избавляемся от поп-апа, который перекрывает доступ ко кнопкам
+# ЛК: в мод. авторизации переключить вкладки, залогиниться
+b_close = driver.find_element(by=By.CSS_SELECTOR, value='#lesson_main > div > div > div > div > img')
+auth_link = driver.find_element(by=By.CSS_SELECTOR, value='#navbar-notification a')
+# title = driver.find_element(by=By.CSS_SELECTOR, value='#login-modal')
+btn_1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-default"]//a[@href="#!"]')
+tab1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Войти в аккаунт"]')
+tab2 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Ввести пароль"]')
+login = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-login')
+password = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-password')
+btn_2 = driver.find_element(by=By.XPATH, value='//*[@action="/security/login"]/*[@name="login-button"]')
+
+actions.move_by_offset(100, 100).click().perform()
 time.sleep(1)
-popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-driver.execute_script("""
-var auth_win = arguments[0];
-auth_win.remove();
-""", popup_w)
+b_close.click()
+time.sleep(1)
+auth_link.click()
+time.sleep(1)
+# title.click()
+btn_1.click()
+tab1.click()
+tab2.click()
+login.send_keys(str(data["LK_cred"]["login"]))
+password.send_keys(str(data["LK_cred"]["password"]))
+btn_2.click()
+wait(driver, 20).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
-# 1.4 проверка формы "Оставьте заявку", Максим - проверяю наличие правильного атрибута lgForm
-try:
-    form_id = driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_max_callback'])[1]")
-except Exception as e:
-        error_msg = str(e).split('\n')[0]
-        print("Ошибка: главная, форма с Максимом, lgForm — ", error_msg)
-
+driver.get('https://cabinet.moigektar.ru/notifications')
+not_list = len(driver.find_elements(by=By.CSS_SELECTOR, value='#notification-app > div > ul > li'))
+print(not_list)
 
 time.sleep(5)
 driver.quit()

@@ -650,13 +650,28 @@ while count < 3:
         else:
             driver.refresh()
 
-# 39. проверка syn_27 по видимости заголовка "Забронировать"
-# driver.get("https://syn27.lp.moigektar.ru/")
-# try:
-#     wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
-#     print(' / \ syn_27: OK')
-# except:
-#     print('ERROR (service_check): не дождался загрузки элемента на син_27')
+# 39. проверка сайта турпортала Вазуза по наличию текста "Усадьба на Байкале» — это:"
+driver.get("https://турпортал-вазуза.рф")
+
+driver.find_element(by=By.CSS_SELECTOR, value='input[id=loginconfig-username]').send_keys('moigektar')
+driver.find_element(by=By.CSS_SELECTOR, value='input[id=loginconfig-password]').send_keys('moigektar')
+driver.find_element(by=By.CSS_SELECTOR, value='button[type]').click()
+
+time.sleep(5)
+
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h3[text()[contains(., "Уникальный экокурорт")]]')))
+        if elem:
+            print(' / \ сайт турпортала: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте турпортала ')
+        else:
+            driver.refresh()
 
 # 40. проверка "Полевых работ" по наличию текста "Запомнить"
 driver.get("https://fields.bigland.ru/site/login")
@@ -1113,6 +1128,8 @@ while count < 3:
             print('ERROR (service_check): не дождался загрузки элемента на syn_447 ')
         else:
             driver.refresh()
+
+
 
 
 time.sleep(2)
