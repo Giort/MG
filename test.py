@@ -28,38 +28,82 @@ with open('data.json', 'r') as file:
 #driver.get("https://moigektar.ru")
 #driver.get("https://syn73.lp.moigektar.ru/")
 
-driver.get("https://cabinet.moigektar.ru/")
-time.sleep(5)
+# 8. проверка раздела "Подарочный сертификат"
+# 8.1 модалка "Оставьте заявку!" №1 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="gift-main-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #1, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #1, lgForm — ', error_msg)
+# 8.2 модалка "Оставьте заявку!" №2 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-parents-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #2, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #2, lgForm — ', error_msg)
+# 8.3 модалка "Оставьте заявку!" №3 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-friend-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #3, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #3, lgForm — ', error_msg)
+# 8.4 модалка "Оставьте заявку!" №4 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-business-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #4, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #4, lgForm — ', error_msg)
+# 8.5 модалка "Оставьте заявку!" №5 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="gift-option-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #5, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #5, lgForm — ', error_msg)
+# 8.6 модалка "Оставьте заявку!" №6 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="gift-certificate-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #6, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #6, lgForm — ', error_msg)
+# 8.7 модалка "Оставьте заявку!" №7 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="select-certificate-plot-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #7, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #7, lgForm — ', error_msg)
+# 8.8 модалка "Оставьте заявку!" №8 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="select-certificate-sum-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #8, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #8, lgForm — ', error_msg)
+# 8.9 модалка "Оставьте заявку!" №9 — проверяю наличие правильного атрибута lgForm
+try:
+    driver.get('https://moigektar.ru/gift')
+    driver.find_element(by=By.XPATH, value='(//*[@id="gift-land-modal"]//*[@value="lg_cert"])[1]')
+    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #9, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #9, lgForm — ', error_msg)
 
-# ЛК: в мод. авторизации переключить вкладки, залогиниться
-b_close = driver.find_element(by=By.CSS_SELECTOR, value='#lesson_main > div > div > div > div > img')
-auth_link = driver.find_element(by=By.CSS_SELECTOR, value='#navbar-notification a')
-# title = driver.find_element(by=By.CSS_SELECTOR, value='#login-modal')
-btn_1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-default"]//a[@href="#!"]')
-tab1 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Войти в аккаунт"]')
-tab2 = driver.find_element(by=By.XPATH, value='//*[@id="tab-call"]//*[text()="Ввести пароль"]')
-login = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-login')
-password = driver.find_element(by=By.CSS_SELECTOR, value='input#authconfig-password')
-btn_2 = driver.find_element(by=By.XPATH, value='//*[@action="/security/login"]/*[@name="login-button"]')
 
-actions.move_by_offset(100, 100).click().perform()
-time.sleep(1)
-b_close.click()
-time.sleep(1)
-auth_link.click()
-time.sleep(1)
-# title.click()
-btn_1.click()
-tab1.click()
-tab2.click()
-login.send_keys(str(data["LK_cred"]["login"]))
-password.send_keys(str(data["LK_cred"]["password"]))
-btn_2.click()
-wait(driver, 20).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
-driver.get('https://cabinet.moigektar.ru/notifications')
-not_list = len(driver.find_elements(by=By.CSS_SELECTOR, value='#notification-app > div > ul > li'))
-print(not_list)
 
 time.sleep(5)
 driver.quit()

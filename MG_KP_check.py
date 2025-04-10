@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 
-ch_options.add_argument('--headless')
+#ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = ch_options)
 ch_options.page_load_strategy = 'eager'
@@ -54,7 +54,7 @@ tab2.click()
 login.send_keys(str(data["LK_cred"]["login"]))
 password.send_keys(str(data["LK_cred"]["password"]))
 btn_2.click()
-time.sleep(5)
+time.sleep(10)
 
 # МГ: сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
