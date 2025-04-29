@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
 
-#ch_options.add_argument('--headless')
+ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = ch_options)
 ch_options.page_load_strategy = 'eager'
