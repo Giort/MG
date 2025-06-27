@@ -13,6 +13,10 @@ from selenium.webdriver.common.keys import Keys
 # Настройка драйвера с Selenium Wire
 # Включаем перехват запросов
 sw_options = {'disable_capture': False}
+import json
+
+with open('data.json', 'r') as file:
+    data = json.load(file)
 
 # мод. авторизации из хедера: отправляется цель при открытии и взаимодействии
 def check_header_auth_modal_goal(text):
@@ -197,3 +201,69 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: при нажатии на карточку актива — ', error_msg)
+
+# карточки активов: нажатия на элементы в карточке
+def check_batch_card_button_goal(button_tests):
+    driver = webdriver.Chrome(
+        seleniumwire_options=sw_options,
+        options=ch_options)
+    actions = ActionChains(driver)
+
+    try:
+        driver.get("https://moigektar.ru")
+
+        #авторизация
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+        time.sleep(2)
+        tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
+        name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+        password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
+        btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
+        tab.click()
+        name.send_keys(str(data["LK_cred"]["login"]))
+        password.send_keys(str(data["LK_cred"]["password"]))
+        btn.click()
+        time.sleep(10)
+
+        # Переход к СП и проверка отправки целей
+        driver.get("https://moigektar.ru#catalogueSpecial")
+        time.sleep(5)
+        for test in button_tests:
+            try:
+                elem = driver.find_element(By.XPATH, test['loc'])
+                elem.click()
+                time.sleep(15)
+
+                request_found = False
+                for request in driver.requests:
+                    if test['goal'] in request.url:
+                        print(f"     ОК: при нажатии на {test['place']} отправляется цель '{test['goal']}'")
+                        request_found = True
+                        break
+
+                if not request_found:
+                    print(f"Ошибка: при нажатии на {test['place']} текст '{test['goal']}' не найден")
+
+            except Exception as e:
+                error_msg = str(e).split('\n')[0]
+                print(f'Ошибка: при нажатии на {test["place"]} — {error_msg}')
+
+    finally:
+        driver.quit()
+
+# Параметры для check_batch_card_button_goal
+button_tests = [
+    {
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
+        'goal': 'catalog_v4.batch_share',
+        'place': 'кнопку "Поделиться" на карточке актива'
+    },
+    {
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[1]',
+        'goal': 'catalog_v4.batch_presentation_download',
+        'place': 'кнопку "pdf" на карточке актива'
+    }
+]
+
+# Запуск
+check_batch_card_button_goal(button_tests)

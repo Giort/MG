@@ -239,7 +239,7 @@ driver.get("https://complex.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'комплекс услуг')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Комплекс услуг')]]")))
         if elem:
             print('  |  Комплекс услуг: OK')
             break
@@ -1128,6 +1128,24 @@ while count < 3:
             print('ERROR (service_check): не дождался загрузки элемента на syn_447 ')
         else:
             driver.refresh()
+
+# 71. проверка сайта продажи здания в Бронницах по наличию текста "Усадьба на Байкале» — это:"
+driver.get("https://здание-бронницы.рф")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "стоящее здание")]]')))
+        if elem:
+            print(' \ / Бронницы: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте Бронниц ')
+        else:
+            driver.refresh()
+
+
 
 
 

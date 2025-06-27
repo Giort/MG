@@ -3,7 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
+# ch_options.add_argument('--headless')
 ch_options.page_load_strategy = 'eager'
 driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = ch_options)
 from selenium.webdriver.common.by import By
@@ -30,6 +30,7 @@ with open('data.json', 'r') as file:
 # избавляемся от поп-апа, который перекрывает доступ ко кнопкам
 try:
     driver.get("http://moigektar.ru")
+    # driver.get("http://moigektar.localhost")
     time.sleep(1)
     popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
     driver.execute_script("""
@@ -39,51 +40,67 @@ try:
 except:
     print("Popup not found")
 
-# 1.1 проверка формы "Оставьте заявку", Арина
+# 1.1 проверка формы "Оставьте заявку", форма с Софией №1
 # проверяю отправку данных через форму
 # проверяю наличие правильного атрибута lgForm
 try:
     title = driver.find_element(by=By.XPATH, value="/descendant::*[text()[contains(.,'Арина')]][2]")
     # сохраняю текущий динамический id формы в переменную для того, чтобы последующие локаторы не были такого вида:
     # //h1/*[text()[contains(.,'Хотите узнать')]]//parent::h1//following-sibling::ul[2]//input[@id='consultationform-phone']
-    form_id = driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')])[1]").get_attribute("id")
+    form_id = driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')])[1]").get_attribute("id")
     actions.move_to_element(title).perform()
     driver.find_element(by=By.XPATH, value="(//div[@id='"+ form_id +"']//*[@id='consultationform-phone'])[1]").send_keys(str(data["test_data_valid"]["phone"]))
     driver.find_element(by=By.XPATH, value="(//div[@id='"+ form_id +"']//*[text()[contains(.,'Отправить')]])[1]").click()
     try:
         name_input = driver.find_element(by=By.XPATH, value="(//div[@id='"+ form_id +"']//*[@id='consultationform-name'])[2]")
         name_input.click()
-        print("     ОК: главная, форма с Ариной, отправка через форму")
+        print("     ОК: главная, форма с Софией №1, отправка через форму")
     except Exception as e:
         error_msg = str(e).split('\n')[0]
-        print("Ошибка: главная, форма с Ариной, отправка через форму — ", error_msg)
+        print("Ошибка: главная, форма с Софией №1, отправка через форму — ", error_msg)
     try:
-        driver.find_element(by=By.XPATH, value="(//div[@id='"+ form_id +"']//*[@value='mg_main_page_arina_callback'])[2]")
-        print("     ОК: главная, форма с Ариной, lgForm")
+        driver.find_element(by=By.XPATH, value="(//div[@id='"+ form_id +"']//*[@value='mg_main_page_sofia2_callback'])[2]")
+        print("     ОК: главная, форма с Софией №1, lgForm")
     except Exception as e:
         error_msg = str(e).split('\n')[0]
-        print("Ошибка: главная, форма с Ариной, lgForm — ", error_msg)
+        print("Ошибка: главная, форма с Софией, lgForm — ", error_msg)
 except Exception as e:
         error_msg = str(e).split('\n')[0]
-        print("Ошибка: главная, форма с Ариной — ", error_msg)
+        print("Ошибка: главная, форма с Софией №1 — ", error_msg)
 
-# 1.2 проверка формы "Оставьте заявку", Андрей - проверяю наличие правильного атрибута lgForm
+# 1.2 проверка формы "Оставьте заявку", Арина #1 - проверяю наличие правильного атрибута lgForm
 try:
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_andrey_callback'])[1]")
-    print("     ОК: главная, форма с Андреем, lgForm")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_arina_callback'])[1]")
+    print("     ОК: главная, форма с Ариной #1, lgForm")
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print("Ошибка: главная, форма с Андреем, lgForm — ", error_msg)
+    print("Ошибка: главная, форма с Ариной #1, lgForm — ", error_msg)
 
-# 1.3 проверка формы "Оставьте заявку", София - проверяю наличие правильного атрибута lgForm
+# 1.3 проверка формы "Оставьте заявку", Арина #2 - проверяю наличие правильного атрибута lgForm
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_arina2_callback'])[1]")
+    print("     ОК: главная, форма с Ариной #2, lgForm")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: главная, форма с Ариной #2, lgForm — ", error_msg)
+
+# 1.4 проверка формы "Оставьте заявку", Анастасия - проверяю наличие правильного атрибута lgForm
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_anastasiya_callback'])[1]")
+    print("     ОК: главная, форма с Анастасией, lgForm")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: главная, форма с Анастасией, lgForm — ", error_msg)
+
+# 1.5 проверка формы "Оставьте заявку", София №2 - проверяю наличие правильного атрибута lgForm
 try:
     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_sofia_callback'])[1]")
-    print("     ОК: главная, форма с Софией, lgForm")
+    print("     ОК: главная, форма с Софией №2, lgForm")
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print("Ошибка: главная, форма с Софией, lgForm — ", error_msg)
+    print("Ошибка: главная, форма с Софией №2, lgForm — ", error_msg)
 
-# 1.4 проверка формы "Оставьте заявку", Максим - проверяю наличие правильного атрибута lgForm
+# 1.6 проверка формы "Оставьте заявку", Максим - проверяю наличие правильного атрибута lgForm
 try:
     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_max_callback'])[1]")
     print("     ОК: главная, форма с Максимом, lgForm")
@@ -98,9 +115,18 @@ try:
     driver.get("https://moigektar.ru/catalogue-no-auth")
     actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
     time.sleep(2)
-    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
     time.sleep(2)
-    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+    time.sleep(2)
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+    time.sleep(2)
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+    time.sleep(2)
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+    time.sleep(2)
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+    time.sleep(2)
     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_catalog_arina_callback'])[1]")
     print("     ОК: каталог, форма с Ариной, lgForm")
 except Exception as e:

@@ -256,7 +256,15 @@ except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #9, lgForm — ', error_msg)
 
-
+# 9. проверка страницы про инвестиции
+# модалка "Получить консультацию" — проверяю наличие правильного атрибута lgForm
+try:
+    driver.find_element(by=By.XPATH,
+                        value='(//*[@id="modal-descr-invest-batch"]//*[@value="mg_invest_batch_page"])[1]')
+    print('     ОК: стр. про инвестиции, блок "Преимущества", модалка "Получить консультацию", lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: стр. про инвестиции, блок "Преимущества", модалка "Получить консультацию", lgForm — ', error_msg)
 
 
 #time.sleep(8)
