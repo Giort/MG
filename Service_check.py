@@ -303,7 +303,7 @@ driver.get("https://clearance.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'РАСЧИСТКА УЧАСТКА')]]")))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'для чего нужна расчистка')]]")))
         if elem:
             print('  |  Расчистка участка: OK')
             break
@@ -602,21 +602,21 @@ while count < 3:
         else:
             driver.refresh()
 
-# 36. проверка syn_22 по видимости заголовка "Генеральный"
-# driver.get("https://syn22.lp.moigektar.ru/")
-# count = 0
-# while count < 3:
-#     try:
-#         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-#         if elem:
-#             print(' \ / syn_22: OK')
-#             break
-#     except:
-#         count += 1
-#         if count == 3:
-#             print('ERROR (service_check): не дождался загрузки элемента на син_22')
-#         else:
-#             driver.refresh()
+# 36. проверка сайта продажи здания в Бронницах по наличию текста "Усадьба на Байкале» — это:"
+driver.get("https://здание-бронницы.рф")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '(//*[text()[contains(., "Отдельно стоящее здание")]])[1]')))
+        if elem:
+            print(' \ / Бронницы: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте Бронниц ')
+        else:
+            driver.refresh()
 
 # 37. проверка syn_23 по видимости заголовка "Генеральный"
 driver.get("https://syn23.lp.moigektar.ru/")
@@ -1088,7 +1088,7 @@ while count < 3:
     try:
         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Концепция")]]')))
         if elem:
-            print('  |   syn_74: OK')
+            print('  |  syn_74: OK')
             break
     except:
         count += 1
@@ -1097,14 +1097,14 @@ while count < 3:
         else:
             driver.refresh()
 
-# 69. проверка сайта родовых поселений по наличию текста "Концепция"
+# 69. проверка сайта родовых поселений по наличию текста "участником"
 driver.get("https://settlements.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
         elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "участником")]]')))
         if elem:
-            print('  |   "Родовые поселения": OK')
+            print('  |  "Родовые поселения": OK')
             break
     except:
         count += 1
@@ -1129,21 +1129,7 @@ while count < 3:
         else:
             driver.refresh()
 
-# 71. проверка сайта продажи здания в Бронницах по наличию текста "Усадьба на Байкале» — это:"
-driver.get("https://здание-бронницы.рф")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "стоящее здание")]]')))
-        if elem:
-            print(' \ / Бронницы: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте Бронниц ')
-        else:
-            driver.refresh()
+
 
 
 
