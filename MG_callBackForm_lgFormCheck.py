@@ -29,8 +29,8 @@ with open('data.json', 'r') as file:
 
 # избавляемся от поп-апа, который перекрывает доступ ко кнопкам
 try:
-    driver.get("http://moigektar.ru")
-    # driver.get("http://moigektar.localhost")
+    driver.get("https://moigektar.ru/catalogue-no-auth")
+    driver.get("https://moigektar.ru")
     time.sleep(1)
     popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
     driver.execute_script("""
@@ -464,18 +464,18 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: "Вопрос-ответ", форма с Юлией, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Юлия')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[2]")
-#     print('     ОК: "Вопрос-ответ", форма с Юлией, заголовок')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: "Вопрос-ответ", форма с Юлией, заголовок — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Юлия')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print('     ОК: "Вопрос-ответ", форма с Юлией, заголовок')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: "Вопрос-ответ", форма с Юлией, заголовок — ', error_msg)
 
 
 # 7. Проверка детальной страницы новости
 # 7.1 Инлайн-форма Арина - проверяю наличие правильного атрибута lgForm и заголовка
 try:
-    driver.get("https://moigektar.ru/news/novosti-servisnoy-kompanii-moy-gektar-za-period-11-17-iyulya-ob7OQtWgcC")
+    driver.get("https://moigektar.ru/news/keys-statya-proekta-moy-gektar-dom-nikity-lovicha-usadba-v-zavidovo-W2fdhFEXcn")
     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_news_page_callback'])[1]")
     print('     ОК: детальная страница новости, форма с Ариной, lgForm')
 except Exception as e:
@@ -498,12 +498,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - Основная, форма с Максимом, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - Основная, форма с Максимом, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - Основная, форма с Максимом, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - Основная, форма с Максимом, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - Основная, форма с Максимом, заголовок — ", error_msg)
 
 # 8.2 Страница 1 - проверяю наличие правильного атрибута lgForm и заголовка
 try:
@@ -513,12 +513,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - страница 1, форма с Ариной, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 1, форма с Ариной, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 1, форма с Ариной, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 1, форма с Ариной, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 1, форма с Ариной, заголовок — ", error_msg)
 
 # 8.3 Страница 2 - проверяю наличие правильного атрибута lgForm и заголовка
 try:
@@ -528,27 +528,27 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - страница 2, форма с Максимом, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 2, форма с Максимом, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 2, форма с Максимом, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 2, форма с Максимом, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 2, форма с Максимом, заголовок — ", error_msg)
 
 # 8.4 Страница 3 - проверяю наличие правильного атрибута lgForm и заголовка
-# try:
-#     driver.get("https://moigektar.ru/actions/3")
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_veteran_callback'])[1]")
-#     print('     ОК: Акции - страница 3, форма с Андреем, lgForm')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Акции - страница 3, форма с Андреем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 3, форма с Андреем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 3, форма с Андреем, заголовок — ", error_msg)
+try:
+    driver.get("https://moigektar.ru/actions/3")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_veteran_callback'])[1]")
+    print('     ОК: Акции - страница 3, форма с Андреем, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Акции - страница 3, форма с Андреем, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 3, форма с Андреем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 3, форма с Андреем, заголовок — ", error_msg)
 
 # 8.5 Страница 4 - проверяю наличие правильного атрибута lgForm и заголовка
 try:
@@ -558,12 +558,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - страница 4, форма с Софией, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 4, форма с Софией, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 4, форма с Софией, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 4, форма с Софией, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 4, форма с Софией, заголовок — ", error_msg)
 
 # 8.6 Страница 5 - проверяю наличие правильного атрибута lgForm и заголовка
 try:
@@ -573,27 +573,27 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - страница 5, форма с Ариной, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 5, форма с Ариной, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 5, форма с Ариной, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 5, форма с Ариной, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 5, форма с Ариной, заголовок — ", error_msg)
 
 # 8.7 Страница 6 - проверяю наличие правильного атрибута lgForm и заголовка
-# try:
-#     driver.get("https://moigektar.ru/actions/6")
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_refugees_callback'])[1]")
-#     print('     ОК: Акции - страница 6, форма с Андреем, lgForm')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Акции - страница 6, форма с Андреем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 6, форма с Андреем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 6, форма с Андреем, заголовок — ", error_msg)
+try:
+    driver.get("https://moigektar.ru/actions/6")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_refugees_callback'])[1]")
+    print('     ОК: Акции - страница 6, форма с Андреем, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Акции - страница 6, форма с Андреем, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 6, форма с Андреем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 6, форма с Андреем, заголовок — ", error_msg)
 
 # 8.8 Страница 7 - проверяю наличие правильного атрибута lgForm и заголовка
 try:
@@ -603,12 +603,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Акции - страница 7, форма с Максимом, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Акции - страница 7, форма с Максимом, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Акции - страница 7, форма с Максимом, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Акции - страница 7, форма с Максимом, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Акции - страница 7, форма с Максимом, заголовок — ", error_msg)
 
 
 # 9. Проверка раздела "Фонд добра"
@@ -620,12 +620,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: Фонд добра, форма с Юлией, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Юлия')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[2]")
-#     print('     ОК: Фонд добра, форма с Юлией, заголовок')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Фонд добра, форма с Юлией, заголовок — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'гораздо')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print('     ОК: Фонд добра, форма с Юлией, заголовок')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Фонд добра, форма с Юлией, заголовок — ', error_msg)
 
 
 # 10. Проверка раздела "Вакансии"
@@ -664,53 +664,53 @@ except Exception as e:
 
 # 12. Проверка раздела "Глэмпинг"
 # 12.1 Инлайн-форма Андрей - проверяю наличие правильного атрибута lgForm и заголовка
-# try:
-#     driver.get("https://moigektar.ru/goal/glamping")
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_glamping_page_andrey_callback'])[1]")
-#     print('     ОК: Глэмпинг, форма с Андреем, lgForm')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Глэмпинг, форма с Андреем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Глэмпинг, форма с Андреем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Глэмпинг, форма с Андреем, заголовок — ", error_msg)
+try:
+    driver.get("https://moigektar.ru/goal/glamping")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_glamping_page_andrey_callback'])[1]")
+    print('     ОК: Глэмпинг, форма с Андреем, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Глэмпинг, форма с Андреем, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Глэмпинг, форма с Андреем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Глэмпинг, форма с Андреем, заголовок — ", error_msg)
 
 
 # 13. Проверка раздела "Фермы и агробизнес"
 # 13.1 Инлайн-форма Андрей - проверяю наличие правильного атрибута lgForm и заголовка
-# try:
-#     driver.get("https://moigektar.ru/goal/farm")
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_farm_page_andrey_callback'])[1]")
-#     print('     ОК: Фермы и агробизнес, форма с Андреем, lgForm')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Фермы и агробизнес, форма с Андреем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Фермы и агробизнес, форма с Андреем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Фермы и агробизнес, форма с Андреем, заголовок — ", error_msg)
+try:
+    driver.get("https://moigektar.ru/goal/farm")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_farm_page_andrey_callback'])[1]")
+    print('     ОК: Фермы и агробизнес, форма с Андреем, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Фермы и агробизнес, форма с Андреем, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Фермы и агробизнес, форма с Андреем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Фермы и агробизнес, форма с Андреем, заголовок — ", error_msg)
 
 
 # 14. Проверка раздела "Родовые поселения"
 # 14.1 Инлайн-форма Андрей - проверяю наличие правильного атрибута lgForm и заголовка
-# try:
-#     driver.get("http://moigektar.ru/goal/settlements")
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_settlements_page_andrey_callback'])[1]")
-#     print('     ОК: Родовые поселения, форма с Андреем, lgForm')
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print('Ошибка: Родовые поселения, форма с Андреем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: Родовые поселения, форма с Андреем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: Родовые поселения, форма с Андреем, заголовок — ", error_msg)
+try:
+    driver.get("https://moigektar.ru/goal/settlements")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_settlements_page_andrey_callback'])[1]")
+    print('     ОК: Родовые поселения, форма с Андреем, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: Родовые поселения, форма с Андреем, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: Родовые поселения, форма с Андреем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: Родовые поселения, форма с Андреем, заголовок — ", error_msg)
 
 
 # 15. Проверка раздела "Подарочный сертификат"
@@ -751,12 +751,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: раздел личного кабинета, форма с Ариной, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'и я вас проконсультирую,')]])[2]")
-#     print("     ОК: раздел личного кабинет, форма с Ариной, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: раздел личного кабинет, форма с Ариной, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: раздел личного кабинет, форма с Ариной, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: раздел личного кабинет, форма с Ариной, заголовок — ", error_msg)
 # 17.2 Инлайн-форма с Игорем, проверяю наличие правильного атрибута lgForm и заголовка
 try:
     driver.get("https://moigektar.ru/cabinet")
@@ -765,12 +765,12 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('Ошибка: раздел личного кабинета, форма с Игорем, lgForm — ', error_msg)
-# try:
-#     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Игорь')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'к личному кабинету,')]])[2]")
-#     print("     ОК: раздел личного кабинет, форма с Игорем, заголовок")
-# except Exception as e:
-#     error_msg = str(e).split('\n')[0]
-#     print("Ошибка: раздел личного кабинет, форма с Игорем, заголовок — ", error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Игорь')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'к личному кабинету')]])[1]")
+    print("     ОК: раздел личного кабинет, форма с Игорем, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: раздел личного кабинет, форма с Игорем, заголовок — ", error_msg)
 
 
 # 18. Проверка раздела регистрации от стойки
