@@ -23,76 +23,48 @@ actions = ActionChains(driver)
 with open('data.json', 'r') as file:
     data = json.load(file)
 
-# 8. Проверка раздела "Акции"
-# 8.1 Основная страница, Максим - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_main_page_max_callback'])[1]")
-    print('     ОК: Акции - Основная, форма с Максимом, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - Основная, форма с Максимом, lgForm — ', error_msg)
 
-# 8.2 Страница 1 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/1")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_large_family_callback'])[1]")
-    print('     ОК: Акции - страница 1, форма с Ариной, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 1, форма с Ариной, lgForm — ', error_msg)
 
-# 8.3 Страница 2 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/2")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_svo_callback'])[1]")
-    print('     ОК: Акции - страница 2, форма с Максимом, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 2, форма с Максимом, lgForm — ', error_msg)
+# карточки активов: нажали на карточку
+def check_batch_card_goal(text):
+    driver = webdriver.Chrome(
+        seleniumwire_options=sw_options,
+        options=ch_options)
+    actions = ActionChains(driver)
+    driver.get('https://moigektar.ru/?__counters=1')
 
-# 8.4 Страница 3 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/3")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_veteran_callback'])[1]")
-    print('     ОК: Акции - страница 3, форма с Андреем, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 3, форма с Андреем, lgForm — ', error_msg)
+    # избавляемся от поп-апа, который перекрывает доступ к карточкам
+    try:
+        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+        driver.execute_script("""
+        var auth_win = arguments[0];
+        auth_win.remove();
+        """, popup_w)
+    except:
+        print("Popup not found")
 
-# 8.5 Страница 4 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/4")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_facilities_callback'])[1]")
-    print('     ОК: Акции - страница 4, форма с Софией, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 4, форма с Софией, lgForm — ', error_msg)
+    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[4]')
+    time.sleep(1500)
+    actions.move_to_element(card).perform()
+    card.click()
+    time.sleep(1500)
 
-# 8.6 Страница 5 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/5")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_certificate_friend_callback'])[1]")
-    print('     ОК: Акции - страница 5, форма с Ариной, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 5, форма с Ариной, lgForm — ', error_msg)
+    request_found = False
+    for request in driver.requests:
+        if text in request.url:
+            print(f"     ОК: при нажатии на карточку актива отправляется цель '{text}'")
+            request_found = True
+            break
+    if not request_found:
+        print(
+            f"Ошибка: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
 
-# 8.7 Страница 6 - проверяю наличие правильного атрибута lgForm
-try:
-    driver.get("https://moigektar.ru/actions/6")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_refugees_callback'])[1]")
-    print('     ОК: Акции - страница 6, форма с Андреем, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 6, форма с Андреем, lgForm — ', error_msg)
+    driver.quit()
+    return request_found
 
-# 8.8 Страница 7 - проверяю наличие правильного атрибута lgForm
 try:
-    driver.get("https://moigektar.ru/actions/7")
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_page_certificate_self_callback'])[1]")
-    print('     ОК: Акции - страница 7, форма с Максимом, lgForm')
+    check_batch_card_goal('catalog_v4.batch_card_click')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('Ошибка: Акции - страница 7, форма с Максимом, lgForm — ', error_msg)
+    print('Ошибка: при нажатии на карточку актива — ', error_msg)
 

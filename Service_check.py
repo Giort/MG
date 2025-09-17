@@ -106,12 +106,12 @@ while count < 3:
         else:
             driver.refresh()
 
-# 5. проверка syn_34 по видимости элемента "стрелка"
+# 5. проверка syn_34 по видимости заголовка "Поселок «Усадьба в Подмосковье» — это:"
 driver.get("https://syn34.lp.moigektar.ru/")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'10 соток под дачу')]]")))
         if elem:
             print('  |  syn_34: OK')
             break
@@ -618,19 +618,19 @@ while count < 3:
         else:
             driver.refresh()
 
-# 37. проверка syn_23 по видимости заголовка "Генеральный"
-driver.get("https://syn23.lp.moigektar.ru/")
+# 37. проверка syn_103 по видимости заголовка "Генеральный"
+driver.get("https://synergycountryclub.ru")
 count = 0
 while count < 3:
     try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '(//*[text()[contains(.,"Клубный посёлок")]])[1]')))
         if elem:
-            print('  |  syn_23: OK')
+            print('  |  syn_103: OK')
             break
     except:
         count += 1
         if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_23')
+            print('ERROR (service_check): не дождался загрузки элемента на син_103')
         else:
             driver.refresh()
 
@@ -1129,9 +1129,37 @@ while count < 3:
         else:
             driver.refresh()
 
+# 71. проверка сайта книги Бутовецкого по наличию текста "Заказать книгу"
+driver.get("https://книга-садоводов.рф")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Заказать книгу")]]')))
+        if elem:
+            print(' / \ сайт Бутовецкого: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на сайте Бутовецкого')
+        else:
+            driver.refresh()
 
-
-
+# 72. проверка vault.dmz.bug.land по наличию текста "Sign in to Vault"
+driver.get("https://vault.dmz.bug.land")
+count = 0
+while count < 3:
+    try:
+        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Sign in to Vault")]]')))
+        if elem:
+            print(' \ / vault.dmz.bug.land: OK')
+            break
+    except:
+        count += 1
+        if count == 3:
+            print('ERROR (service_check): не дождался загрузки элемента на vault.dmz.bug.land')
+        else:
+            driver.refresh()
 
 
 

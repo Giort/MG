@@ -179,7 +179,7 @@ def check_batch_card_goal(text):
         seleniumwire_options=sw_options,
         options=ch_options)
     driver.get('https://moigektar.ru/?__counters=1')
-    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[1]')
+    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[4]')
     card.click()
     time.sleep(5)
 

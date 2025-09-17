@@ -47,7 +47,7 @@ driver.get("https://moigektar.ru/catalogue?clusterIds%5B%5D=88")
 time.sleep(2)
 actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
 time.sleep(2)
-btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-analytics-catalog-batch-presentation-download"))])[2]')
+btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-analytics-catalog-batch-presentation-download"))])[1]')
 btn.click()
 window_after = driver.window_handles[1]
 driver.switch_to.window(window_after)

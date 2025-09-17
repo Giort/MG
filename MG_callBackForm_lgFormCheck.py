@@ -172,7 +172,7 @@ except Exception as e:
     error_msg = str(e).split('\n')[0]
     print("Ошибка: каталог, форма с Ариной, lgForm — ", error_msg)
 try:
-    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[2]")
     print("     ОК: каталог, форма с Ариной, заголовок")
 except Exception as e:
     error_msg = str(e).split('\n')[0]
@@ -773,8 +773,25 @@ except Exception as e:
     print("Ошибка: раздел личного кабинет, форма с Игорем, заголовок — ", error_msg)
 
 
-# 18. Проверка раздела регистрации от стойки
+# 18. Проверка страницы про инвестиции
 # 18.1 Инлайн-форма "Оставьте заявку ...", проверяю наличие правильного атрибута lgForm и заголовка
+try:
+    driver.get("https://moigektar.ru/invest-batch")
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_invest_batch_page_callback'])[1]")
+    print('     ОК: страница про инвестиции, форма с Максимом Фёдоровым, lgForm')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('Ошибка: страница про инвестиции, форма с Максимом Фёдоровым, lgForm — ', error_msg)
+try:
+    driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]")
+    print("     ОК: страница про инвестиции, форма с Максимом Фёдоровым, заголовок")
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: страница про инвестиции, форма с Максимом Фёдоровым, заголовок — ", error_msg)
+
+
+# 19. Проверка раздела регистрации от стойки
+# 19.1 Инлайн-форма "Оставьте заявку ...", проверяю наличие правильного атрибута lgForm и заголовка
 try:
     driver.get("https://moigektar.ru/public-event")
     driver.find_element(by=By.XPATH, value="(//*[text()[contains(.,'Оставьте')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='public-event'])[1]")
@@ -784,8 +801,8 @@ except Exception as e:
     print('Ошибка: раздел регистрации от стойки, инлайн-форма, lgForm — ', error_msg)
 
 
-# 19. Проверка раздела закрытого предложения
-# 19.1 Инлайн-форма "Узнать о закрытом предложении", проверяю наличие правильного атрибута lgForm и заголовка
+# 20. Проверка раздела закрытого предложения
+# 20.1 Инлайн-форма "Узнать о закрытом предложении", проверяю наличие правильного атрибута lgForm и заголовка
 try:
     driver.get("https://moigektar.ru/closed-offer")
     driver.find_element(by=By.XPATH, value="//*[text()[contains(.,'закрытом')]]/ancestor::div//*[@value='lg_closed_offer']")
