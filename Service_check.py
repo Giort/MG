@@ -2,1168 +2,473 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-ch_options = Options()
-ch_options.add_argument('--headless')
-ch_options.page_load_strategy = 'eager'
-service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=ch_options)
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
-actions = ActionChains(driver)
-driver.set_window_size(1680, 1000)
-driver.implicitly_wait(10)
 
-with open('data.json', 'r') as file:
-    data = json.load(file)
 
-# Скрипт последовательно заходит на каждый сервис МГ и проверяет видимость
-# одного элемента на странице
-#
-# В лог выводится сообщение "ОК", если этот элемент найден
-# В лог выводится сообщение "ERROR", если истекло время ожидания элемента
-#
-
-
-# 1. проверка "МГ" по видимости заголовка "Гектар под ваши цели" на главной
-driver.get("https://moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Описание проекта')]]")))
-        if elem:
-            print(' \:/ МГ: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на МГ')
-        else:
-            driver.refresh()
-
-
-# 54. проверка сервиса генерации опросов по наличию поля "Логин"
-# не дожидается загрузки элемента, если поместить его после проверки ЛК - независимо от того, какой элемент
-# выбран в качестве селектора для сервиса опросов
-# опять эта странная проблема с actionchains
-driver.get("https://polls.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div/section/div/div/div/h1")))
-        if elem:
-            print('  |  сервис генерации опросов: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сервисе генерации опросов')
-        else:
-            driver.refresh()
-
-# 2. проверка ЛК по видимости окна, который отображается при первом входе в ЛК
-driver.get("https://cabinet.moigektar.ru")
-try:
-    wait(driver,14).until(EC.presence_of_element_located((By.XPATH, "//*[text()[contains(.,'Вы находитесь в демо-версии личного кабинета')]]")))
-    print('  |  ЛК: ОК')
-except:
-    print('ERROR (service_check): не дождался загрузки элемента на ЛК')
-
-# 3. проверка syn_9 по видимости элемента "стрелка"
-driver.get("https://syn9.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' / \ syn_9: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_9')
-        else:
-            driver.refresh()
-
-# 4. проверка syn_33 по видимости элемента "стрелка"
-driver.get("https://syn33.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' \ / syn_33: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_33')
-        else:
-            driver.refresh()
-
-# 5. проверка syn_34 по видимости заголовка "Поселок «Усадьба в Подмосковье» — это:"
-driver.get("https://syn34.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'10 соток под дачу')]]")))
-        if elem:
-            print('  |  syn_34: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_34')
-        else:
-            driver.refresh()
-
-# 6. проверка syn_37 по видимости элемента "стрелка"
-driver.get("https://syn37.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_37: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_37')
-        else:
-            driver.refresh()
-
-# 7. проверка syn_53 по видимости элемента "стрелка"
-driver.get("https://syn53.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' / \ syn_53: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_53')
-        else:
-            driver.refresh()
-
-# 8. проверка syn_67 по видимости элемента "стрелка"
-driver.get("https://syn67.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' \ / syn_67: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_67')
-        else:
-            driver.refresh()
-
-# 9. проверка vazuza2 по видимости фразы "Уникальный экокурорт"
-driver.get("https://vazuza2.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h3[text()[contains(., "Уникальный экокурорт")]]')))
-        if elem:
-            print('  |  vazuza2: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Вазузе')
-        else:
-            driver.refresh()
-
-# 10. проверка pay.moigektar по видимости заголовка "Платёжные сервисы"
-driver.get("https://pay.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Платежные сервисы')]]")))
-        if elem:
-            print('  |  pay.moigektar: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Платёжных сервисах')
-        else:
-            driver.refresh()
-
-# 11. проверка сервиса "Вынос границ" по наличию заголовка "Вынос границ участка"
-driver.get("https://points.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ВЫНОС ГРАНИЦ')]]")))
-        if elem:
-            print(' / \ Вынос границ: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Выносе границ')
-        else:
-            driver.refresh()
-
-# 12. проверка сервиса "Инвестиции" по наличию заголовка "Инвестиции"
-driver.get("https://investment.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Инвестиции')]]")))
-        if elem:
-            print(' \ / Инвестиции: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Инвестициях')
-        else:
-            driver.refresh()
-
-# 13. проверка сервиса "Комплекс услуг" по наличию заголовка "Комплекс услуг"
-driver.get("https://complex.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Комплекс услуг')]]")))
-        if elem:
-            print('  |  Комплекс услуг: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Комплексе услуг')
-        else:
-            driver.refresh()
-
-# 14. проверка сервиса "Кооперативы" по наличию заголовка "Зачем нужен кооператив"
-driver.get("https://cooperative.lp.moigektar.ru")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Кооператив собственников')]]")))
-        if elem:
-            print('  |  Кооперативы: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Кооперативах')
-        else:
-            driver.refresh()
-
-# 15. проверка сервиса "Правовая поддержка" по наличию заголовка "Центр правовой поддержки"
-driver.get("https://law.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'центр правовой поддержки')]]")))
-        if elem:
-            print(' / \ Правовая поддержка: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Правовой поддержке')
-        else:
-            driver.refresh()
-
-# 16. проверка сервиса "Разработка проекта" по наличию заголовка "Этапы работы по онлайн-показам"
-driver.get("https://planning.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'ЭТАПЫ РАБОТЫ')]]")))
-        if elem:
-            print(' \ / Разработка проекта: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Разработке проекта')
-        else:
-            driver.refresh()
-
-# 17. проверка сервиса "Расчистка участка" по наличию заголовка "Расчистка участка"
-driver.get("https://clearance.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'для чего нужна расчистка')]]")))
-        if elem:
-            print('  |  Расчистка участка: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Расчистке участка')
-        else:
-            driver.refresh()
-
-# 18. проверка сервиса "Строительство въездной группы" по наличию заголовка "Коллективное строительство"
-driver.get("http://syn9.entrance.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Коллективное')]]")))
-        if elem:
-            print('  |  Строительство въездной группы: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Въездной группе')
-        else:
-            driver.refresh()
-
-# 19. проверка сервиса "Строительство дорог" по наличию заголовка "Коллективное строительство"
-driver.get("https://syn23.roads.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//p[text()[contains(.,'КОЛЛЕКТИВНОЕ')]]")))
-        if elem:
-            print(' / \ Строительство дорог: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Строительстве дорог')
-        else:
-            driver.refresh()
-
-# 20. проверка сервиса "Строительство центрального дома" по наличию заголовка "Коллективное строительство"
-driver.get("https://house.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное строительство')]]")))
-        if elem:
-            print(' \ / Строительство центрального дома: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Строительстве центрального дома')
-        else:
-            driver.refresh()
-
-# 21. проверка сервиса "Установка видеонаблюдения" по наличию заголовка "Установка видеонаблюдения"
-driver.get("https://barrier.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'установка видеонаблюдения')]]")))
-        if elem:
-            print('  |  Установка видеонаблюдения: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Установке видеонаблюдения')
-        else:
-            driver.refresh()
-
-# 22. проверка сервиса "Электрификация" по наличию заголовка "Коллективное строительство"
-driver.get("https://syn9.electrification.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'коллективное')]]")))
-        if elem:
-            print('  |  Электрификация: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Электрификации')
-        else:
-            driver.refresh()
-
-# 23. проверка сервиса "GIS" по наличию заголовка "Login"
-driver.get("https://gis.bigland.ru/site/login")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
-        if elem:
-            print(' / \ GIS: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на ГИС')
-        else:
-            driver.refresh()
-
-# 24. проверка сервиса генерации КП по наличию заголовка "Сервис генерации КП"
-driver.get("https://offers.bigland.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Сервис генерации КП')]]")))
-        if elem:
-            print(' \ / Сервис генерации КП: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Генерации КП')
-        else:
-            driver.refresh()
-
-# 25. проверка syn_99 по наличию заголовка "Генеральный"
-driver.get("https://syn99.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_99: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_99')
-        else:
-            driver.refresh()
-
-# 26. проверка syn_11 по видимости заголовка "Интерактивный выбор"
-driver.get("https://syn11.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-        if elem:
-            print('  |  syn_11: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_11')
-        else:
-            driver.refresh()
-
-# 27. проверка syn_12 по видимости заголовка "Интерактивный выбор"
-driver.get("https://syn12.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-        if elem:
-            print(' / \ syn_12: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_12')
-        else:
-            driver.refresh()
-
-# 28. проверка syn_6 по видимости заголовка "Выбрать участок"
-driver.get("https://syn6.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()[contains(.,'Выбрать участок')]]")))
-        if elem:
-            print(' \ / syn_6: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_6')
-        else:
-            driver.refresh()
-
-# 29. проверка syn_14 по видимости заголовка "Интерактивный"
-driver.get("https://syn14.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-        if elem:
-            print('  |  syn_14: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_14')
-        else:
-            driver.refresh()
-
-# 30. проверка syn_15 по видимости заголовка "Виртуальные туры"
-driver.get("https://syn15.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные туры')]]")))
-        if elem:
-            print('  |  syn_15: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_15')
-        else:
-            driver.refresh()
-
-# 31. проверка syn_16 по видимости заголовка "Интерактивный выбор"
-driver.get("https://syn16.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-        if elem:
-            print(' / \ syn_16: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_16')
-        else:
-            driver.refresh()
-
-# 32. проверка syn_17 по видимости заголовка "Виртуальные туры"
-driver.get("https://syn17.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Виртуальные')]]")))
-        if elem:
-            print(' \ / syn_17: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_17')
-        else:
-            driver.refresh()
-
-# 33. проверка syn_18 по видимости заголовка "Интерактивный"
-driver.get("https://syn18.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//span[text()[contains(.,'Интерактивный')]]")))
-        if elem:
-            print('  |  syn_18: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_18')
-        else:
-            driver.refresh()
-
-# 34. проверка syn_19 по видимости элемента "стрелка"
-driver.get("https://syn19.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_19: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_19')
-        else:
-            driver.refresh()
-
-# 35. проверка syn_21 по видимости заголовка "Генеральный"
-driver.get("https://syn21.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print(' / \ syn_21: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_21')
-        else:
-            driver.refresh()
-
-# 36. проверка сайта продажи здания в Бронницах по наличию текста "Усадьба на Байкале» — это:"
-driver.get("https://здание-бронницы.рф")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '(//*[text()[contains(., "Отдельно стоящее здание")]])[1]')))
-        if elem:
-            print(' \ / Бронницы: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте Бронниц ')
-        else:
-            driver.refresh()
-
-# 37. проверка syn_103 по видимости заголовка "Генеральный"
-driver.get("https://synergycountryclub.ru")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '(//*[text()[contains(.,"Клубный посёлок")]])[1]')))
-        if elem:
-            print('  |  syn_103: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_103')
-        else:
-            driver.refresh()
-
-# 38. проверка syn_24 по видимости заголовка "Генеральный"
-driver.get("https://syn24.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print('  |  syn_24: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_24')
-        else:
-            driver.refresh()
-
-# 39. проверка сайта турпортала Вазуза по наличию текста "Усадьба на Байкале» — это:"
-driver.get("https://турпортал-вазуза.рф")
-
-driver.find_element(by=By.CSS_SELECTOR, value='input[id=loginconfig-username]').send_keys('moigektar')
-driver.find_element(by=By.CSS_SELECTOR, value='input[id=loginconfig-password]').send_keys('moigektar')
-driver.find_element(by=By.CSS_SELECTOR, value='button[type]').click()
-
-time.sleep(5)
-
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h3[text()[contains(., "Уникальный экокурорт")]]')))
-        if elem:
-            print(' / \ сайт турпортала: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте турпортала ')
-        else:
-            driver.refresh()
-
-# 40. проверка "Полевых работ" по наличию текста "Запомнить"
-driver.get("https://fields.bigland.ru/site/login")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[text()[contains(.,'Запомнить')]]")))
-        if elem:
-            print(' \ / Полевые работы: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Полевых работах')
-        else:
-            driver.refresh()
-
-# 41. проверка syn_35 по видимости заголовка "Генеральный"
-driver.get("https://syn35.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print('  |  syn_35: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_35')
-        else:
-            driver.refresh()
-
-# 42. проверка syn_36 по видимости заголовка "Генеральный"
-driver.get("https://syn36.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print('  |  syn_36: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_36')
-        else:
-            driver.refresh()
-
-# 44. проверка syn_39 по видимости элемента "стрелка"
-driver.get("https://syn39.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' / \ syn_39: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_39')
-        else:
-            driver.refresh()
-
-# 45. проверка syn_42 по видимости элемента "стрелка"
-driver.get("https://syn42.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' \ / syn_42: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_42')
-        else:
-            driver.refresh()
-
-# 46. проверка syn_48 по видимости элемента "стрелка"
-driver.get("https://syn48.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_48: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_48')
-        else:
-            driver.refresh()
-
-# 47. проверка syn_58 по видимости заголовка "Забронировать"
-driver.get("https://syn58.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h3[text()[contains(.,'Забронировать')]]")))
-        if elem:
-            print('  |  syn_58: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_58')
-        else:
-            driver.refresh()
-
-# 48. проверка syn_61 по видимости заголовка "Генеральный"
-driver.get("https://syn61.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print(' / \ syn_61: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_61')
-        else:
-            driver.refresh()
-
-# 49. проверка сервиса редактирования дорог по наличию заголовка "Login"
-driver.get("https://editor.roads.bigland.ru/site/login")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//h1[text()[contains(.,'Login')]]")))
-        if elem:
-            print(' \ / Сервис дорог: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Сервисе дорог')
-        else:
-            driver.refresh()
-
-# 50. проверка syn_85 по наличию заголовка "Генеральный"
-driver.get("https://syn85.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_85: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_85')
-        else:
-            driver.refresh()
-
-# 51. проверка syn_84 по наличию заголовка "Генеральный"
-driver.get("https://syn84.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_84: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_84')
-        else:
-            driver.refresh()
-
-# 52. проверка syn_8 по наличию заголовка "Генеральный"
-driver.get("https://syn8.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(.,"Генеральный")]]')))
-        if elem:
-            print(' / \ syn_8: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_8')
-        else:
-            driver.refresh()
-
-# 53. проверка syn_89 по наличию заголовка "Генеральный"
-driver.get("https://syn89.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"Озерный край: ")]]')))
-        if elem:
-            print(' \ / syn_89: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_89')
-        else:
-            driver.refresh()
-
-# 55. проверка сервиса по работе с портал ТП по наличию поля "Логин"
-driver.get("https://electrification.bigland.ru/site/login")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginparams-username']")))
-        if elem:
-            print('  |  сервис по работе с портал ТП: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сервисе по работе с портал ТП')
-        else:
-            driver.refresh()
-
-
-# 56. проверка сервиса статей по наличию поля "Логин"
-driver.get("https://a.bigland.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='loginform-username']")))
-        if elem:
-            print('  |  сервис статей: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сервисе статей')
-        else:
-            driver.refresh()
-
-# 57. проверка syn_87 по наличию заголовка "Генеральный"
-driver.get("https://mt.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' / \ syn_87: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_92')
-        else:
-            driver.refresh()
-
-# 58. проверка syn_92 по наличию заголовка "Генеральный"
-driver.get("https://syn92.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' \ / syn_92: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_92')
-        else:
-            driver.refresh()
-
-# 59. проверка syn_95 по видимости текста "«Усадьба Императрицы»"
-driver.get("https://syn95.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "«Усадьба Императрицы»")]]')))
-        if elem:
-            print('  |  syn_95: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_95')
-        else:
-            driver.refresh()
-
-# 60. проверка syn_47 по видимости фразы "Клубный поселок"
-driver.get("https://syn47.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Клубный поселок")]]')))
-        if elem:
-            print('  |  syn_47: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_47')
-        else:
-            driver.refresh()
-
-# 61. проверка syn_111 по видимости элемента "стрелка"
-driver.get("https://syn111.lp.moigektar.ru/")
-login = driver.find_element(by=By.ID, value='loginconfig-username')
-password = driver.find_element(by=By.ID, value='loginconfig-password')
-submit = driver.find_element(by=By.CSS_SELECTOR, value='div button')
-login.send_keys(str(data["111_cred"]["login"]))
-password.send_keys(str(data["111_cred"]["password"]))
-submit.click()
-time.sleep(2)
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print(' / \ syn_111: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_111')
-        else:
-            driver.refresh()
-
-# 62. проверка сайта СК по видимости заголовка "Наша цель"
-driver.get("https://sc.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Наша цель")]]')))
-        if elem:
-            print(' \ / сайт СК: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте СК')
-        else:
-            driver.refresh()
-
-# 63. проверка syn_73 по наличию заголовка "Генеральный"
-driver.get("https://syn73.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//a[@href="#w-descr"]')))
-        if elem:
-            print('  |  syn_73: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_73')
-        else:
-            driver.refresh()
-
-# 65. проверка сайта "Барская Усадьба" по видимости текста "Ждем вас в гости!"
-driver.get("https://xn--80aacl7dl0e.xn--p1ai")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//h2[text()[contains(., "Ждем вас в гости!")]]')))
-        if elem:
-            print('  |  Барская усадьба: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на Барской усадьбе')
-        else:
-            driver.refresh()
-
-# 66. проверка сайта "Онлайн-показ" по видимости текста "онлайн-показ"
-driver.get("https://presentation.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//span[text()[contains(., "онлайн-показ")]]')))
-        if elem:
-            print(' / \ сайт "Онлайн-показ": OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте "Онлайн-показ"')
-        else:
-            driver.refresh()
-
-# 67. проверка сайта mail.bug.land по видимости текста "Имя пользователя"
-driver.get("https://mail.bug.land")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.ID, 'userNameLabel')))
-        if elem:
-            print(' \ / сайт "mail.bug.land": OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте "mail.bug.land"')
-        else:
-            driver.refresh()
-
-# 68. проверка syn_74 по наличию текста "Концепция"
-driver.get("https://syn74.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Концепция")]]')))
-        if elem:
-            print('  |  syn_74: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на син_74')
-        else:
-            driver.refresh()
-
-# 69. проверка сайта родовых поселений по наличию текста "участником"
-driver.get("https://settlements.lp.moigektar.ru/")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "участником")]]')))
-        if elem:
-            print('  |  "Родовые поселения": OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на "Родовых поселениях"')
-        else:
-            driver.refresh()
-
-# 70. проверка сайта syn_447 по наличию текста "Усадьба на Байкале» — это:"
-driver.get("https://syn447.lp.moigektar.ru")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Усадьба на Байкале» — это:")]]')))
-        if elem:
-            print(' / \ syn_447: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на syn_447 ')
-        else:
-            driver.refresh()
-
-# 71. проверка сайта книги Бутовецкого по наличию текста "Заказать книгу"
-driver.get("https://книга-садоводов.рф")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Заказать книгу")]]')))
-        if elem:
-            print(' / \ сайт Бутовецкого: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на сайте Бутовецкого')
-        else:
-            driver.refresh()
-
-# 72. проверка vault.dmz.bug.land по наличию текста "Sign in to Vault"
-driver.get("https://vault.dmz.bug.land")
-count = 0
-while count < 3:
-    try:
-        elem = wait(driver,14).until(EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Sign in to Vault")]]')))
-        if elem:
-            print(' \ / vault.dmz.bug.land: OK')
-            break
-    except:
-        count += 1
-        if count == 3:
-            print('ERROR (service_check): не дождался загрузки элемента на vault.dmz.bug.land')
-        else:
-            driver.refresh()
-
-
-
-
-time.sleep(2)
-driver.quit()
-
+# Инициализация драйвера
+def init_driver():
+    ch_options = Options()
+    # ch_options.add_argument('--headless')
+    ch_options.page_load_strategy = 'eager'
+    service = ChromeService(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=ch_options)
+    driver.set_window_size(1680, 1000)
+    driver.implicitly_wait(10)
+    return driver
+
+
+# Универсальный метод проверки сервиса
+def check_service(driver, config, data=None):
+    """
+    Проверяет доступность сервиса по заданной конфигурации
+
+    Args:
+        driver: WebDriver экземпляр
+        config: Словарь с параметрами проверки
+        data: Данные для авторизации (если нужны)
+    """
+    url = config['url']
+    name = config['name']
+    xpath = config['xpath']
+    auth = config.get('auth', None)
+    max_attempts = config.get('max_attempts', 3)
+    wait_timeout = config.get('wait_timeout', 14)
+
+    driver.get(url)
+
+    # Авторизация, если нужна
+    if auth and data:
+        try:
+            if auth == 'turportal':
+                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-username]').send_keys(str(data["turporlal_cred"]["login"]))
+                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-password]').send_keys(str(data["turporlal_cred"]["password"]))
+                driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
+                time.sleep(5)
+            elif auth == 'syn111':
+                driver.find_element(By.ID, 'loginconfig-username').send_keys(str(data["111_cred"]["login"]))
+                driver.find_element(By.ID, 'loginconfig-password').send_keys(str(data["111_cred"]["password"]))
+                driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                time.sleep(2)
+        except Exception as e:
+            print(f'WARNING: Ошибка авторизации на {name}: {e}')
+
+    # Проверка элемента
+    count = 0
+    while count < max_attempts:
+        try:
+            elem = wait(driver, wait_timeout).until(EC.visibility_of_element_located((By.XPATH, xpath)))
+            if elem:
+                print(f'   OK: {name}')
+                return True
+        except:
+            count += 1
+            if count == max_attempts:
+                print(f'ERROR: {name}')
+                return False
+            else:
+                driver.refresh()
+                # Повторная авторизация после обновления страницы
+                if auth and data:
+                    try:
+                        if auth == 'turportal':
+                            driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-username]').send_keys(str(data["turportal_cred"]["login"]))
+                            driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-password]').send_keys(str(data["turportal_cred"]["password"]))
+                            driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
+                            time.sleep(5)
+                        elif auth == 'syn111':
+                            driver.find_element(By.ID, 'loginconfig-username').send_keys(str(data["111_cred"]["login"]))
+                            driver.find_element(By.ID, 'loginconfig-password').send_keys(str(data["111_cred"]["password"]))
+                            driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                    except:
+                        pass
+    return False
+
+
+# Массив конфигураций для всех сервисов
+services_config = [
+    {
+        'name': 'МГ',
+        'url': 'https://moigektar.ru/',
+        'xpath': '//h2[text()[contains(.,"Описание проекта")]]'
+    },
+    {
+        'name': 'ЛК',
+        'url': 'https://cabinet.moigektar.ru',
+        'xpath': '//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]]'
+    },
+    {
+        'name': 'сервис генерации опросов',
+        'url': 'https://polls.moigektar.ru/',
+        'xpath': '/html/body/div/div/section/div/div/div/h1'
+    },
+    {
+        'name': 'syn_9',
+        'url': 'https://syn9.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_33',
+        'url': 'https://syn33.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_34',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(.,"10 соток под дачу")]]'
+    },
+    {
+        'name': 'syn_37',
+        'url': 'https://syn37.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_53',
+        'url': 'https://syn53.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_67',
+        'url': 'https://syn67.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'vazuza',
+        'url': 'https://vazuza2.lp.moigektar.ru/',
+        'xpath': '//h3[text()[contains(., "Уникальный экокурорт")]]'
+    },
+    {
+        'name': 'pay.moigektar',
+        'url': 'https://pay.moigektar.ru/',
+        'xpath': '//h3[text()[contains(.,"Платежные сервисы")]]'
+    },
+    {
+        'name': 'Вынос границ',
+        'url': 'https://points.lp.moigektar.ru/',
+        'xpath': '//p[text()[contains(.,"ВЫНОС ГРАНИЦ")]]'
+    },
+    {
+        'name': 'Инвестиции',
+        'url': 'https://investment.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"Инвестиции")]]'
+    },
+    {
+        'name': 'Комплекс услуг',
+        'url': 'https://complex.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"Комплекс услуг")]]'
+    },
+    {
+        'name': 'Кооперативы',
+        'url': 'https://cooperative.lp.moigektar.ru',
+        'xpath': '//h1[text()[contains(.,"Кооператив собственников")]]'
+    },
+    {
+        'name': 'Правовая поддержка',
+        'url': 'https://law.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"центр правовой поддержки")]]'
+    },
+    {
+        'name': 'Разработка проекта',
+        'url': 'https://planning.moigektar.ru/',
+        'xpath': '//p[text()[contains(.,"ЭТАПЫ РАБОТЫ")]]'
+    },
+    {
+        'name': 'Расчистка участка',
+        'url': 'https://clearance.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(.,"для чего нужна расчистка")]]'
+    },
+    {
+        'name': 'Строительство въездной группы',
+        'url': 'http://syn9.entrance.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"Коллективное")]]'
+    },
+    {
+        'name': 'Строительство дорог',
+        'url': 'https://syn23.roads.moigektar.ru/',
+        'xpath': '//p[text()[contains(.,"КОЛЛЕКТИВНОЕ")]]'
+    },
+    {
+        'name': 'Строительство центрального дома',
+        'url': 'https://house.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"коллективное строительство")]]'
+    },
+    {
+        'name': 'Установка видеонаблюдения',
+        'url': 'https://barrier.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"установка видеонаблюдения")]]'
+    },
+    {
+        'name': 'Электрификация',
+        'url': 'https://syn9.electrification.lp.moigektar.ru/',
+        'xpath': '//h1[text()[contains(.,"коллективное")]]'
+    },
+    {
+        'name': 'GIS',
+        'url': 'https://gis.bigland.ru/site/login',
+        'xpath': '//h1[text()[contains(.,"Login")]]'
+    },
+    {
+        'name': 'Сервис генерации КП',
+        'url': 'https://offers.bigland.ru/',
+        'xpath': '//h1[text()[contains(.,"Сервис генерации КП")]]'
+    },
+    {
+        'name': 'syn_99',
+        'url': 'https://syn99.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_11',
+        'url': 'https://syn11.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_12',
+        'url': 'https://syn12.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_6',
+        'url': 'https://syn6.lp.moigektar.ru/',
+        'xpath': '//h2[text()[contains(.,"Выбрать участок")]]'
+    },
+    {
+        'name': 'syn_14',
+        'url': 'https://syn14.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_15',
+        'url': 'https://syn15.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Виртуальные туры")]]'
+    },
+    {
+        'name': 'syn_16',
+        'url': 'https://syn16.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_17',
+        'url': 'https://syn17.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Виртуальные")]]'
+    },
+    {
+        'name': 'syn_18',
+        'url': 'https://syn18.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_19',
+        'url': 'https://syn19.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_21',
+        'url': 'https://syn21.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'Бронницы',
+        'url': 'https://здание-бронницы.рф',
+        'xpath': '(//*[text()[contains(., "Отдельно стоящее здание")]])[1]'
+    },
+    {
+        'name': 'synergycountryclub.ru',
+        'url': 'https://synergycountryclub.ru',
+        'xpath': '(//*[text()[contains(.,"Клубный посёлок")]])[1]'
+    },
+    {
+        'name': 'syn_24',
+        'url': 'https://syn24.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'сайт турпортала',
+        'url': 'https://турпортал-вазуза.рф',
+        'xpath': '//h3[text()[contains(., "Уникальный экокурорт")]]',
+        'auth': 'turportal'
+    },
+    {
+        'name': 'Полевые работы',
+        'url': 'https://fields.bigland.ru/site/login',
+        'xpath': '//*[text()[contains(.,"Запомнить")]]'
+    },
+    {
+        'name': 'syn_35',
+        'url': 'https://syn35.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_36',
+        'url': 'https://syn36.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_39',
+        'url': 'https://syn39.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_42',
+        'url': 'https://syn42.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_48',
+        'url': 'https://syn48.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_58',
+        'url': 'https://syn58.lp.moigektar.ru/',
+        'xpath': '//h3[text()[contains(.,"Забронировать")]]'
+    },
+    {
+        'name': 'syn_61',
+        'url': 'https://syn61.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'Сервис дорог',
+        'url': 'https://editor.roads.bigland.ru/site/login',
+        'xpath': '//h1[text()[contains(.,"Login")]]'
+    },
+    {
+        'name': 'syn_85',
+        'url': 'https://syn85.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_84',
+        'url': 'https://syn84.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_8',
+        'url': 'https://syn8.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_89',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(.,"Озерный край: ")]]'
+    },
+    {
+        'name': 'сервис по работе с портал ТП',
+        'url': 'https://electrification.bigland.ru/site/login',
+        'xpath': '//*[@id="loginparams-username"]'
+    },
+    {
+        'name': 'сервис статей',
+        'url': 'https://a.bigland.ru/',
+        'xpath': '//*[@id="loginform-username"]'
+    },
+    {
+        'name': 'syn_87',
+        'url': 'https://mt.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_92',
+        'url': 'https://syn92.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_95',
+        'url': 'https://syn95.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "«Усадьба Императрицы»")]]'
+    },
+    {
+        'name': 'syn_47',
+        'url': 'https://syn47.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Клубный поселок")]]'
+    },
+    {
+        'name': 'syn_111',
+        'url': 'https://syn111.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]',
+        'auth': 'syn111'
+    },
+    {
+        'name': 'сайт СК',
+        'url': 'https://sc.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Наша цель")]]'
+    },
+    {
+        'name': 'syn_73',
+        'url': 'https://syn73.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'Барская усадьба',
+        'url': 'https://xn--80aacl7dl0e.xn--p1ai',
+        'xpath': '//h2[text()[contains(., "Ждем вас в гости!")]]'
+    },
+    {
+        'name': 'сайт "Онлайн-показ"',
+        'url': 'https://presentation.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(., "онлайн-показ")]]'
+    },
+    {
+        'name': 'сайт "mail.bug.land"',
+        'url': 'https://mail.bug.land',
+        'xpath': '#userNameLabel'
+    },
+    {
+        'name': 'syn_74',
+        'url': 'https://syn74.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Концепция")]]'
+    },
+    {
+        'name': '"Родовые поселения"',
+        'url': 'https://settlements.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "участником")]]'
+    },
+    {
+        'name': 'syn_447',
+        'url': 'https://syn447.lp.moigektar.ru',
+        'xpath': '//*[text()[contains(., "Усадьба на Байкале» — это:")]]'
+    },
+    {
+        'name': 'сайт Бутовецкого',
+        'url': 'https://книга-садоводов.рф',
+        'xpath': '//*[text()[contains(., "Заказать книгу")]]'
+    },
+    {
+        'name': 'vault.dmz.bug.land',
+        'url': 'https://vault.dmz.bug.land',
+        'xpath': '//*[text()[contains(., "Sign in to Vault")]]'
+    }
+]
+
+
+def main():
+    # Загрузка данных для авторизации
+    try:
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = None
+        print("WARNING: файл data.json не найден, авторизация будет пропущена")
+
+    # Инициализация драйвера
+    driver = init_driver()
+
+    try:
+        # Проверка всех сервисов
+        for config in services_config:
+            check_service(driver, config, data)
+            time.sleep(0.5) # Небольшая пауза между проверками
+
+    finally:
+        time.sleep(2)
+        driver.quit()
+
+
+if __name__ == "__main__":
+    main()
