@@ -100,12 +100,12 @@ services_config = [
     {
         'name': 'ЛК',
         'url': 'https://cabinet.moigektar.ru',
-        'xpath': '//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]]'
+        'xpath': '(//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]])[2]'
     },
     {
         'name': 'сервис генерации опросов',
         'url': 'https://polls.moigektar.ru/',
-        'xpath': '/html/body/div/div/section/div/div/div/h1'
+        'xpath': '//*[text()[contains(.,"Проект «МОЙ ГЕКТАР»")]]'
     },
     {
         'name': 'syn_9',
@@ -417,7 +417,7 @@ services_config = [
     {
         'name': 'сайт "mail.bug.land"',
         'url': 'https://mail.bug.land',
-        'xpath': '#userNameLabel'
+        'xpath': '//*[@id="userNameLabel"]'
     },
     {
         'name': 'syn_74',
