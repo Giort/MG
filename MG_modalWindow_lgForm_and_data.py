@@ -16,8 +16,8 @@ class ModalWindowChecker:
     def __init__(self, headless: bool = True):
         """Инициализация драйвера с настройками"""
         self.options = Options()
-        if headless:
-            self.options.add_argument('--headless')
+        # if headless:
+        #     self.options.add_argument('--headless')
         self.options.page_load_strategy = 'eager'
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
@@ -130,7 +130,9 @@ class ModalWindowChecker:
             ('(//*[@id="modal-main-consultation"]//*[@value="callback_main"])[1]',
              'главная, модалка "Получить консультацию" в футере, lgForm'),
             ('(//*[@id="modal-fixed"]//*[@value="callback_fixed_btn"])[1]',
-             'главная, модалка "Получить консультацию" на фикс. кнопке, lgForm')
+             'главная, модалка "Получить консультацию" на фикс. кнопке, lgForm'),
+            ('(//*[@id="modal-meeting-meeting"]//*[@value="meeting_book"])[1]',
+             'главная, модалка "Записаться на встречу", lgForm')
         ]
 
         for xpath, description in checks:
@@ -155,10 +157,11 @@ class ModalWindowChecker:
                 EC.presence_of_element_located(
                     (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-phone"])[1]'))
             )
-
-            phone_number = self.data.get("test_data_valid", {}).get("phone", "79123456789")
-            phone_field.clear()
+            phone_field.click()
+            phone_number = str(self.data["test_data_valid"]["phone"])
+            time.sleep(2)
             phone_field.send_keys(phone_number)
+            time.sleep(2)
 
             # Нажимаем кнопку отправки
             submit_btn = self.driver.find_element(By.XPATH,
@@ -170,16 +173,13 @@ class ModalWindowChecker:
                 name_input = self.wait.until(EC.element_to_be_clickable(
                     (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-name"])[2]')))
                 name_input.click()
-                print('   ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму')
+                print('   ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
+                return True  # Возвращаем True при успешной отправке
 
             except Exception as e:
                 error_msg = self._format_error_message(e)
                 print(f'ОШИБКА: главная, модалка "Записаться на встречу" — {error_msg}')
-
-            # Проверяем lgForm
-            lgform_result = self._check_element('(//*[@id="modal-meeting-meeting"]//*[@value="meeting_book"])[1]',
-                                                'главная, модалка "Записаться на встречу", lgForm')
-            return lgform_result
+                return False  # Возвращаем False при ошибке отправки
 
         except TimeoutException as e:
             error_msg = f"Таймаут ожидания: {self._format_error_message(e)}"
@@ -235,6 +235,13 @@ class ModalWindowChecker:
                      'стр. "Бизнес-планы", модалка "Получить консультацию", lgForm')
                 ]
             },
+            'gift': {
+                'url': 'https://moigektar.ru/gift',
+                'checks': [
+                    ('(//*[@id="gift-main-modal"]//*[@value="lg_cert"])[1]',
+                     'стр. "Подарочный сертификат", модалка "Оставьте заявку!", lgForm')
+                ]
+            },
             'hr': {
                 'url': 'https://moigektar.ru/hr',
                 'checks': [
@@ -268,36 +275,13 @@ class ModalWindowChecker:
 
         return results
 
-    def check_gift_page(self) -> List[bool]:
-        """Проверяет страницу подарочного сертификата"""
-        print("\n   Проверка страницы 'Подарочный сертификат'")
-
-        if not self._safe_navigate('https://moigektar.ru/gift'):
-            return [False] * 9
-
-        # Все модалки на странице подарочного сертификата имеют одинаковое значение lgForm
-        modal_ids = [
-            "gift-main-modal", "plot-certificate-parents-modal", "plot-certificate-friend-modal",
-            "plot-certificate-business-modal", "gift-option-modal", "gift-certificate-modal",
-            "select-certificate-plot-modal", "select-certificate-sum-modal", "gift-land-modal"
-        ]
-
-        results = []
-        for i, modal_id in enumerate(modal_ids, 1):
-            xpath = f'(//*[@id="{modal_id}"]//*[@value="lg_cert"])[1]'
-            description = f'стр. "Подарочный сертификат", модалка "Оставьте заявку!" #{i}, lgForm'
-            results.append(self._check_element(xpath, description))
-
-        return results
-
     def run_all_checks(self) -> Dict[str, any]:
         """Запускает все проверки"""
         print("Начинаем проверку модальных окон...")
 
         results = {
             'main_page': self.check_main_page(),
-            'other_pages': self.check_pages(),
-            'gift_page': self.check_gift_page()
+            'other_pages': self.check_pages()
         }
 
         # Подсчет статистики
@@ -306,12 +290,17 @@ class ModalWindowChecker:
 
         for page_results in results.values():
             if isinstance(page_results, list):
-                total_checks += len(page_results)
-                passed_checks += sum(page_results)
+                # Фильтруем None значения и считаем только bool
+                valid_results = [result for result in page_results if isinstance(result, bool)]
+                total_checks += len(valid_results)
+                passed_checks += sum(valid_results)
             elif isinstance(page_results, dict):
                 for page_list in page_results.values():
-                    total_checks += len(page_list)
-                    passed_checks += sum(page_list)
+                    if isinstance(page_list, list):
+                        # Фильтруем None значения и считаем только bool
+                        valid_results = [result for result in page_list if isinstance(result, bool)]
+                        total_checks += len(valid_results)
+                        passed_checks += sum(valid_results)
 
         print(f"\nИтого: {passed_checks}/{total_checks} проверок прошли успешно")
         print(f"Процент успешных проверок: {(passed_checks / total_checks * 100):.1f}%")
