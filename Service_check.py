@@ -14,7 +14,7 @@ import json
 # Инициализация драйвера
 def init_driver():
     ch_options = Options()
-    # ch_options.add_argument('--headless')
+    ch_options.add_argument('--headless')
     ch_options.page_load_strategy = 'eager'
     service = ChromeService(executable_path=ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=ch_options)
