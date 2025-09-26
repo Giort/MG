@@ -15,9 +15,9 @@ from typing import Dict, List, Tuple
 class ModalWindowChecker:
     def __init__(self, headless: bool = True):
         """Инициализация драйвера с настройками"""
-        self.options = Options()
-        # if headless:
-        #     self.options.add_argument('--headless')
+        # self.options = Options()
+        # # if headless:
+        # #     self.options.add_argument('--headless')
         self.options.page_load_strategy = 'eager'
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
@@ -113,12 +113,12 @@ class ModalWindowChecker:
              'главная, модалка "Доступ в личный кабинет", lgForm'),
             ('(//*[@id="promo-modal1-3"]//*[@value="callback_main_promo_volga"])[1]',
              'главная, модалка в блоке "Распродажа на Волге", lgForm'),
+            ('(//*[@id="modal_syn-73"]//*[@value="lg_main_catalog_yasnie_zori"])[1]',
+             'главная, модалка син_73 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
+             'главная, модалка син_53 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-29"]//*[@value="lg_main_catalog_usadba_na_volge"])[1]',
-             'главная, модалка син_56 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-34"]//*[@value="lg_main_catalog_usadba_v_podmoskovie"])[1]',
-             'главная, модалка син_34 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-ecat"]//*[@value="lg_main_catalog_ekaterinovka"])[1]',
-             'главная, модалка син_95 в блоке "Лучшие поселения", lgForm'),
+             'главная, модалка син_29 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-1"]//*[@value="mg_main_page_business_area"])[1]',
              'главная, модалка на карточке 1 в блоке "Зарабатывайте на гектаре", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-2"]//*[@value="mg_main_page_business_area"])[1]',
