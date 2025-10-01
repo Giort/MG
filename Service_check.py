@@ -103,14 +103,69 @@ services_config = [
         'xpath': '(//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]])[2]'
     },
     {
-        'name': 'сервис генерации опросов',
-        'url': 'https://polls.moigektar.ru/',
-        'xpath': '//*[text()[contains(.,"Проект «МОЙ ГЕКТАР»")]]'
+        'name': 'syn_6',
+        'url': 'https://syn6.lp.moigektar.ru/',
+        'xpath': '//h2[text()[contains(.,"Выбрать участок")]]'
+    },
+    {
+        'name': 'syn_8',
+        'url': 'https://syn8.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
     },
     {
         'name': 'syn_9',
         'url': 'https://syn9.lp.moigektar.ru/',
         'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_11',
+        'url': 'https://syn11.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_12',
+        'url': 'https://syn12.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_14',
+        'url': 'https://syn14.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_15',
+        'url': 'https://syn15.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Виртуальные туры")]]'
+    },
+    {
+        'name': 'syn_16',
+        'url': 'https://syn16.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_17',
+        'url': 'https://syn17.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Виртуальные")]]'
+    },
+    {
+        'name': 'syn_18',
+        'url': 'https://syn18.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
+    },
+    {
+        'name': 'syn_19',
+        'url': 'https://syn19.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_21',
+        'url': 'https://syn21.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_24',
+        'url': 'https://syn24.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
     },
     {
         'name': 'syn_33',
@@ -123,8 +178,33 @@ services_config = [
         'xpath': '//*[text()[contains(.,"10 соток под дачу")]]'
     },
     {
-        'name': 'syn_37',
-        'url': 'https://syn37.lp.moigektar.ru/',
+        'name': 'syn_35',
+        'url': 'https://syn35.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_36',
+        'url': 'https://syn36.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_39',
+        'url': 'https://syn39.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_42',
+        'url': 'https://syn42.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_47',
+        'url': 'https://syn47.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Клубный поселок")]]'
+    },
+    {
+        'name': 'syn_48',
+        'url': 'https://syn48.lp.moigektar.ru/',
         'xpath': '//a[@href="#w-descr"]'
     },
     {
@@ -133,9 +213,9 @@ services_config = [
         'xpath': '//a[@href="#w-descr"]'
     },
     {
-        'name': 'syn_67',
-        'url': 'https://syn67.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
+        'name': 'syn_58',
+        'url': 'https://syn58.lp.moigektar.ru/',
+        'xpath': '//h3[text()[contains(.,"Забронировать")]]'
     },
     {
         'name': 'vazuza',
@@ -143,6 +223,81 @@ services_config = [
         'xpath': '//h3[text()[contains(., "Уникальный экокурорт")]]'
     },
     {
+        'name': 'syn_61',
+        'url': 'https://syn61.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+    },
+    {
+        'name': 'syn_67',
+        'url': 'https://syn67.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_73',
+        'url': 'https://syn73.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_74',
+        'url': 'https://syn74.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Концепция")]]'
+    },
+    {
+        'name': 'syn_84',
+        'url': 'https://syn84.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_85',
+        'url': 'https://syn85.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_89',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(.,"Озерный край: ")]]'
+    },
+    {
+        'name': 'syn_87',
+        'url': 'https://mt.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_92',
+        'url': 'https://syn92.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'syn_95',
+        'url': 'https://syn95.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "«Усадьба Императрицы»")]]'
+    },
+    {
+        'name': 'syn_99',
+        'url': 'https://syn99.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]'
+    },
+    {
+        'name': 'synergycountryclub.ru',
+        'url': 'https://synergycountryclub.ru',
+        'xpath': '(//*[text()[contains(.,"Клубный посёлок")]])[1]'
+    },
+    {
+        'name': 'syn_111',
+        'url': 'https://syn111.lp.moigektar.ru/',
+        'xpath': '//a[@href="#w-descr"]',
+        'auth': 'syn111'
+    },
+    {
+        'name': 'syn_447',
+        'url': 'https://syn447.lp.moigektar.ru',
+        'xpath': '//*[text()[contains(., "Усадьба на Байкале» — это:")]]'
+    },
+    {
+        'name': 'сервис генерации опросов',
+        'url': 'https://polls.moigektar.ru/',
+        'xpath': '//*[text()[contains(.,"Проект «МОЙ ГЕКТАР»")]]'
+    },    {
         'name': 'pay.moigektar',
         'url': 'https://pay.moigektar.ru/',
         'xpath': '//h3[text()[contains(.,"Платежные сервисы")]]'
@@ -166,6 +321,11 @@ services_config = [
         'name': 'Кооперативы',
         'url': 'https://cooperative.lp.moigektar.ru',
         'xpath': '//h1[text()[contains(.,"Кооператив собственников")]]'
+    },
+    {
+        'name': 'сайт "Онлайн-показ"',
+        'url': 'https://presentation.lp.moigektar.ru/',
+        'xpath': '//span[text()[contains(., "онлайн-показ")]]'
     },
     {
         'name': 'Правовая поддержка',
@@ -208,6 +368,37 @@ services_config = [
         'xpath': '//h1[text()[contains(.,"коллективное")]]'
     },
     {
+        'name': 'сайт СК',
+        'url': 'https://sc.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "Наша цель")]]'
+    },
+    {
+        'name': 'Барская усадьба',
+        'url': 'https://xn--80aacl7dl0e.xn--p1ai',
+        'xpath': '//h2[text()[contains(., "Ждем вас в гости!")]]'
+    },
+    {
+        'name': 'Бронницы',
+        'url': 'https://здание-бронницы.рф',
+        'xpath': '(//*[text()[contains(., "Отдельно стоящее здание")]])[1]'
+    },
+    {
+        'name': 'сайт турпортала',
+        'url': 'https://турпортал-вазуза.рф',
+        'xpath': '//h3[text()[contains(., "Уникальный экокурорт")]]',
+        'auth': 'turportal'
+    },
+    {
+        'name': '"Родовые поселения"',
+        'url': 'https://settlements.lp.moigektar.ru/',
+        'xpath': '//*[text()[contains(., "участником")]]'
+    },
+    {
+        'name': 'сайт Бутовецкого',
+        'url': 'https://книга-садоводов.рф',
+        'xpath': '//*[text()[contains(., "Заказать книгу")]]'
+    },
+    {
         'name': 'GIS',
         'url': 'https://gis.bigland.ru/site/login',
         'xpath': '//h1[text()[contains(.,"Login")]]'
@@ -218,145 +409,14 @@ services_config = [
         'xpath': '//h1[text()[contains(.,"Сервис генерации КП")]]'
     },
     {
-        'name': 'syn_99',
-        'url': 'https://syn99.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_11',
-        'url': 'https://syn11.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
-    },
-    {
-        'name': 'syn_12',
-        'url': 'https://syn12.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
-    },
-    {
-        'name': 'syn_6',
-        'url': 'https://syn6.lp.moigektar.ru/',
-        'xpath': '//h2[text()[contains(.,"Выбрать участок")]]'
-    },
-    {
-        'name': 'syn_14',
-        'url': 'https://syn14.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
-    },
-    {
-        'name': 'syn_15',
-        'url': 'https://syn15.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Виртуальные туры")]]'
-    },
-    {
-        'name': 'syn_16',
-        'url': 'https://syn16.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
-    },
-    {
-        'name': 'syn_17',
-        'url': 'https://syn17.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Виртуальные")]]'
-    },
-    {
-        'name': 'syn_18',
-        'url': 'https://syn18.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Интерактивный")]]'
-    },
-    {
-        'name': 'syn_19',
-        'url': 'https://syn19.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_21',
-        'url': 'https://syn21.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
-        'name': 'Бронницы',
-        'url': 'https://здание-бронницы.рф',
-        'xpath': '(//*[text()[contains(., "Отдельно стоящее здание")]])[1]'
-    },
-    {
-        'name': 'synergycountryclub.ru',
-        'url': 'https://synergycountryclub.ru',
-        'xpath': '(//*[text()[contains(.,"Клубный посёлок")]])[1]'
-    },
-    {
-        'name': 'syn_24',
-        'url': 'https://syn24.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
-        'name': 'сайт турпортала',
-        'url': 'https://турпортал-вазуза.рф',
-        'xpath': '//h3[text()[contains(., "Уникальный экокурорт")]]',
-        'auth': 'turportal'
-    },
-    {
         'name': 'Полевые работы',
         'url': 'https://fields.bigland.ru/site/login',
         'xpath': '//*[text()[contains(.,"Запомнить")]]'
     },
     {
-        'name': 'syn_35',
-        'url': 'https://syn35.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
-        'name': 'syn_36',
-        'url': 'https://syn36.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
-        'name': 'syn_39',
-        'url': 'https://syn39.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_42',
-        'url': 'https://syn42.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_48',
-        'url': 'https://syn48.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_58',
-        'url': 'https://syn58.lp.moigektar.ru/',
-        'xpath': '//h3[text()[contains(.,"Забронировать")]]'
-    },
-    {
-        'name': 'syn_61',
-        'url': 'https://syn61.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
         'name': 'Сервис дорог',
         'url': 'https://editor.roads.bigland.ru/site/login',
         'xpath': '//h1[text()[contains(.,"Login")]]'
-    },
-    {
-        'name': 'syn_85',
-        'url': 'https://syn85.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_84',
-        'url': 'https://syn84.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_8',
-        'url': 'https://syn8.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
-        'name': 'syn_89',
-        'url': 'https://syn89.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(.,"Озерный край: ")]]'
     },
     {
         'name': 'сервис по работе с портал ТП',
@@ -369,75 +429,9 @@ services_config = [
         'xpath': '//*[@id="loginform-username"]'
     },
     {
-        'name': 'syn_87',
-        'url': 'https://mt.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_92',
-        'url': 'https://syn92.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'syn_95',
-        'url': 'https://syn95.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "«Усадьба Императрицы»")]]'
-    },
-    {
-        'name': 'syn_47',
-        'url': 'https://syn47.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "Клубный поселок")]]'
-    },
-    {
-        'name': 'syn_111',
-        'url': 'https://syn111.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]',
-        'auth': 'syn111'
-    },
-    {
-        'name': 'сайт СК',
-        'url': 'https://sc.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "Наша цель")]]'
-    },
-    {
-        'name': 'syn_73',
-        'url': 'https://syn73.lp.moigektar.ru/',
-        'xpath': '//a[@href="#w-descr"]'
-    },
-    {
-        'name': 'Барская усадьба',
-        'url': 'https://xn--80aacl7dl0e.xn--p1ai',
-        'xpath': '//h2[text()[contains(., "Ждем вас в гости!")]]'
-    },
-    {
-        'name': 'сайт "Онлайн-показ"',
-        'url': 'https://presentation.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(., "онлайн-показ")]]'
-    },
-    {
         'name': 'сайт "mail.bug.land"',
         'url': 'https://mail.bug.land',
         'xpath': '//*[@id="userNameLabel"]'
-    },
-    {
-        'name': 'syn_74',
-        'url': 'https://syn74.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "Концепция")]]'
-    },
-    {
-        'name': '"Родовые поселения"',
-        'url': 'https://settlements.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "участником")]]'
-    },
-    {
-        'name': 'syn_447',
-        'url': 'https://syn447.lp.moigektar.ru',
-        'xpath': '//*[text()[contains(., "Усадьба на Байкале» — это:")]]'
-    },
-    {
-        'name': 'сайт Бутовецкого',
-        'url': 'https://книга-садоводов.рф',
-        'xpath': '//*[text()[contains(., "Заказать книгу")]]'
     },
     {
         'name': 'vault.dmz.bug.land',

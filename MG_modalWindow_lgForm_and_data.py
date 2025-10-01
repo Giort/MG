@@ -15,9 +15,9 @@ from typing import Dict, List, Tuple
 class ModalWindowChecker:
     def __init__(self, headless: bool = True):
         """Инициализация драйвера с настройками"""
-        # self.options = Options()
-        # # if headless:
-        # #     self.options.add_argument('--headless')
+        self.options = Options()
+        if headless:
+            self.options.add_argument('--headless')
         self.options.page_load_strategy = 'eager'
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
