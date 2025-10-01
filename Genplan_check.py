@@ -83,7 +83,9 @@ class GenplanChecker:
 
         return False
 
-    def check_with_auth(self, url, name, credentials_key):
+    def check_with_auth(self, url, name, credentials_key,
+                        title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
+                        genplan_css='ymaps.ymaps-2-1-79-inner-panes'):
         """
         Проверка генплана с авторизацией
 
@@ -91,6 +93,8 @@ class GenplanChecker:
             url: URL страницы
             name: Название посёлка для логов
             credentials_key: Ключ для получения креденшелов из data.json
+            title_xpath: XPath для кликабельного элемента открытия генплана
+            genplan_css: CSS селектор для элемента генплана
         """
         self.driver.get(url)
 
@@ -106,7 +110,7 @@ class GenplanChecker:
         time.sleep(2)
 
         # Проверка генплана
-        self.check_genplan(self.driver.current_url, name)
+        self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
 
     def run_checks(self):
         """Запуск всех проверок"""
@@ -133,6 +137,7 @@ class GenplanChecker:
             ('https://syn95.lp.moigektar.ru', 'syn_95'),
             ('https://syn99.lp.moigektar.ru', 'syn_99'),
             ('https://synergycountryclub.ru', 'syn_103'),
+            ('https://syn447.lp.moigektar.ru', 'syn_447'),
         ]
 
         for url, name in standard_sites:
@@ -150,6 +155,14 @@ class GenplanChecker:
             'https://syn111.lp.moigektar.ru',
             'syn_111',
             '111_cred'
+        )
+
+        # турпортал Едем на Вазузу - с авторизацией и особым селектором
+        self.check_with_auth(
+            'https://едемнавазузу.рф',
+            'ТурПортал',
+            'turporlal_cred',
+            title_xpath='(//*[text()[contains(.,"Интерактивная")]])[1]'
         )
 
     def cleanup(self):
