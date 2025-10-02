@@ -13,8 +13,15 @@ from typing import Dict, List, Tuple
 
 
 class ModalWindowChecker:
-    def __init__(self, headless: bool = True):
-        """Инициализация драйвера с настройками"""
+    def __init__(self, headless: bool = True, base_url: str = "https://moigektar.ru"):
+        """Инициализация драйвера с настройками
+
+        Args:
+            headless: Запуск браузера в headless режиме
+            base_url: Базовый URL сайта (по умолчанию https://moigektar.ru)
+        """
+        self.base_url = base_url.rstrip('/')  # Убираем trailing slash если есть
+
         self.options = Options()
         if headless:
             self.options.add_argument('--headless')
@@ -97,9 +104,9 @@ class ModalWindowChecker:
 
     def check_main_page(self) -> List[bool]:
         """Проверяет модальные окна на главной странице"""
-        print("\n   Проверка главной страницы 'МГ'")
+        print("\n   Главная страница 'МГ'")
 
-        if not self._safe_navigate("https://moigektar.ru"):
+        if not self._safe_navigate(self.base_url):
             return [False] * 8
 
         time.sleep(1)
@@ -173,7 +180,8 @@ class ModalWindowChecker:
                 name_input = self.wait.until(EC.element_to_be_clickable(
                     (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-name"])[2]')))
                 name_input.click()
-                print('   ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
+                print(
+                    '   ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
                 return True  # Возвращаем True при успешной отправке
 
             except Exception as e:
@@ -197,14 +205,16 @@ class ModalWindowChecker:
         # Конфигурация страниц для проверки
         page_configs = {
             'catalog': {
-                'url': 'https://moigektar.ru/catalogue',
+                'name': 'Каталог',
+                'url': f'{self.base_url}/catalogue',
                 'checks': [
                     ('(//*[@id="modal-auth"]//*[@value="catalog_auth_request"])[1]',
                      'стр. каталога, модалка "Доступ в каталог", lgForm')
                 ]
             },
             'batch_detail': {
-                'url': 'https://moigektar.ru/batches/55302',
+                'name': 'Страница актива',
+                'url': f'{self.base_url}/batches/55302',
                 'checks': [
                     ('(//*[@id="modal-batch-detail"]//*[@value="buy-batch-modal"])[1]',
                      'стр. актива, модалка "Заявка на консультацию", lgForm'),
@@ -215,42 +225,48 @@ class ModalWindowChecker:
                 ]
             },
             'investment_basic': {
-                'url': 'https://moigektar.ru/investment/basic',
+                'name': 'Инвестор (базовая)',
+                'url': f'{self.base_url}/investment/basic',
                 'checks': [
                     ('(//*[@id="modal-select"]//*[@value="mg_invest_basic_page_callback"])[1]',
                      'стр. "Базовая стратегия", модалка "Заказать услугу", lgForm')
                 ]
             },
             'investment_businessman': {
-                'url': 'https://moigektar.ru/investment/businessman',
+                'name': 'Инвестор (предприниматель)',
+                'url': f'{self.base_url}/investment/businessman',
                 'checks': [
                     ('(//*[@id="modal-select"]//*[@value="capitalization_count"])[1]',
                      'стр. "Предприниматель", модалка "Заказать услугу", lgForm')
                 ]
             },
             'business_plans': {
-                'url': 'https://moigektar.ru/business-plans',
+                'name': 'Бизнес-планы',
+                'url': f'{self.base_url}/business-plans',
                 'checks': [
                     ('(//*[@id="modal-main"]//*[@value="callback_business"])[1]',
                      'стр. "Бизнес-планы", модалка "Получить консультацию", lgForm')
                 ]
             },
             'gift': {
-                'url': 'https://moigektar.ru/gift',
+                'name': 'Подарочный сертификат',
+                'url': f'{self.base_url}/gift',
                 'checks': [
                     ('(//*[@id="gift-main-modal"]//*[@value="lg_cert"])[1]',
                      'стр. "Подарочный сертификат", модалка "Оставьте заявку!", lgForm')
                 ]
             },
             'hr': {
-                'url': 'https://moigektar.ru/hr',
+                'name': 'Вакансии',
+                'url': f'{self.base_url}/hr',
                 'checks': [
                     ('(//*[@id="hr-main-modal"]//*[@value="callback_hr"])[1]',
                      'стр. "Вакансии", модалка "Оставьте анкету ...", lgForm')
                 ]
             },
             'settlements': {
-                'url': 'http://moigektar.ru/goal/settlements',
+                'name': 'Родовые поселения',
+                'url': f'{self.base_url}/goal/settlements',
                 'checks': [
                     ('(//*[@id="settlements-main-modal"]//*[@value="callback_main_settlements"])[1]',
                      'стр. "Родовые поселения", 1-й экран, модалка "Оставьте заявку!", lgForm'),
@@ -262,7 +278,7 @@ class ModalWindowChecker:
 
         # Проверяем каждую страницу
         for page_name, config in page_configs.items():
-            print(f"\n   Проверка страницы: {page_name}")
+            print(f"\n   {config['name']}")
             page_results = []
 
             if self._safe_navigate(config['url']):
@@ -284,27 +300,6 @@ class ModalWindowChecker:
             'other_pages': self.check_pages()
         }
 
-        # Подсчет статистики
-        total_checks = 0
-        passed_checks = 0
-
-        for page_results in results.values():
-            if isinstance(page_results, list):
-                # Фильтруем None значения и считаем только bool
-                valid_results = [result for result in page_results if isinstance(result, bool)]
-                total_checks += len(valid_results)
-                passed_checks += sum(valid_results)
-            elif isinstance(page_results, dict):
-                for page_list in page_results.values():
-                    if isinstance(page_list, list):
-                        # Фильтруем None значения и считаем только bool
-                        valid_results = [result for result in page_list if isinstance(result, bool)]
-                        total_checks += len(valid_results)
-                        passed_checks += sum(valid_results)
-
-        print(f"\nИтого: {passed_checks}/{total_checks} проверок прошли успешно")
-        print(f"Процент успешных проверок: {(passed_checks / total_checks * 100):.1f}%")
-
         return results
 
     def __del__(self):
@@ -315,7 +310,10 @@ class ModalWindowChecker:
 
 def main():
     """Основная функция"""
-    checker = ModalWindowChecker(headless=True)
+    # Для быстрого переключения домена измените base_url:
+    # Продакшн: base_url="https://moigektar.ru"
+    # Локальный: base_url="http://moigektar.localhost"
+    checker = ModalWindowChecker(headless=True, base_url="https://moigektar.ru")
     try:
         results = checker.run_all_checks()
         return results
