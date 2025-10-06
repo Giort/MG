@@ -437,6 +437,11 @@ services_config = [
         'name': 'vault.dmz.bug.land',
         'url': 'https://vault.dmz.bug.land',
         'xpath': '//*[text()[contains(., "Sign in to Vault")]]'
+    },
+    {
+        'name': 'compliance.bug.land',
+        'url': 'https://compliance.bug.land',
+        'xpath': '//*[text()[contains(., "Авторизация")]]'
     }
 ]
 
