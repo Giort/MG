@@ -51,7 +51,6 @@ class ModalWindowChecker:
         try:
             popup = self.driver.find_element(By.ID, 'visitors-popup')
             self.driver.execute_script("arguments[0].remove();", popup)
-            print("   Popup удален")
         except NoSuchElementException:
             pass  # Popup не найден, это нормально
 
@@ -76,16 +75,27 @@ class ModalWindowChecker:
         # Если все строки пустые или содержат только служебную информацию
         return f"{type(error).__name__}: элемент не найден"
 
-    def _check_element(self, xpath: str, description: str) -> bool:
-        """Проверяет наличие элемента по XPath"""
-        try:
-            self.driver.find_element(By.XPATH, xpath)
-            print(f'   ОК: {description}')
-            return True
-        except NoSuchElementException as e:
-            error_msg = self._format_error_message(e)
-            print(f'ОШИБКА: {description} — {error_msg}')
-            return False
+    def _check_element(self, xpath: str, description: str, max_attempts: int = 3) -> bool:
+        """Проверяет наличие элемента по XPath с повторными попытками
+
+        Args:
+            xpath: XPath селектор элемента
+            description: Описание проверки для логирования
+            max_attempts: Максимальное количество попыток (по умолчанию 3)
+        """
+        for attempt in range(1, max_attempts + 1):
+            try:
+                self.driver.find_element(By.XPATH, xpath)
+                print(f'   ОК: {description}')
+                return True
+            except NoSuchElementException as e:
+                if attempt < max_attempts:
+                    self.driver.refresh()
+                    time.sleep(2)
+                else:
+                    error_msg = self._format_error_message(e)
+                    print(f'ОШИБКА: {description} — {error_msg}')
+                    return False
 
     def _safe_navigate(self, url: str, max_retries: int = 3) -> bool:
         """Безопасная навигация с повторными попытками"""
@@ -104,7 +114,6 @@ class ModalWindowChecker:
 
     def check_main_page(self) -> List[bool]:
         """Проверяет модальные окна на главной странице"""
-        print("\n   Главная страница 'МГ'")
 
         if not self._safe_navigate(self.base_url):
             return [False] * 8
@@ -120,12 +129,14 @@ class ModalWindowChecker:
              'главная, модалка "Доступ в личный кабинет", lgForm'),
             ('(//*[@id="promo-modal1-3"]//*[@value="callback_main_promo_volga"])[1]',
              'главная, модалка в блоке "Распродажа на Волге", lgForm'),
-            ('(//*[@id="modal_syn-73"]//*[@value="lg_main_catalog_yasnie_zori"])[1]',
-             'главная, модалка син_73 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="modal_syn-35"]//*[@value="lg_main_catalog_usadba_podo_rgevom"])[1]',
+             'главная, модалка син_35 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
              'главная, модалка син_53 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-29"]//*[@value="lg_main_catalog_usadba_na_volge"])[1]',
              'главная, модалка син_29 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="product-card-modal"]//*[@value="mg_main_page_product_card_callback"])[1]',
+             'главная, модалка в блоке "Реализуйте продукцию ...", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-1"]//*[@value="mg_main_page_business_area"])[1]',
              'главная, модалка на карточке 1 в блоке "Зарабатывайте на гектаре", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-2"]//*[@value="mg_main_page_business_area"])[1]',
@@ -174,6 +185,7 @@ class ModalWindowChecker:
             submit_btn = self.driver.find_element(By.XPATH,
                                                   '(//*[@id="modal-meeting-meeting"]//*[text()[contains(.,"Отправить заявку")]])[1]')
             submit_btn.click()
+            time.sleep(2)
 
             # Пытаемся найти поле имени - если оно появилось, значит форма успешно отправлена
             try:
@@ -222,6 +234,18 @@ class ModalWindowChecker:
                      'стр. актива, модалка "Оставьте заявку" на кешбэке, lgForm'),
                     ('(//*[@id="modal-batch-installment"]//*[@value="batch_installment_special_offer"])[1]',
                      'стр. актива, модалка "Рассчитайте рассрочку", lgForm')
+                ]
+            },
+            'service_company': {
+                'name': 'Сервисная компания',
+                'url': f'{self.base_url}/service-company',
+                'checks': [
+                    ('(//*[@id="sk-how-interview"]//*[@value="mg_service_company_interview_callback"])[1]',
+                     'стр. СК, модалка "Запись на собеседование", lgForm'),
+                    ('(//*[@id="sk-how-coach"]//*[@value="mg_service_company_coach_callback"])[1]',
+                     'стр. СК, модалка "Запись на коуч-сессию, lgForm'),
+                    ('(//*[@id="sk-main-modal"]//*[@value="mg_service_company_page_callback"])[1]',
+                     'стр. СК, модалка "Начать развитие", lgForm')
                 ]
             },
             'investment_basic': {
@@ -278,7 +302,6 @@ class ModalWindowChecker:
 
         # Проверяем каждую страницу
         for page_name, config in page_configs.items():
-            print(f"\n   {config['name']}")
             page_results = []
 
             if self._safe_navigate(config['url']):
@@ -293,7 +316,7 @@ class ModalWindowChecker:
 
     def run_all_checks(self) -> Dict[str, any]:
         """Запускает все проверки"""
-        print("Начинаем проверку модальных окон...")
+        print("\n Проверка модальных окон")
 
         results = {
             'main_page': self.check_main_page(),

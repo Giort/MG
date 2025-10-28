@@ -57,6 +57,7 @@ def check_catalog_modal_auth_back_to_main_goal(text):
     # Открываем страницу каталога
     driver.get('https://moigektar.ru/catalogue/?__counters=1')
     back_button = driver.find_element(By.XPATH, '//*[text()[contains(., "Вернуться на главную")]]')
+    time.sleep(1)
     back_button.click()
 
     request_found = False
@@ -82,7 +83,7 @@ def check_catalog_modal_social_media_btn_goal(btn_selector, text, btn):
     driver = webdriver.Chrome(
         seleniumwire_options=sw_options,
         options = ch_options)
-    driver.get('https://moigektar.ru')
+    driver.get('https://moigektar.ru/?__counters=1')
     driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
     button = driver.find_element(By.CLASS_NAME, btn_selector)
     button.click()
@@ -124,7 +125,7 @@ def check_quiz_btn_goal(quiz_btn, goal, place):
         seleniumwire_options=sw_options,
         options = ch_options)
     actions = ActionChains(driver)
-    driver.get('https://moigektar.ru')
+    driver.get('https://moigektar.ru/?__counters=1')
     btn = driver.find_element(By.XPATH, quiz_btn)
     actions.move_to_element(btn).perform()
     actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
@@ -207,10 +208,9 @@ def check_batch_card_button_goal(button_tests):
     driver = webdriver.Chrome(
         seleniumwire_options=sw_options,
         options=ch_options)
-    actions = ActionChains(driver)
 
     try:
-        driver.get("https://moigektar.ru")
+        driver.get("https://moigektar.ru/?__counters=1")
 
         #авторизация
         driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
@@ -267,3 +267,167 @@ button_tests = [
 
 # Запуск
 check_batch_card_button_goal(button_tests)
+
+
+# Главная, блок "Отзывы о проекте", нажали кнопку "Посмотреть больше"
+def check_news_button_goal(text):
+    driver = webdriver.Chrome(
+        seleniumwire_options=sw_options,
+        options=ch_options)
+    actions = ActionChains(driver)
+    driver.get('https://moigektar.ru/?__counters=1')
+
+    try:
+        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+        driver.execute_script("arguments[0].remove();", popup_w)
+    except:
+        print("Popup not found")
+
+    title = driver.find_element(By.XPATH, '(//*[text()[contains(., "Отзывы о проекте")]])[2]')
+    actions.move_to_element(title).perform()
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    button = driver.find_element(By.XPATH, '//div/*[@href="/about/reviews"]')
+    button.click()
+    time.sleep(5)
+
+    request_found = False
+    for request in driver.requests:
+        if text in request.url:
+            print(f"     ОК: при нажатии на кнопку в 'Отзывах' отправляется цель '{text}'")
+            request_found = True
+            break
+    if not request_found:
+        print(
+            f"Ошибка: при нажатии на кнопку в 'Отзывах' текст '{text}' не найден в отправленных запросах")
+
+    driver.quit()
+    return request_found
+
+try:
+    check_news_button_goal('main_reviews_button')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: при нажатии на кнопку в 'Отзывах' — ", error_msg)
+
+# Главная, блок "Выбери участок в лучшей локации", нажали кнопку "Смотреть участки"
+def check_locations_button_goal(text):
+    driver = webdriver.Chrome(
+        seleniumwire_options=sw_options,
+        options=ch_options)
+    actions = ActionChains(driver)
+    driver.get('https://moigektar.ru/?__counters=1')
+
+    try:
+        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+        driver.execute_script("arguments[0].remove();", popup_w)
+    except:
+        print("Popup not found")
+
+    title = driver.find_element(By.XPATH, '//*[text()[contains(., "Выбери участок")]]')
+    actions.move_to_element(title).perform()
+    actions.send_keys(Keys.PAGE_DOWN).perform()
+    button = driver.find_element(By.XPATH, '(//*[text()[contains(., "Смотреть участки")]])[1]')
+    button.click()
+    time.sleep(5)
+
+    request_found = False
+    for request in driver.requests:
+        if text in request.url:
+            print(f"     ОК: при нажатии на кнопку в 'Выбери уч. в лучшей локации' отправляется цель '{text}'")
+            request_found = True
+            break
+    if not request_found:
+        print(
+            f"Ошибка: при нажатии на кнопку в 'Выбери уч. в лучшей локации' текст '{text}' не найден в отправленных запросах")
+
+    driver.quit()
+    return request_found
+
+try:
+    check_locations_button_goal('best_location_button')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print("Ошибка: при нажатии на кнопку в 'Выбери уч. в лучшей локации' — ", error_msg)
+
+
+# каталог: нажатия на кнопки
+def check_catalogue_button_goal(button_tests):
+    driver = None
+
+    try:
+        driver = webdriver.Chrome(
+            seleniumwire_options=sw_options,
+            options=ch_options)
+        actions = ActionChains(driver)
+
+        for test in button_tests:
+            max_attempts = 3
+            success = False
+
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    driver.get("https://moigektar.ru/catalogue-no-auth/?__counters=1")
+                    time.sleep(5)
+                    if not test['goal'] == "catalog_v4.filter_button_click":
+                        actions.send_keys(Keys.PAGE_DOWN).perform()
+                    elem = driver.find_element(By.XPATH, test['loc'])
+                    if test['goal'] == "catalog_v4.list_view_toggle":
+                        button = driver.find_element(By.XPATH, '(//*[text()[contains(., "На карте")]])[1]')
+                        button.click()
+                        time.sleep(5)
+                    elem.click()
+                    time.sleep(15)
+
+                    request_found = False
+                    for request in driver.requests:
+                        if test['goal'] in request.url:
+                            print(f"     ОК: при нажатии на {test['button']} отправляется цель '{test['goal']}'")
+                            request_found = True
+                            success = True
+                            break
+
+                    if request_found:
+                        break  # Выходим из цикла попыток, если проверка успешна
+                    elif attempt == max_attempts:
+                        print(
+                            f"Ошибка: при нажатии на {test['button']} текст '{test['goal']}' не найден в отправленных запросах")
+
+                except Exception as e:
+                    error_msg = str(e).split('\n')[0]
+                    if attempt == max_attempts:
+                        print(f'Ошибка: при нажатии на {test["button"]} — {error_msg}')
+
+    except Exception as e:
+        error_msg = str(e).split('\n')[0]
+        print(f'Ошибка в тесте "Каталог: нажатия на кнопки": {error_msg}')
+    finally:
+        if driver:
+            driver.quit()
+
+
+# Параметры для check_catalogue_button_goal
+button_tests = [
+    {
+        'loc': '(//*[text()[contains(., "На карте")]])[1]',
+        'goal': 'catalog_v4.map_view_toggle',
+        'button': 'кнопку "Карта"'
+    },
+    {
+        'loc': '(//*[text()[contains(., "Плиткой")]])[1]',
+        'goal': 'catalog_v4.list_view_toggle',
+        'button': 'кнопку "Плитка"'
+    },
+    {
+        'loc': '(//*[text()[contains(., "Туристический")]])[1]',
+        'goal': 'filter_interaction.business_toggle',
+        'button': 'кнопку "Туристический бизнес"'
+    },
+    {
+        'loc': '(//*[text()[contains(., "Фильтр")]])[1]',
+        'goal': 'catalog_v4.filter_button_click',
+        'button': 'кнопку "Фильтр"'
+    }
+]
+
+# Запуск
+check_catalogue_button_goal(button_tests)

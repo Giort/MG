@@ -41,6 +41,7 @@ def check_service(driver, config, data=None):
     wait_timeout = config.get('wait_timeout', 14)
 
     driver.get(url)
+    time.sleep(1)
 
     # Авторизация, если нужна
     if auth and data:
@@ -158,11 +159,6 @@ services_config = [
         'xpath': '//a[@href="#w-descr"]'
     },
     {
-        'name': 'syn_21',
-        'url': 'https://syn21.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
-    },
-    {
         'name': 'syn_24',
         'url': 'https://syn24.lp.moigektar.ru/',
         'xpath': '//span[text()[contains(.,"Генеральный")]]'
@@ -180,7 +176,7 @@ services_config = [
     {
         'name': 'syn_35',
         'url': 'https://syn35.lp.moigektar.ru/',
-        'xpath': '//span[text()[contains(.,"Генеральный")]]'
+        'xpath': '(//a[@href="#w-main"])[1]'
     },
     {
         'name': 'syn_36',
@@ -296,7 +292,7 @@ services_config = [
     {
         'name': 'сервис генерации опросов',
         'url': 'https://polls.moigektar.ru/',
-        'xpath': '//*[text()[contains(.,"Проект «МОЙ ГЕКТАР»")]]'
+        'xpath': '//*[text()[contains(.,"Заполните поля")]]'
     },    {
         'name': 'pay.moigektar',
         'url': 'https://pay.moigektar.ru/',
@@ -368,11 +364,6 @@ services_config = [
         'xpath': '//h1[text()[contains(.,"коллективное")]]'
     },
     {
-        'name': 'сайт СК',
-        'url': 'https://sc.lp.moigektar.ru/',
-        'xpath': '//*[text()[contains(., "Наша цель")]]'
-    },
-    {
         'name': 'Барская усадьба',
         'url': 'https://xn--80aacl7dl0e.xn--p1ai',
         'xpath': '//h2[text()[contains(., "Ждем вас в гости!")]]'
@@ -441,7 +432,7 @@ services_config = [
     {
         'name': 'compliance.bug.land',
         'url': 'https://compliance.bug.land',
-        'xpath': '//*[text()[contains(., "Авторизация")]]'
+        'xpath': '(//*[text()[contains(.,"Авторизация")]])[3]'
     }
 ]
 

@@ -120,6 +120,7 @@ class GenplanChecker:
             ('https://syn9.lp.moigektar.ru', 'syn_9'),
             ('https://syn33.lp.moigektar.ru', 'syn_33'),
             ('https://syn34.lp.moigektar.ru', 'syn_34'),
+            ('https://syn35.lp.moigektar.ru', 'syn_35'),
             ('https://syn39.lp.moigektar.ru', 'syn_39'),
             ('https://syn42.lp.moigektar.ru', 'syn_42'),
             ('https://syn48.lp.moigektar.ru', 'syn_48'),

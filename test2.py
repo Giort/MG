@@ -1,70 +1,94 @@
-import time
-
-from exceptiongroup import catch
-from selenium.webdriver.support.ui import WebDriverWait as wait
-from seleniumwire import webdriver
-from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
 ch_options = Options()
-#ch_options.add_argument('--headless')
-ch_options.add_argument("--window-size=1680,1000")
+# ch_options.add_argument('--headless')
+ch_options.page_load_strategy = 'eager'
+service = ChromeService(executable_path=ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=ch_options)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-# Настройка драйвера с Selenium Wire
-# Включаем перехват запросов
-sw_options = {'disable_capture': False}
-import json
-from selenium.webdriver.common.action_chains import ActionChains
-from tenacity import retry, stop_after_attempt, retry_if_exception, retry_if_exception_type, wait_fixed
-driver = webdriver.Chrome(options=ch_options)
 actions = ActionChains(driver)
+from selenium.webdriver.common.keys import Keys
+import time
+import json
+driver.set_window_size(1600, 1000)
+driver.implicitly_wait(10)
 
 with open('data.json', 'r') as file:
     data = json.load(file)
 
 
+def check_tour(tour_number, balloon_index, z_index_value, max_attempts=3):
+    """
+    Проверяет виртуальный тур на главной странице МГ
 
-# карточки активов: нажали на карточку
-def check_batch_card_goal(text):
-    driver = webdriver.Chrome(
-        seleniumwire_options=sw_options,
-        options=ch_options)
-    actions = ActionChains(driver)
-    driver.get('https://moigektar.ru/?__counters=1')
+    Args:
+        tour_number: номер тура для вывода (1, 2, 3)
+        balloon_index: индекс кнопки с баллоном в XPath (1, 2, 3)
+        z_index_value: ожидаемое значение z-index для проверки
+        max_attempts: максимальное количество попыток (по умолчанию 3)
 
-    # избавляемся от поп-апа, который перекрывает доступ к карточкам
-    try:
-        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-        driver.execute_script("""
-        var auth_win = arguments[0];
-        auth_win.remove();
-        """, popup_w)
-    except:
-        print("Popup not found")
+    Returns:
+        True если проверка прошла успешно, False если не прошла после всех попыток
+    """
+    for attempt in range(1, max_attempts + 1):
+        try:
+            # Находим и кликаем на кнопку
+            btn = wait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, f'(//span[@uk-icon="balloon"])[{balloon_index}]'))
+            )
+            actions.move_to_element(btn).perform()
+            time.sleep(1)
+            actions.click(btn).perform()
 
-    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[4]')
-    time.sleep(1500)
-    actions.move_to_element(card).perform()
-    card.click()
-    time.sleep(1500)
+            # Переключаемся на iframe
+            iframe = wait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, 'uk-lightbox-iframe'))
+            )
+            driver.switch_to.frame(iframe)
 
-    request_found = False
-    for request in driver.requests:
-        if text in request.url:
-            print(f"     ОК: при нажатии на карточку актива отправляется цель '{text}'")
-            request_found = True
-            break
-    if not request_found:
-        print(
-            f"Ошибка: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
+            # Проверяем наличие элемента с нужным z-index
+            elem = wait(driver, 20).until(
+                EC.visibility_of_element_located((By.XPATH, f"//div[(contains(@style, 'z-index: {z_index_value}'))]"))
+            )
 
-    driver.quit()
-    return request_found
+            if elem:
+                print(f'   OK: МГ, тур{tour_number} на главной')
+                driver.switch_to.default_content()
+                return True
 
+        except Exception as e:
+            driver.switch_to.default_content()
+
+            if attempt < max_attempts:
+                driver.refresh()
+                time.sleep(2)
+            else:
+                print(f'ERROR: МГ, тур{tour_number} на главной')
+                return False
+
+    return False
+
+
+# Основной код
 try:
-    check_batch_card_goal('catalog_v4.batch_card_click')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: при нажатии на карточку актива — ', error_msg)
+    driver.get("https://moigektar.ru/")
+    time.sleep(3)  # Даем странице время загрузиться
 
+    # Выполняем все три проверки независимо друг от друга
+    # Тур 1 - z-index: 3101
+    check_tour(tour_number=1, balloon_index=1, z_index_value='3101', max_attempts=3)
+
+    # Тур 2 - z-index: 308
+    check_tour(tour_number=2, balloon_index=2, z_index_value='308', max_attempts=3)
+
+    # Тур 3 - z-index: 230
+    check_tour(tour_number=3, balloon_index=3, z_index_value='230', max_attempts=3)
+
+finally:
+    # Закрываем драйвер
+    driver.quit()

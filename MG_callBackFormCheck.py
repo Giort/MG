@@ -14,7 +14,6 @@ class FormChecker:
 
     # Базовый URL сайта - можно легко переключаться между prod и local
     BASE_URL = "https://moigektar.ru"
-
     # BASE_URL = "http://moigektar.localhost"
 
     def __init__(self, headless=False):
@@ -200,7 +199,7 @@ class FormChecker:
             "каталог", "форма с Ариной", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'я вас проконсультирую')]])[2]",
             "каталог", "форма с Ариной", "заголовок"
         )
 
@@ -335,6 +334,7 @@ class FormChecker:
     def check_other_pages(self):
         """Проверка остальных страниц"""
         pages = [
+            ("/service-company", "Сервисная компания", "Анастасия", "mg_service_company_form_callback", "Анастасией"),
             ("/good-fund", "Фонд добра", "гораздо", "mg_fond_dobra_callback", "Юлией"),
             ("/hr", "Вакансии", "Юлия", "callback_hr_form", "Юлией"),
             ("/contacts", "Контакты", "Арина", "mg_contact_page_callback", "Ариной"),
@@ -357,6 +357,9 @@ class FormChecker:
             if page_name == "Контакты" or page_name == "Подарочный сертификат":
                 header_text = "оставьте свой номер"
                 index = "[2]"
+            elif page_name == "Сервисная компания":
+                header_text = "Сервисной компании"
+                index = "[1]"
             else:
                 header_text = "я вас проконсультирую"
                 index = "[1]"
@@ -463,7 +466,7 @@ class FormChecker:
 
 
 if __name__ == "__main__":
-    checker = FormChecker(headless=False)
+    checker = FormChecker(headless=True)
     try:
         checker.run_all_checks()
     finally:
