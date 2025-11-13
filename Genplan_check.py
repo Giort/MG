@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -112,8 +113,100 @@ class GenplanChecker:
         # Проверка генплана
         self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
 
+    def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
+                            max_attempts=3, wait_time=14):
+        """
+        Проверка загрузки карты в каталоге
+
+        Args:
+            url: URL страницы каталога
+            name: Название для логов
+            max_attempts: Максимальное количество попыток
+            wait_time: Время ожидания элементов
+        """
+        self.driver.get(url)
+        # PAGE_DOWN делаем только один раз при первой загрузке
+        self.actions.send_keys(Keys.PAGE_DOWN).perform()
+
+        for attempt in range(max_attempts):
+            try:
+                # Ожидание и клик на кнопку "На карте"
+                map_button = wait(self.driver, wait_time).until(
+                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(., "На карте")]])[1]'))
+                )
+                map_button.click()
+
+                # Проверка появления элемента "3D-ТУР" (признак загрузки генплана)
+                tour_element = wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Слои")]]'))
+                )
+
+                if tour_element:
+                    print(f'   OK: {name}')
+                    return True
+
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: {name} - {str(e)}')
+                    return False
+                else:
+                    # При refresh не делаем повторный PAGE_DOWN
+                    self.driver.refresh()
+
+        return False
+
+    def check_asset_genplan(self, url='https://moigektar.ru/batches-no-auth/60786', name='Страница участка',
+                            max_attempts=3, wait_time=14):
+        """
+        Проверка загрузки генплана на странице актива
+
+        Args:
+            url: URL страницы актива
+            name: Название для логов
+            max_attempts: Максимальное количество попыток
+            wait_time: Время ожидания элементов
+        """
+        self.driver.get(url)
+
+        for attempt in range(max_attempts):
+            try:
+                # Ожидание кнопки "Генеральный"
+                genplan_button = wait(self.driver, wait_time).until(
+                    EC.element_to_be_clickable((By.XPATH, '//*[text()[contains(.,"Генеральный")]]'))
+                )
+
+                # Прокрутка делается только при первой попытке
+                if attempt == 0:
+                    self.actions.move_to_element(genplan_button).perform()
+
+                genplan_button.click()
+
+                # Проверка появления элемента "На участок" (признак загрузки генплана)
+                to_plot_element = wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"На участок")]]'))
+                )
+
+                if to_plot_element:
+                    print(f'   OK: {name}')
+                    return True
+
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: {name} - {str(e)}')
+                    return False
+                else:
+                    self.driver.refresh()
+
+        return False
+
     def run_checks(self):
         """Запуск всех проверок"""
+
+        # Проверка карты в каталоге moigektar.ru
+        self.check_catalogue_map()
+
+        # Проверка генплана на странице актива moigektar.ru
+        self.check_asset_genplan()
 
         # Сайты с одинаковыми селекторами
         standard_sites = [
