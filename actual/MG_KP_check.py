@@ -26,7 +26,7 @@ driver.implicitly_wait(10)
 # Засекаем время начала теста
 start_time = time.time()
 
-with open('../data.json', 'r') as file:
+with open('../actual/data.json', 'r') as file:
     data = json.load(file)
 
 # логин

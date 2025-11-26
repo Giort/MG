@@ -768,7 +768,7 @@ services_config = [
 def main():
     # Загрузка данных для авторизации
     try:
-        with open('../data.json', 'r') as file:
+        with open('../actual/data.json', 'r') as file:
             data = json.load(file)
     except FileNotFoundError:
         data = None

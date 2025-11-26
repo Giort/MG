@@ -41,7 +41,7 @@ class FormChecker:
 
     def _load_test_data(self):
         """Загрузка тестовых данных из JSON"""
-        with open('../data.json', 'r') as file:
+        with open('../actual/data.json', 'r') as file:
             return json.load(file)
 
     def check_element(self, xpath, page_name, form_name, element_type, max_attempts=3):
@@ -202,7 +202,7 @@ class FormChecker:
             "каталог", "форма с Ариной", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'я вас проконсультирую')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Оставьте заявку')]])[2]",
             "каталог", "форма с Ариной", "заголовок"
         )
 

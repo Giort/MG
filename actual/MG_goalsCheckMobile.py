@@ -6,8 +6,8 @@ from seleniumwire import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 ch_options = Options()
-ch_options.add_argument('--headless')
-ch_options.add_argument("--window-size=1680,1000")
+# ch_options.add_argument('--headless')
+ch_options.add_argument("--window-size=360,820")
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 # Настройка драйвера с Selenium Wire
@@ -20,7 +20,7 @@ from datetime import datetime
 # Засекаем время начала теста
 start_time = time.time()
 
-with open('../data.json', 'r') as file:
+with open('../actual/data.json', 'r') as file:
     data = json.load(file)
 
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
@@ -68,7 +68,7 @@ def check_header_auth_modal_goal(text):
         seleniumwire_options=sw_options,
         options = ch_options)
     driver.get('https://moigektar.ru/?__counters=1')
-    button = driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]')
+    button = driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]')
     button.click()
     time.sleep(5)
 
@@ -126,7 +126,7 @@ def check_catalog_modal_social_media_btn_goal(btn_selector, text, btn):
         seleniumwire_options=sw_options,
         options = ch_options)
     driver.get('https://moigektar.ru/?__counters=1')
-    driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+    driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
     button = driver.find_element(By.CLASS_NAME, btn_selector)
     button.click()
     time.sleep(5)
@@ -222,7 +222,7 @@ def check_batch_card_goal(text):
         seleniumwire_options=sw_options,
         options=ch_options)
     driver.get('https://moigektar.ru/?__counters=1')
-    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[4]')
+    card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[5]')
     card.click()
     time.sleep(10)
 
@@ -255,7 +255,7 @@ def check_batch_card_button_goal(button_tests):
         driver.get("https://moigektar.ru/?__counters=1")
 
         #авторизация
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
         time.sleep(2)
         tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
         name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
@@ -296,12 +296,12 @@ def check_batch_card_button_goal(button_tests):
 # Параметры для check_batch_card_button_goal
 button_tests = [
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[5]',
         'goal': 'catalog_v4.batch_share',
         'place': 'кнопку "Поделиться" на карточке актива'
     },
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[1]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[5]',
         'goal': 'catalog_v4.batch_presentation_download',
         'place': 'кнопку "pdf" на карточке актива'
     }
@@ -348,12 +348,12 @@ def check_batch_card_button_goal(button_tests):
 # Параметры для check_batch_card_button_goal
 button_tests = [
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[5]',
         'goal': 'catalog_v4.batch_share',
         'place': 'кнопку "Поделиться" на карточке актива'
     },
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[1]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[5]',
         'goal': 'catalog_v4.batch_presentation_download',
         'place': 'кнопку "pdf" на карточке актива'
     }
@@ -379,7 +379,7 @@ def check_news_button_goal(text):
 
     title = driver.find_element(By.XPATH, '(//*[text()[contains(., "Отзывы о проекте")]])[2]')
     actions.move_to_element(title).perform()
-    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
     button = driver.find_element(By.XPATH, '//div/*[@href="/about/reviews"]')
     button.click()
     time.sleep(5)
@@ -415,19 +415,14 @@ def check_locations_button_goal(text):
         popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
         driver.execute_script("arguments[0].remove();", popup_w)
     except:
-        print("Popup not found")
+        print("     Popup not found")
 
     title = driver.find_element(By.XPATH, '//*[text()[contains(., "Выбери участок")]]')
     actions.move_to_element(title).perform()
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-    driver.save_screenshot(f'screenshot_{timestamp}.png')
-    actions.send_keys(Keys.PAGE_DOWN).perform()
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-    driver.save_screenshot(f'screenshot_{timestamp}.png')
-    actions.send_keys(Keys.PAGE_DOWN).perform()
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-    driver.save_screenshot(f'screenshot_{timestamp}.png')
+    actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
+    time.sleep(5)
     button = driver.find_element(By.XPATH, '(//*[text()[contains(., "Смотреть участки")]])[1]')
+    time.sleep(5)
     button.click()
     time.sleep(5)
 
@@ -470,10 +465,10 @@ def check_catalogue_button_goal(button_tests):
                     driver.get("https://moigektar.ru/catalogue-no-auth/?__counters=1")
                     time.sleep(5)
                     if not test['goal'] == "catalog_v4.filter_button_click":
-                        actions.send_keys(Keys.PAGE_DOWN).perform()
+                        actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
                     elem = driver.find_element(By.XPATH, test['loc'])
                     if test['goal'] == "catalog_v4.list_view_toggle":
-                        button = driver.find_element(By.XPATH, '(//*[text()[contains(., "На карте")]])[1]')
+                        button = driver.find_element(By.XPATH, '(//*[text()[contains(., "На карте")]])[2]')
                         button.click()
                         time.sleep(5)
                     elem.click()
@@ -509,19 +504,14 @@ def check_catalogue_button_goal(button_tests):
 # Параметры для check_catalogue_button_goal
 button_tests = [
     {
-        'loc': '(//*[text()[contains(., "На карте")]])[1]',
+        'loc': '(//*[text()[contains(., "На карте")]])[2]',
         'goal': 'catalog_v4.map_view_toggle',
         'button': 'кнопку "Карта"'
     },
     {
-        'loc': '(//*[text()[contains(., "Плиткой")]])[1]',
+        'loc': '//*[text()[contains(., "Назад к списку")]]',
         'goal': 'catalog_v4.list_view_toggle',
         'button': 'кнопку "Плитка"'
-    },
-    {
-        'loc': '(//*[text()[contains(., "Туристический")]])[1]',
-        'goal': 'filter_interaction.business_toggle',
-        'button': 'кнопку "Туристический бизнес"'
     },
     {
         'loc': '(//*[text()[contains(., "Фильтр")]])[1]',

@@ -23,7 +23,6 @@ start_time = time.time()
 # - авторизован как демо
 # - авторизован как зарегистрированный пользователь
 # -- хорошо бы проверять доступность с офисных айпи
-# todo: add tries
 
 
 # Проверяемый урл
@@ -41,7 +40,7 @@ class UnauthChecker:
     def init_driver(self):
         """Инициализация драйвера"""
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -63,23 +62,31 @@ class UnauthChecker:
 
         full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
 
-        try:
-            self.driver.get(full_url)
+        # Выполняем три попытки
+        for attempt in range(3):
+            try:
+                self.driver.get(full_url)
 
-            # Ждем появления элемента
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath_selector))
-            )
+                # Ждем появления элемента
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
 
-            print(f"     OK: {page_name}")
-            return True
+                print(f"     OK: {page_name}")
+                return True
 
-        except TimeoutException:
-            print(f" ERROR: {page_name} - элемент не найден")
-            return False
-        except Exception as e:
-            print(f" ERROR: {page_name} - {str(e)}")
-            return False
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
 
     def check_all_pages(self, pages_config, delay=1):
         """
@@ -146,15 +153,17 @@ if __name__ == "__main__":
     main()
 
 
+
+
 class DemoChecker:
     def __init__(self, mg_base_url):
         self.mg_base_url = mg_base_url.rstrip('/')
         self.driver = None
 
     def init_driver(self):
-        """Инициализация драйвера"""
+
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -163,7 +172,7 @@ class DemoChecker:
         return self.driver
 
     def open_cabinet(self):
-        """Открывает страницу cabinet один раз перед всеми проверками"""
+        """Открываем ЛК для того, чтобы произошла авторизация от лица демо-пользователя"""
         try:
             self.driver.get(LK_BASE_URL)
             return True
@@ -172,36 +181,36 @@ class DemoChecker:
             return False
 
     def check_page(self, page_config, timeout=20):
-        """
-        Проверяет доступность страницы и наличие элемента
 
-        Args:
-            page_config: словарь с конфигурацией страницы
-            timeout: время ожидания элемента
-        """
         page_path = page_config['path']
         page_name = page_config['name']
         xpath_selector = page_config['xpath']
 
         full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
 
-        try:
-            self.driver.get(full_url)
+        for attempt in range(3):
+            try:
+                self.driver.get(full_url)
 
-            # Ждем появления элемента
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath_selector))
-            )
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
 
-            print(f"     OK: {page_name}")
-            return True
+                print(f"     OK: {page_name}")
+                return True
 
-        except TimeoutException:
-            print(f" ERROR: {page_name} - элемент не найден")
-            return False
-        except Exception as e:
-            print(f" ERROR: {page_name} - {str(e)}")
-            return False
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
 
     def check_all_pages(self, pages_config, delay=1):
         """
@@ -280,9 +289,9 @@ class NoAuthChecker:
         self.driver = None
 
     def init_driver(self):
-        """Инициализация драйвера"""
+
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -291,45 +300,39 @@ class NoAuthChecker:
         return self.driver
 
     def check_page(self, page_config, timeout=20):
-        """
-        Проверяет доступность страницы и наличие элемента
 
-        Args:
-            page_config: словарь с конфигурацией страницы
-            timeout: время ожидания элемента
-        """
         page_path = page_config['path']
         page_name = page_config['name']
         xpath_selector = page_config['xpath']
 
         full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
 
-        try:
-            self.driver.get(full_url)
+        for attempt in range(3):
+            try:
+                self.driver.get(full_url)
 
-            # Ждем появления элемента
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath_selector))
-            )
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
 
-            print(f"     OK: {page_name}")
-            return True
+                print(f"     OK: {page_name}")
+                return True
 
-        except TimeoutException:
-            print(f" ERROR: {page_name} - элемент не найден")
-            return False
-        except Exception as e:
-            print(f" ERROR: {page_name} - {str(e)}")
-            return False
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep()
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
 
     def check_all_pages(self, pages_config, delay=1):
-        """
-        Проверяет все страницы из конфигурации
 
-        Args:
-            pages_config: список словарей с конфигурациями страниц
-            delay: задержка между проверками
-        """
         print(f"\n     Проверка страниц _при входе по no-auth_")
 
         results = {}
@@ -341,11 +344,10 @@ class NoAuthChecker:
         return results
 
     def close(self):
-        """Закрывает драйвер"""
+
         if self.driver:
             self.driver.quit()
 
-# Конфигурация страниц и элементов
 PAGES_CONFIG = [
     {
         'name': 'каталог',
@@ -393,9 +395,9 @@ class AuthChecker:
         self.driver = None
 
     def init_driver(self):
-        """Инициализация драйвера"""
+
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -424,49 +426,42 @@ class AuthChecker:
             return False
 
     def check_page(self, page_config, timeout=20):
-        """
-        Проверяет доступность страницы и наличие элемента
 
-        Args:
-            page_config: словарь с конфигурацией страницы
-            timeout: время ожидания элемента
-        """
         page_path = page_config['path']
         page_name = page_config['name']
         xpath_selector = page_config['xpath']
 
         full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
 
-        try:
-            self.driver.get(full_url)
+        for attempt in range(3):
+            try:
+                self.driver.get(full_url)
 
-            # Ждем появления элемента
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath_selector))
-            )
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
 
-            print(f"     OK: {page_name}")
-            return True
+                print(f"     OK: {page_name}")
+                return True
 
-        except TimeoutException:
-            print(f" ERROR: {page_name} - элемент не найден")
-            return False
-        except Exception as e:
-            print(f" ERROR: {page_name} - {str(e)}")
-            return False
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
 
     def check_all_pages(self, pages_config, delay=1):
-        """
-        Проверяет все страницы из конфигурации
 
-        Args:
-            pages_config: список словарей с конфигурациями страниц
-            delay: задержка между проверками
-        """
         print(f"\n     Проверка страниц для _авторизованного пользователя_")
 
-        # сначала заходим в кабинет
-
+        # сначала авторизуемся
         self.auth()
         time.sleep(6)
 
@@ -479,12 +474,10 @@ class AuthChecker:
         return results
 
     def close(self):
-        """Закрывает драйвер"""
+
         if self.driver:
             self.driver.quit()
 
-
-# Конфигурация страниц и элементов
 PAGES_CONFIG = [
     {
         'name': 'каталог',

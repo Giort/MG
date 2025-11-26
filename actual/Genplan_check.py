@@ -37,7 +37,7 @@ class GenplanChecker:
     def _load_data(self):
         """Загрузка конфигурации из JSON"""
         try:
-            with open('../data.json', 'r') as file:
+            with open('../actual/data.json', 'r') as file:
                 return json.load(file)
         except FileNotFoundError:
             return {}

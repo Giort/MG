@@ -206,6 +206,13 @@ tour_configs = [
         'z_index': '350',
     },
     {
+        'name': 'syn_35',
+        'url': 'https://syn35.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_TOUR_CLASS,
+        'z_index': '3101',
+    },
+    {
         'name': 'syn_39',
         'url': 'https://syn39.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
@@ -329,7 +336,7 @@ tour_configs = [
         'url': 'https://syn89.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_ICON,
-        'z_index': '3101',
+        'z_index': '176',
     },
     {
         'name': 'syn_33',
@@ -352,7 +359,7 @@ def main():
 
     # Загрузка данных для авторизации
     try:
-        with open('../data.json', 'r') as file:
+        with open('../actual/data.json', 'r') as file:
             data = json.load(file)
     except FileNotFoundError:
         data = None

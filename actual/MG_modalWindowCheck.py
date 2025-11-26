@@ -43,7 +43,7 @@ class ModalWindowChecker:
     def _load_test_data(self) -> dict:
         """Загружает тестовые данные из JSON файла"""
         try:
-            with open('../data.json', 'r', encoding='utf-8') as file:
+            with open('../actual/data.json', 'r', encoding='utf-8') as file:
                 return json.load(file)
         except FileNotFoundError:
             print("Предупреждение: файл data.json не найден")
