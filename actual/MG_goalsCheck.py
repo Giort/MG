@@ -477,7 +477,7 @@ def check_batch_card_button_goal(button_tests, max_attempts=3):
         driver = None
         try:
             driver = init_driver()
-
+            actions = ActionChains(driver)
             driver.get("https://moigektar.ru/?__counters=1")
 
             if not auth_user(driver):
@@ -485,7 +485,6 @@ def check_batch_card_button_goal(button_tests, max_attempts=3):
                     time.sleep(5)
                 continue
 
-            driver.get("https://moigektar.ru#catalogueSpecial")
             time.sleep(5)
 
             for test in button_tests:
@@ -494,6 +493,8 @@ def check_batch_card_button_goal(button_tests, max_attempts=3):
 
                 try:
                     elem = driver.find_element(By.XPATH, test['loc'])
+                    actions.move_to_element(elem).perform()
+                    actions.send_keys(Keys.ARROW_DOWN).perform()
                     elem.click()
                     time.sleep(15)
 
@@ -570,10 +571,8 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
         driver = None
         try:
             driver = init_driver()
+            actions = ActionChains(driver)
             driver.get("https://moigektar.ru/?__counters=1")
-
-            # Переход к СП и проверка отправки целей
-            driver.get("https://moigektar.ru#catalogueSpecial")
             time.sleep(5)
 
             for test in button_tests:
@@ -583,6 +582,8 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
 
                 try:
                     elem = driver.find_element(By.XPATH, test['loc'])
+                    actions.move_to_element(elem).perform()
+                    actions.send_keys(Keys.ARROW_DOWN).perform()
                     elem.click()
                     time.sleep(15)
 

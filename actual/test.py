@@ -1,109 +1,117 @@
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-ch_options = Options()
-#ch_options.add_argument('--headless')
-ch_options.page_load_strategy = 'eager'
-driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = ch_options)
-from selenium.webdriver.support.ui import WebDriverWait as wait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-actions = ActionChains(driver)
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementNotVisibleException
-from selenium.webdriver.common.keys import Keys
 import time
-import json
-driver.set_window_size(1680, 1000)
-driver.implicitly_wait(10)
+from seleniumwire import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
-with open('../data.json', 'r') as file:
+ch_options = Options()
+# ch_options.add_argument('--headless')
+ch_options.add_argument("--window-size=360,900")
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
+# Настройка драйвера с Selenium Wire
+# Включаем перехват запросов
+sw_options = {'disable_capture': False}
+import json
+from datetime import datetime
+
+
+# Засекаем время начала теста
+start_time = time.time()
+
+with open('data.json', 'r') as file:
     data = json.load(file)
 
+# Проверяемый урл
+MG_BASE_URL = "https://moigektar.ru"
+#MG_BASE_URL = "http://moigektar.localhost"
 
 
-#driver.get("https://moigektar.ru")
-#driver.get("https://syn73.lp.moigektar.ru/")
+def init_driver():
+    """Инициализация драйвера"""
+    driver = webdriver.Chrome(
+        seleniumwire_options=sw_options,
+        options=ch_options)
+    return driver
 
-# 8. проверка раздела "Подарочный сертификат"
-# 8.1 модалка "Оставьте заявку!" №1 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="gift-main-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #1, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #1, lgForm — ', error_msg)
-# 8.2 модалка "Оставьте заявку!" №2 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-parents-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #2, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #2, lgForm — ', error_msg)
-# 8.3 модалка "Оставьте заявку!" №3 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-friend-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #3, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #3, lgForm — ', error_msg)
-# 8.4 модалка "Оставьте заявку!" №4 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="plot-certificate-business-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #4, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #4, lgForm — ', error_msg)
-# 8.5 модалка "Оставьте заявку!" №5 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="gift-option-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #5, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #5, lgForm — ', error_msg)
-# 8.6 модалка "Оставьте заявку!" №6 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="gift-certificate-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #6, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #6, lgForm — ', error_msg)
-# 8.7 модалка "Оставьте заявку!" №7 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="select-certificate-plot-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #7, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #7, lgForm — ', error_msg)
-# 8.8 модалка "Оставьте заявку!" №8 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="select-certificate-sum-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #8, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #8, lgForm — ', error_msg)
-# 8.9 модалка "Оставьте заявку!" №9 — проверяю наличие правильного атрибута lgForm
-try:
-    driver.get('https://moigektar.ru/gift')
-    driver.find_element(by=By.XPATH, value='(//*[@id="gift-land-modal"]//*[@value="lg_cert"])[1]')
-    print('     ОК: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #9, lgForm')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('Ошибка: стр. "Подарочный сертификат", модалка "Оставьте заявку!" #9, lgForm — ', error_msg)
+def remove_popup(driver):
+    """Удаление попапа посетителей"""
+    try:
+        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+        driver.execute_script("arguments[0].remove();", popup_w)
+    except Exception:
+        pass
+
+def auth_user(driver):
+    """Авторизация пользователя"""
+    try:
+        driver.get("https://moigektar.ru/?__counters=1")
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
+        time.sleep(2)
+        tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
+        name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+        password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
+        btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
+        tab.click()
+        name.send_keys(str(data["LK_cred"]["login"]))
+        password.send_keys(str(data["LK_cred"]["password"]))
+        btn.click()
+        time.sleep(10)
+        return True
+    except Exception as e:
+        print(f"ERROR: Не удалось авторизоваться - {str(e)}")
+        return False
 
 
+# карточки активов: нажали на карточку
+def check_batch_card_goal(text, max_attempts=3):
+    # Словарь для хранения результатов
+    results = {'success': False, 'attempts': 0}
+
+    for attempt in range(max_attempts):
+        driver = None
+        try:
+            driver = init_driver()
+            actions = ActionChains(driver)
+            driver.get('https://moigektar.ru/?__counters=1')
+            remove_popup(driver)
+            card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[5]')
+            actions.move_to_element(card).perform()
+            card.click()
+            time.sleep(10)
+
+            request_found = False
+            for request in driver.requests:
+                if text in request.url:
+                    results['success'] = True
+                    results['attempts'] = attempt + 1
+                    request_found = True
+                    break
+
+            if request_found:
+                break
+
+        except Exception as e:
+            results['attempts'] = attempt + 1
+        finally:
+            if driver:
+                driver.quit()
+
+            if attempt < max_attempts - 1 and not results['success']:
+                time.sleep(5)
+
+    if results['success']:
+        print(f"     ОК: при нажатии на карточку актива отправляется цель '{text}'")
+    else:
+        print(f"ERROR: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
+
+    return results['success']
 
 
-time.sleep(5)
-driver.quit()
+try:
+    check_batch_card_goal('catalog_v4.batch_card_click')
+except Exception as e:
+    error_msg = str(e).split('\n')[0]
+    print('ERROR: при нажатии на карточку актива — ', error_msg)
+
+

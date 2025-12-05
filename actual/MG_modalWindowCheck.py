@@ -130,8 +130,8 @@ class ModalWindowChecker:
         checks = [
             ('(//*[@id="modal-auth-lk"]//*[@value="catalog_auth_request"])[1]',
              'главная, модалка "Доступ в личный кабинет", lgForm'),
-            ('(//*[@id="promo-modal1-3"]//*[@value="callback_main_promo_volga"])[1]',
-             'главная, модалка в блоке "Распродажа на Волге", lgForm'),
+            ('(//*[@id="promo-modal1-3"]//*[@value="lg_promo_modal_newyear"])[1]',
+             'главная, модалка в блоке "Лучший новогодний подарок", lgForm'),
             ('(//*[@id="modal_syn-35"]//*[@value="lg_main_catalog_usadba_podo_rgevom"])[1]',
              'главная, модалка син_35 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
