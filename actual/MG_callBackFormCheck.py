@@ -147,7 +147,7 @@ class FormChecker:
             "главная", "форма с Ариной #1", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
             "главная", "форма с Ариной #1", "заголовок"
         )
 
@@ -214,7 +214,7 @@ class FormChecker:
             "стр. актива", "форма с Ариной", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
             "стр. актива", "форма с Ариной", "заголовок"
         )
 
@@ -234,7 +234,7 @@ class FormChecker:
                 f'"{page_name}"', "форма с Ариной", "lgForm"
             )
             self.check_element(
-                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
                 f"'{page_name}'", "форма с Ариной", "заголовок"
             )
 
@@ -257,7 +257,7 @@ class FormChecker:
                 f'"{page_name}"', "форма с Ариной", "lgForm"
             )
             self.check_element(
-                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
                 f"'{page_name}'", "форма с Ариной", "заголовок"
             )
 
@@ -279,7 +279,7 @@ class FormChecker:
                 f'"{page_name}"', "форма с Ариной", "lgForm"
             )
             self.check_element(
-                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+                "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
                 f"'{page_name}'", "форма с Ариной", "заголовок"
             )
 
@@ -306,7 +306,7 @@ class FormChecker:
             "детальная страница новости", "форма с Ариной", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Напишу вам в WhatsApp,')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]",
             "детальная страница новости", "форма с Ариной", "заголовок"
         )
 

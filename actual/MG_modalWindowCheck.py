@@ -132,20 +132,16 @@ class ModalWindowChecker:
              'главная, модалка "Доступ в личный кабинет", lgForm'),
             ('(//*[@id="promo-modal1-3"]//*[@value="lg_promo_modal_newyear"])[1]',
              'главная, модалка в блоке "Лучший новогодний подарок", lgForm'),
-            ('(//*[@id="modal_syn-35"]//*[@value="lg_main_catalog_usadba_podo_rgevom"])[1]',
-             'главная, модалка син_35 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
-             'главная, модалка син_53 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="modal_syn-432"]//*[@value="lg_main_catalog_odincovo"])[1]',
+             'главная, модалка син_432 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="modal_syn-376"]//*[@value="lg_main_catalog_rybackaya"])[1]',
+             'главная, модалка син_376 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-29"]//*[@value="lg_main_catalog_usadba_na_volge"])[1]',
              'главная, модалка син_29 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="product-card-modal"]//*[@value="mg_main_page_product_card_callback"])[1]',
              'главная, модалка в блоке "Реализуйте продукцию ...", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-1"]//*[@value="mg_main_page_business_area"])[1]',
              'главная, модалка на карточке 1 в блоке "Зарабатывайте на гектаре", lgForm'),
-            ('(//*[@id="modal-descr-invest-batch-2"]//*[@value="mg_main_page_business_area"])[1]',
-             'главная, модалка на карточке 2 в блоке "Зарабатывайте на гектаре", lgForm'),
-            ('(//*[@id="modal-descr-invest-batch-3"]//*[@value="mg_main_page_business_area"])[1]',
-             'главная, модалка на карточке 3 в блоке "Зарабатывайте на гектаре", lgForm'),
             ('(//*[@id="modal-descr-invest-batch"]//*[@value="mg_invest_batch_page"])[1]',
              'главная, модалка на красной кнопке в блоке "Зарабатывайте на гектаре", lgForm'),
             ('(//*[@id="modal-main-consultation"]//*[@value="callback_main"])[1]',
@@ -288,7 +284,9 @@ class ModalWindowChecker:
                 'url': f'{self.base_url}/hr',
                 'checks': [
                     ('(//*[@id="hr-main-modal"]//*[@value="callback_hr"])[1]',
-                     'стр. "Вакансии", модалка "Оставьте анкету ...", lgForm')
+                     'стр. "Вакансии", модалка "Оставьте анкету ...", lgForm'),
+                    ('(//*[@id="hr-main-modal-2"]//*[@value="callback_hr_partner"])[1]',
+                     'стр. "Вакансии", модалка "Станьте партнером ...", lgForm')
                 ]
             },
             'settlements': {

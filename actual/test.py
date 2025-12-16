@@ -46,7 +46,7 @@ def auth_user(driver):
     """Авторизация пользователя"""
     try:
         driver.get("https://moigektar.ru/?__counters=1")
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
         time.sleep(2)
         tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
         name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
@@ -77,6 +77,7 @@ def check_batch_card_goal(text, max_attempts=3):
             remove_popup(driver)
             card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[5]')
             actions.move_to_element(card).perform()
+            actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
             card.click()
             time.sleep(10)
 
@@ -113,5 +114,3 @@ try:
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print('ERROR: при нажатии на карточку актива — ', error_msg)
-
-

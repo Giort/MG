@@ -153,7 +153,9 @@ def check_header_auth_modal_goal(text, max_attempts=3):
         driver = None
         try:
             driver = init_driver()
+            actions = ActionChains(driver)
             driver.get('https://moigektar.ru/?__counters=1')
+            actions.send_keys(Keys.PAGE_DOWN).perform()
             button = driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]')
             button.click()
             time.sleep(5)
@@ -179,10 +181,10 @@ def check_header_auth_modal_goal(text, max_attempts=3):
                 time.sleep(5)
 
     if results['success']:
-        print(f"     ОК: при взаимодействии с мод. авторизации на главной отправляется цель '{text}'")
+        print(f"     ОК: при вызове мод. авторизации из навбара отправляется цель '{text}'")
     else:
         print(
-            f"ERROR: при взаимодействии с мод. авторизации на главной текст '{text}' не найден в отправленных запросах")
+            f"ERROR: при вызове мод. авторизации из навбара текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -190,7 +192,7 @@ try:
     check_header_auth_modal_goal('catalog_modal_auth')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при взаимодействии с мод. авторизации на главной — ', error_msg)
+    print('ERROR: при вызове мод. авторизации из навбара — ', error_msg)
 
 
 # мод. авторизации в каталоге: отправляется цель, если нажали "Вернуться на главную"
@@ -253,6 +255,7 @@ def check_catalog_modal_social_media_btn_goal(tests, max_attempts=3):
         driver = None
         try:
             driver = init_driver()
+            actions = ActionChains(driver)
 
             for test in tests:
 
@@ -261,6 +264,7 @@ def check_catalog_modal_social_media_btn_goal(tests, max_attempts=3):
 
                 try:
                     driver.get('https://moigektar.ru/?__counters=1')
+                    actions.send_keys(Keys.PAGE_DOWN).perform()
                     driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
                     button = driver.find_element(By.CLASS_NAME, test['btn_selector'])
                     button.click()

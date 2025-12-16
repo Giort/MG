@@ -328,59 +328,50 @@ except Exception as e:
     print('ERROR: при проверке кнопок соцсетей в модалке авторизации — ', error_msg)
 
 
-# квиз: отправляется цель, если нажали кнопки вызова квиза
 def check_quiz_btn_goal(tests, max_attempts=3):
-
     results = {test['place']: {'success': False, 'attempts': 0} for test in tests}
 
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            actions = ActionChains(driver)
-
-            remove_popup(driver)
-
-            for test in tests:
-
+    for test in tests:
+        # Для каждого теста выполняем до max_attempts попыток
+        for attempt in range(max_attempts):
+            driver = None
+            try:
                 if results[test['place']]['success']:
-                    continue
+                    break  # Если тест уже успешен, переходим к следующему
 
-                try:
-                    driver.get('https://moigektar.ru/?__counters=1')
-                    btn = driver.find_element(By.XPATH, test['quiz_btn'])
-                    actions.move_to_element(btn).perform()
-                    actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
-                    btn.click()
-                    time.sleep(10)
+                driver = init_driver()
+                actions = ActionChains(driver)
 
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['place']]['success'] = True
-                            results[test['place']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
+                driver.get('https://moigektar.ru/?__counters=1')
+                remove_popup(driver)
+                btn = driver.find_element(By.XPATH, test['quiz_btn'])
+                actions.move_to_element(btn).perform()
+                actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+                btn.click()
+                time.sleep(10)
 
-                    if not request_found:
+                request_found = False
+                for request in driver.requests:
+                    if test['goal'] in request.url:
+                        results[test['place']]['success'] = True
                         results[test['place']]['attempts'] = attempt + 1
+                        request_found = True
+                        break
 
-                except Exception as e:
-                    results[test['place']]['attempts'] = attempt + 1
+                if request_found:
+                    break  # Успешная попытка, выходим из цикла попыток для этого теста
 
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
+            except Exception as e:
+                if attempt == max_attempts - 1:  # Если это последняя попытка
+                    print(f"Ошибка в тесте '{test['place']}': {e}")
+            finally:
+                if driver:
+                    driver.quit()
 
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
+                if attempt < max_attempts - 1 and not results[test['place']]['success']:
+                    time.sleep(2)  # Короткая пауза между попытками одного теста
 
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
+    # Выводим итоговые результаты
     all_success = True
     for test in tests:
         place = test['place']
@@ -389,7 +380,7 @@ def check_quiz_btn_goal(tests, max_attempts=3):
         if result['success']:
             print(f'     ОК: при нажатии на кнопку квиза {test["place"]} отправляется цель "{test["goal"]}"')
         else:
-            print(f'ERROR: при нажатии на кнопку квиза {test["place"]} текст "{test["goal"]}" не найден в отправленных запросах')
+            print(f'ERROR: при нажатии на кнопку квиза {test["place"]} текст "{test["goal"]}" не найден')
             all_success = False
 
     return all_success
@@ -433,7 +424,7 @@ def check_batch_card_goal(text, max_attempts=3):
             actions = ActionChains(driver)
             driver.get('https://moigektar.ru/?__counters=1')
             remove_popup(driver)
-            card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[5]')
+            card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[9]')
             actions.move_to_element(card).perform()
             actions.send_keys(Keys.ARROW_DOWN).perform()
             card.click()
@@ -485,9 +476,7 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
             driver = init_driver()
             actions = ActionChains(driver)
             driver.get("https://moigektar.ru/?__counters=1")
-
             time.sleep(5)
-
             remove_popup(driver)
 
             for test in button_tests:
@@ -547,12 +536,12 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
 # Параметры для check_batch_card_button_goal_unauth
 button_tests = [
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[5]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[9]',
         'goal': 'catalog_v4.batch_share',
         'place': 'кнопку "Поделиться" на карточке актива'
     },
     {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[5]',
+        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[9]',
         'goal': 'catalog_v4.batch_presentation_download',
         'place': 'кнопку "pdf" на карточке актива'
     }

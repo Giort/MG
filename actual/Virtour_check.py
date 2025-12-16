@@ -233,7 +233,7 @@ tour_configs = [
         'url': 'https://syn47.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
-        'z_index': '159',
+        'z_index': '173',
     },
     {
         'name': 'syn_48',
@@ -312,7 +312,7 @@ tour_configs = [
         'url': 'https://syn95.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
-        'z_index': '227',
+        'z_index': '275',
     },
     {
         'name': 'syn_99',
@@ -328,7 +328,7 @@ tour_configs = [
         'url': 'https://syn74.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_ICON,
-        'z_index': '176',
+        'z_index': '188',
         'wait_time': 3,
     },
     {
@@ -375,8 +375,8 @@ def main():
         time.sleep(3)  # Даем странице время загрузиться
 
         # Проверяем все три тура на главной
-        check_main_page_tour(driver, actions, tour_number=1, balloon_index=1, z_index_value='3101')
-        check_main_page_tour(driver, actions, tour_number=2, balloon_index=2, z_index_value='308')
+        check_main_page_tour(driver, actions, tour_number=1, balloon_index=1, z_index_value='227')
+        check_main_page_tour(driver, actions, tour_number=2, balloon_index=2, z_index_value='188')
         check_main_page_tour(driver, actions, tour_number=3, balloon_index=3, z_index_value='230')
 
         driver.refresh()
