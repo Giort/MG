@@ -25,6 +25,7 @@ def init_driver():
     driver.implicitly_wait(10)
     return driver
 
+print(f"\n     Проверка доступности виртуальных туров на сайтах \n")
 
 def check_main_page_tour(driver, actions, tour_number, balloon_index, z_index_value, max_attempts=3):
     """
@@ -63,7 +64,7 @@ def check_main_page_tour(driver, actions, tour_number, balloon_index, z_index_va
             )
 
             if elem:
-                print(f'   OK: МГ, тур{tour_number} на главной')
+                print(f'     OK: МГ, тур{tour_number} на главной')
                 driver.switch_to.default_content()
                 return True
 
@@ -153,7 +154,7 @@ def check_tour(driver, actions, config):
             )
 
             if elem:
-                print(f'   OK: {name}')
+                print(f'     OK: {name}')
                 driver.switch_to.default_content()
                 return True
 
@@ -320,6 +321,13 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '201',
+    },
+    {
+        'name': 'syn_447',
+        'url': 'https://syn447.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_TOUR_CLASS,
+        'z_index': '263',
     },
 
     # Проекты с другими локаторами

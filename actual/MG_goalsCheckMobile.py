@@ -26,6 +26,7 @@ with open('data.json', 'r') as file:
 MG_BASE_URL = "https://moigektar.ru"
 #MG_BASE_URL = "http://moigektar.localhost"
 
+print(f"\n     Проверка отправки целей на моб. МГ на домене {MG_BASE_URL} \n")
 
 def init_driver():
     """Инициализация драйвера"""

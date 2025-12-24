@@ -42,6 +42,8 @@ class GenplanChecker:
         except FileNotFoundError:
             return {}
 
+    print(f"\n     Проверка доступности блока генплана на сайтах \n")
+
     def check_genplan(self, url, name, title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
                       genplan_css='ymaps.ymaps-2-1-79-inner-panes',
                       max_attempts=3, wait_time=14):
@@ -75,7 +77,7 @@ class GenplanChecker:
                 )
 
                 if genplan_elem:
-                    print(f'   OK: {name}')
+                    print(f'      OK: {name}')
                     return True
 
             except Exception as e:
@@ -145,7 +147,7 @@ class GenplanChecker:
                 )
 
                 if tour_element:
-                    print(f'   OK: {name}')
+                    print(f'     OK: {name}')
                     return True
 
             except Exception as e:
@@ -190,7 +192,7 @@ class GenplanChecker:
                 )
 
                 if to_plot_element:
-                    print(f'   OK: {name}')
+                    print(f'     OK: {name}')
                     return True
 
             except Exception as e:

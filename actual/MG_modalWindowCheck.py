@@ -89,7 +89,7 @@ class ModalWindowChecker:
         for attempt in range(1, max_attempts + 1):
             try:
                 self.driver.find_element(By.XPATH, xpath)
-                print(f'   ОК: {description}')
+                print(f'     ОК: {description}')
                 return True
             except NoSuchElementException as e:
                 if attempt < max_attempts:
@@ -192,7 +192,7 @@ class ModalWindowChecker:
                     (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-name"])[2]')))
                 name_input.click()
                 print(
-                    '   ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
+                    '     ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
                 return True  # Возвращаем True при успешной отправке
 
             except Exception as e:
@@ -317,7 +317,7 @@ class ModalWindowChecker:
 
     def run_all_checks(self) -> Dict[str, any]:
         """Запускает все проверки"""
-        print("\n Проверка модальных окон")
+        print(f"\n     Проверка модальных окон на домене {self.base_url} \n")
 
         results = {
             'main_page': self.check_main_page(),
@@ -338,6 +338,7 @@ def main():
     # Продакшн: base_url="https://moigektar.ru"
     # Локальный: base_url="http://moigektar.localhost"
     checker = ModalWindowChecker(headless=True, base_url="https://moigektar.ru")
+
     try:
         results = checker.run_all_checks()
         return results

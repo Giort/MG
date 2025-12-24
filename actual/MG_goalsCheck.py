@@ -27,6 +27,9 @@ MG_BASE_URL = "https://moigektar.ru"
 #MG_BASE_URL = "http://moigektar.localhost"
 
 
+print(f"\n     Проверка отправки целей на МГ на домене {MG_BASE_URL}")
+
+
 def init_driver():
     """Инициализация драйвера"""
     driver = webdriver.Chrome(
@@ -62,7 +65,7 @@ def auth_user(driver):
         print(f"ERROR: Не удалось авторизоваться - {str(e)}")
         return False
 
-
+print()
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
 def check_catalog_modal_auth_show(tests, max_attempts=3):
     # Словарь для хранения результатов каждого теста

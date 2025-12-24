@@ -445,7 +445,7 @@ class FormChecker:
 
     def run_all_checks(self):
         """Запуск всех проверок"""
-        print("\n Начало проверки форм на сайте МойГектар")
+        print("\n     Проверка форм на сайте МойГектар \n")
 
         self.check_main_page_forms()
         self.check_catalog_forms()

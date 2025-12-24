@@ -29,6 +29,8 @@ start_time = time.time()
 with open('../actual/data.json', 'r') as file:
     data = json.load(file)
 
+print(f"\n     Проверка генерации КП \n")
+
 # логин
 driver.get("https://moigektar.ru/catalogue")
 
@@ -60,7 +62,7 @@ while count_kp < 21:
         kp = driver.current_url
         look_btn = wait(driver,60).until(EC.visibility_of_element_located((By.XPATH, '//*[@title="Посмотреть"]')))
         if look_btn:
-            print('    OK: КП сгенерировано. Попытка номер ' + str(count_kp))
+            print('     OK: КП сгенерировано. Попытка номер ' + str(count_kp))
             break
     except:
         count_kp += 1

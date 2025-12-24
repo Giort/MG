@@ -26,6 +26,7 @@ def init_driver():
     driver.implicitly_wait(10)
     return driver
 
+print(f"\n     Проверка доступности сайтов \n")
 
 # Универсальный метод проверки сервиса
 def check_service(driver, config, data=None):
@@ -80,9 +81,9 @@ def check_service(driver, config, data=None):
             elem = wait(driver, wait_timeout).until(EC.visibility_of_element_located((By.XPATH, xpath)))
             if elem:
                 if project:
-                    print(f'   OK: [{project}] {name}')
+                    print(f'     OK: [{project}] {name}')
                 else:
-                    print(f'   OK: {name}')
+                    print(f'     OK: {name}')
 
                 # Удаляем куки только если указан флаг clear_cookies (это для того, чтобы вход в ЛК под демо не влиял на
                 # отображение интерфейса на зависящих сайтах)
