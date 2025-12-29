@@ -66,7 +66,7 @@ class FormChecker:
                     time.sleep(2)
                 else:
                     error_msg = str(e).split('\n')[0]
-                    print(f"ОШИБКА: {page_name}, {form_name}, {element_type} — {error_msg}")
+                    print(f"ERROR: {page_name}, {form_name}, {element_type} — {error_msg}")
                     return False
 
     def remove_popup(self):
@@ -127,11 +127,11 @@ class FormChecker:
                 print("     ОК: главная, форма с Софией №1, отправка через форму")
             except Exception as e:
                 error_msg = str(e).split('\n')[0]
-                print(f"Ошибка: главная, форма с Софией №1, отправка через форму — {error_msg}")
+                print(f"ERROR: главная, форма с Софией №1, отправка через форму — {error_msg}")
 
         except Exception as e:
             error_msg = str(e).split('\n')[0]
-            print(f"Ошибка: главная, форма с Софией №1 — {error_msg}")
+            print(f"ERROR: главная, форма с Софией №1 — {error_msg}")
 
     def check_main_page_forms(self):
         """Проверка всех форм на главной странице"""
