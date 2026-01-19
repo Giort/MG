@@ -181,7 +181,7 @@ XPATH_INTERACTIVE = '//span[text()[contains(.,"Интерактивный")]]'
 XPATH_GENPLAN = '//span[text()[contains(.,"Генеральный")]]'
 XPATH_VIRTUAL_TOURS = '//span[text()[contains(.,"Виртуальные")]]'
 XPATH_UNIQUE_ECORESORT = '//h3[text()[contains(., "Уникальный экокурорт")]]'
-XPATH_10_SOTOK = '//*[text()[contains(.,"10 соток под дачу")]]'
+XPATH_20_SOTOK = '//*[text()[contains(.,"20 соток ИЖС")]]'
 XPATH_W_MAIN = '(//a[@href="#w-main"])[1]'
 XPATH_CLUB_VILLAGE = '//*[text()[contains(., "Клубный поселок")]]'
 XPATH_BOOK = '//h3[text()[contains(.,"Забронировать")]]'
@@ -353,7 +353,7 @@ services_config = [
             ('syn63.lp.moigektar.ru', 'https://syn63.lp.moigektar.ru'),
             ('усадьба-в-подмосковье.рф', 'https://усадьба-в-подмосковье.рф'),
         ],
-        XPATH_10_SOTOK
+        XPATH_20_SOTOK
     ),
 
     # === ПРОЕКТ: syn_35 Усадьба подо Ржевом===
@@ -800,6 +800,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

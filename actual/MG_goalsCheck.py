@@ -886,6 +886,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

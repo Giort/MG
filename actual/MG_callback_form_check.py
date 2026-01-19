@@ -344,6 +344,7 @@ class FormChecker:
             ("/goal/glamping", "Глэмпинг", "Андрей", "mg_glamping_page_andrey_callback", "Андреем"),
             ("/goal/farm", "Фермы и агробизнес", "Андрей", "mg_farm_page_andrey_callback", "Андреем"),
             ("/goal/settlements", "Родовые поселения", "Андрей", "mg_settlements_page_andrey_callback", "Андреем"),
+            ("/broker", "страница для брокеров", "Андрей", "mg_broker_page_andrey_callback", "Андреем"),
             ("/gift", "Подарочный сертификат", "Арина", "mg_gift_page_callback", "Ариной"),
             ("/cabinet", "раздел личного кабинета", "Арина", "mg_lk_page_page_arina_callback", "Ариной"),
             ("/invest-batch", "страница про инвестиции", "Максим", "mg_invest_batch_page_callback", "Максимом"),
@@ -360,7 +361,7 @@ class FormChecker:
             if page_name == "Контакты" or page_name == "Подарочный сертификат":
                 header_text = "оставьте свой номер"
                 index = "[2]"
-            elif page_name == "Сервисная компания":
+            elif page_name == "Сервисная компания" or page_name == "страница для брокеров":
                 header_text = "Сервисной компании"
                 index = "[1]"
             else:
@@ -483,7 +484,7 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
 

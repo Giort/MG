@@ -131,7 +131,7 @@ class ModalWindowChecker:
             ('(//*[@id="modal-auth-lk"]//*[@value="catalog_auth_request"])[1]',
              'главная, модалка "Доступ в личный кабинет", lgForm'),
             ('(//*[@id="promo-modal1-3"]//*[@value="lg_promo_modal_newyear"])[1]',
-             'главная, модалка в блоке "Лучший новогодний подарок", lgForm'),
+             'главная, модалка на баннере "Лучшее новогоднее предложение", lgForm'),
             ('(//*[@id="modal_syn-432"]//*[@value="lg_main_catalog_odincovo"])[1]',
              'главная, модалка син_432 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="modal_syn-376"]//*[@value="lg_main_catalog_rybackaya"])[1]',
@@ -298,6 +298,14 @@ class ModalWindowChecker:
                     ('(//*[@id="settlements-descr-modal"]//*[@value="callback_descr_settlements"])[1]',
                      'стр. "Родовые поселения", описание, модалка "Оставьте заявку!", lgForm')
                 ]
+            },
+            'broker': {
+                'name': 'для брокеров',
+                'url': f'{self.base_url}/broker',
+                'checks': [
+                    ('(//*[@id="broker-main-modal"]//*[@value="lg_broker_modal"])[1]',
+                     'стр. для брокеров, 1-й экран, модалка "Оставьте заявку!", lgForm')
+                ]
             }
         }
 
@@ -357,6 +365,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

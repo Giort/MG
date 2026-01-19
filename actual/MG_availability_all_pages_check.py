@@ -15,15 +15,7 @@ with open('data.json', 'r') as file:
 # Засекаем время начала теста
 start_time = time.time()
 
-# Проверка доступности пользовательских страниц пр разных состояниях
-#
-# Состояния:
-# - не авторизован
-# - зашёл по no-auth
-# - авторизован как демо
-# - авторизован как зарегистрированный пользователь
-# -- хорошо бы проверять доступность с офисных айпи
-
+# Проверка доступности страниц МГ
 
 # Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
@@ -40,7 +32,7 @@ class PageChecker:
     def init_driver(self):
 
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -601,7 +593,7 @@ PAGES_CONFIG = [
     {
         'name': 'контакты',
         'path': 'contacts',
-        'xpath': '//*[text()[contains(.,"Департамент продаж")]]',
+        'xpath': '(//*[text()[contains(.,"Департамент продаж")]])[1]',
     },
     {
         'name': 'подарочный сертификат',
@@ -780,6 +772,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

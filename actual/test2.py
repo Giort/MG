@@ -1,884 +1,837 @@
-import time
-
-from exceptiongroup import catch
-from selenium.webdriver.support.ui import WebDriverWait as wait
-from seleniumwire import webdriver
-from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-
-ch_options = Options()
-# ch_options.add_argument('--headless')
-ch_options.add_argument("--window-size=1680,1000")
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-
-# Настройка драйвера с Selenium Wire
-# Включаем перехват запросов
-sw_options = {'disable_capture': False}
+import time
 import json
-from datetime import datetime
+import requests
+from urllib.parse import urljoin
+
+# расширенная версия кода проверки всех страниц. Сейчас проверяет http-статус страницы при входе.
 
 
-# Засекаем время начала теста
-start_time = time.time()
 
 with open('data.json', 'r') as file:
     data = json.load(file)
 
+# Засекаем время начала теста
+start_time = time.time()
+
+# Проверка доступности страниц МГ
+
 # Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
-#MG_BASE_URL = "http://moigektar.localhost"
+LK_BASE_URL = "https://cabinet.moigektar.ru"
+# MG_BASE_URL = "http://moigektar.localhost"
+# LK_BASE_URL = "http://cabinet.moigektar.localhost"
 
 
-def init_driver():
-    """Инициализация драйвера"""
-    driver = webdriver.Chrome(
-        seleniumwire_options=sw_options,
-        options=ch_options)
-    return driver
+class PageChecker:
+    def __init__(self, mg_base_url):
+        self.driver = self.init_driver()
+        self.actions = ActionChains(self.driver)
+        self.mg_base_url = mg_base_url.rstrip('/')
+        self.session = requests.Session()
+        # Устанавливаем заголовки, чтобы имитировать браузер
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        })
 
-def remove_popup(driver):
-    """Удаление попапа посетителей"""
-    try:
-        popup_w = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-        driver.execute_script("arguments[0].remove();", popup_w)
-    except Exception:
-        pass
+    def init_driver(self):
+        ch_options = Options()
+        ch_options.add_argument('--headless')
+        ch_options.page_load_strategy = 'eager'
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=ch_options)
+        driver.set_window_size(1680, 1000)
+        driver.implicitly_wait(10)
+        return driver
 
-def auth_user(driver):
-    """Авторизация пользователя"""
-    try:
-        driver.get("https://moigektar.ru/?__counters=1")
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+    def auth(self):
+        """ Авторизация """
+        try:
+            self.driver.get("https://moigektar.ru//")
+            self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+            time.sleep(2)
+            tab = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
+            name = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+            password = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
+            btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
+            tab.click()
+            name.send_keys(str(data["LK_cred"]["login"]))
+            password.send_keys(str(data["LK_cred"]["password"]))
+            btn.click()
+            time.sleep(5)
+            return True
+        except Exception as e:
+            print(f" ERROR: Не удалось авторизоваться - {str(e)}")
+            return False
+
+    def check_http_status(self, url, timeout=10):
+        """
+        Проверяет HTTP-статус страницы
+        Возвращает (status_code, error_message)
+        """
+        try:
+            response = self.session.get(url, timeout=timeout, allow_redirects=True)
+
+            # Проверяем статус код
+            status_code = response.status_code
+
+            if status_code >= 400:
+                if 400 <= status_code < 500:
+                    error_type = "Клиентская ошибка"
+                elif status_code >= 500:
+                    error_type = "Серверная ошибка"
+                else:
+                    error_type = "Ошибка"
+
+                return status_code, f"{error_type} {status_code}"
+            else:
+                return status_code, None
+
+        except requests.exceptions.Timeout:
+            return None, "Таймаут при проверке HTTP-статуса"
+        except requests.exceptions.ConnectionError:
+            return None, "Ошибка подключения"
+        except Exception as e:
+            return None, f"Ошибка при проверке HTTP: {str(e)}"
+
+    def check_page(self, page_config, timeout=20):
+        page_path = page_config['path']
+        page_name = page_config['name']
+        xpath_selector = page_config['xpath']
+
+        full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
+        self.actions.send_keys(Keys.PAGE_DOWN).perform()
         time.sleep(2)
-        tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-        name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-        password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-        btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
-        tab.click()
-        name.send_keys(str(data["LK_cred"]["login"]))
-        password.send_keys(str(data["LK_cred"]["password"]))
-        btn.click()
-        time.sleep(10)
-        return True
+
+        # Сначала проверяем HTTP-статус
+        status_code, http_error = self.check_http_status(full_url)
+
+        if http_error:
+            print(f" ERROR: {page_name} - {http_error}")
+            return False
+
+        # Затем проверяем через Selenium
+        for attempt in range(3):
+            try:
+                self.driver.get(full_url)
+
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
+
+                print(f"     OK: {page_name}")
+                return True
+
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
+
+    def check_all_pages(self, pages_config, delay=1):
+        print(f"\n     Проверка всех страниц МГ \n")
+
+        # сначала авторизуемся
+        self.auth()
+        time.sleep(6)
+
+        results = {}
+        for page_config in pages_config:
+            result = self.check_page(page_config)
+            results[page_config['name']] = result
+            time.sleep(delay)
+
+        return results
+
+    def close(self):
+        if self.driver:
+            self.driver.quit()
+
+
+PAGES_CONFIG = [
+    {
+        'name': 'главная',
+        'path': '/',
+        'xpath': '//h2[text()[contains(.,"Описание проекта")]]',
+    },
+#     {
+#         'name': 'каталог',
+#         'path': 'catalogue',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - новорижское шоссе',
+#         'path': 'catalogue/zemelnye-uchastki-na-novorizhskom-shosse',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - ленинградское шоссе',
+#         'path': 'catalogue/zemelnye-uchastki-na-leningradskom-shosse',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - минское шоссе',
+#         'path': 'catalogue/zemelnye-uchastki-na-minskom-shosse',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - ярославское шоссе',
+#         'path': 'catalogue/uchastki-na-yaroslavskom-shosse',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - на Волге',
+#         'path': 'catalogue/volga',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - на Валдае',
+#         'path': 'catalogue/valday',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - на Вазузе',
+#         'path': 'catalogue/vazuza',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - на Селигере',
+#         'path': 'catalogue/seliger',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - в Завидово',
+#         'path': 'catalogue/uchastki-v-zavidovo',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - у воды',
+#         'path': 'catalogue/zemelnye-uchastki-u-vody',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - у леса',
+#         'path': 'catalogue/zemelnye-uchastki-u-lesa',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - у реки',
+#         'path': 'catalogue/zemelnye-uchastki-u-reki',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - у озера',
+#         'path': 'catalogue/zemelnye-uchastki-u-ozera',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - на водохранилище',
+#         'path': 'catalogue/uchastki-na-vodohranilische',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - видовые участки',
+#         'path': 'catalogue/vidovye-uchastki',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - до 30 соток',
+#         'path': 'catalogue/uchastki-do-30-sotok',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под дачу',
+#         'path': 'catalogue/dachnye-zemelnye-uchastki',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под усадьбу',
+#         'path': 'catalogue/zemelnye-uchastki-pod-usadbu',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под бизнес',
+#         'path': 'catalogue/zemelnye-uchastki-pod-biznes',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под базу отдыха',
+#         'path': 'catalogue/zemelnye-uchastki-pod-bazu-otdyha',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под глэмпинг',
+#         'path': 'catalogue/zemelnye-uchastki-pod-glemping',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под кемпинг',
+#         'path': 'catalogue/zemelnye-uchastki-pod-kemping',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под отель, экоотель',
+#         'path': 'catalogue/zemelnye-uchastki-pod-otel-eko-otel',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под ферму',
+#         'path': 'catalogue/zemelnye-uchastki-pod-fermu',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под инвестиции',
+#         'path': 'catalogue/zemelnye-uchastki-pod-investicii',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - ижс',
+#         'path': 'catalogue/zemelnye-uchastki-pod-izhs-v-moskovskoy-oblasti',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под ижс',
+#         'path': 'catalogue/uchastki-pod-izhs',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под агробизнес',
+#         'path': 'catalogue/uchastki-pod-agrobiznes',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под туристический бизнес',
+#         'path': 'catalogue/uchastki-pod-turistichesky-biznes',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - для активного отдыха',
+#         'path': 'catalogue/uchastki-dlya-aktivnogo-otdyha',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под ритейл',
+#         'path': 'catalogue/uchastki-pod-riteyl',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под производство',
+#         'path': 'catalogue/uchastki-pod-proizvodstvo',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под придорожный сервис',
+#         'path': 'catalogue/uchastki-pod-proidorozhny-servis',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог чпу - под корпоративные посёлки',
+#         'path': 'catalogue/uchastki-pod-korporativnye-poselki',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Киевское шоссе',
+#         'path': 'catalogue/kiev-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Москва',
+#         'path': 'catalogue/moscow-batch',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Московский регион',
+#         'path': 'catalogue/moscow-region-batch',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Калужское шоссе',
+#         'path': 'catalogue/kaluga-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Ярославское шоссе',
+#         'path': 'catalogue/yaroslavl-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Симферопольское шоссе',
+#         'path': 'catalogue/simferopol-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Каширское шоссе',
+#         'path': 'catalogue/kashirskoe-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Минское шоссе',
+#         'path': 'catalogue/minsk-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'каталог - регионы - Рогачёвское шоссе',
+#         'path': 'catalogue/rogachevskoe-highway',
+#         'xpath': '(//*[(contains(@class, "js-batch-name"))])[1]',
+#     },
+#     {
+#         'name': 'страница актива',
+#         'path': 'batches/30608',
+#         'xpath': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',
+#     },
+#     {
+#         'name': 'избранное',
+#         'path': 'catalogue/wishlist',
+#         'xpath': '//*[text()[contains(.,"Мои подборки")]]',
+#     },
+#     {
+#         'name': 'сравнения',
+#         'path': 'catalogue/compare',
+#         'xpath': '//*[text()[contains(.,"Выбранные участки")]]',
+#     },
+#     {
+#         'name': 'о проекте',
+#         'path': 'about',
+#         'xpath': '//*[text()[contains(.,"Цель проекта")]]',
+#     },
+#     {
+#         'name': 'о проекте - сервисная компания',
+#         'path': 'service-company',
+#         'xpath': '(//*[text()[contains(.,"Анастасия Васехина")]])[2]',
+#     },
+#     {
+#         'name': 'о проекте - личный кабинет',
+#         'path': 'cabinet',
+#         'xpath': '//*[text()[contains(.,"Для собственников")]]',
+#     },
+#     {
+#         'name': 'о проекте - партнёры',
+#         'path': 'about/advantages',
+#         'xpath': '(//div[2]/div/picture/img[1])[1]',
+#     },
+#     {
+#         'name': 'о проекте - союз садоводов',
+#         'path': 'about/union',
+#         'xpath': '(//*[text()[contains(.,"ом садовода - опора семьи")]])[1]',
+#     },
+#     {
+#         'name': 'о проекте - отзывы',
+#         'path': 'about/reviews',
+#         'xpath': '(//*[@id="w0"]//ul[contains(@class, "uk-grid")]/li)[1]',
+#     },
+#     {
+#         'name': 'миссия проекта',
+#         'path': '2.0',
+#         'xpath': '//*[text()[contains(.,"Система предоставления")]]',
+#     },
+#     {
+#         'name': 'развитие - развитие гектара',
+#         'path': 'growth/construct',
+#         'xpath': '//*[text()[contains(.,"Федеральный закон")]]',
+#     },
+#     {
+#         'name': 'развитие - развитие поселков',
+#         'path': 'growth',
+#         'xpath': '//*[text()[contains(.,"Развитие поселков на карте")]]',
+#     },
+#     {
+#         'name': 'развитие - страница услуги типовая',
+#         'path': 'growth/view?uuid=33067acf-f6e7-4579-8a88-237ef05cc9ff',
+#         'xpath': '//*[text()[contains(.,"Опубликовано")]]',
+#     },
+#     {
+#         'name': 'развитие - глазами инвестора',
+#         'path': 'investment',
+#         'xpath': '//*[text()[contains(.,"Приемлемая цена")]]',
+#     },
+#     {
+#         'name': 'развитие - капитализация',
+#         'path': 'investment/capitalization',
+#         'xpath': '//*[@id="uk-slider-13"]',
+#     },
+#     {
+#         'name': 'развитие - базовая стратегия',
+#         'path': 'investment/basic',
+#         'xpath': '//h3[text()[contains(.,"Таблица доходности инвестиций")]]',
+#     },
+#     {
+#         'name': 'развитие - предприниматель',
+#         'path': 'investment/businessman',
+#         'xpath': '//h3[text()[contains(.,"Таблица доходности инвестиций")]]',
+#     },
+#     {
+#         'name': 'развитие - фермер-садовод',
+#         'path': 'investment/farmer',
+#         'xpath': '//h3[text()[contains(.,"Таблица доходности инвестиций")]]',
+#     },
+#     {
+#         'name': 'развитие - фамильная усадьба',
+#         'path': 'investment/family',
+#         'xpath': '//h3[text()[contains(.,"Таблица доходности инвестиций")]]',
+#     },
+#     {
+#         'name': 'онлайн-поселок',
+#         'path': 'polls/about',
+#         'xpath': '//*[text()[contains(.,"Ваша роль в развитии поселка")]]',
+#     },
+    {
+        'name': 'онлайн-поселок - голосования и опросы',
+        'path': 'polls?list=all',
+        'xpath': '(//*[@class="list-view"]//*[contains(@class, "poll-item")])[1]'
+    },
+    {
+        'name': 'онлайн-поселок - детальная страница голосования',
+        'path': 'polls/view?id=19',
+        'xpath': '//*[contains(@class, "w-polls-id")]',
+    },
+    {
+        'name': 'онлайн-поселок - результаты работы за 2019 год',
+        'path': 'polls/summary-2019',
+        'xpath': '(//a[text()[contains(.,"История вопроса")]])[1]',
+    },
+    {
+        'name': 'бизнес-планы',
+        'path': 'business-plans',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[6]',
+    },
+    {
+        'name': 'меры поддержки - государственная поддержка',
+        'path': 'documents/gos',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[6]',
+    },
+    {
+        'name': 'меры поддержки - для владельцев земли',
+        'path': 'documents',
+        'xpath': '//*[text()[contains(.,"Еще 30-40 лет назад")]]',
+    },
+    {
+        'name': 'меры поддержки - начинающий фермер',
+        'path': 'documents/farmer',
+        'xpath': '//*[text()[contains(.,"Программа “Начинающий фермер” ")]]',
+    },
+    {
+        'name': 'меры поддержки - агростартап',
+        'path': 'documents/startup',
+        'xpath': '//*[text()[contains(.,"Ещё один из способов")]]',
+    },
+    {
+        'name': 'меры поддержки - грант на семейную ипотеку',
+        'path': 'documents/family',
+        'xpath': '//*[text()[contains(.,"Грант на развитие семейной")]]',
+    },
+    {
+        'name': 'меры поддержки - сельская ипотека',
+        'path': 'documents/ipoteka',
+        'xpath': '//*[text()[contains(.,"— это ипотечный кредит")]]',
+    },
+    {
+        'name': 'вопрос-ответ',
+        'path': 'faq',
+        'xpath': '(//*[contains(@class, "js-faq-15-card")])[1]',
+    },
+    {
+        'name': 'новости - основная страница',
+        'path': 'news',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[8]',
+    },
+    {
+        'name': 'новости - видео',
+        'path': 'news/video',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[6]',
+    },
+    {
+        'name': 'новости - страница с фильтром по разделу',
+        'path': 'news/list/kredity-granty-subsidii',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[8]',
+    },
+    {
+        'name': 'новости - детальная страница новости',
+        'path': 'news/k-2030-godu-dlya-vyzhivaniya-lyudey-dopolnitelno-ponadobitsya-80-mln-ga-pahotnyh-zemel-lyhZ51ZoQr',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[9]',
+    },
+    {
+        'name': 'акции - основная',
+        'path': 'actions',
+        'xpath': '(//*[contains(@class, "uk-grid")]//*[contains(@class, "uk-card")])[6]',
+    },
+    {
+        'name': 'акции - участок для многодетной семьи',
+        'path': 'actions/1',
+        'xpath': '(//*[text()[contains(.,"многодетной семьи")]])[2]',
+    },
+    {
+        'name': 'акции - участок для участников сво',
+        'path': 'actions/2',
+        'xpath': '(//*[text()[contains(.,"военной операции")]])[2]',
+    },
+    {
+        'name': 'акции - участок для ветеранов ВОВ',
+        'path': 'actions/3',
+        'xpath': '(//*[text()[contains(.,"Великой Отечественной")]])[2]',
+    },
+    {
+        'name': 'акции - участок для льготных категорий граждан',
+        'path': 'actions/4',
+        'xpath': '(//*[text()[contains(.,"категорий граждан")]])[2]',
+    },
+    {
+        'name': 'акции - скидка при покупке по сертификату друга',
+        'path': 'actions/5',
+        'xpath': '(//*[text()[contains(.,"сертификату друга")]])[2]',
+    },
+    {
+        'name': 'акции - скидка для беженцев из Донбасса',
+        'path': 'actions/6',
+        'xpath': '(//*[text()[contains(.,"беженцев из Донбасса")]])[2]',
+    },
+    {
+        'name': 'акции - скидка при единовременной оплате',
+        'path': 'actions/7',
+        'xpath': '(//*[text()[contains(.,"единовременной оплате")]])[2]',
+    },
+    {
+        'name': 'фонд добра - основная',
+        'path': 'good-fund',
+        'xpath': '(//*[text()[contains(.,"своими силами")]])[1]',
+    },
+    {
+        'name': 'фонд добра - фермер восстанавливает храм',
+        'path': 'good-fund/farmer',
+        'xpath': '(//*[text()[contains(.,"своими силами")]])[1]',
+    },
+    {
+        'name': 'фонд добра - центр помощи "МногоМама"',
+        'path': 'good-fund/mama',
+        'xpath': '(//*[text()[contains(.,"многодетных семей")]])[1]',
+    },
+    {
+        'name': 'фонд добра - музей "Дорога к Пушкину"',
+        'path': 'good-fund/pushkin',
+        'xpath': '(//*[text()[contains(.,"Дорога к Пушкину")]])[1]',
+    },
+    {
+        'name': 'фонд добра - храм в Щеколдино',
+        'path': 'good-fund/church',
+        'xpath': '(//*[text()[contains(.,"местных жителей")]])[1]',
+    },
+    {
+        'name': 'фонд добра - поддержка участников сво',
+        'path': 'good-fund/svo',
+        'xpath': '(//*[text()[contains(.,"военной операции")]])[1]',
+    },
+    {
+        'name': 'вакансии',
+        'path': 'hr',
+        'xpath': '//*[text()[contains(.,"направлениях проекта")]]',
+    },
+    {
+        'name': 'контакты',
+        'path': 'contacts',
+        'xpath': '(//*[text()[contains(.,"Департамент продаж")]])[1]',
+    },
+    {
+        'name': 'подарочный сертификат',
+        'path': 'gift',
+        'xpath': '//*[text()[contains(.,"преподнести подарок родным")]]',
+    },
+    {
+        'name': 'вебинары - основная',
+        'path': 'webinar',
+        'xpath': '(//*[text()[contains(.,"мастер-классы")]])[2]',
+    },
+    {
+        'name': 'вебинары - как заработать на участке',
+        'path': 'webinar/invest',
+        'xpath': '//*[text()[contains(.,"заработать на гектаре")]]',
+    },
+    {
+        'name': 'вебинары - как заработать на участке - видео',
+        'path': 'webinar/video/invest',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - глэмпинг',
+        'path': 'webinar/glamping',
+        'xpath': '//*[text()[contains(.,"организации глэмпинга")]]',
+    },
+    {
+        'name': 'вебинары - глэмпинг - видео',
+        'path': 'webinar/video/glamping',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - гранты и господдержка',
+        'path': 'webinar/gos-support',
+        'xpath': '//*[text()[contains(.,"сфере агробизнеса")]]',
+    },
+    {
+        'name': 'вебинары - гранты и господдержка - видео',
+        'path': 'webinar/video/gos-support',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - что делать на гектаре',
+        'path': 'webinar/what-to-do',
+        'xpath': '//*[text()[contains(.,"построить на своем")]]',
+    },
+    {
+        'name': 'вебинары - что делать на гектаре - видео',
+        'path': 'webinar/video/what-to-do',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - как выбрать участок',
+        'path': 'webinar/how-to-choose',
+        'xpath': '//*[text()[contains(.,"Что можно построить")]]',
+    },
+    {
+        'name': 'вебинары - как выбрать участок - видео',
+        'path': 'webinar/video/how-to-choose',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - доходная недвижимость',
+        'path': 'webinar/income-property',
+        'xpath': '//*[text()[contains(.,"инвестирования в землю")]]',
+    },
+    {
+        'name': 'вебинары - доходная недвижимость - видео',
+        'path': 'webinar/video/income-property',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'вебинары - ответы на вопросы',
+        'path': 'webinar/answers-to-questions',
+        'xpath': '//*[text()[contains(.,"Какие услуги выполняет")]]',
+    },
+    {
+        'name': 'вебинары - ответы на вопросы - видео',
+        'path': 'webinar/video/answers-to-questions',
+        'xpath': '//a[text()[contains(.,"землю под инвестиции")]]',
+    },
+    {
+        'name': 'страница заявки на вебинар',
+        'path': 'webinar/meeting',
+        'xpath': '//*[text()[contains(.,"подогреваемые бассейны")]]',
+    },
+    {
+        'name': 'цели - туризм (глэмпинги)',
+        'path': 'goal/glamping',
+        'xpath': '//*[contains(@class, "uk-card") and contains(.,"кемпинги")]',
+    },
+    {
+        'name': 'цели - агробизнес',
+        'path': 'goal/farm',
+        'xpath': '//p[contains(.,"сельскохозяйственной деятельности")]',
+    },
+    {
+        'name': 'цели - родовые поселения',
+        'path': 'goal/settlements',
+        'xpath': '//h4[contains(.,"Ассортимент участков")]',
+    },
+    {
+        'name': 'страница для брокеров',
+        'path': 'broker',
+        'xpath': '(//*[contains(@class, "uk-inline-clip") and contains(.,"Усадьба Императрицы")])[1]',
+    },
+    {
+        'name': 'страница про инвестиции',
+        'path': 'invest-batch',
+        'xpath': '//*[contains(@class, "uk-grid")]/div/div//*[contains(.,"+300")]',
+    },
+    {
+        'name': 'страница регистрации клиента от стойки',
+        'path': 'public-event',
+        'xpath': '//input[@id="publiceventform-name"]',
+    },
+    {
+        'name': 'страница закрытого предложения',
+        'path': 'closed-offer',
+        'xpath': '//*[contains(., "закрытом предложении")]//input[@id="consultationform-name"]',
+    },
+    {
+        'name': 'страница благодарности',
+        'path': 'thanks',
+        'xpath': '//h4[contains(., "Спасибо за отправленную заявку!")]',
+    },
+    {
+        'name': 'страница политики конфиденциальности',
+        'path': 'policy',
+        'xpath': '//p[contains(., "1. Настоящая Политика конфиденциальности")]',
+    },
+    {
+        'name': 'страница согласия на обработку персональных данных',
+        'path': 'policy-personal-data',
+        'xpath': '//p[contains(., "Разрешаю Оператору производить")]',
+    },
+    {
+        'name': 'страница согласия на получение рассылки',
+        'path': 'policy-marketing',
+        'xpath': '//p[contains(., "позволяет подтвердить сторонам")]',
+    },
+    {
+        'name': 'страница правил использования сертификата',
+        'path': 'cert',
+        'xpath': '//li[contains(., "электронный или бумажный")]',
+    },
+    {
+        'name': 'страница ошибки',
+        'path': '123',
+        'xpath': '//img[@data-src="/img/tractor-drift.gif"]',
+    },
+]
+
+
+def main():
+    checker = PageChecker(MG_BASE_URL)
+
+    try:
+        checker.init_driver()
+        results = checker.check_all_pages(PAGES_CONFIG)
+
+        # Дополнительный анализ результатов
+        print("\n" + "=" * 60)
+        print("ИТОГОВЫЙ ОТЧЕТ:")
+        print("=" * 60)
+
+        successful = sum(1 for result in results.values() if result)
+        failed = len(results) - successful
+
+        print(f"Успешно: {successful} страниц")
+        print(f"С ошибками: {failed} страниц")
+
+        if failed > 0:
+            print("\nСтраницы с ошибками:")
+            for page_name, result in results.items():
+                if not result:
+                    print(f"  - {page_name}")
+
     except Exception as e:
-        print(f"ERROR: Не удалось авторизоваться - {str(e)}")
-        return False
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
 
 
-# мод. авторизации в каталоге: отправляется цель, когда модалка показана
-def check_catalog_modal_auth_show(tests, max_attempts=3):
-    # Словарь для хранения результатов каждого теста
-    results = {test['text']: {'success': False, 'attempts': 0} for test in tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-
-            for test in tests:
-                # Если тест уже успешно пройден, пропускаем
-                if results[test['text']]['success']:
-                    continue
-
-                try:
-                    driver.get(test['url'])
-                    time.sleep(10)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['text']]['success'] = True
-                            results[test['text']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['text']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['text']]['attempts'] = attempt + 1
-
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    all_success = True
-    for test in tests:
-        text = test['text']
-        result = results[text]
-
-        if result['success']:
-            print(f"     ОК: при открытии {test['text']} отправляется цель '{test['goal']}'")
-        else:
-            print(f"ERROR: при открытии {test['text']} текст '{test['goal']}' не найден в отправленных запросах")
-            all_success = False
-
-    return all_success
-
-# Параметры для check_catalog_modal_auth_show
-modal_tests = [
-    {
-        'url': 'https://moigektar.ru/catalogue/?__counters=1',
-        'text': 'каталога без авторизации',
-        'goal': 'catalog_v4.authwall_shown'
-    },
-    {
-        'url': 'https://moigektar.ru/batches/59228?__counters=1',
-        'text': 'стр. актива без авторизации',
-        'goal': 'catalog_v4.authwall_shown'
-    }
-]
-
-# Запуск
-try:
-    check_catalog_modal_auth_show(modal_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке модалок авторизации — ', error_msg)
-
-
-# мод. авторизации из хедера: отправляется цель при открытии
-def check_header_auth_modal_goal(text, max_attempts=3):
-
-    results = {'success': False, 'attempts': 0}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            driver.get('https://moigektar.ru/?__counters=1')
-            button = driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]')
-            button.click()
-            time.sleep(5)
-
-            request_found = False
-            for request in driver.requests:
-                if text in request.url:
-                    results['success'] = True
-                    results['attempts'] = attempt + 1
-                    request_found = True
-                    break
-
-            if request_found:
-                break
-
-        except Exception as e:
-            results['attempts'] = attempt + 1
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not results['success']:
-                time.sleep(5)
-
-    if results['success']:
-        print(f"     ОК: при взаимодействии с мод. авторизации на главной отправляется цель '{text}'")
-    else:
-        print(
-            f"ERROR: при взаимодействии с мод. авторизации на главной текст '{text}' не найден в отправленных запросах")
-
-    return results['success']
-
-try:
-    check_header_auth_modal_goal('catalog_modal_auth')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при взаимодействии с мод. авторизации на главной — ', error_msg)
-
-
-# мод. авторизации в каталоге: отправляется цель, если нажали "Вернуться на главную"
-def check_catalog_modal_auth_back_to_main_goal(text, max_attempts=3):
-    # Словарь для хранения результатов
-    results = {'success': False, 'attempts': 0}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            # Открываем страницу каталога
-            driver.get('https://moigektar.ru/catalogue/?__counters=1')
-            back_button = driver.find_element(By.XPATH, '//*[text()[contains(., "Вернуться на главную")]]')
-            time.sleep(1)
-            back_button.click()
-
-            request_found = False
-            for request in driver.requests:
-                if text in request.url:
-                    results['success'] = True
-                    results['attempts'] = attempt + 1
-                    request_found = True
-                    break
-
-            if request_found:
-                break
-
-        except Exception as e:
-            results['attempts'] = attempt + 1
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not results['success']:
-                time.sleep(5)
-
-    if results['success']:
-        print(f"     ОК: при возврате на главную из мод. авторизации в каталоге отправляется цель '{text}'")
-    else:
-        print(
-            f"ERROR: при возврате на главную из мод. авторизации в каталоге текст '{text}' не найден в отправленных запросах")
-
-    return results['success']
-
-
-try:
-    check_catalog_modal_auth_back_to_main_goal('catalog_modal_auth_button_main')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при возврате на главную из мод. авторизации в каталоге — ', error_msg)
-
-
-# мод. авторизации: отправляется цель, если нажали кнопки соцсетей
-def check_catalog_modal_social_media_btn_goal(tests, max_attempts=3):
-
-    results = {test['btn']: {'success': False, 'attempts': 0} for test in tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-
-            for test in tests:
-
-                if results[test['btn']]['success']:
-                    continue
-
-                try:
-                    driver.get('https://moigektar.ru/?__counters=1')
-                    driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
-                    button = driver.find_element(By.CLASS_NAME, test['btn_selector'])
-                    button.click()
-                    time.sleep(5)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['text'] in request.url:
-                            results[test['btn']]['success'] = True
-                            results[test['btn']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['btn']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['btn']]['attempts'] = attempt + 1
-
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    all_success = True
-    for test in tests:
-        btn = test['btn']
-        result = results[btn]
-
-        if result['success']:
-            print(f"     ОК: при нажатии в мод. авторизации на кнопку '{test['btn']}' отправляется цель '{test['text']}'")
-        else:
-            print(f"ERROR: при нажатии в мод. авторизации на кнопку '{test['btn']}' текст '{test['text']}' не найден в отправленных запросах")
-            all_success = False
-
-    return all_success
-
-# Параметры для check_catalog_modal_social_media_btn_goal
-social_tests = [
-    {
-        'btn_selector': 'js-analytics-vk-auth-button-click',
-        'text': 'vk_auth_button_click',
-        'btn': 'ВК'
-    },
-    {
-        'btn_selector': 'js-analytics-ya-auth-button-click',
-        'text': 'ya_auth_button_click',
-        'btn': 'Яндекс'
-    }
-]
-
-# Запуск
-try:
-    check_catalog_modal_social_media_btn_goal(social_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке кнопок соцсетей в модалке авторизации — ', error_msg)
-
-
-# квиз: отправляется цель, если нажали кнопки вызова квиза
-def check_quiz_btn_goal(tests, max_attempts=3):
-
-    results = {test['place']: {'success': False, 'attempts': 0} for test in tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            actions = ActionChains(driver)
-
-            for test in tests:
-
-                if results[test['place']]['success']:
-                    continue
-
-                try:
-                    driver.get('https://moigektar.ru/?__counters=1')
-                    btn = driver.find_element(By.XPATH, test['quiz_btn'])
-                    actions.move_to_element(btn).perform()
-                    actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
-                    btn.click()
-                    time.sleep(10)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['place']]['success'] = True
-                            results[test['place']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['place']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['place']]['attempts'] = attempt + 1
-
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    all_success = True
-    for test in tests:
-        place = test['place']
-        result = results[place]
-
-        if result['success']:
-            print(f'     ОК: при нажатии на кнопку квиза {test["place"]} отправляется цель "{test["goal"]}"')
-        else:
-            print(f'ERROR: при нажатии на кнопку квиза {test["place"]} текст "{test["goal"]}" не найден в отправленных запросах')
-            all_success = False
-
-    return all_success
-
-# Параметры для check_quiz_btn_goal
-quiz_tests = [
-    {
-        'quiz_btn': '(//*[contains(@class, "w-navbar")]//a[text()[contains(., "Каталог участков")]])[2]',
-        'goal': 'quiz_btn_v2',
-        'place': 'в хедере'
-    },
-    {
-        'quiz_btn': '(//*[@id="w-descr"]//a)[3]',
-        'goal': 'quiz_btn_v2',
-        'place': 'в "Описании проекта"'
-    },
-    {
-        'quiz_btn': '(//*[@id="best-example"]//a[text()[contains(., "Каталог участков")]])[1]',
-        'goal': 'quiz_btn_v2',
-        'place': 'в "Успешных примерах"'
-    }
-]
-
-# Запуск
-try:
-    check_quiz_btn_goal(quiz_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке кнопок квиза — ', error_msg)
-
-
-# карточки активов: нажали на карточку
-def check_batch_card_goal(text, max_attempts=3):
-    # Словарь для хранения результатов
-    results = {'success': False, 'attempts': 0}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            driver.get('https://moigektar.ru/?__counters=1')
-            card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[4]')
-            card.click()
-            time.sleep(10)
-
-            request_found = False
-            for request in driver.requests:
-                if text in request.url:
-                    results['success'] = True
-                    results['attempts'] = attempt + 1
-                    request_found = True
-                    break
-
-            if request_found:
-                break
-
-        except Exception as e:
-            results['attempts'] = attempt + 1
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not results['success']:
-                time.sleep(5)
-
-    if results['success']:
-        print(f"     ОК: при нажатии на карточку актива отправляется цель '{text}'")
-    else:
-        print(f"ERROR: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
-
-    return results['success']
-
-
-try:
-    check_batch_card_goal('catalog_v4.batch_card_click')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатии на карточку актива — ', error_msg)
-
-
-# карточки активов: нажатия на элементы в карточке, если пользователь авторизован
-def check_batch_card_button_goal(button_tests, max_attempts=3):
-
-    results = {test['place']: {'success': False, 'attempts': 0} for test in button_tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-
-            driver.get("https://moigektar.ru/?__counters=1")
-
-            if not auth_user(driver):
-                if attempt < max_attempts - 1:
-                    time.sleep(5)
-                continue
-
-            driver.get("https://moigektar.ru#catalogueSpecial")
-            time.sleep(5)
-
-            for test in button_tests:
-                if results[test['place']]['success']:
-                    continue
-
-                try:
-                    elem = driver.find_element(By.XPATH, test['loc'])
-                    elem.click()
-                    time.sleep(15)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['place']]['success'] = True
-                            results[test['place']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['place']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['place']]['attempts'] = attempt + 1
-
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    all_success = True
-    for test in button_tests:
-        place = test['place']
-        result = results[place]
-
-        if result['success']:
-            print(f"     OK: при нажатии на {test['place']} отправляется цель '{test['goal']}'")
-        else:
-            print(f" ERROR: при нажатии на {test['place']} текст '{test['goal']}' не найден в отправленных запросах")
-            all_success = False
-
-    return all_success
-
-
-# Параметры для check_batch_card_button_goal
-button_tests = [
-    {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
-        'goal': 'catalog_v4.batch_share',
-        'place': 'кнопку "Поделиться" на карточке актива'
-    },
-    {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[1]',
-        'goal': 'catalog_v4.batch_presentation_download',
-        'place': 'кнопку "pdf" на карточке актива'
-    }
-]
-
-# Запуск
-try:
-    check_batch_card_button_goal(button_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатиях на кнопки в карточках активов — ', error_msg)
-
-
-# карточки активов: нажатия на элементы в карточке, если пользователь НЕ авторизован
-def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
-    # Словарь для хранения результатов каждой кнопки
-    results = {test['place']: {'success': False, 'attempts': 0} for test in button_tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            driver.get("https://moigektar.ru/?__counters=1")
-
-            # Переход к СП и проверка отправки целей
-            driver.get("https://moigektar.ru#catalogueSpecial")
-            time.sleep(5)
-
-            for test in button_tests:
-                # Если тест уже успешно пройден, пропускаем
-                if results[test['place']]['success']:
-                    continue
-
-                try:
-                    elem = driver.find_element(By.XPATH, test['loc'])
-                    elem.click()
-                    time.sleep(15)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['place']]['success'] = True
-                            results[test['place']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['place']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['place']]['attempts'] = attempt + 1
-
-            # Проверяем, все ли тесты прошли успешно
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    # Выводим итоговые результаты после всех попыток
-    all_success = True
-    for test in button_tests:
-        place = test['place']
-        result = results[place]
-
-        if result['success']:
-            print(f"     ОК: у неавт. юзера при нажатии на {test['place']} отправляется цель '{test['goal']}'")
-        else:
-            print(f"ERROR: у неавт. юзера при нажатии на {test['place']} текст '{test['goal']}' не найден")
-            all_success = False
-
-    return all_success
-
-# Параметры для check_batch_card_button_goal_unauth
-button_tests = [
-    {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
-        'goal': 'catalog_v4.batch_share',
-        'place': 'кнопку "Поделиться" на карточке актива'
-    },
-    {
-        'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/pdf.svg"])[1]',
-        'goal': 'catalog_v4.batch_presentation_download',
-        'place': 'кнопку "pdf" на карточке актива'
-    }
-]
-
-# Запуск
-try:
-    check_batch_card_button_goal_unauth(button_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатиях на кнопки в карточках активов — ', error_msg)
-
-
-# Главная, блок "Отзывы о проекте", нажали кнопку "Посмотреть больше"
-def check_news_button_goal(text, max_attempts=3):
-    # Словарь для хранения результатов
-    results = {'success': False, 'attempts': 0}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            actions = ActionChains(driver)
-            driver.get('https://moigektar.ru/?__counters=1')
-
-            remove_popup(driver)
-
-            title = driver.find_element(By.XPATH, '(//*[text()[contains(., "Отзывы о проекте")]])[2]')
-            actions.move_to_element(title).perform()
-            actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.PAGE_DOWN).perform()
-            button = driver.find_element(By.XPATH, '//div/*[@href="/about/reviews"]')
-            button.click()
-            time.sleep(5)
-
-            request_found = False
-            for request in driver.requests:
-                if text in request.url:
-                    results['success'] = True
-                    results['attempts'] = attempt + 1
-                    request_found = True
-                    break
-
-            if request_found:
-                break
-
-        except Exception as e:
-            results['attempts'] = attempt + 1
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not results['success']:
-                time.sleep(5)
-
-    # Выводим итоговый результат после всех попыток
-    if results['success']:
-        print(f"     ОК: при нажатии на кнопку в 'Отзывах' отправляется цель '{text}'")
-    else:
-        print(f"ERROR: при нажатии на кнопку в 'Отзывах' текст '{text}' не найден в отправленных запросах")
-
-    return results['success']
-
-
-try:
-    check_news_button_goal('main_reviews_button')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print("ERROR: при нажатии на кнопку в 'Отзывах' — ", error_msg)
-
-
-# Главная, блок "Выбери участок в лучшей локации", нажали кнопку "Смотреть участки"
-def check_locations_button_goal(text, max_attempts=3):
-    # Словарь для хранения результатов
-    results = {'success': False, 'attempts': 0}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            actions = ActionChains(driver)
-            driver.get('https://moigektar.ru/?__counters=1')
-
-            remove_popup(driver)
-
-            title = driver.find_element(By.XPATH, '//*[text()[contains(., "Выбери участок")]]')
-            actions.move_to_element(title).perform()
-            time.sleep(5)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-            driver.save_screenshot(f'x_screenshot_{timestamp}.png')
-            actions.send_keys(Keys.PAGE_DOWN).perform()
-            time.sleep(5)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-            driver.save_screenshot(f'x_screenshot_{timestamp}.png')
-            actions.send_keys(Keys.PAGE_DOWN).perform()
-            time.sleep(5)
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-            driver.save_screenshot(f'x_screenshot_{timestamp}.png')
-            button = driver.find_element(By.XPATH, '(//*[text()[contains(., "Смотреть участки")]])[1]')
-            button.click()
-            time.sleep(5)
-
-            request_found = False
-            for request in driver.requests:
-                if text in request.url:
-                    results['success'] = True
-                    results['attempts'] = attempt + 1
-                    request_found = True
-                    break
-
-            if request_found:
-                break
-
-        except Exception as e:
-            results['attempts'] = attempt + 1
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not results['success']:
-                time.sleep(5)
-
-    # Выводим итоговый результат после всех попыток
-    if results['success']:
-        print(f"     ОК: при нажатии на кнопку в 'Выбери уч. в лучшей локации' отправляется цель '{text}'")
-    else:
-        print(
-            f"ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' текст '{text}' не найден в отправленных запросах")
-
-    return results['success']
-
-
-try:
-    check_locations_button_goal('best_location_button')
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print("ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' — ", error_msg)
-
-
-# каталог: нажатия на кнопки
-def check_catalogue_button_goal(button_tests, max_attempts=3):
-    # Словарь для хранения результатов каждой кнопки
-    results = {test['button']: {'success': False, 'attempts': 0} for test in button_tests}
-
-    for attempt in range(max_attempts):
-        driver = None
-        try:
-            driver = init_driver()
-            actions = ActionChains(driver)
-
-            for test in button_tests:
-                # Если тест уже успешно пройден, пропускаем
-                if results[test['button']]['success']:
-                    continue
-
-                try:
-                    driver.get("https://moigektar.ru/catalogue-no-auth/?__counters=1")
-                    time.sleep(5)
-                    if not test['goal'] == "catalog_v4.filter_button_click":
-                        actions.send_keys(Keys.PAGE_DOWN).perform()
-                    elem = driver.find_element(By.XPATH, test['loc'])
-                    if test['goal'] == "catalog_v4.list_view_toggle":
-                        button = driver.find_element(By.XPATH, '(//*[text()[contains(., "На карте")]])[1]')
-                        button.click()
-                        time.sleep(5)
-                    elem.click()
-                    time.sleep(15)
-
-                    request_found = False
-                    for request in driver.requests:
-                        if test['goal'] in request.url:
-                            results[test['button']]['success'] = True
-                            results[test['button']]['attempts'] = attempt + 1
-                            request_found = True
-                            break
-
-                    if not request_found:
-                        results[test['button']]['attempts'] = attempt + 1
-
-                except Exception as e:
-                    results[test['button']]['attempts'] = attempt + 1
-
-            # Проверяем, все ли тесты прошли успешно
-            all_passed = all(result['success'] for result in results.values())
-            if all_passed:
-                break
-
-        except Exception as e:
-            print(f"Критическая ошибка в попытке {attempt + 1}: {e}")
-        finally:
-            if driver:
-                driver.quit()
-
-            if attempt < max_attempts - 1 and not all(result['success'] for result in results.values()):
-                time.sleep(5)
-
-    all_success = True
-    for test in button_tests:
-        button = test['button']
-        result = results[button]
-
-        if result['success']:
-            print(f"     ОК: при нажатии на {test['button']} отправляется цель '{test['goal']}'")
-        else:
-            print(f"ERROR: при нажатии на {test['button']} текст '{test['goal']}' не найден в отправленных запросах")
-            all_success = False
-
-    return all_success
-
-# Параметры для check_catalogue_button_goal
-button_tests = [
-    {
-        'loc': '(//*[text()[contains(., "На карте")]])[1]',
-        'goal': 'catalog_v4.map_view_toggle',
-        'button': 'кнопку "Карта"'
-    },
-    {
-        'loc': '(//*[text()[contains(., "Плиткой")]])[1]',
-        'goal': 'catalog_v4.list_view_toggle',
-        'button': 'кнопку "Плитка"'
-    },
-    {
-        'loc': '(//*[text()[contains(., "Туристический")]])[1]',
-        'goal': 'filter_interaction.business_toggle',
-        'button': 'кнопку "Туристический бизнес"'
-    },
-    {
-        'loc': '(//*[text()[contains(., "Фильтр")]])[1]',
-        'goal': 'catalog_v4.filter_button_click',
-        'button': 'кнопку "Фильтр"'
-    }
-]
-
-# Запуск
-try:
-    check_catalogue_button_goal(button_tests)
-except Exception as e:
-    error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатии на кнопки в каталоге — ', error_msg)
-
+if __name__ == "__main__":
+    main()
 
 # Вычисляем и выводим время выполнения теста
 end_time = time.time()
@@ -887,6 +840,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

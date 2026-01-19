@@ -77,7 +77,7 @@ class GenplanChecker:
                 )
 
                 if genplan_elem:
-                    print(f'      OK: {name}')
+                    print(f'     OK: {name}')
                     return True
 
             except Exception as e:
@@ -235,7 +235,7 @@ class GenplanChecker:
             ('https://syn92.lp.moigektar.ru', 'syn_92'),
             ('https://syn95.lp.moigektar.ru', 'syn_95'),
             ('https://syn99.lp.moigektar.ru', 'syn_99'),
-            ('https://synergycountryclub.ru', 'syn_103'),
+            # ('https://synergycountryclub.ru', 'syn_103'),
             ('https://syn447.lp.moigektar.ru', 'syn_447'),
         ]
 
@@ -290,6 +290,6 @@ minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
 if minutes > 0:
-    print(f'\nВремя выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f'\nВремя выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
