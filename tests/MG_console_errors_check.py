@@ -9,12 +9,15 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 import os
+import sys
+from pathlib import Path
 import requests
-from urllib.parse import urljoin
 import logging
 logging.getLogger('WDM').setLevel(logging.WARNING)
 logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
 
+
+# Проверка страниц МГ на ошибки в консоли
 
 # Настройка логирования
 logging.basicConfig(
@@ -27,9 +30,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-with open('data.json', 'r') as file:
-    data = json.load(file)
-
 # Засекаем время начала теста
 start_time = time.time()
 
@@ -37,11 +37,88 @@ start_time = time.time()
 MG_BASE_URL = "https://moigektar.ru"
 # MG_BASE_URL = "http://moigektar.localhost"
 
+# Определяем пути
+BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
+TESTS_DIR = BASE_DIR / 'tests'
+LOGS_DIR = BASE_DIR / 'logs'
+DATA_DIR = BASE_DIR / 'data'
+SCREENSHOTS_DIR = LOGS_DIR / 'screenshots'
+
+# Создаем необходимые папки, если их нет
+for directory in [LOGS_DIR, DATA_DIR, SCREENSHOTS_DIR]:
+    directory.mkdir(exist_ok=True)
+
+# Файлы с данными
+DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
+MG_PAGES_JSON = DATA_DIR / 'mg_pages.json'   # файл с конфигурацией страниц
+
+
+def check_data_files():
+    """Проверяет наличие необходимых файлов с данными"""
+    missing_files = []
+
+    if not DATA_JSON.exists():
+        missing_files.append(f"data/{DATA_JSON.name}")
+
+    if not MG_PAGES_JSON.exists():
+        missing_files.append(f"data/{MG_PAGES_JSON.name}")
+
+    if missing_files:
+        print(f"\n ERROR: Отсутствуют необходимые файлы:")
+        for file in missing_files:
+            print(f"   - {file}")
+        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
+        return False
+
+    return True
+
+# НАСТРОЙКА ЛОГИРОВАНИЯ
+logging.getLogger('WDM').setLevel(logging.WARNING)
+logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(LOGS_DIR / 'page_checker.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+def load_data():
+    """Загружает данные из data.json"""
+    try:
+        with open(DATA_JSON, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        logger.error(f" ERROR: Файл не найден: {DATA_JSON}")
+        raise
+    except json.JSONDecodeError as e:
+        logger.error(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
+        raise
+    except Exception as e:
+        logger.error(f" ERROR: Ошибка загрузки данных: {e}")
+        raise
+
 class PageChecker:
     def __init__(self, base_url):
         self.base_url = base_url.rstrip('/')
         self.driver = None
         self.session = requests.Session()
+
+        # Определяем пути для логов и скриншотов
+        self.base_dir = Path(__file__).parent.parent
+        self.logs_dir = self.base_dir / 'logs'
+        self.screenshots_dir = self.logs_dir / 'screenshots'
+
+        # Создаем папки при инициализации
+        self.screenshots_dir.mkdir(exist_ok=True, parents=True)
+
+        # Добавляем временную метку для группировки файлов текущего запуска
+        self.run_timestamp = time.strftime('%Y%m%d_%H%M%S')
+
         # Настраиваем сессию для проверки HTTP
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -267,6 +344,12 @@ class PageChecker:
     def _log_error(self, page_name, url, error_type, error_message,
                    http_status, response_time, critical_errors=None, non_critical_errors=None):
         """Логирование ошибки"""
+
+        # Сохраняем скриншот для ошибок
+        screenshot_path = None
+        if self.driver and error_type not in ['HTTP_ERROR']:
+            screenshot_path = self.save_screenshot("error", page_name)
+
         error_info = {
             'page': page_name,
             'url': url,
@@ -276,6 +359,7 @@ class PageChecker:
             'response_time': response_time,
             'critical_errors': critical_errors or [],
             'non_critical_errors': non_critical_errors or [],
+            'screenshot': screenshot_path,
             'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         self.results['errors'].append(error_info)
@@ -295,9 +379,6 @@ class PageChecker:
 
     def quick_image_health_check(self):
         """Быстрая проверка здоровья сервера картинок"""
-        print("\n" + "=" * 60)
-        print("  Quick Image Health Check")
-        print("=" * 60)
 
         test_urls = [
             "https://i.bigland.ru/images/f64bad331de9d257296fee7ee50966a8173a91c9d3c37434120a2de378dadd0a/2xl",
@@ -307,9 +388,6 @@ class PageChecker:
         for url in test_urls:
             try:
                 response = self.session.head(url, timeout=10)
-                status_icon = "✓" if response.status_code == 200 else "✗"
-                status_color = "32" if response.status_code == 200 else "31"
-                print(f"  \033[{status_color}m{status_icon}\033[0m {url[:50]}... - {response.status_code}")
 
                 if response.status_code != 200:
                     all_ok = False
@@ -319,11 +397,10 @@ class PageChecker:
                 all_ok = False
 
         if all_ok:
-            print("  \033[32m✓ Все критичные изображения доступны\033[0m")
+            print("\n     ОК: Все критичные изображения доступны")
         else:
             print("  \033[31m⚠ Есть проблемы с изображениями!\033[0m")
 
-        print("=" * 60)
         return all_ok
 
     def check_page_elements(self, url, xpath_selector, timeout=20):
@@ -363,17 +440,55 @@ class PageChecker:
 
             # Пытаемся сделать скриншот при ошибке
             try:
-                screenshot_name = f"error_{time.strftime('%Y%m%d_%H%M%S')}.png"
-                self.driver.save_screenshot(screenshot_name)
-                error_msg += f" (скриншот сохранен: {screenshot_name})"
-            except:
-                pass
+                # Генерируем имя файла с timestamp
+                page_name = url.split('/')[-1] if url.split('/')[-1] else 'home'
+                screenshot_name = f"error_{self.run_timestamp}_{page_name}.png"
+                screenshot_path = self.screenshots_dir / screenshot_name
+
+                self.driver.save_screenshot(str(screenshot_path))
+                error_msg += f" (скриншот: logs/screenshots/{screenshot_name})"
+            except Exception as screenshot_error:
+                error_msg += f" (не удалось сохранить скриншот: {screenshot_error})"
 
             return False, error_msg
         except NoSuchElementException:
             return False, f"Элемент не найден: {xpath_selector[:50]}..."
         except Exception as e:
             return False, f"Ошибка Selenium: {str(e)[:100]}"
+
+    def save_screenshot(self, prefix="screenshot", page_name=None):
+        """
+        Сохраняет скриншот текущей страницы в папку logs/screenshots
+
+        Args:
+            prefix: префикс имени файла
+            page_name: имя страницы (будет использовано в имени файла)
+
+        Returns:
+            Путь к сохраненному файлу или None при ошибке
+        """
+        try:
+            if not self.driver:
+                return None
+
+            # Формируем имя файла
+            if page_name:
+                # Убираем недопустимые символы для имени файла
+                safe_page_name = ''.join(c for c in page_name if c.isalnum() or c in (' ', '-', '_')).strip()
+                safe_page_name = safe_page_name.replace(' ', '_')
+                filename = f"{prefix}_{self.run_timestamp}_{safe_page_name}.png"
+            else:
+                filename = f"{prefix}_{self.run_timestamp}.png"
+
+            screenshot_path = self.screenshots_dir / filename
+            self.driver.save_screenshot(str(screenshot_path))
+
+            logger.debug(f"Скриншот сохранен: {screenshot_path}")
+            return str(screenshot_path)
+
+        except Exception as e:
+            logger.error(f"Ошибка сохранения скриншота: {e}")
+            return None
 
     def check_page(self, page_config, delay=1):
         """
@@ -468,7 +583,7 @@ class PageChecker:
         """
         Проверка всех страниц из конфигурации
         """
-        print(f"     Начинаем проверку страниц")
+        print(f"\n     Начинаем проверку страниц")
 
         total_pages = len(pages_config)
         successful = 0
@@ -484,7 +599,7 @@ class PageChecker:
                     failed += 1
 
             except Exception as e:
-                logger.error(f"❌ Критическая ошибка при проверке страницы: {e}")
+                logger.error(f" Критическая ошибка при проверке страницы: {e}")
                 failed += 1
                 error_info = {
                     'page': page_config['name'],
@@ -608,27 +723,44 @@ class PageChecker:
             self.driver.quit()
         self.session.close()
 
+
 def load_pages_config(config_file='mg_pages.json'):
     """
     Загружает конфигурацию страниц из JSON файла
     """
     try:
-        # Проверяем существование файла
-        if not os.path.exists(config_file):
-            raise FileNotFoundError(f" ERROR: Файл конфигурации не найден: {config_file}")
+        # Определяем путь к файлу конфигурации
+        config_path = DATA_DIR / config_file
 
-        with open(config_file, 'r', encoding='utf-8') as f:
+        if not config_path.exists():
+            # Пробуем найти в текущей директории (для обратной совместимости)
+            alt_path = Path(config_file)
+            if alt_path.exists():
+                config_path = alt_path
+                logger.warning(
+                    f"⚠ Файл найден в текущей директории, а не в data/. Рекомендуется переместить его в data/")
+            else:
+                raise FileNotFoundError(f"Файл конфигурации не найден: {config_path}")
+
+        with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
 
         return config
 
     except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {config_file}: {e}")
+        logger.error(f"❌ Ошибка в формате JSON файла {config_path}: {e}")
         raise
     except Exception as e:
-        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        # Возвращаем конфигурацию по умолчанию
-        return get_default_pages_config()
+        logger.error(f"❌ Ошибка загрузки конфигурации: {e}")
+        raise
+
+# Загружаем данные
+try:
+    data = load_data()
+except Exception as e:
+    print(f"\n ERROR: Не удалось загрузить данные. Тест остановлен.")
+    sys.exit(1)
+
 
 def get_default_pages_config():
     """
@@ -659,7 +791,7 @@ def main():
 
     try:
 
-        pages_config = load_pages_config('mg_pages.json')
+        pages_config = load_pages_config('../data/mg_pages.json')
 
         # Инициализируем драйвер
         if not checker.init_driver():
