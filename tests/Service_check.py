@@ -10,10 +10,66 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 from datetime import datetime
 import json
+import sys
+from pathlib import Path
+
+
+# Проверка доступности веб-интерфейсов сервисов по наличию на страницах ключевых элементов
+
+# Определяем пути
+BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
+TESTS_DIR = BASE_DIR / 'tests'
+DATA_DIR = BASE_DIR / 'data'
+
+# Создаем необходимые папки, если их нет
+for directory in [DATA_DIR]:
+    directory.mkdir(exist_ok=True)
+
+# Файлы с данными
+DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
+MG_PAGES_JSON = DATA_DIR / 'mg_pages.json'   # файл с конфигурацией страниц
+
+
+def check_data_files():
+    """Проверяет наличие необходимых файлов с данными"""
+    missing_files = []
+
+    if not DATA_JSON.exists():
+        missing_files.append(f"data/{DATA_JSON.name}")
+
+    if not MG_PAGES_JSON.exists():
+        missing_files.append(f"data/{MG_PAGES_JSON.name}")
+
+    if missing_files:
+        print(f"\n ERROR: Отсутствуют необходимые файлы:")
+        for file in missing_files:
+            print(f"   - {file}")
+        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
+        return False
+
+    return True
+
+
+def load_data():
+    """Загружает данные из data.json"""
+    try:
+        with open(DATA_JSON, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f" ERROR: Файл не найден: {DATA_JSON}")
+        raise
+    except json.JSONDecodeError as e:
+        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
+        raise
+    except Exception as e:
+        print(f" ERROR: Ошибка загрузки данных: {e}")
+        raise
 
 
 # Засекаем время начала теста
 start_time = time.time()
+
 
 # Инициализация драйвера
 def init_driver():
@@ -27,6 +83,7 @@ def init_driver():
     return driver
 
 print(f"\n     Проверка доступности сайтов \n")
+
 
 # Универсальный метод проверки сервиса
 def check_service(driver, config, data=None):
@@ -211,7 +268,7 @@ services_config = [
     {
         'name': 'YouTrack',
         'url': 'https://youtrack.bug.land',
-        'xpath': '(//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]])[2]'
+        'xpath': '(//*[text()[contains(.,"Войти в YouTrack")]])[2]'
     },
 
     # === ПРОЕКТ: syn_6 Почурино ===
@@ -773,12 +830,17 @@ services_config = [
 
 def main():
     # Загрузка данных для авторизации
+    if not check_data_files():
+        print("ERROR: Необходимые файлы данных не найдены")
+        sys.exit(1)
+
+    # Загрузка данных для авторизации
     try:
-        with open('../actual/data.json', 'r') as file:
-            data = json.load(file)
-    except FileNotFoundError:
+        data = load_data()
+    except Exception as e:
         data = None
-        print("WARNING: файл data.json не найден, авторизация будет пропущена")
+        print(f"WARNING: не удалось загрузить данные: {e}")
+        print("Авторизация будет пропущена")
 
     # Инициализация драйвера
     driver = init_driver()
