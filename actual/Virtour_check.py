@@ -320,7 +320,7 @@ tour_configs = [
         'url': 'https://syn99.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
-        'z_index': '201',
+        'z_index': '181',
     },
     {
         'name': 'syn_447',

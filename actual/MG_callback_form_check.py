@@ -461,7 +461,7 @@ class FormChecker:
         self.check_public_event_page()
         self.check_closed_offer_page()
 
-        print("\n Проверка завершена")
+        print("\n     Проверка завершена")
 
     def close(self):
         """Закрытие браузера"""

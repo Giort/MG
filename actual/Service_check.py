@@ -208,6 +208,11 @@ services_config = [
         'xpath': '(//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]])[2]',
         'clear_cookies': True  # Удаляем куку _identity после проверки
     },
+    {
+        'name': 'YouTrack',
+        'url': 'https://youtrack.bug.land',
+        'xpath': '(//*[text()[contains(.,"Вы находитесь в демо-версии личного кабинета")]])[2]'
+    },
 
     # === ПРОЕКТ: syn_6 Почурино ===
     *create_project_configs(
@@ -221,7 +226,7 @@ services_config = [
 
     # === ПРОЕКТ: syn_8 Долина Селигера ===
     {
-        'name': 'syn_8 Долина Селигера',
+        'name': '[syn_8 Долина Селигера]',
         'url': 'https://syn8.lp.moigektar.ru',
         'xpath': XPATH_GENPLAN
     },
@@ -270,7 +275,7 @@ services_config = [
 
     # === ПРОЕКТ: syn_15 Агро-Усадьба ===
     {
-        'name': 'syn_15 Агро-Усадьба',
+        'name': '[syn_15 Агро-Усадьба]',
         'url': 'https://syn15.lp.moigektar.ru',
         'xpath': '//span[text()[contains(.,"Виртуальные туры")]]'
     },
@@ -287,7 +292,7 @@ services_config = [
 
     # === ПРОЕКТ: syn_17 Агро-Мирный ===
     {
-        'name': 'syn_17 Агро-Мирный',
+        'name': '[syn_17 Агро-Мирный]',
         'url': 'https://syn17.lp.moigektar.ru',
         'xpath': XPATH_VIRTUAL_TOURS
     },
@@ -305,7 +310,7 @@ services_config = [
 
     # === ПРОЕКТ: syn_23 Долина Вазузы ===
     {
-        'name': 'syn_23 Долина Вазузы',
+        'name': '[syn_23 Долина Вазузы]',
         'url': 'https://syn23.lp.moigektar.ru',
         'xpath': XPATH_UNIQUE_ECORESORT
     },
@@ -406,7 +411,7 @@ services_config = [
 
     # === ПРОЕКТ: syn_47 Synergy Island (активы 62) ===
     {
-        'name': 'syn_47 Synergy Island (активы 62)',
+        'name': '[syn_47 Synergy Island] (активы 62)',
         'url': 'https://syn47.lp.moigektar.ru',
         'xpath': XPATH_CLUB_VILLAGE
     },

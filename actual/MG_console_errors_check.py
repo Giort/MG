@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
+import os
 import requests
 from urllib.parse import urljoin
 import logging
@@ -34,10 +35,7 @@ start_time = time.time()
 
 # Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
-
-
 # MG_BASE_URL = "http://moigektar.localhost"
-
 
 class PageChecker:
     def __init__(self, base_url):
@@ -65,16 +63,169 @@ class PageChecker:
             ch_options.add_argument('--disable-gpu')
             ch_options.page_load_strategy = 'eager'
 
+            # Включаем логирование консоли
+            ch_options.set_capability('goog:loggingPrefs', {
+                'browser': 'ALL',
+                'performance': 'ALL'
+            })
+
             service = ChromeService(executable_path=ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=service, options=ch_options)
             self.driver.set_window_size(1680, 1000)
             self.driver.implicitly_wait(5)
 
-            print("\n     Проверка всех страниц МГ\n")
+            # Включаем мониторинг сети через CDP
+            self.driver.execute_cdp_cmd('Network.enable', {})
+
+            # Регистрируем обработчик для перехвата консольных ошибок
+            self._setup_console_monitoring()
+
+            print("\n     Проверка всех страниц МГ на ошибки в консоли\n")
             return True
         except Exception as e:
             logger.error(f"Ошибка инициализации WebDriver: {e}")
             return False
+
+    def _setup_console_monitoring(self):
+        """Настройка мониторинга консоли и сети"""
+        # Скрипт для перехвата ошибок в JavaScript
+        js_script = """
+        // Сохраняем оригинальные методы
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        // Массивы для хранения ошибок
+        window._capturedConsoleErrors = [];
+        window._capturedNetworkErrors = [];
+
+        // Перехватываем console.error
+        console.error = function(...args) {
+            const message = args.join(' ');
+            window._capturedConsoleErrors.push({
+                type: 'console.error',
+                message: message,
+                timestamp: Date.now(),
+                stack: new Error().stack
+            });
+            return originalError.apply(console, args);
+        };
+
+        // Перехватываем console.warn
+        console.warn = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('403') || message.includes('404') || 
+                message.includes('500') || message.includes('Failed')) {
+                window._capturedConsoleErrors.push({
+                    type: 'console.warn',
+                    message: message,
+                    timestamp: Date.now()
+                });
+            }
+            return originalWarn.apply(console, args);
+        };
+
+        // Перехватываем ошибки загрузки ресурсов
+        window.addEventListener('error', function(e) {
+            if (e.target && (e.target.tagName === 'SCRIPT' || 
+                             e.target.tagName === 'LINK' || 
+                             e.target.tagName === 'IMG')) {
+                window._capturedNetworkErrors.push({
+                    type: 'resource_error',
+                    url: e.target.src || e.target.href,
+                    tag: e.target.tagName,
+                    message: 'Failed to load resource'
+                });
+            }
+        }, true);
+        """
+
+        self.driver.execute_script(js_script)
+
+    def capture_browser_errors(self):
+        """Сбор ошибок из консоли браузера"""
+        critical_errors = []  # Критические (4xx, 5xx)
+        non_critical_errors = []  # Некритические (предупреждения и т.д.)
+
+        try:
+            # Собираем логи из консоли браузера
+            browser_logs = self.driver.get_log('browser')
+
+            for entry in browser_logs:
+                message = entry.get('message', '')
+                level = entry.get('level', '').upper()
+
+                # Пропускаем информационные сообщения
+                if level not in ['SEVERE', 'ERROR', 'WARNING']:
+                    continue
+
+                # Определяем, критическая ли ошибка
+                is_critical = False
+                status_code = None
+                url = 'unknown'
+
+                # Проверяем на сетевые ошибки (403, 404, 500 и т.д.)
+                if any(error_code in message for error_code in
+                       [' 403 ', ' 404 ', ' 500 ', ' 502 ', ' 503 ', ' 504 ']):
+                    # Это сетевая ошибка - критическая
+                    is_critical = True
+                    status_code = self._extract_status_code(message)
+
+                    # Извлекаем URL
+                    import re
+                    url_pattern = r'https?://[^\s\'"]+'
+                    urls = re.findall(url_pattern, message)
+                    url = urls[0][:150] if urls else 'unknown'
+
+                # Также считаем критические JS ошибки
+                elif level == 'SEVERE' and any(phrase in message for phrase in
+                                               ['Uncaught', 'SyntaxError', 'TypeError']):
+                    is_critical = True
+
+                error_data = {
+                    'level': level,
+                    'message': message[:250],
+                    'url': url,
+                    'status': status_code,
+                    'source': 'browser_console'
+                }
+
+                if is_critical:
+                    critical_errors.append(error_data)
+                else:
+                    non_critical_errors.append(error_data)
+
+        except Exception as e:
+            logger.warning(f"Ошибка при сборе ошибок из браузера: {e}")
+
+        return critical_errors, non_critical_errors
+
+    def _extract_status_code(self, message):
+        """Извлекает статус код и определяет, критический ли он"""
+        import re
+
+        # Ищем статус коды
+        patterns = [
+            r'\s(\d{3})\s+\([^)]+\)',  # " 403 (Forbidden)"
+            r'status[=:]\s*(\d{3})',  # "status=403"
+            r'\"status\":\s*(\d{3})',  # "status": 403
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, message)
+            if match:
+                status = int(match.group(1))
+                # Критические только 4xx и 5xx
+                if 400 <= status < 600:
+                    return status
+
+        return None
+
+    def _extract_url_from_message(self, message):
+        """Извлекает URL из сообщения об ошибке"""
+        import re
+        url_pattern = r'https?://[^\s\']+'
+        match = re.search(url_pattern, message)
+        return match.group(0)[:200] if match else 'unknown'
 
     def check_http_status(self, url, timeout=15):
         """
@@ -113,6 +264,68 @@ class PageChecker:
         except Exception as e:
             return None, f"Неизвестная ошибка: {str(e)}", None
 
+    def _log_error(self, page_name, url, error_type, error_message,
+                   http_status, response_time, critical_errors=None, non_critical_errors=None):
+        """Логирование ошибки"""
+        error_info = {
+            'page': page_name,
+            'url': url,
+            'error_type': error_type,
+            'error_message': error_message,
+            'http_status': http_status,
+            'response_time': response_time,
+            'critical_errors': critical_errors or [],
+            'non_critical_errors': non_critical_errors or [],
+            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.results['errors'].append(error_info)
+
+    def _log_success(self, page_name, url, http_status, response_time, non_critical_errors=None):
+        """Логирование успешной проверки"""
+        success_info = {
+            'page': page_name,
+            'url': url,
+            'http_status': http_status,
+            'response_time': response_time,
+            'non_critical_errors': non_critical_errors or [],
+            'has_non_critical_errors': bool(non_critical_errors),
+            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        self.results['success'].append(success_info)
+
+    def quick_image_health_check(self):
+        """Быстрая проверка здоровья сервера картинок"""
+        print("\n" + "=" * 60)
+        print("  Quick Image Health Check")
+        print("=" * 60)
+
+        test_urls = [
+            "https://i.bigland.ru/images/f64bad331de9d257296fee7ee50966a8173a91c9d3c37434120a2de378dadd0a/2xl",
+        ]
+
+        all_ok = True
+        for url in test_urls:
+            try:
+                response = self.session.head(url, timeout=10)
+                status_icon = "✓" if response.status_code == 200 else "✗"
+                status_color = "32" if response.status_code == 200 else "31"
+                print(f"  \033[{status_color}m{status_icon}\033[0m {url[:50]}... - {response.status_code}")
+
+                if response.status_code != 200:
+                    all_ok = False
+
+            except Exception as e:
+                print(f"  \033[31m✗\033[0m {url[:50]}... - ERROR: {str(e)[:30]}")
+                all_ok = False
+
+        if all_ok:
+            print("  \033[32m✓ Все критичные изображения доступны\033[0m")
+        else:
+            print("  \033[31m⚠ Есть проблемы с изображениями!\033[0m")
+
+        print("=" * 60)
+        return all_ok
+
     def check_page_elements(self, url, xpath_selector, timeout=20):
         """
         Проверка наличия элементов на странице
@@ -131,7 +344,7 @@ class PageChecker:
 
             # Дополнительная проверка, что элемент видим
             if element.is_displayed():
-                print(f"     ОК: Элемент найден и видим: {xpath_selector[:50]}...")
+                print(f"     ОК: Элемент найден и видим")
                 return True, None
             else:
                 # Если элемент не видим, прокручиваем к нему
@@ -140,10 +353,10 @@ class PageChecker:
                 time.sleep(0.5)
 
                 if element.is_displayed():
-                    logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки: {xpath_selector[:50]}...")
+                    logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки")
                     return True, None
                 else:
-                    return False, f"     Элемент найден, но не видим: {xpath_selector[:50]}..."
+                    return False, f"     Элемент найден, но не видим"
 
         except TimeoutException:
             error_msg = f"Таймаут ({timeout} сек) при ожидании элемента: {xpath_selector[:50]}..."
@@ -172,22 +385,28 @@ class PageChecker:
 
         full_url = f"{self.base_url}/{page_path.lstrip('/')}"
 
+        # Исключение для страницы ошибки 404
+        is_error_page = page_path == '123'
+
         # Шаг 1: Проверка HTTP статуса
         http_status, http_error, response_time = self.check_http_status(full_url)
 
-        if http_error:
-            error_info = {
-                'page': page_name,
-                'url': full_url,
-                'error_type': 'HTTP_ERROR',
-                'error_message': http_error,
-                'http_status': http_status,
-                'response_time': response_time,
-                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-            }
-            self.results['errors'].append(error_info)
-            logger.error(f"❌ HTTP ошибка: {http_error}")
+        if http_error and not is_error_page:
+            # Обычная страница - ошибка критическая
+            print(f"HTTP ошибка: {http_error}")
             return False
+        elif http_error and is_error_page:
+            # Страница ошибки - проверяем что это именно 404
+            if http_status == 404:
+                print(f"     Ожидаемая ошибка 404 (страница не найдена)")
+            else:
+                print(f"HTTP ошибка: {http_error} (неожиданный статус)")
+                return False
+        elif not http_error and is_error_page:
+            # Если страница ошибки вернула не 404 - это проблема
+            if http_status != 404:
+                print(f"ОШИБКА: страница ошибки вернула {http_status} вместо 404")
+                return False
 
         print(f"     HTTP статус: {http_status} (время ответа: {response_time:.2f} сек)")
 
@@ -198,28 +417,43 @@ class PageChecker:
         )
 
         if not elements_ok:
-            error_info = {
-                'page': page_name,
-                'url': full_url,
-                'error_type': 'ELEMENT_ERROR',
-                'error_message': elements_error,
-                'http_status': http_status,
-                'response_time': response_time,
-                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-            }
-            self.results['errors'].append(error_info)
-            logger.error(f"❌ Ошибка элемента: {elements_error}")
+            # Отсутствие элемента - критическая ошибка
+            print(f"Ошибка элемента: {elements_error}")
+            self._log_error(page_name, full_url, 'ELEMENT_ERROR', elements_error, http_status, response_time)
             return False
 
+        # Шаг 3: Сбор ошибок из консоли браузера
+        time.sleep(1)  # Даем время для выполнения запросов
+        critical_errors, non_critical_errors = self.capture_browser_errors()
+
+        # Логируем некритические ошибки (только если их много)
+        if non_critical_errors:
+            # print(f"Найдено некритических ошибок: {len(non_critical_errors)} (не мешают работе)")
+            # Можно залогировать в файл, но не выводить в консоль
+            logger.debug(f"Некритические ошибки на {page_name}: {len(non_critical_errors)}")
+
+        # Проверяем критические ошибки
+        if critical_errors:
+            if not is_error_page:
+                logger.warning(f"ERROR:  Найдено критических ошибок: {len(critical_errors)}")
+                for error in critical_errors[:3]:  # Показываем первые 3
+                    status = f"[{error.get('status', '?')}] " if error.get('status') else ""
+                    url_display = error.get('url', '')[:50] if error.get('url') != 'unknown' else ''
+                    print(f"  - {status}{url_display}")
+
+                # Логируем детали критической ошибки
+                error_message = f"Найдено {len(critical_errors)} критических ошибок в консоли"
+                self._log_error(
+                    page_name, full_url, 'CONSOLE_ERRORS', error_message,
+                    http_status, response_time, critical_errors, non_critical_errors
+                )
+                return False
+
         # Успешная проверка
-        success_info = {
-            'page': page_name,
-            'url': full_url,
-            'http_status': http_status,
-            'response_time': response_time,
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        self.results['success'].append(success_info)
+        self._log_success(
+            page_name, full_url, http_status, response_time,
+            non_critical_errors  # Сохраняем некритические ошибки для отчета
+        )
 
         # Пауза между проверками
         time.sleep(delay)
@@ -227,6 +461,10 @@ class PageChecker:
         return True
 
     def check_all_pages(self, pages_config, delay=1):
+
+        # Быстрая проверка картинок перед тестами
+        self.quick_image_health_check()
+
         """
         Проверка всех страниц из конфигурации
         """
@@ -264,35 +502,64 @@ class PageChecker:
 
     def print_summary(self, total, successful, failed):
         """
-        Вывод итогового отчета
+        Вывод отчета
         """
-        print(f"\n{'#' * 80}")
-        print("ОТЧЕТ")
 
-        print(f"\n📊 Статистика:")
-        print(f"   Всего проверено страниц: {total}")
-        print(f"   Успешно: {successful} ({successful / total * 100:.1f}%)")
-        print(f"   С ошибками: {failed} ({failed / total * 100:.1f}%)")
+        print(f"\n {' #' * 80}")
+        print("     ОТЧЕТ")
 
-        if failed > 0:
-            logger.info(f"\n❌ СТРАНИЦЫ С ОШИБКАМИ:")
+        print(f"\n     Статистика:")
+        print(f"       Всего проверено страниц: {total}")
+        print(f"       Успешно: {successful} ({successful / total * 100:.1f}%)")
+        print(f"       С ошибками: {failed} ({failed / total * 100:.1f}%)")
+
+        # Собираем все критические ошибки
+        all_critical_errors = []
+        for error in self.results['errors']:
+            if 'critical_errors' in error:
+                all_critical_errors.extend(error['critical_errors'])
+
+        # Группируем критические ошибки по типу
+        if all_critical_errors:
+            print(f"\n     КРИТИЧЕСКИЕ ОШИБКИ ПО ТИПАМ:")
+
+            # Сетевые ошибки (4xx, 5xx)
+            network_errors = [e for e in all_critical_errors if e.get('status')]
+            if network_errors:
+                print(f"\n       Сетевые ошибки:")
+                error_counts = {}
+                for error in network_errors:
+                    status = error.get('status', 'unknown')
+                    error_counts[status] = error_counts.get(status, 0) + 1
+
+                for status, count in sorted(error_counts.items()):
+                    print(f"     {status}: {count} ошибок")
+
+            # JS ошибки
+            js_errors = [e for e in all_critical_errors if not e.get('status')]
+            if js_errors:
+                print(f"       JavaScript ошибки: {len(js_errors)}")
+
+        # Выводим детали по страницам с критическими ошибками
+        if self.results['errors']:
+            print(f"\n     СТРАНИЦЫ С КРИТИЧЕСКИМИ ОШИБКАМИ:")
             for error in self.results['errors']:
-                logger.info(f"\n   Страница: {error['page']}")
-                logger.info(f"   URL: {error['url']}")
-                logger.info(f"   Тип ошибки: {error['error_type']}")
-                logger.info(f"   Сообщение: {error['error_message']}")
-                if error.get('http_status'):
-                    logger.info(f"   HTTP статус: {error['http_status']}")
-                logger.info(f"   Время: {error['timestamp']}")
+                print(f"\n       Страница: {error['page']}")
+                print(f"         URL: {error['url']}")
+                print(f"         Тип ошибки: {error['error_type']}")
+                print(f"         Сообщение: {error['error_message']}")
 
-        # Сохраняем детальный отчет в JSON файл
-        try:
-            report_file = f"check_report_{time.strftime('%Y%m%d_%H%M%S')}.json"
-            with open(report_file, 'w', encoding='utf-8') as f:
-                json.dump(self.results, f, ensure_ascii=False, indent=2)
-            print(f"\n📄 Детальный отчет сохранен в: {report_file}")
-        except Exception as e:
-            logger.error(f"Не удалось сохранить отчет: {e}")
+                # Выводим только критические ошибки
+                if 'critical_errors' in error and error['critical_errors']:
+                    print(f"         Критические ошибки:")
+                    for crit_err in error['critical_errors'][:3]:  # Первые 3
+                        if crit_err.get('status'):
+                            status = crit_err.get('status', '?')
+                            url_display = crit_err.get('url', '')[:60]
+                            print(f"         [{status}] {url_display}...")
+                        else:
+                            msg = crit_err.get('message', '')[:80]
+                            print(f"         JS: {msg}...")
 
     def auth(self):
         """Авторизация в системе"""
@@ -341,43 +608,59 @@ class PageChecker:
             self.driver.quit()
         self.session.close()
 
+def load_pages_config(config_file='mg_pages.json'):
+    """
+    Загружает конфигурацию страниц из JSON файла
+    """
+    try:
+        # Проверяем существование файла
+        if not os.path.exists(config_file):
+            raise FileNotFoundError(f" ERROR: Файл конфигурации не найден: {config_file}")
 
-PAGES_CONFIG = [
-    {
-        'name': 'главная',
-        'path': '/',
-        'xpath': '//h2[text()[contains(.,"Описание проекта")]]',
-        'scroll_lazy': True
-    },
-    {
-        'name': 'страница актива',
-        'path': 'batches/30608',
-        'xpath': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',
-        'scroll_lazy': True
-    },
-    {
-        'name': 'онлайн-поселок - голосования и опросы',
-        'path': 'polls?list=all',
-        'xpath': '(//*[@class="list-view"]//*[contains(@class, "poll-item")])[1]'
-    },
-    {
-        'name': 'о проекте',
-        'path': 'about',
-        'xpath': '//*[text()[contains(.,"Цель проекта")]]',
-    },
-    {
-        'name': 'страница ошибки',
-        'path': '123',
-        'xpath': '//img[@data-src="/img/tractor-drift.gif"]',
-    },
-]
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = json.load(f)
 
+        return config
+
+    except json.JSONDecodeError as e:
+        print(f" ERROR: Ошибка в формате JSON файла {config_file}: {e}")
+        raise
+    except Exception as e:
+        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
+        # Возвращаем конфигурацию по умолчанию
+        return get_default_pages_config()
+
+def get_default_pages_config():
+    """
+    Возвращает конфигурацию по умолчанию
+    (на случай, если файл не найден)
+    """
+    return [
+        {
+            'name': 'Главная страница',
+            'path': '',
+            'xpath': "//h1[contains(., 'Мой гекатар')]",
+        },
+        {
+            'name': 'Страница актива',
+            'path': 'batches/30608',
+            'xpath': "(//*[@uk-toggle='target: #modal-batch-detail'])[2]",
+        },
+        {
+            'name': 'Страница для брокеров',
+            'path': 'broker',
+            'xpath': "(//*[contains(@class, 'uk-inline-clip') and contains(.,'Усадьба Императрицы')])[1]",
+        }
+    ]
 
 def main():
     """Основная функция"""
     checker = PageChecker(MG_BASE_URL)
 
     try:
+
+        pages_config = load_pages_config('mg_pages.json')
+
         # Инициализируем драйвер
         if not checker.init_driver():
             logger.error("Не удалось инициализировать WebDriver")
@@ -387,7 +670,7 @@ def main():
         checker.auth()
 
         # Проверяем все страницы
-        results = checker.check_all_pages(PAGES_CONFIG, delay=1)
+        results = checker.check_all_pages(pages_config, delay=1)
 
     except Exception as e:
         logger.error(f"Критическая ошибка в main: {e}")
@@ -395,7 +678,7 @@ def main():
         traceback.print_exc()
     finally:
         checker.close()
-        print("Ресурсы освобождены")
+        print("\n     Ресурсы освобождены")
 
 
 if __name__ == "__main__":
@@ -409,7 +692,7 @@ seconds = int(elapsed_time % 60)
 
 print(f"\n{'=' * 80}")
 if minutes > 0:
-    print(f"⏱️ Общее время выполнения: {minutes} мин {seconds} сек")
+    print(f"     Общее время выполнения: {minutes} мин {seconds} сек")
 else:
-    print(f"⏱️ Общее время выполнения: {seconds:.1f} сек")
+    print(f"     Общее время выполнения: {seconds:.1f} сек")
 print(f"{'=' * 80}")
