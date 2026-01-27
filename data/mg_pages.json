@@ -384,30 +384,6 @@
         "requires_auth": false
     },
     {
-        "name": "онлайн-поселок",
-        "path": "polls/about",
-        "xpath": "//*[text()[contains(.,'Ваша роль в развитии поселка')]]",
-        "requires_auth": false
-    },
-    {
-        "name": "онлайн-поселок - голосования и опросы",
-        "path": "polls?list=all",
-        "xpath": "(//*[@class='list-view']//*[contains(@class, 'poll-item')])[1]",
-        "requires_auth": false
-    },
-    {
-        "name": "онлайн-поселок - детальная страница голосования",
-        "path": "polls/view?id=19",
-        "xpath": "//*[contains(@class, 'w-polls-id')]",
-        "requires_auth": false
-    },
-    {
-        "name": "онлайн-поселок - результаты работы за 2019 год",
-        "path": "polls/summary-2019",
-        "xpath": "(//a[text()[contains(.,'История вопроса')]])[1]",
-        "requires_auth": false
-    },
-    {
         "name": "бизнес-планы",
         "path": "business-plans",
         "xpath": "(//*[contains(@class, 'uk-grid')]//*[contains(@class, 'uk-card')])[6]",
