@@ -7,6 +7,62 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from webdriver_manager.chrome import ChromeDriverManager
+from pathlib import Path
+
+
+# Проверка доступности форм обратной связи
+# Проверка отправки данных через одну из форм
+
+
+# Проверяемый урл
+MG_BASE_URL = "https://moigektar.ru"
+# MG_BASE_URL = "http://moigektar.localhost"
+
+
+# Определяем пути
+BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
+TESTS_DIR = BASE_DIR / 'tests'
+DATA_DIR = BASE_DIR / 'data'
+
+# Создаем необходимые папки, если их нет
+DATA_DIR.mkdir(exist_ok=True)
+
+# Файлы с данными
+DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
+
+
+def check_data_files():
+    """Проверяет наличие необходимых файлов с данными"""
+    missing_files = []
+
+    if not DATA_JSON.exists():
+        missing_files.append(f"data/{DATA_JSON.name}")
+
+    if missing_files:
+        print(f"\n ERROR: Отсутствуют необходимые файлы:")
+        for file in missing_files:
+            print(f"   - {file}")
+        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
+        return False
+
+    return True
+
+
+def load_data():
+    """Загружает данные из data.json"""
+    try:
+        with open(DATA_JSON, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f" ERROR: Файл не найден: {DATA_JSON}")
+        raise
+    except json.JSONDecodeError as e:
+        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
+        raise
+    except Exception as e:
+        print(f" ERROR: Ошибка загрузки данных: {e}")
+        raise
 
 
 # Засекаем время начала теста
@@ -15,14 +71,13 @@ start_time = time.time()
 class FormChecker:
     """Класс для проверки форм обратной связи на сайте МойГектар"""
 
-    # Базовый URL сайта - можно легко переключаться между prod и local
-    BASE_URL = "https://moigektar.ru"
-    # BASE_URL = "http://moigektar.localhost"
 
-    def __init__(self, headless=False):
+    def __init__(self, base_url, headless=False):
+        self.BASE_URL = base_url
         self.driver = self._init_driver(headless)
         self.actions = ActionChains(self.driver)
         self.test_data = self._load_test_data()
+
 
     def _init_driver(self, headless):
         """Инициализация Chrome WebDriver"""
@@ -39,10 +94,16 @@ class FormChecker:
         driver.set_window_size(1660, 1000)
         return driver
 
+
     def _load_test_data(self):
-        """Загрузка тестовых данных из JSON"""
-        with open('../actual/data.json', 'r') as file:
-            return json.load(file)
+        """Загружает тестовые данные из data.json"""
+        try:
+            with open(DATA_JSON, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+            return data
+        except Exception as e:
+            print(f"WARNING: Не удалось загрузить тестовые данные: {e}")
+
 
     def check_element(self, xpath, page_name, form_name, element_type, max_attempts=3):
         """
@@ -109,15 +170,19 @@ class FormChecker:
 
             # Проверка отправки данных
             try:
-                self.driver.find_element(
+                phone_input = self.driver.find_element(
                     by=By.XPATH,
                     value=f"(//div[@id='{form_id}']//*[@id='consultationform-phone'])[1]"
-                ).send_keys(str(self.test_data["test_data_valid"]["phone"]))
+                )
+                phone_input.clear()
+                phone_input.send_keys(str(self.test_data.get("test_data_valid", {}).get("phone", "79991234567")))
 
                 self.driver.find_element(
                     by=By.XPATH,
                     value=f"(//div[@id='{form_id}']//*[text()[contains(.,'Отправить')]])[1]"
                 ).click()
+
+                time.sleep(1)  # Даем время для отображения поля имени
 
                 name_input = self.driver.find_element(
                     by=By.XPATH,
@@ -132,6 +197,7 @@ class FormChecker:
         except Exception as e:
             error_msg = str(e).split('\n')[0]
             print(f"ERROR: главная, форма с Софией №1 — {error_msg}")
+
 
     def check_main_page_forms(self):
         """Проверка всех форм на главной странице"""
@@ -470,7 +536,12 @@ class FormChecker:
 
 
 if __name__ == "__main__":
-    checker = FormChecker(headless=True)
+    # Проверяем наличие файлов с данными
+    if not check_data_files():
+        print("ERROR: Необходимые файлы данных не найдены")
+        exit(1)
+
+    checker = FormChecker(base_url=MG_BASE_URL, headless=True)
     try:
         checker.run_all_checks()
     finally:
