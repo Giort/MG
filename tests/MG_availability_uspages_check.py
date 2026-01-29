@@ -8,8 +8,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
-from pathlib import Path
 
+with open('../data/data.json', 'r') as file:
+    data = json.load(file)
+
+# Засекаем время начала теста
+start_time = time.time()
 
 # Проверка доступности пользовательских страниц при разных состояниях
 #
@@ -20,57 +24,12 @@ from pathlib import Path
 # - авторизован как зарегистрированный пользователь
 # -- хорошо бы проверять доступность с офисных айпи
 
+
 # Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
 LK_BASE_URL = "https://cabinet.moigektar.ru"
 # MG_BASE_URL = "http://moigektar.localhost"
 # LK_BASE_URL = "http://cabinet.moigektar.localhost"
-
-
-# Определяем пути
-BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
-TESTS_DIR = BASE_DIR / 'tests'
-DATA_DIR = BASE_DIR / 'data'
-
-# Создаем необходимые папки, если их нет
-DATA_DIR.mkdir(exist_ok=True)
-
-# Файлы с данными
-DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
-
-
-def check_data_files():
-    """Проверяет наличие необходимых файлов с данными"""
-    missing_files = []
-
-    if not DATA_JSON.exists():
-        missing_files.append(f"data/{DATA_JSON.name}")
-
-    if missing_files:
-        print(f"\n ERROR: Отсутствуют необходимые файлы:")
-        for file in missing_files:
-            print(f"   - {file}")
-        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
-        return False
-
-    return True
-
-
-def load_data():
-    """Загружает данные из data.json"""
-    try:
-        with open(DATA_JSON, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
-    except FileNotFoundError:
-        print(f" ERROR: Файл не найден: {DATA_JSON}")
-        raise
-    except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
-        raise
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки данных: {e}")
-        raise
 
 
 class UnauthChecker:
@@ -137,6 +96,7 @@ class UnauthChecker:
             pages_config: список словарей с конфигурациями страниц
             delay: задержка между проверками
         """
+        print(f"\n     Проверка страниц для _неавторизованного пользователя_ на домене {self.mg_base_url}")
 
         results = {}
         for page_config in pages_config:
@@ -174,6 +134,25 @@ UNAUTH_PAGES_CONFIG = [
         'xpath': '//*[text()[contains(.,"для авторизованных пользователей.")]]',
     },
 ]
+
+
+def main():
+    checker = UnauthChecker(MG_BASE_URL)
+
+    try:
+        checker.init_driver()
+        results = checker.check_all_pages(UNAUTH_PAGES_CONFIG)
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
+
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 class DemoChecker:
@@ -241,6 +220,7 @@ class DemoChecker:
             pages_config: список словарей с конфигурациями страниц
             delay: задержка между проверками
         """
+        print(f"\n     Проверка страниц для _демо-пользователя_")
 
         # сначала заходим в кабинет
 
@@ -286,6 +266,23 @@ DEMO_PAGES_CONFIG = [
 ]
 
 
+def main():
+    checker = DemoChecker(MG_BASE_URL)
+
+    try:
+        checker.init_driver()
+        results = checker.check_all_pages(DEMO_PAGES_CONFIG)
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
+
+
+if __name__ == "__main__":
+    main()
+
+
 class NoAuthChecker:
     def __init__(self, mg_base_url):
         self.mg_base_url = mg_base_url.rstrip('/')
@@ -329,12 +326,14 @@ class NoAuthChecker:
                     return False
             except Exception as e:
                 if attempt < 2:
-                    time.sleep(1)
+                    time.sleep()
                 else:
                     print(f" ERROR: {page_name} - {str(e)}")
                     return False
 
     def check_all_pages(self, pages_config, delay=1):
+
+        print(f"\n     Проверка страниц _при входе по no-auth_")
 
         results = {}
         for page_config in pages_config:
@@ -373,11 +372,27 @@ NOAUTH_PAGES_CONFIG = [
 ]
 
 
+def main():
+    checker = NoAuthChecker(MG_BASE_URL)
+
+    try:
+        checker.init_driver()
+        results = checker.check_all_pages(NOAUTH_PAGES_CONFIG)
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
+
+
+if __name__ == "__main__":
+    main()
+
+
 class AuthChecker:
-    def __init__(self, mg_base_url, auth_data):
+    def __init__(self, mg_base_url):
         self.mg_base_url = mg_base_url.rstrip('/')
         self.driver = None
-        self.auth_data = auth_data  # Сохраняем данные для авторизации
 
     def init_driver(self):
 
@@ -391,10 +406,7 @@ class AuthChecker:
         return self.driver
 
     def auth(self):
-        if not self.auth_data:
-            print(" ERROR: Данные для авторизации не установлены")
-            return False
-
+        """ Авторизация """
         try:
             self.driver.get("https://moigektar.ru//")
             self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
@@ -404,8 +416,8 @@ class AuthChecker:
             password = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
             btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
             tab.click()
-            name.send_keys(str(self.auth_data["login"]))
-            password.send_keys(str(self.auth_data["password"]))
+            name.send_keys(str(data["LK_cred"]["login"]))
+            password.send_keys(str(data["LK_cred"]["password"]))
             btn.click()
             time.sleep(5)
             return True
@@ -446,6 +458,8 @@ class AuthChecker:
                     return False
 
     def check_all_pages(self, pages_config, delay=1):
+
+        print(f"\n     Проверка страниц для _авторизованного пользователя_")
 
         # сначала авторизуемся
         self.auth()
@@ -488,58 +502,30 @@ AUTH_PAGES_CONFIG = [
 ]
 
 
-def run_all_tests():
-    """Запускает все проверки"""
-    print("\n     Проверка доступности пользовательских страниц на домене " + MG_BASE_URL)
-
-    # 1. Загружаем данные
-    if not check_data_files():
-        return
+def main():
+    checker = AuthChecker(MG_BASE_URL)
 
     try:
-        all_data = load_data()
+        checker.init_driver()
+        results = checker.check_all_pages(AUTH_PAGES_CONFIG)
+
     except Exception as e:
-        print(f" ERROR: Не удалось загрузить данные: {e}")
-        return
-
-    # 2. Проверки для разных состояний
-    test_cases = [
-        ("неавторизованный пользователь", UnauthChecker(MG_BASE_URL), UNAUTH_PAGES_CONFIG),
-        ("демо-пользователь", DemoChecker(MG_BASE_URL), DEMO_PAGES_CONFIG),
-        ("доступ по no-auth", NoAuthChecker(MG_BASE_URL), NOAUTH_PAGES_CONFIG),
-        ("авторизованный пользователь", AuthChecker(MG_BASE_URL, all_data.get("LK_cred", {})), AUTH_PAGES_CONFIG),
-    ]
-
-    for name, checker, pages_config in test_cases:  # <-- Исправлено: распаковываем 3 значения
-        print(f"\n     Проверка: {name}")
-
-        try:
-            checker.init_driver()
-            # Выполняем проверку с соответствующей конфигурацией
-            checker.check_all_pages(pages_config, delay=1)
-        except Exception as e:
-            print(f" Ошибка при проверке {name}: {e}")
-        finally:
-            checker.close()
-
-
-def main():
-    """Основная функция"""
-    start_time = time.time()
-
-    run_all_tests()
-
-    # Вычисляем время выполнения
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    minutes = int(elapsed_time // 60)
-    seconds = int(elapsed_time % 60)
-
-    if minutes > 0:
-        print(f'\n     Время выполнения всех тестов: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
-    else:
-        print(f'\n     Время выполнения всех тестов: {seconds} сек ({elapsed_time:.2f} сек)')
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
 
 
 if __name__ == "__main__":
     main()
+
+
+# Вычисляем и выводим время выполнения теста
+end_time = time.time()
+elapsed_time = end_time - start_time
+minutes = int(elapsed_time // 60)
+seconds = int(elapsed_time % 60)
+
+if minutes > 0:
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+else:
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
