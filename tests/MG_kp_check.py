@@ -26,7 +26,7 @@ driver.implicitly_wait(10)
 # Засекаем время начала теста
 start_time = time.time()
 
-with open('../actual/data.json', 'r') as file:
+with open('../data/data.json', 'r') as file:
     data = json.load(file)
 
 print(f"\n     Проверка генерации КП \n")
