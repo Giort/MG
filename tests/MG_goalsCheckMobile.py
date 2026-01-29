@@ -13,77 +13,18 @@ from selenium.webdriver.common.keys import Keys
 # Включаем перехват запросов
 sw_options = {'disable_capture': False}
 import json
-from pathlib import Path
-
-
-# Проверка отправки целей на мобильной версии МГ
-
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
-#MG_BASE_URL = "http://moigektar.localhost"
-
-# Определяем пути
-BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
-TESTS_DIR = BASE_DIR / 'tests'
-DATA_DIR = BASE_DIR / 'data'
-
-# Создаем необходимые папки, если их нет
-for directory in [DATA_DIR]:
-    directory.mkdir(exist_ok=True)
-
-# Файлы с данными
-DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
-MG_PAGES_JSON = DATA_DIR / 'mg_pages.json'   # файл с конфигурацией страниц
-
-
-def check_data_files():
-    """Проверяет наличие необходимых файлов с данными"""
-    missing_files = []
-
-    if not DATA_JSON.exists():
-        missing_files.append(f"data/{DATA_JSON.name}")
-
-    if not MG_PAGES_JSON.exists():
-        missing_files.append(f"data/{MG_PAGES_JSON.name}")
-
-    if missing_files:
-        print(f"\n ERROR: Отсутствуют необходимые файлы:")
-        for file in missing_files:
-            print(f"   - {file}")
-        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
-        return False
-
-    return True
-
-
-def load_data():
-    """Загружает данные из data.json"""
-    try:
-        with open(DATA_JSON, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
-    except FileNotFoundError:
-        print(f" ERROR: Файл не найден: {DATA_JSON}")
-        raise
-    except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
-        raise
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки данных: {e}")
-        raise
+from datetime import datetime
 
 
 # Засекаем время начала теста
 start_time = time.time()
 
-# Загружаем данные
-data = None
-try:
-    if check_data_files():
-        data = load_data()
-except Exception as e:
-    print(f" WARNING: Не удалось загрузить данные: {e}")
+with open('../data/data.json', 'r') as file:
+    data = json.load(file)
 
+# Проверяемый урл
+MG_BASE_URL = "https://moigektar.ru"
+#MG_BASE_URL = "http://moigektar.localhost"
 
 print(f"\n     Проверка отправки целей на моб. МГ на домене {MG_BASE_URL} \n")
 
@@ -102,24 +43,19 @@ def remove_popup(driver):
     except Exception:
         pass
 
-def auth_user(driver, auth_data=None):
-
+def auth_user(driver):
     """Авторизация пользователя"""
-    if not auth_data:
-        print(" ERROR: Данные для авторизации не предоставлены")
-        return False
-
     try:
         driver.get("https://moigektar.ru/?__counters=1")
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
         time.sleep(2)
         tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
         name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
         password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
         btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
         tab.click()
-        name.send_keys(str(auth_data.get("login", "")))
-        password.send_keys(str(auth_data.get("password", "")))
+        name.send_keys(str(data["LK_cred"]["login"]))
+        password.send_keys(str(data["LK_cred"]["password"]))
         btn.click()
         time.sleep(10)
         return True

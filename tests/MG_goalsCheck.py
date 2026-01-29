@@ -13,76 +13,17 @@ from selenium.webdriver.common.keys import Keys
 # Включаем перехват запросов
 sw_options = {'disable_capture': False}
 import json
-from pathlib import Path
-
-
-# Проверка отправки целей на десктопной версии МГ
-
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
-#MG_BASE_URL = "http://moigektar.localhost"
-
-# Определяем пути
-BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
-TESTS_DIR = BASE_DIR / 'tests'
-DATA_DIR = BASE_DIR / 'data'
-
-# Создаем необходимые папки, если их нет
-for directory in [DATA_DIR]:
-    directory.mkdir(exist_ok=True)
-
-# Файлы с данными
-DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
-MG_PAGES_JSON = DATA_DIR / 'mg_pages.json'   # файл с конфигурацией страниц
-
-
-def check_data_files():
-    """Проверяет наличие необходимых файлов с данными"""
-    missing_files = []
-
-    if not DATA_JSON.exists():
-        missing_files.append(f"data/{DATA_JSON.name}")
-
-    if not MG_PAGES_JSON.exists():
-        missing_files.append(f"data/{MG_PAGES_JSON.name}")
-
-    if missing_files:
-        print(f"\n ERROR: Отсутствуют необходимые файлы:")
-        for file in missing_files:
-            print(f"   - {file}")
-        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
-        return False
-
-    return True
-
-
-def load_data():
-    """Загружает данные из data.json"""
-    try:
-        with open(DATA_JSON, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
-    except FileNotFoundError:
-        print(f" ERROR: Файл не найден: {DATA_JSON}")
-        raise
-    except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
-        raise
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки данных: {e}")
-        raise
 
 
 # Засекаем время начала теста
 start_time = time.time()
 
-# Загружаем данные
-data = None
-try:
-    if check_data_files():
-        data = load_data()
-except Exception as e:
-    print(f" WARNING: Не удалось загрузить данные: {e}")
+with open('../data/data.json', 'r') as file:
+    data = json.load(file)
+
+# Проверяемый урл
+MG_BASE_URL = "https://moigektar.ru"
+#MG_BASE_URL = "http://moigektar.localhost"
 
 
 print(f"\n     Проверка отправки целей на МГ на домене {MG_BASE_URL}")
@@ -103,13 +44,8 @@ def remove_popup(driver):
     except Exception:
         pass
 
-def auth_user(driver, auth_data=None):
-
+def auth_user(driver):
     """Авторизация пользователя"""
-    if not auth_data:
-        print(" ERROR: Данные для авторизации не предоставлены")
-        return False
-
     try:
         driver.get("https://moigektar.ru/?__counters=1")
         driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
@@ -119,8 +55,8 @@ def auth_user(driver, auth_data=None):
         password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
         btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
         tab.click()
-        name.send_keys(str(auth_data.get("login", "")))
-        password.send_keys(str(auth_data.get("password", "")))
+        name.send_keys(str(data["LK_cred"]["login"]))
+        password.send_keys(str(data["LK_cred"]["password"]))
         btn.click()
         time.sleep(10)
         return True
@@ -128,7 +64,7 @@ def auth_user(driver, auth_data=None):
         print(f" ERROR: Не удалось авторизоваться - {str(e)}")
         return False
 
-
+print()
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
 def check_catalog_modal_auth_show(tests, max_attempts=3):
     # Словарь для хранения результатов каждого теста
@@ -247,10 +183,10 @@ def check_header_auth_modal_goal(text, max_attempts=3):
                 time.sleep(5)
 
     if results['success']:
-        print(f"     ОК: при вызове мод. авторизации из хедера отправляется цель '{text}'")
+        print(f"     ОК: при вызове мод. авторизации из навбара отправляется цель '{text}'")
     else:
         print(
-            f" ERROR: при вызове мод. авторизации из хедера текст '{text}' не найден в отправленных запросах")
+            f" ERROR: при вызове мод. авторизации из навбара текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -541,8 +477,6 @@ except Exception as e:
 # карточки активов: нажатия на элементы в карточке, если пользователь авторизован
 def check_batch_card_button_goal(button_tests, max_attempts=3):
 
-    global data
-
     results = {test['place']: {'success': False, 'attempts': 0} for test in button_tests}
 
     for attempt in range(max_attempts):
@@ -552,13 +486,7 @@ def check_batch_card_button_goal(button_tests, max_attempts=3):
             actions = ActionChains(driver)
             driver.get("https://moigektar.ru/?__counters=1")
 
-            if data and "LK_cred" in data:
-                auth_success = auth_user(driver, data["LK_cred"])
-            else:
-                print("ERROR: Данные для авторизации не найдены")
-                auth_success = False
-
-            if not auth_success:
+            if not auth_user(driver):
                 if attempt < max_attempts - 1:
                     time.sleep(5)
                 continue
@@ -619,7 +547,7 @@ def check_batch_card_button_goal(button_tests, max_attempts=3):
 
 
 # Параметры для check_batch_card_button_goal
-auth_button_tests = [
+button_tests = [
     {
         'loc': '(//div[@id="catalogueSpecial"]//*[@src="/img/catalog/icons/share-light.svg"])[1]',
         'goal': 'catalog_v4.batch_share',
@@ -634,10 +562,7 @@ auth_button_tests = [
 
 # Запуск
 try:
-    if data and "LK_cred" in data:
-        check_batch_card_button_goal(auth_button_tests)
-    else:
-        print(" ERROR: Данные для авторизации не найдены")
+    check_batch_card_button_goal(button_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
     print(' ERROR: при нажатиях на кнопки в карточках активов — ', error_msg)
