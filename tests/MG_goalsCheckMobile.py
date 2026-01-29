@@ -13,18 +13,77 @@ from selenium.webdriver.common.keys import Keys
 # Включаем перехват запросов
 sw_options = {'disable_capture': False}
 import json
-from datetime import datetime
+from pathlib import Path
+
+
+# Проверка отправки целей на мобильной версии МГ
+
+# Проверяемый урл
+MG_BASE_URL = "https://moigektar.ru"
+#MG_BASE_URL = "http://moigektar.localhost"
+
+# Определяем пути
+BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
+TESTS_DIR = BASE_DIR / 'tests'
+DATA_DIR = BASE_DIR / 'data'
+
+# Создаем необходимые папки, если их нет
+for directory in [DATA_DIR]:
+    directory.mkdir(exist_ok=True)
+
+# Файлы с данными
+DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
+MG_PAGES_JSON = DATA_DIR / 'mg_pages.json'   # файл с конфигурацией страниц
+
+
+def check_data_files():
+    """Проверяет наличие необходимых файлов с данными"""
+    missing_files = []
+
+    if not DATA_JSON.exists():
+        missing_files.append(f"data/{DATA_JSON.name}")
+
+    if not MG_PAGES_JSON.exists():
+        missing_files.append(f"data/{MG_PAGES_JSON.name}")
+
+    if missing_files:
+        print(f"\n ERROR: Отсутствуют необходимые файлы:")
+        for file in missing_files:
+            print(f"   - {file}")
+        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
+        return False
+
+    return True
+
+
+def load_data():
+    """Загружает данные из data.json"""
+    try:
+        with open(DATA_JSON, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f" ERROR: Файл не найден: {DATA_JSON}")
+        raise
+    except json.JSONDecodeError as e:
+        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
+        raise
+    except Exception as e:
+        print(f" ERROR: Ошибка загрузки данных: {e}")
+        raise
 
 
 # Засекаем время начала теста
 start_time = time.time()
 
-with open('data.json', 'r') as file:
-    data = json.load(file)
+# Загружаем данные
+data = None
+try:
+    if check_data_files():
+        data = load_data()
+except Exception as e:
+    print(f" WARNING: Не удалось загрузить данные: {e}")
 
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
-#MG_BASE_URL = "http://moigektar.localhost"
 
 print(f"\n     Проверка отправки целей на моб. МГ на домене {MG_BASE_URL} \n")
 
@@ -43,24 +102,29 @@ def remove_popup(driver):
     except Exception:
         pass
 
-def auth_user(driver):
+def auth_user(driver, auth_data=None):
+
     """Авторизация пользователя"""
+    if not auth_data:
+        print(" ERROR: Данные для авторизации не предоставлены")
+        return False
+
     try:
         driver.get("https://moigektar.ru/?__counters=1")
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
+        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
         time.sleep(2)
         tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
         name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
         password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
         btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
         tab.click()
-        name.send_keys(str(data["LK_cred"]["login"]))
-        password.send_keys(str(data["LK_cred"]["password"]))
+        name.send_keys(str(auth_data.get("login", "")))
+        password.send_keys(str(auth_data.get("password", "")))
         btn.click()
         time.sleep(10)
         return True
     except Exception as e:
-        print(f"ERROR: Не удалось авторизоваться - {str(e)}")
+        print(f" ERROR: Не удалось авторизоваться - {str(e)}")
         return False
 
 
@@ -118,7 +182,7 @@ def check_catalog_modal_auth_show(tests, max_attempts=3):
         if result['success']:
             print(f"     ОК: при открытии {test['text']} отправляется цель '{test['goal']}'")
         else:
-            print(f"ERROR: при открытии {test['text']} текст '{test['goal']}' не найден в отправленных запросах")
+            print(f" ERROR: при открытии {test['text']} текст '{test['goal']}' не найден в отправленных запросах")
             all_success = False
 
     return all_success
@@ -142,7 +206,7 @@ try:
     check_catalog_modal_auth_show(modal_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке модалок авторизации — ', error_msg)
+    print(' ERROR: при проверке модалок авторизации — ', error_msg)
 
 
 # мод. авторизации из хедера: отправляется цель при открытии
@@ -183,7 +247,7 @@ def check_header_auth_modal_goal(text, max_attempts=3):
         print(f"     ОК: при взаимодействии с мод. авторизации на главной отправляется цель '{text}'")
     else:
         print(
-            f"ERROR: при взаимодействии с мод. авторизации на главной текст '{text}' не найден в отправленных запросах")
+            f" ERROR: при взаимодействии с мод. авторизации на главной текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -191,7 +255,7 @@ try:
     check_header_auth_modal_goal('catalog_modal_auth')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при взаимодействии с мод. авторизации на главной — ', error_msg)
+    print(' ERROR: при взаимодействии с мод. авторизации на главной — ', error_msg)
 
 
 # мод. авторизации в каталоге: отправляется цель, если нажали "Вернуться на главную"
@@ -233,7 +297,7 @@ def check_catalog_modal_auth_back_to_main_goal(text, max_attempts=3):
         print(f"     ОК: при возврате на главную из мод. авторизации в каталоге отправляется цель '{text}'")
     else:
         print(
-            f"ERROR: при возврате на главную из мод. авторизации в каталоге текст '{text}' не найден в отправленных запросах")
+            f" ERROR: при возврате на главную из мод. авторизации в каталоге текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -242,7 +306,7 @@ try:
     check_catalog_modal_auth_back_to_main_goal('catalog_modal_auth_button_main')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при возврате на главную из мод. авторизации в каталоге — ', error_msg)
+    print(' ERROR: при возврате на главную из мод. авторизации в каталоге — ', error_msg)
 
 
 # мод. авторизации: отправляется цель, если нажали кнопки соцсетей
@@ -302,7 +366,7 @@ def check_catalog_modal_social_media_btn_goal(tests, max_attempts=3):
         if result['success']:
             print(f"     ОК: при нажатии в мод. авторизации на кнопку '{test['btn']}' отправляется цель '{test['text']}'")
         else:
-            print(f"ERROR: при нажатии в мод. авторизации на кнопку '{test['btn']}' текст '{test['text']}' не найден в отправленных запросах")
+            print(f" ERROR: при нажатии в мод. авторизации на кнопку '{test['btn']}' текст '{test['text']}' не найден в отправленных запросах")
             all_success = False
 
     return all_success
@@ -326,7 +390,7 @@ try:
     check_catalog_modal_social_media_btn_goal(social_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке кнопок соцсетей в модалке авторизации — ', error_msg)
+    print(' ERROR: при проверке кнопок соцсетей в модалке авторизации — ', error_msg)
 
 
 def check_quiz_btn_goal(tests, max_attempts=3):
@@ -381,7 +445,7 @@ def check_quiz_btn_goal(tests, max_attempts=3):
         if result['success']:
             print(f'     ОК: при нажатии на кнопку квиза {test["place"]} отправляется цель "{test["goal"]}"')
         else:
-            print(f'ERROR: при нажатии на кнопку квиза {test["place"]} текст "{test["goal"]}" не найден')
+            print(f' ERROR: при нажатии на кнопку квиза {test["place"]} текст "{test["goal"]}" не найден')
             all_success = False
 
     return all_success
@@ -410,7 +474,7 @@ try:
     check_quiz_btn_goal(quiz_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при проверке кнопок квиза — ', error_msg)
+    print(' ERROR: при проверке кнопок квиза — ', error_msg)
 
 
 # карточки активов: нажали на карточку
@@ -454,7 +518,7 @@ def check_batch_card_goal(text, max_attempts=3):
     if results['success']:
         print(f"     ОК: при нажатии на карточку актива отправляется цель '{text}'")
     else:
-        print(f"ERROR: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
+        print(f" ERROR: при нажатии на карточку актива текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -463,7 +527,7 @@ try:
     check_batch_card_goal('catalog_v4.batch_card_click')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатии на карточку актива — ', error_msg)
+    print(' ERROR: при нажатии на карточку актива — ', error_msg)
 
 
 # карточки активов: нажатия на элементы в карточке, если пользователь НЕ авторизован
@@ -529,7 +593,7 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
         if result['success']:
             print(f"     ОК: у неавт. юзера при нажатии на {test['place']} отправляется цель '{test['goal']}'")
         else:
-            print(f"ERROR: у неавт. юзера при нажатии на {test['place']} текст '{test['goal']}' не найден")
+            print(f" ERROR: у неавт. юзера при нажатии на {test['place']} текст '{test['goal']}' не найден")
             all_success = False
 
     return all_success
@@ -553,7 +617,7 @@ try:
     check_batch_card_button_goal_unauth(button_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатиях на кнопки в карточках активов — ', error_msg)
+    print(' ERROR: при нажатиях на кнопки в карточках активов — ', error_msg)
 
 
 # Главная, блок "Отзывы о проекте", нажали кнопку "Посмотреть больше"
@@ -602,7 +666,7 @@ def check_news_button_goal(text, max_attempts=3):
     if results['success']:
         print(f"     ОК: при нажатии на кнопку в 'Отзывах' отправляется цель '{text}'")
     else:
-        print(f"ERROR: при нажатии на кнопку в 'Отзывах' текст '{text}' не найден в отправленных запросах")
+        print(f" ERROR: при нажатии на кнопку в 'Отзывах' текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -611,7 +675,7 @@ try:
     check_news_button_goal('main_reviews_button')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print("ERROR: при нажатии на кнопку в 'Отзывах' — ", error_msg)
+    print(" ERROR: при нажатии на кнопку в 'Отзывах' — ", error_msg)
 
 
 # Главная, блок "Выбери участок в лучшей локации", нажали кнопку "Смотреть участки"
@@ -663,7 +727,7 @@ def check_locations_button_goal(text, max_attempts=3):
         print(f"     ОК: при нажатии на кнопку в 'Выбери уч. в лучшей локации' отправляется цель '{text}'")
     else:
         print(
-            f"ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' текст '{text}' не найден в отправленных запросах")
+            f" ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' текст '{text}' не найден в отправленных запросах")
 
     return results['success']
 
@@ -672,7 +736,7 @@ try:
     check_locations_button_goal('best_location_button')
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print("ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' — ", error_msg)
+    print(" ERROR: при нажатии на кнопку в 'Выбери уч. в лучшей локации' — ", error_msg)
 
 
 # каталог: нажатия на кнопки
@@ -740,7 +804,7 @@ def check_catalogue_button_goal(button_tests, max_attempts=3):
         if result['success']:
             print(f"     ОК: при нажатии на {test['button']} отправляется цель '{test['goal']}'")
         else:
-            print(f"ERROR: при нажатии на {test['button']} текст '{test['goal']}' не найден в отправленных запросах")
+            print(f" ERROR: при нажатии на {test['button']} текст '{test['goal']}' не найден в отправленных запросах")
             all_success = False
 
     return all_success
@@ -769,7 +833,7 @@ try:
     check_catalogue_button_goal(button_tests)
 except Exception as e:
     error_msg = str(e).split('\n')[0]
-    print('ERROR: при нажатии на кнопки в каталоге — ', error_msg)
+    print(' ERROR: при нажатии на кнопки в каталоге — ', error_msg)
 
 
 # Вычисляем и выводим время выполнения теста
