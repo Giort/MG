@@ -51,7 +51,7 @@ class PageChecker:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         })
-        self.session.timeout = 15
+        self.session.timeout = 25
         self.results = {
             'success': [],
             'errors': []
@@ -482,9 +482,19 @@ class PageChecker:
         total_pages = len(pages_config)
         successful = 0
         failed = 0
+        skipped = 0
 
         for i, page_config in enumerate(pages_config, 1):
-            print(f"\n     Страница {i}/{total_pages}: {page_config['name']}")
+            page_name = page_config['name']
+
+            # Пропускаем страницы с skip: true
+            if page_config.get('skip', False):
+                skip_reason = page_config.get('skip_reason', 'без указания причины')
+                print(f"\n     Страница {i}/{total_pages}: {page_name} - \033[33mПРОПУЩЕНА ({skip_reason})\033[0m")
+                skipped += 1
+                continue
+
+            print(f"\n     Страница {i}/{total_pages}: {page_name}")
 
             try:
                 if self.check_page(page_config, delay):
@@ -505,12 +515,12 @@ class PageChecker:
                 self.results['errors'].append(error_info)
 
         # Вывод итогового отчета
-        self.print_summary(total_pages, successful, failed)
+        self.print_summary(total_pages, successful, failed, skipped)
 
         return self.results
 
 
-    def print_summary(self, total, successful, failed):
+    def print_summary(self, total, successful, failed, skipped=0):
         """
         Вывод отчета
         """
@@ -520,8 +530,18 @@ class PageChecker:
 
         print(f"\n     Статистика:")
         print(f"       Всего проверено страниц: {total}")
-        print(f"       Успешно: {successful} ({successful / total * 100:.1f}%)")
-        print(f"       С ошибками: {failed} ({failed / total * 100:.1f}%)")
+        print(f"       Пропущено: {skipped}")
+        print(f"       Проверено страниц: {total - skipped}")
+
+        if total - skipped > 0:
+            success_percent = (successful / (total - skipped)) * 100
+            failed_percent = (failed / (total - skipped)) * 100
+        else:
+            success_percent = 0
+            failed_percent = 0
+
+        print(f"       Успешно: {successful} ({success_percent:.1f}%)")
+        print(f"       С ошибками: {failed} ({failed_percent:.1f}%)")
 
         # Собираем все критические ошибки
         all_critical_errors = []
