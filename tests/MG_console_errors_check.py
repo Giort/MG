@@ -305,6 +305,107 @@ class PageChecker:
         }
         self.results['success'].append(success_info)
 
+    def print_slowest_pages(self, top_n=6):
+        """
+        Выводит топ-N самых медленных страниц
+        """
+
+        def get_load_time_level(response_time):
+            """Определяет уровень загрузки"""
+            if response_time > 5.0:
+                return "critical", "\033[31m", "⚠ Критично: страница загружалась дольше 5 секунд"
+            elif response_time > 3.0:
+                return "warning", "\033[33m", "⚠ Внимание: страница загружалась дольше 3 секунд"
+            elif response_time > 1.0:
+                return "normal", "\033[32m", ""
+            else:
+                return "fast", "\033[32m", ""
+
+        # Собираем все страницы с временем ответа
+        all_pages = []
+
+        # Собираем успешные страницы
+        for success in self.results['success']:
+            if 'response_time' in success and success['response_time'] is not None:
+                all_pages.append({
+                    'type': 'success',
+                    'name': success['page'],
+                    'url': success['url'],
+                    'response_time': success['response_time'],
+                    'status': success['http_status']
+                })
+
+        # Собираем страницы с ошибками
+        for error in self.results['errors']:
+            if 'response_time' in error and error['response_time'] is not None:
+                all_pages.append({
+                    'type': 'error',
+                    'name': error['page'],
+                    'url': error['url'],
+                    'response_time': error['response_time'],
+                    'status': error.get('http_status', 'error')
+                })
+
+        # Сортируем по времени ответа (от большего к меньшему)
+        all_pages.sort(key=lambda x: x['response_time'], reverse=True)
+
+        # Выводим топ-N
+        if all_pages:
+            print(f"\n     Топ-{min(top_n, len(all_pages))} самых медленных страниц:")
+
+            for i, page in enumerate(all_pages[:top_n], 1):
+
+                # Определяем уровень загрузки
+                level, time_color, warning_message = get_load_time_level(page['response_time'])
+
+                print(f"     {i}. {page['response_time']:.2f} сек - {page['name']} ({page['url']})")
+
+                # Выводим предупреждение, если есть
+                if warning_message:
+                    print(f"         {time_color}{warning_message}\033[0m")
+
+        else:
+            print(f"\n     Нет данных о времени загрузки страниц")
+
+    def print_performance_summary(self):
+        """
+        Выводит сводку по производительности
+        """
+        # Собираем все времена ответа
+        response_times = []
+
+        for success in self.results['success']:
+            if 'response_time' in success and success['response_time'] is not None:
+                response_times.append(success['response_time'])
+
+        for error in self.results['errors']:
+            if 'response_time' in error and error['response_time'] is not None:
+                response_times.append(error['response_time'])
+
+        if response_times:
+            avg_time = sum(response_times) / len(response_times)
+            max_time = max(response_times)
+            min_time = min(response_times)
+
+            print(f"\n     {'=' * 40}")
+            print("     СВОДКА ПО ПРОИЗВОДИТЕЛЬНОСТИ:")
+            # print(f"\n     Всего измерений: {len(response_times)}")
+            # print(f"     Среднее время: {avg_time:.2f} сек")
+            # print(f"     Минимальное: {min_time:.2f} сек")
+            # print(f"     Максимальное: {max_time:.2f} сек")
+            #
+            # # Распределение по диапазонам (с исправленной логикой)
+            # fast = len([t for t in response_times if t < 1.0])
+            # normal = len([t for t in response_times if 1.0 <= t < 3.0])
+            # slow = len([t for t in response_times if 3.0 <= t < 5.0])
+            # very_slow = len([t for t in response_times if t >= 5.0])
+            #
+            # print(f"\n     Распределение по скорости:")
+            # print(f"       Быстрые (<1 сек): {fast} ({fast / len(response_times) * 100:.1f}%)")
+            # print(f"       Нормальные (1-3 сек): {normal} ({normal / len(response_times) * 100:.1f}%)")
+            # print(f"       Медленные (3-5 сек): {slow} ({slow / len(response_times) * 100:.1f}%)")
+            # print(f"       Очень медленные (≥5 сек): {very_slow} ({very_slow / len(response_times) * 100:.1f}%)")
+
 
     def quick_image_health_check(self):
         """Быстрая проверка здоровья сервера картинок"""
@@ -363,7 +464,7 @@ class PageChecker:
                     logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки")
                     return True, None
                 else:
-                    return False, f"     Элемент найден, но не видим"
+                    return False, f"Элемент найден, но не видим"
 
         except TimeoutException:
             error_msg = f"Таймаут ({timeout} сек) при ожидании элемента: {xpath_selector[:50]}..."
@@ -426,7 +527,7 @@ class PageChecker:
 
         if not elements_ok:
             # Отсутствие элемента - критическая ошибка
-            print(f"Ошибка элемента: {elements_error}")
+            print(f" ERROR: {elements_error}")
             self._log_error(page_name, full_url, 'ELEMENT_ERROR', elements_error, http_status, response_time)
             return False
 
@@ -443,7 +544,7 @@ class PageChecker:
         # Проверяем критические ошибки
         if critical_errors:
             if not is_error_page:
-                logger.warning(f"ERROR:  Найдено критических ошибок: {len(critical_errors)}")
+                logger.warning(f" ERROR:  Найдено критических ошибок: {len(critical_errors)}")
                 for error in critical_errors[:3]:  # Показываем первые 3
                     status = f"[{error.get('status', '?')}] " if error.get('status') else ""
                     url_display = error.get('url', '')[:50] if error.get('url') != 'unknown' else ''
@@ -517,6 +618,11 @@ class PageChecker:
         # Вывод итогового отчета
         self.print_summary(total_pages, successful, failed, skipped)
 
+        # Выводим информацию о производительности
+        if successful + failed > 0:  # Если были проверки
+            self.print_performance_summary()
+            self.print_slowest_pages(top_n=6)
+
         return self.results
 
 
@@ -574,8 +680,7 @@ class PageChecker:
         if self.results['errors']:
             print(f"\n     СТРАНИЦЫ С КРИТИЧЕСКИМИ ОШИБКАМИ:")
             for error in self.results['errors']:
-                print(f"\n       Страница: {error['page']}")
-                print(f"         URL: {error['url']}")
+                print(f"\n       Страница: {error['page']} ({error['url']})")
                 print(f"         Тип ошибки: {error['error_type']}")
                 print(f"         Сообщение: {error['error_message']}")
 

@@ -767,7 +767,9 @@
         "name": "страница благодарности",
         "path": "thanks",
         "xpath": "//h4[contains(., 'Спасибо за отправленную заявку!')]",
-        "requires_auth": false
+        "requires_auth": false,
+        "skip": true,
+        "skip_reason": "страница не будет дорабатываться"
     },
     {
         "name": "страница политики конфиденциальности",
