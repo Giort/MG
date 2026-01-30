@@ -9,58 +9,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
-import sys
-from pathlib import Path
 
 
 # Проверка работы генпланов на сайтах
-
-
-# Определяем пути
-BASE_DIR = Path(__file__).parent.parent  # Поднимаемся на уровень выше tests
-TESTS_DIR = BASE_DIR / 'tests'
-DATA_DIR = BASE_DIR / 'data'
-
-# Создаем необходимые папки, если их нет
-DATA_DIR.mkdir(exist_ok=True)
-
-# Файлы с данными
-DATA_JSON = DATA_DIR / 'data.json'           # файл с учетными данными
-
-
-def check_data_files():
-    """Проверяет наличие необходимых файлов с данными"""
-    missing_files = []
-
-    if not DATA_JSON.exists():
-        missing_files.append(f"data/{DATA_JSON.name}")
-
-    if missing_files:
-        print(f"\n ERROR: Отсутствуют необходимые файлы:")
-        for file in missing_files:
-            print(f"   - {file}")
-        print(f"\nСоздайте папку 'data' на одном уровне с 'tests' и поместите туда файлы:")
-        return False
-
-    return True
-
-
-def load_data():
-    """Загружает данные из data.json"""
-    try:
-        with open(DATA_JSON, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
-    except FileNotFoundError:
-        print(f" ERROR: Файл не найден: {DATA_JSON}")
-        raise
-    except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
-        raise
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки данных: {e}")
-        raise
-
 
 # Засекаем время начала теста
 start_time = time.time()
@@ -88,18 +39,9 @@ class GenplanChecker:
     def _load_data(self):
         """Загрузка конфигурации из JSON"""
         try:
-            # ИСПРАВЛЕНО: используем правильный путь к data.json
-            with open(DATA_JSON, 'r', encoding='utf-8') as file:
+            with open('../data/data.json', 'r') as file:
                 return json.load(file)
         except FileNotFoundError:
-            print(f"ERROR: Файл данных не найден: {DATA_JSON}")
-            print(f"      Проверьте, что файл существует по пути: {DATA_JSON.absolute()}")
-            return {}
-        except json.JSONDecodeError as e:
-            print(f"ERROR: Ошибка в формате JSON файла {DATA_JSON}: {e}")
-            return {}
-        except Exception as e:
-            print(f"ERROR: Ошибка загрузки данных: {e}")
             return {}
 
     print(f"\n     Проверка доступности блока генплана на сайтах \n")
