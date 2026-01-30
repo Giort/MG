@@ -15,205 +15,273 @@
         "name": "каталог чпу - новорижское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-novorizhskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - ленинградское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-leningradskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - минское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-minskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - ярославское шоссе",
         "path": "catalogue/uchastki-na-yaroslavskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - на Волге",
         "path": "catalogue/volga",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - на Валдае",
         "path": "catalogue/valday",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - на Вазузе",
         "path": "catalogue/vazuza",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - на Селигере",
         "path": "catalogue/seliger",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - в Завидово",
         "path": "catalogue/uchastki-v-zavidovo",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - у воды",
         "path": "catalogue/zemelnye-uchastki-u-vody",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - у леса",
         "path": "catalogue/zemelnye-uchastki-u-lesa",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - у реки",
         "path": "catalogue/zemelnye-uchastki-u-reki",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - у озера",
         "path": "catalogue/zemelnye-uchastki-u-ozera",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - на водохранилище",
         "path": "catalogue/uchastki-na-vodohranilische",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - видовые участки",
         "path": "catalogue/vidovye-uchastki",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - до 30 соток",
         "path": "catalogue/uchastki-do-30-sotok",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под дачу",
         "path": "catalogue/dachnye-zemelnye-uchastki",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под усадьбу",
         "path": "catalogue/zemelnye-uchastki-pod-usadbu",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под бизнес",
         "path": "catalogue/zemelnye-uchastki-pod-biznes",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под базу отдыха",
         "path": "catalogue/zemelnye-uchastki-pod-bazu-otdyha",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под глэмпинг",
         "path": "catalogue/zemelnye-uchastki-pod-glemping",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под кемпинг",
         "path": "catalogue/zemelnye-uchastki-pod-kemping",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под отель, экоотель",
         "path": "catalogue/zemelnye-uchastki-pod-otel-eko-otel",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под ферму",
         "path": "catalogue/zemelnye-uchastki-pod-fermu",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под инвестиции",
         "path": "catalogue/zemelnye-uchastki-pod-investicii",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - ижс",
         "path": "catalogue/zemelnye-uchastki-pod-izhs-v-moskovskoy-oblasti",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под ижс",
         "path": "catalogue/uchastki-pod-izhs",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под агробизнес",
         "path": "catalogue/uchastki-pod-agrobiznes",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под туристический бизнес",
         "path": "catalogue/uchastki-pod-turistichesky-biznes",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - для активного отдыха",
         "path": "catalogue/uchastki-dlya-aktivnogo-otdyha",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под ритейл",
         "path": "catalogue/uchastki-pod-riteyl",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под производство",
         "path": "catalogue/uchastki-pod-proizvodstvo",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под придорожный сервис",
         "path": "catalogue/uchastki-pod-proidorozhny-servis",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог чпу - под корпоративные посёлки",
         "path": "catalogue/uchastki-pod-korporativnye-poselki",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
-        "requires_auth": true
+        "requires_auth": true,
+        "skip": true,
+        "skip_reason": "is_chpu - временно исключено"
     },
     {
         "name": "каталог - регионы - Киевское шоссе",
