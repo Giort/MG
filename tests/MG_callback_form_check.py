@@ -41,7 +41,7 @@ class FormChecker:
 
     def _load_test_data(self):
         """Загрузка тестовых данных из JSON"""
-        with open('../actual/data.json', 'r') as file:
+        with open('../data/data.json', 'r') as file:
             return json.load(file)
 
     def check_element(self, xpath, page_name, form_name, element_type, max_attempts=3):
