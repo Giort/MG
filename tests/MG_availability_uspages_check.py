@@ -405,6 +405,23 @@ class AuthChecker:
         self.driver.implicitly_wait(10)
         return self.driver
 
+    def remove_popup(driver):
+        """Удаление попапа посетителей"""
+        try:
+            # Удаляем попап посетителей
+            popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+            driver.execute_script("arguments[0].remove();", popup_visitors)
+        except Exception:
+            pass
+
+        try:
+            # Удаляем попап вебинара
+            popup_webinar = driver.find_element(by=By.XPATH,
+                                                value="//*[contains(@class, 'js-webinar-running-event-modal')]")
+            driver.execute_script("arguments[0].remove();", popup_webinar)
+        except Exception:
+            pass
+
     def auth(self):
         """ Авторизация """
         try:

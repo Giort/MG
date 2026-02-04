@@ -49,13 +49,22 @@ class ModalWindowChecker:
             print("Предупреждение: файл data.json не найден")
             return {}
 
-    def _remove_popup(self) -> None:
-        """Удаляет всплывающее окно, если оно есть"""
+    def remove_popup(driver):
+        """Удаление попапа посетителей"""
         try:
-            popup = self.driver.find_element(By.ID, 'visitors-popup')
-            self.driver.execute_script("arguments[0].remove();", popup)
-        except NoSuchElementException:
-            pass  # Popup не найден, это нормально
+            # Удаляем попап посетителей
+            popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+            driver.execute_script("arguments[0].remove();", popup_visitors)
+        except Exception:
+            pass
+
+        try:
+            # Удаляем попап вебинара
+            popup_webinar = driver.find_element(by=By.XPATH,
+                                                value="//*[contains(@class, 'js-webinar-running-event-modal')]")
+            driver.execute_script("arguments[0].remove();", popup_webinar)
+        except Exception:
+            pass
 
     def _format_error_message(self, error: Exception) -> str:
         """Форматирует сообщение об ошибке для вывода"""
