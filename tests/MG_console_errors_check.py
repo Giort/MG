@@ -22,6 +22,9 @@ logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
 MG_BASE_URL = "https://moigektar.ru"
 # MG_BASE_URL = "http://moigektar.localhost"
 
+# Настройки исключаемых типов страниц
+DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
+
 # Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
@@ -41,10 +44,16 @@ start_time = time.time()
 
 
 class PageChecker:
-    def __init__(self, base_url):
+    def __init__(self, base_url, excluded_types=None):
         self.base_url = base_url.rstrip('/')
         self.driver = None
         self.session = requests.Session()
+
+        # Настраиваем исключаемые типы
+        if excluded_types is None:
+            self.excluded_types = DEFAULT_EXCLUDED_PAGE_TYPES
+        else:
+            self.excluded_types = excluded_types
 
         # Настраиваем сессию для проверки HTTP
         self.session.headers.update({
@@ -236,7 +245,7 @@ class PageChecker:
         return match.group(0)[:200] if match else 'unknown'
 
 
-    def check_http_status(self, url, timeout=15):
+    def check_http_status(self, url, timeout=25):
         """
         Проверка HTTP статуса страницы
         Возвращает (status_code, error_message, response_time)
@@ -579,6 +588,7 @@ class PageChecker:
         Проверка всех страниц из конфигурации
         """
         print(f"\n     Начинаем проверку страниц")
+        print(f"     Исключаемые типы: {', '.join(self.excluded_types)}")
 
         total_pages = len(pages_config)
         successful = 0
@@ -588,9 +598,10 @@ class PageChecker:
         for i, page_config in enumerate(pages_config, 1):
             page_name = page_config['name']
 
-            # Пропускаем страницы с skip: true
-            if page_config.get('skip', False):
-                skip_reason = page_config.get('skip_reason', 'без указания причины')
+            # Пропускаем страницы с исключенными типами
+            page_type = page_config.get('page_type', '')
+            if page_type in self.excluded_types:
+                skip_reason = f"page_type: {page_type}"
                 print(f"\n     Страница {i}/{total_pages}: {page_name} - \033[33mПРОПУЩЕНА ({skip_reason})\033[0m")
                 skipped += 1
                 continue
@@ -636,7 +647,7 @@ class PageChecker:
 
         print(f"\n     Статистика:")
         print(f"       Всего проверено страниц: {total}")
-        print(f"       Пропущено: {skipped}")
+        print(f"       Пропущено (типы: {', '.join(self.excluded_types)}): {skipped}")
         print(f"       Проверено страниц: {total - skipped}")
 
         if total - skipped > 0:
