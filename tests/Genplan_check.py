@@ -233,7 +233,6 @@ class GenplanChecker:
             ('https://syn84.lp.moigektar.ru', 'syn_84'),
             ('https://syn85.lp.moigektar.ru', 'syn_85'),
             ('https://syn87.lp.moigektar.ru', 'syn_87'),
-            ('https://syn89.lp.moigektar.ru', 'syn_89'),
             ('https://syn92.lp.moigektar.ru', 'syn_92'),
             ('https://syn95.lp.moigektar.ru', 'syn_95'),
             ('https://syn99.lp.moigektar.ru', 'syn_99'),
@@ -249,6 +248,13 @@ class GenplanChecker:
             'https://vazuza2.lp.moigektar.ru',
             'Вазуза',
             title_xpath='(//*[text()[contains(.,"Генеральный")]])[1]'
+        )
+
+        # 89 (другой селектор)
+        self.check_genplan(
+            'https://syn89.lp.moigektar.ru',
+            'syn_89',
+            title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
         )
 
         # syn_111 - с авторизацией
