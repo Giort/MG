@@ -420,7 +420,7 @@
     {
         "name": "бизнес-планы",
         "path": "business-plans",
-        "xpath": "(//*[contains(@class, 'uk-grid')]//*[contains(@class, 'uk-card')])[6]",
+        "xpath": "(//*[contains(@class, 'uk-grid')]//*[contains(@class, 'uk-card')])[10]",
         "requires_auth": false
     },
     {

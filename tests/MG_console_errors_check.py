@@ -189,7 +189,7 @@ class PageChecker:
                     import re
                     url_pattern = r'https?://[^\s\'"]+'
                     urls = re.findall(url_pattern, message)
-                    url = urls[0][:150] if urls else 'unknown'
+                    url = urls[0] if urls else 'unknown'
 
                 # Также считаем критические JS ошибки
                 elif level == 'SEVERE' and any(phrase in message for phrase in
@@ -198,7 +198,7 @@ class PageChecker:
 
                 error_data = {
                     'level': level,
-                    'message': message[:250],
+                    'message': message,
                     'url': url,
                     'status': status_code,
                     'source': 'browser_console'
@@ -432,7 +432,7 @@ class PageChecker:
                     all_ok = False
 
             except Exception as e:
-                print(f"  \033[31m✗\033[0m {url[:50]}... - ERROR: {str(e)[:30]}")
+                print(f"  \033[31m✗\033[0m {url}... - ERROR: {str(e)}")
                 all_ok = False
 
         if all_ok:
@@ -476,7 +476,7 @@ class PageChecker:
                     return False, f"Элемент найден, но не видим"
 
         except TimeoutException:
-            error_msg = f"Таймаут ({timeout} сек) при ожидании элемента: {xpath_selector[:50]}..."
+            error_msg = f"Таймаут ({timeout} сек) при ожидании элемента: {xpath_selector}..."
 
             # Пытаемся сделать скриншот при ошибке
             try:
@@ -488,12 +488,12 @@ class PageChecker:
 
             return False, error_msg
         except NoSuchElementException:
-            return False, f"Элемент не найден: {xpath_selector[:50]}..."
+            return False, f"Элемент не найден: {xpath_selector}..."
         except Exception as e:
-            return False, f"Ошибка Selenium: {str(e)[:100]}"
+            return False, f"Ошибка Selenium: {str(e)}"
 
 
-    def check_page(self, page_config, delay=1):
+    def check_page(self, page_config, delay=1, max_attempts=3):
         """
         Полная проверка одной страницы
         """
@@ -512,6 +512,11 @@ class PageChecker:
         if http_error and not is_error_page:
             # Обычная страница - ошибка критическая
             print(f"HTTP ошибка: {http_error}")
+            # Логируем HTTP ошибку
+            self._log_error(
+                page_name, full_url, 'HTTP_ERROR', http_error,
+                http_status, response_time
+            )
             return False
         elif http_error and is_error_page:
             # Страница ошибки - проверяем что это именно 404
@@ -528,55 +533,111 @@ class PageChecker:
 
         print(f"     HTTP статус: {http_status} (время ответа: {response_time:.2f} сек)")
 
-        # Шаг 2: Проверка элементов на странице
-        elements_ok, elements_error = self.check_page_elements(
-            full_url,
-            xpath_selector
-        )
+        # Шаг 2: Попытки загрузки страницы и проверки элементов
+        for attempt in range(1, max_attempts + 1):
 
-        if not elements_ok:
-            # Отсутствие элемента - критическая ошибка
-            print(f" ERROR: {elements_error}")
-            self._log_error(page_name, full_url, 'ELEMENT_ERROR', elements_error, http_status, response_time)
-            return False
+            try:
+                # Загружаем страницу
+                self.driver.get(full_url)
 
-        # Шаг 3: Сбор ошибок из консоли браузера
-        time.sleep(1)  # Даем время для выполнения запросов
-        critical_errors, non_critical_errors = self.capture_browser_errors()
+                # Проверяем, что страница загрузилась (заголовок не пустой)
+                if self.driver.title is None or self.driver.title.strip() == "":
+                    logger.warning(f"Страница загружена с пустым заголовком: {full_url}")
 
-        # Логируем некритические ошибки (только если их много)
-        if non_critical_errors:
-            # print(f"Найдено некритических ошибок: {len(non_critical_errors)} (не мешают работе)")
-            # Можно залогировать в файл, но не выводить в консоль
-            logger.debug(f"Некритические ошибки на {page_name}: {len(non_critical_errors)}")
-
-        # Проверяем критические ошибки
-        if critical_errors:
-            if not is_error_page:
-                logger.warning(f" ERROR:  Найдено критических ошибок: {len(critical_errors)}")
-                for error in critical_errors[:3]:  # Показываем первые 3
-                    status = f"[{error.get('status', '?')}] " if error.get('status') else ""
-                    url_display = error.get('url', '')[:50] if error.get('url') != 'unknown' else ''
-                    print(f"  - {status}{url_display}")
-
-                # Логируем детали критической ошибки
-                error_message = f"Найдено {len(critical_errors)} критических ошибок в консоли"
-                self._log_error(
-                    page_name, full_url, 'CONSOLE_ERRORS', error_message,
-                    http_status, response_time, critical_errors, non_critical_errors
+                # Ждем появления элемента
+                element = WebDriverWait(self.driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, xpath_selector))
                 )
-                return False
 
-        # Успешная проверка
-        self._log_success(
-            page_name, full_url, http_status, response_time,
-            non_critical_errors  # Сохраняем некритические ошибки для отчета
-        )
+                # Дополнительная проверка, что элемент видим
+                if element.is_displayed():
+                    print(f"     ОК: Элемент найден и видим")
+                    elements_ok, elements_error = True, None
+                else:
+                    # Если элемент не видим, прокручиваем к нему
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.5)
 
-        # Пауза между проверками
+                    if element.is_displayed():
+                        logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки")
+                        elements_ok, elements_error = True, None
+                    else:
+                        elements_ok, elements_error = False, f"Элемент найден, но не видим"
+
+                # Если элемент найден, собираем ошибки из консоли
+                if elements_ok:
+                    time.sleep(1)  # Даем время для выполнения запросов
+                    critical_errors, non_critical_errors = self.capture_browser_errors()
+
+                    # Проверяем критические ошибки
+                    if critical_errors and not is_error_page:
+                        logger.warning(f"     Попытка {attempt}: найдено критических ошибок: {len(critical_errors)}")
+
+                        # Если это не последняя попытка, пробуем перезагрузить
+                        if attempt < max_attempts:
+                            time.sleep(2)  # Пауза перед следующей попыткой
+                            continue
+                        else:
+                            # Последняя попытка, логируем ошибки
+                            logger.warning(f" ERROR:  Найдено критических ошибок: {len(critical_errors)}")
+                            for error in critical_errors[:3]:
+                                status = f"[{error.get('status', '?')}] " if error.get('status') else ""
+                                url_display = error.get('url', '')[:50] if error.get('url') != 'unknown' else ''
+                                print(f"  - {status}{url_display}")
+
+                            # Логируем детали критической ошибки
+                            error_message = f"Найдено {len(critical_errors)} критических ошибок в консоли"
+                            self._log_error(
+                                page_name, full_url, 'CONSOLE_ERRORS', error_message,
+                                http_status, response_time, critical_errors, non_critical_errors
+                            )
+                            return False
+
+                    # Если нет критических ошибок или это страница ошибки 404
+                    self._log_success(
+                        page_name, full_url, http_status, response_time,
+                        non_critical_errors
+                    )
+                    return True
+                else:
+                    # Элемент не найден
+                    if attempt < max_attempts:
+                        print(f"     Перезагружаем страницу из-за отсутствия элемента...")
+                        time.sleep(2)
+                    else:
+                        # Последняя попытка, логируем ошибку
+                        print(f" ERROR: {elements_error}")
+                        self._log_error(page_name, full_url, 'ELEMENT_ERROR', elements_error,
+                                        http_status, response_time)
+                        return False
+
+            except TimeoutException:
+                if attempt < max_attempts:
+                    print(f"     Таймаут при загрузке. Пробуем снова...")
+                    time.sleep(2)
+                else:
+                    error_msg = f"Таймаут при ожидании элемента: {xpath_selector}..."
+                    print(f" ERROR: {error_msg}")
+                    self._log_error(page_name, full_url, 'TIMEOUT_ERROR', error_msg,
+                                    http_status, response_time)
+                    return False
+
+            except Exception as e:
+                if attempt < max_attempts:
+                    print(f"     Ошибка: {str(e)[:80]}. Пробуем снова...")
+                    time.sleep(2)
+                else:
+                    print(f" ERROR: Ошибка Selenium: {str(e)}")
+                    self._log_error(page_name, full_url, 'SELENIUM_ERROR', str(e),
+                                    http_status, response_time)
+                    return False
+
+        # Пауза между проверками разных страниц
         time.sleep(delay)
 
-        return True
+        # Если дошли до этой точки, что-то пошло не так
+        return False
 
 
     def check_all_pages(self, pages_config, delay=1):
@@ -609,7 +670,7 @@ class PageChecker:
             print(f"\n     Страница {i}/{total_pages}: {page_name}")
 
             try:
-                if self.check_page(page_config, delay):
+                if self.check_page(page_config, delay=delay, max_attempts=3):
                     successful += 1
                 else:
                     failed += 1
@@ -701,10 +762,10 @@ class PageChecker:
                     for crit_err in error['critical_errors'][:3]:  # Первые 3
                         if crit_err.get('status'):
                             status = crit_err.get('status', '?')
-                            url_display = crit_err.get('url', '')[:60]
+                            url_display = crit_err.get('url', '')
                             print(f"         [{status}] {url_display}...")
                         else:
-                            msg = crit_err.get('message', '')[:80]
+                            msg = crit_err.get('message', '')
                             print(f"         JS: {msg}...")
 
 
@@ -756,7 +817,7 @@ class PageChecker:
         self.session.close()
 
 
-def load_pages_config(config_file='mg_pages.json'):
+def load_pages_config(config_file='mg_pages_test.json'):
     """
     Загружает конфигурацию страниц из JSON файла
     """
@@ -809,7 +870,7 @@ def main():
 
     try:
 
-        pages_config = load_pages_config('../data/mg_pages.json')
+        pages_config = load_pages_config('../data/mg_pages_test.json')
 
         # Инициализируем драйвер
         if not checker.init_driver():
