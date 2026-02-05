@@ -25,6 +25,9 @@ MG_BASE_URL = "https://moigektar.ru"
 # Настройки исключаемых типов страниц
 DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
 
+# Список страниц для проверки
+PAGES_CONFIG_FILE = '../data/mg_pages.json'
+
 # Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
@@ -817,10 +820,14 @@ class PageChecker:
         self.session.close()
 
 
-def load_pages_config(config_file='mg_pages_test.json'):
+def load_pages_config(config_file=None):
     """
     Загружает конфигурацию страниц из JSON файла
     """
+    # Если файл не указан, используем глобальную константу
+    if config_file is None:
+        config_file = PAGES_CONFIG_FILE
+
     try:
         # Проверяем существование файла
         if not os.path.exists(config_file):
@@ -870,7 +877,7 @@ def main():
 
     try:
 
-        pages_config = load_pages_config('../data/mg_pages_test.json')
+        pages_config = load_pages_config()
 
         # Инициализируем драйвер
         if not checker.init_driver():
