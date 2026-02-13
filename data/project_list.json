@@ -1,0 +1,894 @@
+{
+  "resources": [
+    {
+      "name": "МГ",
+      "url": "https://moigektar.ru",
+      "selector": "//h2[text()[contains(.,\"Описание проекта\")]]",
+      "auth": false
+    },
+    {
+      "name": "ЛК",
+      "url": "https://cabinet.moigektar.ru",
+      "selector": "(//*[text()[contains(.,\"Вы находитесь в демо-версии личного кабинета\")]])[2]",
+      "auth": false,
+      "clear_cookies": true
+    },
+    {
+      "project_name": "syn_6 Почурино",
+      "domains": [
+        {
+          "name": "syn_6",
+          "url": "https://syn6.lp.moigektar.ru"
+        },
+        {
+          "name": "pochurino.moigektar.ru",
+          "url": "https://pochurino.moigektar.ru"
+        }
+      ],
+      "selector": "//h2[text()[contains(.,\"Выбрать участок\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_8 Долина Селигера",
+      "domains": [
+        {
+          "name": "syn_8",
+          "url": "https://syn8.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Генеральный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_9 Бологое",
+      "domains": [
+        {
+          "name": "syn_9",
+          "url": "https://syn9.lp.moigektar.ru"
+        },
+        {
+          "name": "синергия-бологое.рф",
+          "url": "https://xn----btbecgepc3aoqbbtl4u.xn--p1ai"
+        },
+        {
+          "name": "усадьба-бологое.рф",
+          "url": "https://xn----7sbadcmcn6c3abb2a1a2l.xn--p1ai"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_11 Синергия-Мирный",
+      "domains": [
+        {
+          "name": "syn_11",
+          "url": "https://syn11.lp.moigektar.ru"
+        },
+        {
+          "name": "синергия-мирный.рф",
+          "url": "http://синергия-мирный.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_12 Синергия-Волга",
+      "domains": [
+        {
+          "name": "syn_12",
+          "url": "https://syn12.lp.moigektar.ru"
+        },
+        {
+          "name": "синергия-волга.рф",
+          "url": "http://синергия-волга.рф"
+        },
+        {
+          "name": "1za-100.ru",
+          "url": "http://1za-100.ru"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_14 Русская Венеция",
+      "domains": [
+        {
+          "name": "syn_14",
+          "url": "https://syn14.lp.moigektar.ru"
+        },
+        {
+          "name": "1ga100.ru",
+          "url": "http://1ga100.ru"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_15 Агро-Усадьба",
+      "domains": [
+        {
+          "name": "syn_15",
+          "url": "https://syn15.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Виртуальные туры\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_16 Синергия-Митино",
+      "domains": [
+        {
+          "name": "syn_16",
+          "url": "https://syn16.lp.moigektar.ru"
+        },
+        {
+          "name": "синергия-митино.рф",
+          "url": "http://синергия-митино.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_17 Агро-Мирный",
+      "domains": [
+        {
+          "name": "syn_17",
+          "url": "https://syn17.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Виртуальные\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "Почурино 2",
+      "domains": [
+        {
+          "name": "syn_18",
+          "url": "https://syn18.lp.moigektar.ru"
+        },
+        {
+          "name": "почурино.рф",
+          "url": "https://почурино.рф"
+        },
+        {
+          "name": "почурино-ижс.рф",
+          "url": "https://почурино-ижс.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_23 Долина Вазузы",
+      "domains": [
+        {
+          "name": "syn_23",
+          "url": "https://syn23.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_24 Княжьи Горы",
+      "domains": [
+        {
+          "name": "syn_24",
+          "url": "https://syn24.lp.moigektar.ru"
+        },
+        {
+          "name": "княжьигоры.рф",
+          "url": "https://княжьигоры.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Генеральный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_29-56 Усадьба на Волге 1 и 6",
+      "domains": [
+        {
+          "name": "syn_29",
+          "url": "https://syn29.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_37",
+          "url": "https://syn37.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_56",
+          "url": "https://syn56.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-на-волге.рф",
+          "url": "https://усадьба-на-волге.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_33",
+      "domains": [
+        {
+          "name": "syn_33",
+          "url": "https://syn33.lp.moigektar.ru"
+        },
+        {
+          "name": "syn33v2.lp.moigektar.ru",
+          "url": "https://syn33v2.lp.moigektar.ru"
+        },
+        {
+          "name": "лисицыно.рф",
+          "url": "http://лисицыно.рф"
+        },
+        {
+          "name": "поселок-лисицино.рф",
+          "url": "http://поселок-лисицино.рф"
+        },
+        {
+          "name": "лисицино.рф",
+          "url": "https://лисицино.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_34",
+      "domains": [
+        {
+          "name": "syn_34",
+          "url": "https://syn34.lp.moigektar.ru"
+        },
+        {
+          "name": "syn63.lp.moigektar.ru",
+          "url": "https://syn63.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-в-подмосковье.рф",
+          "url": "https://усадьба-в-подмосковье.рф"
+        }
+      ],
+      "selector": "//*[text()[contains(.,\"20 соток ИЖС\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_35 Усадьба подо Ржевом",
+      "domains": [
+        {
+          "name": "syn_35",
+          "url": "https://syn35.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-ржев.рф",
+          "url": "https://усадьба-ржев.рф"
+        }
+      ],
+      "selector": "(//a[@href=\"#w-main\"])[1]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_25-26-28-31-32-36-64 Победа",
+      "domains": [
+        {
+          "name": "syn_25",
+          "url": "https://syn25.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_26",
+          "url": "https://syn26.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_28",
+          "url": "https://syn28.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_31",
+          "url": "https://syn31.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_32",
+          "url": "https://syn32.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_36",
+          "url": "https://syn36.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_64",
+          "url": "https://syn64.lp.moigektar.ru"
+        },
+        {
+          "name": "pobeda.lp.moigektar.ru",
+          "url": "https://pobeda.lp.moigektar.ru"
+        },
+        {
+          "name": "поселок-победа.рф",
+          "url": "https://поселок-победа.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Генеральный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_39 Лесная Усадьба",
+      "domains": [
+        {
+          "name": "syn_39",
+          "url": "https://syn39.lp.moigektar.ru"
+        },
+        {
+          "name": "syn39-v2.lp.moigektar.ru",
+          "url": "https://syn39-v2.lp.moigektar.ru"
+        },
+        {
+          "name": "лесная-усадьба.рф",
+          "url": "https://лесная-усадьба.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_42 Усадьба в Завидово",
+      "domains": [
+        {
+          "name": "syn_42",
+          "url": "https://syn42.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-в-завидово.рф",
+          "url": "https://усадьба-в-завидово.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_47 Synergy Island",
+      "domains": [
+        {
+          "name": "syn_47",
+          "url": "https://syn47.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"Клубный поселок\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_48-97-105 Парк Патриот",
+      "domains": [
+        {
+          "name": "syn_48",
+          "url": "https://syn48.lp.moigektar.ru"
+        },
+        {
+          "name": "syn48-v2.lp.moigektar.ru",
+          "url": "https://syn48-v2.lp.moigektar.ru"
+        },
+        {
+          "name": "парк-патриот.рф",
+          "url": "https://парк-патриот.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_52 Долина Волги",
+      "domains": [
+        {
+          "name": "syn_52",
+          "url": "https://syn52.lp.moigektar.ru"
+        },
+        {
+          "name": "долина-волги.рф",
+          "url": "https://долина-волги.рф"
+        },
+        {
+          "name": "долинаволги.рф",
+          "url": "https://долинаволги.рф"
+        }
+      ],
+      "selector": "(//a[@href=\"#w-main\"])[1]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_53 Новая Жизнь",
+      "domains": [
+        {
+          "name": "syn_53",
+          "url": "https://syn53.lp.moigektar.ru"
+        },
+        {
+          "name": "новая-жизнь.рф",
+          "url": "https://новая-жизнь.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_58 Волга-Путилово",
+      "domains": [
+        {
+          "name": "syn_58",
+          "url": "https://syn58.lp.moigektar.ru"
+        },
+        {
+          "name": "волга-путилово.рф",
+          "url": "https://волга-путилово.рф"
+        }
+      ],
+      "selector": "//h3[text()[contains(.,\"Забронировать\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "vazuza2 Долина Вазузы",
+      "domains": [
+        {
+          "name": "vazuza2.lp.moigektar.ru",
+          "url": "https://vazuza2.lp.moigektar.ru"
+        },
+        {
+          "name": "dolina-vazuza.ru",
+          "url": "https://dolina-vazuza.ru"
+        },
+        {
+          "name": "долина-вазузы.рф",
+          "url": "https://долина-вазузы.рф"
+        },
+        {
+          "name": "долина-вазуза.рф",
+          "url": "https://долина-вазуза.рф"
+        }
+      ],
+      "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_61 Долина Селигера (Антоново)",
+      "domains": [
+        {
+          "name": "syn_61",
+          "url": "https://syn61.lp.moigektar.ru"
+        },
+        {
+          "name": "долина-селигера.рф",
+          "url": "https://долина-селигера.рф"
+        }
+      ],
+      "selector": "//span[text()[contains(.,\"Генеральный\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_67 Моё Поместье",
+      "domains": [
+        {
+          "name": "syn_67",
+          "url": "https://syn67.lp.moigektar.ru"
+        },
+        {
+          "name": "me.lp.moigektar.ru",
+          "url": "https://me.lp.moigektar.ru"
+        },
+        {
+          "name": "me-v2.lp.moigektar.ru",
+          "url": "https://me-v2.lp.moigektar.ru"
+        },
+        {
+          "name": "моепоместье.рф",
+          "url": "https://моепоместье.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_73 Ясные Зори",
+      "domains": [
+        {
+          "name": "syn_73",
+          "url": "https://syn73.lp.moigektar.ru"
+        },
+        {
+          "name": "ясные-зори.рф",
+          "url": "https://ясные-зори.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_74 Междуречье syn_75 Устье",
+      "domains": [
+        {
+          "name": "syn_74",
+          "url": "https://syn74.lp.moigektar.ru"
+        },
+        {
+          "name": "междуречье-волги.рф",
+          "url": "https://междуречье-волги.рф"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"Концепция\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_83-84 Малая Родина",
+      "domains": [
+        {
+          "name": "syn_83",
+          "url": "https://syn83.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_84",
+          "url": "https://syn84.lp.moigektar.ru"
+        },
+        {
+          "name": "малая-родина.рф",
+          "url": "https://малая-родина.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_85 Междуречье на Валдае",
+      "domains": [
+        {
+          "name": "syn_85",
+          "url": "https://syn85.lp.moigektar.ru"
+        },
+        {
+          "name": "междуречье-на-валдае.рф",
+          "url": "https://междуречье-на-валдае.рф"
+        },
+        {
+          "name": "междуречье-валдай.рф",
+          "url": "https://междуречье-валдай.рф"
+        },
+        {
+          "name": "синергия-междуречье.рф",
+          "url": "https://синергия-междуречье.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_19-44-87 Москва-Тверская",
+      "domains": [
+        {
+          "name": "syn_19",
+          "url": "https://syn19.lp.moigektar.ru"
+        },
+        {
+          "name": "syn_87",
+          "url": "https://syn87.lp.moigektar.ru"
+        },
+        {
+          "name": "mt.lp.moigektar.ru",
+          "url": "https://mt.lp.moigektar.ru"
+        },
+        {
+          "name": "москва-тверская.рф",
+          "url": "https://москва-тверская.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_89 Долина Озёр",
+      "domains": [
+        {
+          "name": "syn_89",
+          "url": "https://syn89.lp.moigektar.ru"
+        },
+        {
+          "name": "lakes-valley.lp.moigektar.ru",
+          "url": "https://lakes-valley.lp.moigektar.ru"
+        },
+        {
+          "name": "долина-озер.рф",
+          "url": "https://долина-озер.рф"
+        }
+      ],
+      "selector": "//*[text()[contains(.,\"предложение на Валдае\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_92 Усадьба в Дубровке",
+      "domains": [
+        {
+          "name": "syn_92",
+          "url": "https://syn92.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-дубровка.рф",
+          "url": "https://усадьба-дубровка.рф"
+        },
+        {
+          "name": "усадба-дубровка.рф",
+          "url": "https://усадба-дубровка.рф"
+        },
+        {
+          "name": "усадьба-на-дубровке.рф",
+          "url": "https://усадьба-на-дубровке.рф"
+        },
+        {
+          "name": "дубровка-усадьба.рф",
+          "url": "https://дубровка-усадьба.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_95 Усадьба Императрицы",
+      "domains": [
+        {
+          "name": "syn_95",
+          "url": "https://syn95.lp.moigektar.ru"
+        },
+        {
+          "name": "екатериновка2.рф",
+          "url": "https://екатериновка2.рф"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"«Усадьба Императрицы»\")]]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_99 Лесные Озёра",
+      "domains": [
+        {
+          "name": "syn_99",
+          "url": "https://syn99.lp.moigektar.ru"
+        },
+        {
+          "name": "лесныеозера.рф",
+          "url": "https://лесныеозера.рф"
+        },
+        {
+          "name": "озера-лесные.рф",
+          "url": "https://озера-лесные.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_103 Synergy Country Club",
+      "domains": [
+        {
+          "name": "synergycountryclub.ru",
+          "url": "https://synergycountryclub.ru"
+        }
+      ],
+      "selector": "(//*[text()[contains(.,\"Клубный посёлок\")]])[1]",
+      "auth": false
+    },
+    {
+      "project_name": "syn_111 Технопарк",
+      "domains": [
+        {
+          "name": "syn_111",
+          "url": "https://syn111.lp.moigektar.ru"
+        },
+        {
+          "name": "technopark.lp.moigektar.ru",
+          "url": "https://technopark.lp.moigektar.ru"
+        },
+        {
+          "name": "технопарк-завидово.рф",
+          "url": "https://технопарк-завидово.рф"
+        }
+      ],
+      "selector": "//a[@href=\"#w-descr\"]",
+      "auth": "syn111"
+    },
+    {
+      "project_name": "syn_447 Усадьба на Байкале",
+      "domains": [
+        {
+          "name": "syn_447",
+          "url": "https://syn447.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-на-байкале.рф",
+          "url": "https://усадьба-на-байкале.рф"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"Усадьба на Байкале» — это:\")]]",
+      "auth": false
+    },
+    {
+      "name": "YouTrack",
+      "url": "https://youtrack.bug.land",
+      "selector": "(//*[text()[contains(.,\"Войти в YouTrack\")]])[2]",
+      "auth": false
+    },
+    {
+      "name": "сервис генерации опросов",
+      "url": "https://polls.moigektar.ru",
+      "selector": "//*[text()[contains(.,\"Заполните поля\")]]",
+      "auth": false
+    },
+    {
+      "name": "pay.moigektar",
+      "url": "https://pay.moigektar.ru",
+      "selector": "//h3[text()[contains(.,\"Платежные сервисы\")]]",
+      "auth": false
+    },
+    {
+      "name": "Вынос границ",
+      "url": "https://points.lp.moigektar.ru",
+      "selector": "//p[text()[contains(.,\"ВЫНОС ГРАНИЦ\")]]",
+      "auth": false
+    },
+    {
+      "name": "Инвестиции",
+      "url": "https://investment.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"Инвестиции\")]]",
+      "auth": false
+    },
+    {
+      "name": "Комплекс услуг",
+      "url": "https://complex.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"Комплекс услуг\")]]",
+      "auth": false
+    },
+    {
+      "name": "Кооперативы",
+      "url": "https://cooperative.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"Кооператив собственников\")]]",
+      "auth": false
+    },
+    {
+      "name": "сайт \"Онлайн-показ\"",
+      "url": "https://presentation.lp.moigektar.ru",
+      "selector": "//span[text()[contains(., \"онлайн-показ\")]]",
+      "auth": false
+    },
+    {
+      "name": "Правовая поддержка",
+      "url": "https://law.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"центр правовой поддержки\")]]",
+      "auth": false
+    },
+    {
+      "name": "Разработка проекта",
+      "url": "https://planning.moigektar.ru",
+      "selector": "//p[text()[contains(.,\"ЭТАПЫ РАБОТЫ\")]]",
+      "auth": false
+    },
+    {
+      "name": "Расчистка участка",
+      "url": "https://clearance.lp.moigektar.ru",
+      "selector": "//*[text()[contains(.,\"для чего нужна расчистка\")]]",
+      "auth": false
+    },
+    {
+      "name": "Строительство въездной группы",
+      "url": "http://syn9.entrance.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"Коллективное\")]]",
+      "auth": false
+    },
+    {
+      "name": "Строительство дорог",
+      "url": "https://syn23.roads.moigektar.ru",
+      "selector": "//p[text()[contains(.,\"КОЛЛЕКТИВНОЕ\")]]",
+      "auth": false
+    },
+    {
+      "name": "Строительство центрального дома",
+      "url": "https://house.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"коллективное строительство\")]]",
+      "auth": false
+    },
+    {
+      "name": "Установка видеонаблюдения",
+      "url": "https://barrier.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"установка видеонаблюдения\")]]",
+      "auth": false
+    },
+    {
+      "name": "Электрификация",
+      "url": "https://syn9.electrification.lp.moigektar.ru",
+      "selector": "//h1[text()[contains(.,\"коллективное\")]]",
+      "auth": false
+    },
+    {
+      "name": "GIS",
+      "url": "https://gis.bigland.ru/site/login",
+      "selector": "//h1[text()[contains(.,\"Login\")]]",
+      "auth": false
+    },
+    {
+      "name": "Сервис генерации КП",
+      "url": "https://offers.bigland.ru",
+      "selector": "//h1[text()[contains(.,\"Сервис генерации КП\")]]",
+      "auth": false
+    },
+    {
+      "name": "Полевые работы",
+      "url": "https://fields.bigland.ru/site/login",
+      "selector": "//*[text()[contains(.,\"Запомнить\")]]",
+      "auth": false
+    },
+    {
+      "name": "Сервис дорог",
+      "url": "https://editor.roads.bigland.ru/site/login",
+      "selector": "//h1[text()[contains(.,\"Login\")]]",
+      "auth": false
+    },
+    {
+      "name": "сервис по работе с портал ТП",
+      "url": "https://electrification.bigland.ru/site/login",
+      "selector": "//*[@id=\"loginparams-username\"]",
+      "auth": false
+    },
+    {
+      "name": "сервис статей",
+      "url": "https://a.bigland.ru",
+      "selector": "//*[@id=\"loginform-username\"]",
+      "auth": false
+    },
+    {
+      "name": "сайт \"mail.bug.land\"",
+      "url": "https://mail.bug.land",
+      "selector": "//*[@id=\"userNameLabel\"]",
+      "auth": false
+    },
+    {
+      "name": "vault.dmz.bug.land",
+      "url": "https://vault.dmz.bug.land",
+      "selector": "//*[text()[contains(., \"Sign in to Vault\")]]",
+      "auth": false
+    },
+    {
+      "name": "compliance.bug.land",
+      "url": "https://compliance.bug.land",
+      "selector": "(//*[text()[contains(.,\"Авторизация\")]])[3]",
+      "auth": false
+    },
+    {
+      "name": "Барская усадьба",
+      "url": "https://xn--80aacl7dl0e.xn--p1ai",
+      "selector": "//*[text()[contains(., \"Эксклюзивный отдых\")]]",
+      "auth": false
+    },
+    {
+      "name": "Бронницы",
+      "url": "https://здание-бронницы.рф",
+      "selector": "(//*[text()[contains(., \"Отдельно стоящее здание\")]])[1]",
+      "auth": false
+    },
+    {
+      "name": "сайт турпортала",
+      "url": "https://турпортал-вазуза.рф",
+      "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
+      "auth": "turportal"
+    },
+    {
+      "name": "\"Родовые поселения\"",
+      "url": "https://settlements.lp.moigektar.ru",
+      "selector": "//*[text()[contains(., \"участником\")]]",
+      "auth": false
+    },
+    {
+      "name": "сайт Бутовецкого",
+      "url": "https://книга-садоводов.рф",
+      "selector": "//*[text()[contains(., \"Заказать книгу\")]]",
+      "auth": false
+    }
+ ]
+}
