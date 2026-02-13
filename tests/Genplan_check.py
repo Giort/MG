@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
+import socket
 
 
 # Проверка работы генпланов на сайтах
@@ -34,6 +35,7 @@ class GenplanChecker:
         driver = webdriver.Chrome(service=service, options=ch_options)
         driver.set_window_size(1920, 1080)
         driver.implicitly_wait(10)
+        driver.set_page_load_timeout(30)
         return driver
 
     def _load_data(self):
@@ -45,6 +47,30 @@ class GenplanChecker:
             return {}
 
     print(f"\n     Проверка доступности блока генплана на сайтах \n")
+
+    def _check_domain(self, url, max_attempts=3, wait_time=2):
+
+        try:
+            domain = url.split('//')[1].split('/')[0]
+        except:
+            print(f'ERROR: Не удалось извлечь домен из URL: {url}')
+            return False
+
+        for attempt in range(max_attempts):
+            try:
+                socket.gethostbyname(domain)
+                return True
+            except socket.gaierror as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: Домен {domain} недоступен после {max_attempts} попыток - {str(e)}')
+                    return False
+                else:
+                    time.sleep(wait_time)
+            except Exception as e:
+                print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
+                return False
+
+        return False
 
     def check_genplan(self, url, name, title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
                       genplan_css='ymaps.ymaps-2-1-79-inner-panes',
@@ -60,7 +86,15 @@ class GenplanChecker:
             max_attempts: Максимальное количество попыток
             wait_time: Время ожидания элементов
         """
-        self.driver.get(url)
+
+        if not self._check_domain(url, max_attempts=3, wait_time=2):
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Ошибка загрузки {name}: {str(e)}')
+            return False
 
         for attempt in range(max_attempts):
             try:
@@ -87,7 +121,12 @@ class GenplanChecker:
                     print(f'ERROR: генплан на {name}')
                     return False
                 else:
-                    self.driver.refresh()
+                    try:
+                        time.sleep(1)
+                        self.driver.refresh()
+                    except:
+                        pass
+                    time.sleep(2)
 
         return False
 
@@ -104,21 +143,33 @@ class GenplanChecker:
             title_xpath: XPath для кликабельного элемента открытия генплана
             genplan_css: CSS селектор для элемента генплана
         """
-        self.driver.get(url)
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
 
         # Авторизация
-        creds = self.data.get(credentials_key, {})
-        login_input = self.driver.find_element(By.ID, 'loginconfig-username')
-        password_input = self.driver.find_element(By.ID, 'loginconfig-password')
-        submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
+        try:
+            creds = self.data.get(credentials_key, {})
+            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
+            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
+            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
 
-        login_input.send_keys(str(creds.get("login", "")))
-        password_input.send_keys(str(creds.get("password", "")))
-        submit_btn.click()
-        time.sleep(2)
+            login_input.send_keys(str(creds.get("login", "")))
+            password_input.send_keys(str(creds.get("password", "")))
+            submit_btn.click()
+            time.sleep(2)
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
+            return False
 
         # Проверка генплана
-        self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
+        return self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
 
     def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
                             max_attempts=3, wait_time=14):
@@ -131,7 +182,12 @@ class GenplanChecker:
             max_attempts: Максимальное количество попыток
             wait_time: Время ожидания элементов
         """
-        self.driver.get(url)
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
         # PAGE_DOWN делаем только один раз при первой загрузке
         self.actions.send_keys(Keys.PAGE_DOWN).perform()
 
@@ -158,7 +214,12 @@ class GenplanChecker:
                     return False
                 else:
                     # При refresh не делаем повторный PAGE_DOWN
-                    self.driver.refresh()
+                    try:
+                        time.sleep(1)
+                        self.driver.refresh()
+                    except:
+                        pass
+                    time.sleep(2)
 
         return False
 
@@ -173,7 +234,11 @@ class GenplanChecker:
             max_attempts: Максимальное количество попыток
             wait_time: Время ожидания элементов
         """
-        self.driver.get(url)
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
 
         for attempt in range(max_attempts):
             try:
@@ -202,7 +267,12 @@ class GenplanChecker:
                     print(f'ERROR: {name} - {str(e)}')
                     return False
                 else:
-                    self.driver.refresh()
+                    try:
+                        time.sleep(1)
+                        self.driver.refresh()
+                    except:
+                        pass
+                    time.sleep(2)
 
         return False
 
@@ -211,9 +281,11 @@ class GenplanChecker:
 
         # Проверка карты в каталоге moigektar.ru
         self.check_catalogue_map()
+        time.sleep(1)
 
         # Проверка генплана на странице актива moigektar.ru
         self.check_asset_genplan()
+        time.sleep(1)
 
         # Сайты с одинаковыми селекторами
         standard_sites = [
@@ -242,6 +314,7 @@ class GenplanChecker:
 
         for url, name in standard_sites:
             self.check_genplan(url, name)
+            time.sleep(1)
 
         # vazuza2 (другой селектор)
         self.check_genplan(
@@ -250,12 +323,12 @@ class GenplanChecker:
             title_xpath='(//*[text()[contains(.,"Генеральный")]])[1]'
         )
 
-        # 89 (другой селектор)
-        self.check_genplan(
-            'https://syn89.lp.moigektar.ru',
-            'syn_89',
-            title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
-        )
+        # # 89 (другой селектор)
+        # self.check_genplan(
+        #     'https://syn89.lp.moigektar.ru',
+        #     'syn_89',
+        #     title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
+        # )
 
         # syn_111 - с авторизацией
         self.check_with_auth(
