@@ -642,7 +642,7 @@ def check_locations_button_goal(text, max_attempts=3):
             time.sleep(5)
             actions.send_keys(Keys.PAGE_DOWN).perform()
             time.sleep(5)
-            actions.send_keys(Keys.PAGE_DOWN).perform()
+            actions.send_keys(Keys.ARROW_DOWN).perform()
             time.sleep(5)
             button = driver.find_element(By.XPATH, '(//*[text()[contains(., "Смотреть участки")]])[1]')
             button.click()

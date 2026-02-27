@@ -202,7 +202,7 @@ class FormChecker:
             "каталог", "форма с Ариной", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Оставьте заявку')]])[2]",
+            "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]",
             "каталог", "форма с Ариной", "заголовок"
         )
 

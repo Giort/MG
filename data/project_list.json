@@ -98,10 +98,6 @@
         {
           "name": "syn_14",
           "url": "https://syn14.lp.moigektar.ru"
-        },
-        {
-          "name": "1ga100.ru",
-          "url": "http://1ga100.ru"
         }
       ],
       "selector": "//span[text()[contains(.,\"Интерактивный\")]]",

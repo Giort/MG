@@ -256,7 +256,7 @@ BLOCKS_CONFIG = [
             },
             {
                 'name': 'Кнопка перехода в каталог',
-                'xpath': '//div[@id="catalogueSpecial"]//a[contains(@href, "https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=93&clusterIds%5B1%5D=33&clusterIds%5B2%5D=26") and contains(text(), "Перейти в каталог")]'
+                'xpath': '//div[@id="catalogueSpecial"]//a[contains(@href, "https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=26&clusterIds%5B1%5D=91&clusterIds%5B2%5D=92") and contains(text(), "Перейти в каталог")]'
             }
         ]
     },

@@ -180,9 +180,15 @@ def check_tour(driver, actions, config):
 
 # Общие локаторы
 TITLE_BY_ID_TOUR = (By.ID, 'tour')
+TITLE_89_1 = (By.XPATH, '(//h5[text()[contains(., "Оазис на Осуге")]])[1]')
+TITLE_89_2 = (By.XPATH, '(//h5[text()[contains(., "на озере Шитовское")]])[1]')
+TITLE_89_3 = (By.XPATH, '(//h5[text()[contains(., "на Большом озере")]])[1]')
 BTN_TOUR_CLASS = (By.XPATH, '//*[(contains(@class, "w-tour__btn"))]')
 BTN_TOUR_ICON = (By.XPATH, '//*[(contains(@class, "w-tour__icon"))]')
 BTN_PLAN_CLASS = (By.XPATH, '(//*[(contains(@class, "w-plan__btn"))])[1]')
+BTN_89_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
+BTN_89_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
+BTN_89_3 = (By.XPATH, '(//img[@src="/img/360.svg"])[3]')
 
 # Конфигурации проверок
 tour_configs = [
@@ -350,6 +356,27 @@ tour_configs = [
         'btn_locator': BTN_PLAN_CLASS,
         'z_index': '3101',
     },
+    {
+        'name': 'syn_89_1',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_1,
+        'btn_locator': BTN_89_1,
+        'z_index': '161',
+    },
+    {
+        'name': 'syn_89_2',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_2,
+        'btn_locator': BTN_89_2,
+        'z_index': '155',
+    },
+    {
+        'name': 'syn_89_3',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_3,
+        'btn_locator': BTN_89_3,
+        'z_index': '176',
+    },
 ]
 
 
@@ -381,8 +408,8 @@ def main():
 
         # Проверяем все три тура на главной
         check_main_page_tour(driver, actions, tour_number=1, balloon_index=1, z_index_value='188')
-        check_main_page_tour(driver, actions, tour_number=2, balloon_index=2, z_index_value='155')
-        check_main_page_tour(driver, actions, tour_number=3, balloon_index=3, z_index_value='230')
+        check_main_page_tour(driver, actions, tour_number=2, balloon_index=2, z_index_value='332')
+        check_main_page_tour(driver, actions, tour_number=3, balloon_index=3, z_index_value='155')
 
         driver.refresh()
 

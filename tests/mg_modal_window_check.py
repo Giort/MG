@@ -17,12 +17,8 @@ start_time = time.time()
 
 class ModalWindowChecker:
     def __init__(self, headless: bool = True, base_url: str = "https://moigektar.ru"):
-        """Инициализация драйвера с настройками
+        """Инициализация драйвера с настройками"""
 
-        Args:
-            headless: Запуск браузера в headless режиме
-            base_url: Базовый URL сайта (по умолчанию https://moigektar.ru)
-        """
         self.base_url = base_url.rstrip('/')  # Убираем trailing slash если есть
 
         self.options = Options()
@@ -130,8 +126,8 @@ class ModalWindowChecker:
         if not self._safe_navigate(self.base_url):
             return [False] * 8
 
-        time.sleep(1)
-        self._remove_popup()
+        time.sleep(3)
+        self.remove_popup()
 
         results = []
 
@@ -143,12 +139,10 @@ class ModalWindowChecker:
              'главная, модалка на баннере "Клубные поселки", lgForm'),
             ('(//*[@id="modal_syn-376"]//*[@value="lg_main_catalog_rybackaya"])[1]',
              'главная, модалка син_376 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-488"]//*[@value="lg_main_catalog_odincovo"])[1]',
+            ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
+             'главная, модалка син_53 в блоке "Лучшие поселения", lgForm'),
+            ('(//*[@id="modal_syn-488"]//*[@value="lg_main_catalog_oazis"])[1]',
              'главная, модалка син_488 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-376"]//*[@value="lg_main_catalog_rybackaya"])[1]',
-             'главная, модалка син_376 в блоке "Лучшие поселения", lgForm'),
-            ('(//*[@id="modal_syn-29"]//*[@value="lg_main_catalog_usadba_na_volge"])[1]',
-             'главная, модалка син_29 в блоке "Лучшие поселения", lgForm'),
             ('(//*[@id="product-card-modal"]//*[@value="mg_main_page_product_card_callback"])[1]',
              'главная, модалка в блоке "Реализуйте продукцию ...", lgForm'),
             ('(//*[@id="modal-descr-invest-batch-1"]//*[@value="mg_main_page_business_area"])[1]',

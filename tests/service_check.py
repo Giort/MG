@@ -44,7 +44,7 @@ def check_domain(url, max_attempts=3, wait_time=2):
         try:
             socket.gethostbyname(domain)
             if attempt > 0:
-                print(f'     Домен {domain} доступен после {attempt + 1} попытки')
+                print(f'     == Домен {domain} доступен после {attempt + 1} попытки')
             return True
         except socket.gaierror as e:
             if attempt == max_attempts - 1:
