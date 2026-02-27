@@ -9,9 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 
-
-
-
 # Проверка наличия блоков на главной МГ
 
 # Засекаем время начала теста
@@ -19,6 +16,8 @@ start_time = time.time()
 
 # Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
+
+
 # MG_BASE_URL = "http://moigektar.localhost"
 
 
@@ -37,20 +36,20 @@ class PageBlocksChecker:
         self.driver.implicitly_wait(10)
         return self.driver
 
-    def remove_popup(driver):
+    def remove_popup(self):
         """Удаление попапа посетителей"""
         try:
             # Удаляем попап посетителей
-            popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-            driver.execute_script("arguments[0].remove();", popup_visitors)
+            popup_visitors = self.driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
+            self.driver.execute_script("arguments[0].remove();", popup_visitors)
         except Exception:
             pass
 
         try:
             # Удаляем попап вебинара
-            popup_webinar = driver.find_element(by=By.XPATH,
-                                                value="//*[contains(@class, 'js-webinar-running-event-modal')]")
-            driver.execute_script("arguments[0].remove();", popup_webinar)
+            popup_webinar = self.driver.find_element(by=By.XPATH,
+                                                     value="//*[contains(@class, 'js-webinar-running-event-modal')]")
+            self.driver.execute_script("arguments[0].remove();", popup_webinar)
         except Exception:
             pass
 
@@ -58,11 +57,11 @@ class PageBlocksChecker:
         """Проверка видимости конкретного блока по его конфигурации"""
         block_name = block_config['name']
 
+        # Список для сбора отсутствующих элементов
+        missing_elements = []
+
         try:
             # Проверяем каждый элемент в блоке
-            all_visible = True
-            element_results = []
-
             for element_config in block_config['elements']:
                 element_name = element_config['name']
                 xpath = element_config['xpath']
@@ -82,28 +81,21 @@ class PageBlocksChecker:
                     time.sleep(0.3)
 
                     # Дополнительная проверка видимости
-                    if element.is_displayed():
-                        element_results.append(f"{element_name}")
-                    else:
-                        element_results.append(f"✗ {element_name}")
-                        all_visible = False
+                    if not element.is_displayed():
+                        missing_elements.append(element_name)
 
-                except TimeoutException:
-                    element_results.append(f"✗ {element_name}")
-                    all_visible = False
-                except Exception as e:
-                    element_results.append(f"✗ {element_name}")
-                    all_visible = False
+                except (TimeoutException, Exception):
+                    missing_elements.append(element_name)
 
             # Формируем результат
-            elements_info = " | ".join(element_results)
-
-            if all_visible:
+            if not missing_elements:
                 print(f"     OK: {block_name}")
+                return True
             else:
-                print(f" ERROR: {block_name} - {elements_info}")
-
-            return all_visible
+                # Формируем строку только с отсутствующими элементами
+                missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
+                print(f" ERROR: {block_name} - {missing_str}")
+                return False
 
         except Exception as e:
             print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
@@ -117,9 +109,21 @@ class PageBlocksChecker:
 
         for block_config in blocks_config:
             result = self.check_block_visibility(block_config)
+
+            # Собираем информацию о проблемных элементах для сводки
+            problematic_elements = []
+            if not result:
+                for element_config in block_config['elements']:
+                    element_name = element_config['name']
+                    xpath = element_config['xpath']
+                    try:
+                        self.driver.find_element(By.XPATH, xpath)
+                    except:
+                        problematic_elements.append(element_name)
+
             results[block_config['name']] = {
                 'visible': result,
-                'elements': block_config['elements']
+                'problematic_elements': problematic_elements
             }
             time.sleep(delay)
 
@@ -132,18 +136,16 @@ class PageBlocksChecker:
         visible = sum(1 for r in results.values() if r['visible'])
         not_visible = total - visible
 
-        # print(f"Всего блоков: {total}")
-        # print(f"Полностью видимых: {visible} ({visible / total * 100:.1f}%)")
-        # print(f"С ошибками: {not_visible} ({not_visible / total * 100:.1f}%)")
-
         print(f"\n{'=' * 60}")
         print("     Результат")
 
         if not_visible > 0:
             print(f"\n     БЛОКИ С ПРОБЛЕМАМИ:")
             for name, info in results.items():
-                if not info['visible']:
-                    print(f"     {name}")
+                if not info['visible'] and info['problematic_elements']:
+                    # Показываем только проблемные элементы для каждого блока
+                    elements_str = ", ".join(info['problematic_elements'])
+                    print(f"     {name}: {elements_str}")
         else:
             print(f"\n     ОШИБОК НЕТ")
 
@@ -301,9 +303,27 @@ BLOCKS_CONFIG = [
                 'xpath': '//div[@id="catalogueSpecial11"]//a[contains(@href, "/catalogue?popularChoiceIds%5B%5D=11") and contains(text(), "Перейти в каталог")]'
             }
         ]
+    },
+    {
+        'name': 'Блок "Образ будущих поселений"',
+        'elements': [
+            {
+                'name': 'Заголовок',
+                'xpath': '//*[@id="tour"]//h3[contains (text(), "Образ будущих")]'
+            },
+            {
+                'name': 'Кнопка Play',
+                'xpath': '//*[@id="tour"]//img[@src="/img/play.svg"]'
+            },
+            {
+                'name': 'Видео',
+                'xpath': '//*[@id="tour"]//a[@href="https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0"]'
+            }
+        ]
     }
 
 ]
+
 
 def main():
     checker = PageBlocksChecker(MG_BASE_URL)
