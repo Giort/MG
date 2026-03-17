@@ -251,7 +251,7 @@
           "url": "https://усадьба-в-подмосковье.рф"
         }
       ],
-      "selector": "//*[text()[contains(.,\"20 соток ИЖС\")]]",
+      "selector": "(//*[text()[contains(.,\"нового типа\")]])[1]",
       "auth": false
     },
     {
@@ -373,7 +373,7 @@
           "url": "https://парк-патриот.рф"
         }
       ],
-      "selector": "//a[@href=\"#w-descr\"]",
+      "selector": "(//a[@href=\"#about\"])[1]",
       "auth": false
     },
     {

@@ -291,7 +291,6 @@ class GenplanChecker:
         standard_sites = [
             ('https://syn9.lp.moigektar.ru', 'syn_9'),
             ('https://syn33.lp.moigektar.ru', 'syn_33'),
-            ('https://syn34.lp.moigektar.ru', 'syn_34'),
             ('https://syn35.lp.moigektar.ru', 'syn_35'),
             ('https://syn39.lp.moigektar.ru', 'syn_39'),
             ('https://syn42.lp.moigektar.ru', 'syn_42'),
@@ -308,13 +307,19 @@ class GenplanChecker:
             ('https://syn92.lp.moigektar.ru', 'syn_92'),
             ('https://syn95.lp.moigektar.ru', 'syn_95'),
             ('https://syn99.lp.moigektar.ru', 'syn_99'),
-            # ('https://synergycountryclub.ru', 'syn_103'),
             ('https://syn447.lp.moigektar.ru', 'syn_447'),
         ]
 
         for url, name in standard_sites:
             self.check_genplan(url, name)
             time.sleep(1)
+
+        # syn34 (другой селектор)
+        self.check_genplan(
+            'https://syn34.lp.moigektar.ru',
+            'syn_34 старый план',
+            title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
+        )
 
         # vazuza2 (другой селектор)
         self.check_genplan(

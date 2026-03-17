@@ -50,5 +50,10 @@
     {
         "login" : "moigektar",
         "password" : "moigektar"
+    },
+  "98_cred":
+    {
+        "login" : "moigektar",
+        "password" : "moigektar"
     }
 }

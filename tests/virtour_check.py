@@ -31,59 +31,6 @@ def init_driver():
 
 print(f"\n     Проверка доступности виртуальных туров на сайтах \n")
 
-def check_main_page_tour(driver, actions, tour_number, balloon_index, z_index_value, max_attempts=3):
-    """
-    Проверка тура на главной странице МГ
-
-    Args:
-        driver: WebDriver экземпляр
-        actions: ActionChains экземпляр
-        tour_number: номер тура для вывода (1, 2, 3)
-        balloon_index: локатор кнопки с шаром
-        z_index_value: ожидаемое значение z-index для проверки
-        max_attempts: максимальное количество попыток (по умолчанию 3)
-
-    Returns:
-        True если проверка прошла успешно, False если не прошла после всех попыток
-    """
-    for attempt in range(1, max_attempts + 1):
-        try:
-            # Находим и кликаем на кнопку
-            btn = wait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, f'(//*[@class="w-lord"])[{balloon_index}]'))
-            )
-            actions.move_to_element(btn).perform()
-            time.sleep(1)
-            actions.click(btn).perform()
-
-            # Переключаемся на iframe
-            iframe = wait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, 'uk-lightbox-iframe'))
-            )
-            driver.switch_to.frame(iframe)
-
-            # Проверяем наличие элемента с нужным z-index
-            elem = wait(driver, 30).until(
-                EC.visibility_of_element_located((By.XPATH, f"//div[(contains(@style, 'z-index: {z_index_value}'))]"))
-            )
-
-            if elem:
-                print(f'     OK: МГ, тур{tour_number} на главной')
-                driver.switch_to.default_content()
-                return True
-
-        except Exception:
-            driver.switch_to.default_content()
-
-            if attempt < max_attempts:
-                driver.refresh()
-                time.sleep(2)
-            else:
-                print(f'ERROR: МГ, тур{tour_number} на главной')
-                return False
-
-    return False
-
 
 def check_tour(driver, actions, config):
     """
@@ -179,22 +126,50 @@ def check_tour(driver, actions, config):
 # =============================================================================
 
 # Общие локаторы
+TITLE_MG_MAIN_PAGE = (By.XPATH, '//*[text()[contains(., "Лучшие поселения месяца")]]')
 TITLE_BY_ID_TOUR = (By.ID, 'tour')
+TITLE_34_1 = (By.XPATH, '(//*[text()[contains(., "в Подмосковье»")]])[7]')
+TITLE_34_2 = (By.XPATH, '(//*[text()[contains(., "«Экополис»")]])[1]')
 TITLE_89_1 = (By.XPATH, '(//h5[text()[contains(., "Оазис на Осуге")]])[1]')
 TITLE_89_2 = (By.XPATH, '(//h5[text()[contains(., "на озере Шитовское")]])[1]')
 TITLE_89_3 = (By.XPATH, '(//h5[text()[contains(., "на Большом озере")]])[1]')
 BTN_TOUR_CLASS = (By.XPATH, '//*[(contains(@class, "w-tour__btn"))]')
 BTN_TOUR_ICON = (By.XPATH, '//*[(contains(@class, "w-tour__icon"))]')
 BTN_PLAN_CLASS = (By.XPATH, '(//*[(contains(@class, "w-plan__btn"))])[1]')
+BTN_34_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
+BTN_34_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
 BTN_89_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
 BTN_89_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
 BTN_89_3 = (By.XPATH, '(//img[@src="/img/360.svg"])[3]')
 
 # Конфигурации проверок
 tour_configs = [
+    # МГ - туры на главной
+    {
+        'name': 'МГ, тур1 на главной',
+        'url': 'https://moigektar.ru',
+        'title_locator': TITLE_MG_MAIN_PAGE,
+        'btn_locator': (By.XPATH, '(//*[@class="w-lord"])[1]'),
+        'z_index': '188',
+    },
+    {
+        'name': 'МГ, тур2 на главной',
+        'url': 'https://moigektar.ru',
+        'title_locator': TITLE_MG_MAIN_PAGE,
+        'btn_locator': (By.XPATH, '(//*[@class="w-lord"])[2]'),
+        'z_index': '209',
+    },
+    {
+        'name': 'МГ, тур3 на главной',
+        'url': 'https://moigektar.ru',
+        'title_locator': TITLE_MG_MAIN_PAGE,
+        'btn_locator': (By.XPATH, '(//*[@class="w-lord"])[3]'),
+        'z_index': '176',
+    },
+
     # МГ - тур на странице актива
     {
-        'name': 'тур на странице актива',
+        'name': 'МГ, тур на странице актива',
         'url': 'https://moigektar.ru/batches-no-auth/29305',
         'title_locator': (By.XPATH, '(//a[@data-type="iframe"])[6]'),
         'btn_locator': (By.XPATH, '(//a[@data-type="iframe"])[6]'),
@@ -208,13 +183,6 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '3056',
-    },
-    {
-        'name': 'syn_34',
-        'url': 'https://syn34.lp.moigektar.ru/',
-        'title_locator': TITLE_BY_ID_TOUR,
-        'btn_locator': BTN_TOUR_CLASS,
-        'z_index': '350',
     },
     {
         'name': 'syn_35',
@@ -357,6 +325,20 @@ tour_configs = [
         'z_index': '3101',
     },
     {
+        'name': 'syn_34_1',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_1,
+        'btn_locator': BTN_34_1,
+        'z_index': '350',
+    },
+    {
+        'name': 'syn_34_2',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_2,
+        'btn_locator': BTN_34_2,
+        'z_index': '176',
+    },
+    {
         'name': 'syn_89_1',
         'url': 'https://syn89.lp.moigektar.ru/',
         'title_locator': TITLE_89_1,
@@ -402,18 +384,7 @@ def main():
     actions = ActionChains(driver)
 
     try:
-        # === МГ, ГЛАВНАЯ СТРАНИЦА - Туры в блоке "Лучшие поселения" ===
-        driver.get("https://moigektar.ru/")
-        time.sleep(3)  # Даем странице время загрузиться
 
-        # Проверяем все три тура на главной
-        check_main_page_tour(driver, actions, tour_number=1, balloon_index=1, z_index_value='188')
-        check_main_page_tour(driver, actions, tour_number=2, balloon_index=2, z_index_value='332')
-        check_main_page_tour(driver, actions, tour_number=3, balloon_index=3, z_index_value='155')
-
-        driver.refresh()
-
-        # === ПРОВЕРКА ВСЕХ ОСТАЛЬНЫХ ТУРОВ ===
         for config in tour_configs:
             check_tour(driver, actions, config)
 
