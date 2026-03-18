@@ -339,8 +339,8 @@
           "url": "https://syn42.lp.moigektar.ru"
         },
         {
-          "name": "усадьба-в-завидово.рф",
-          "url": "https://усадьба-в-завидово.рф"
+          "name": "усадьба-завидово.рф",
+          "url": "https://усадьба-завидово.рф"
         }
       ],
       "selector": "//a[@href=\"#w-descr\"]",
@@ -643,6 +643,25 @@
       "auth": false
     },
     {
+      "project_name": "syn_98 Оазис в Завидово",
+      "domains": [
+        {
+          "name": "syn_98",
+          "url": "https://syn98.lp.moigektar.ru"
+        },
+        {
+          "name": "усадьба-в-завидово.рф",
+          "url": "https://усадьба-в-завидово.рф"
+        },
+        {
+          "name": "lakes-valley-oazis.lp.moigektar.ru",
+          "url": "https://lakes-valley-oazis.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"для реализации всех идей\")]]",
+      "auth": "syn_98"
+    },
+    {
       "project_name": "syn_99 Лесные Озёра",
       "domains": [
         {
@@ -689,7 +708,7 @@
         }
       ],
       "selector": "//a[@href=\"#w-descr\"]",
-      "auth": "syn111"
+      "auth": "syn_111"
     },
     {
       "project_name": "syn_447 Усадьба на Байкале",

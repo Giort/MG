@@ -20,7 +20,7 @@ start_time = time.time()
 # Инициализация драйвера
 def init_driver():
     ch_options = Options()
-    ch_options.add_argument('--headless')
+    # ch_options.add_argument('--headless')
     ch_options.page_load_strategy = 'eager'
     service = ChromeService(executable_path=ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=ch_options)
@@ -134,11 +134,18 @@ def check_single_resource(driver, resource, auth_data):
                     str(auth_data.get("turporlal_cred", {}).get("password", "")))
                 driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
                 time.sleep(5)
-            elif auth_type == 'syn111':
+            elif auth_type == 'syn_111':
                 driver.find_element(By.ID, 'loginconfig-username').send_keys(
                     str(auth_data.get("111_cred", {}).get("login", "")))
                 driver.find_element(By.ID, 'loginconfig-password').send_keys(
                     str(auth_data.get("111_cred", {}).get("password", "")))
+                driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                time.sleep(5)
+            elif auth_type == 'syn_98':
+                driver.find_element(By.ID, 'loginconfig-username').send_keys(
+                    str(auth_data.get("98_cred", {}).get("login", "")))
+                driver.find_element(By.ID, 'loginconfig-password').send_keys(
+                    str(auth_data.get("98_cred", {}).get("password", "")))
                 driver.find_element(By.CSS_SELECTOR, 'div button').click()
                 time.sleep(2)
         except Exception as e:
@@ -182,11 +189,18 @@ def check_single_resource(driver, resource, auth_data):
                                     str(auth_data.get("turporlal_cred", {}).get("password", "")))
                                 driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
                                 time.sleep(5)
-                            elif auth_type == 'syn111':
+                            elif auth_type == 'syn_111':
                                 driver.find_element(By.ID, 'loginconfig-username').send_keys(
                                     str(auth_data.get("111_cred", {}).get("login", "")))
                                 driver.find_element(By.ID, 'loginconfig-password').send_keys(
                                     str(auth_data.get("111_cred", {}).get("password", "")))
+                                driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                                time.sleep(5)
+                            elif auth_type == 'syn_98':
+                                driver.find_element(By.ID, 'loginconfig-username').send_keys(
+                                    str(auth_data.get("98_cred", {}).get("login", "")))
+                                driver.find_element(By.ID, 'loginconfig-password').send_keys(
+                                    str(auth_data.get("98_cred", {}).get("password", "")))
                                 driver.find_element(By.CSS_SELECTOR, 'div button').click()
                                 time.sleep(2)
                         except:
@@ -231,11 +245,18 @@ def check_project_with_domains(driver, project, auth_data):
         # Авторизация, если нужна
         if auth_type and auth_data:
             try:
-                if auth_type == 'syn111':
+                if auth_type == 'syn_111':
                     driver.find_element(By.ID, 'loginconfig-username').send_keys(
                         str(auth_data.get("111_cred", {}).get("login", "")))
                     driver.find_element(By.ID, 'loginconfig-password').send_keys(
                         str(auth_data.get("111_cred", {}).get("password", "")))
+                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                    time.sleep(2)
+                if auth_type == 'syn_98':
+                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
+                        str(auth_data.get("98_cred", {}).get("login", "")))
+                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
+                        str(auth_data.get("98_cred", {}).get("password", "")))
                     driver.find_element(By.CSS_SELECTOR, 'div button').click()
                     time.sleep(2)
             except Exception as e:
