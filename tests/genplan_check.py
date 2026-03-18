@@ -218,6 +218,69 @@ class GenplanChecker:
         # Проверка генплана
         return self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
 
+    def check_new_genplan_with_auth(self, url, name, credentials_key, title_xpath, check_css, wait_time=14):
+        """
+        Проверка генплана нового типа с авторизацией
+
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            credentials_key: Ключ для получения креденшелов из data.json
+            title_xpath: XPath элемента, к которому нужно проскроллить
+            check_css: CSS селектор элемента, который должен быть видим
+            wait_time: Время ожидания элементов
+        """
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        # Авторизация
+        try:
+            creds = self.data.get(credentials_key, {})
+            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
+            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
+            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
+
+            login_input.send_keys(str(creds.get("login", "")))
+            password_input.send_keys(str(creds.get("password", "")))
+            submit_btn.click()
+            time.sleep(2)
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
+            return False
+
+        # Проверка генплана нового типа
+        try:
+            # Ожидание появления элемента
+            title = wait(self.driver, wait_time).until(
+                EC.presence_of_element_located((By.XPATH, title_xpath))
+            )
+
+            # Скролл к элементу
+            self.actions.move_to_element(title).perform()
+            time.sleep(1)
+
+            # Проверка видимости целевого элемента
+            check_element = wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+            )
+
+            if check_element:
+                print(f'     OK: {name}')
+                return True
+
+        except Exception as e:
+            print(f'ERROR: {name} (проверка нового генплана с авторизацией) - {str(e)}')
+            return False
+
+        return False
+
     def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
                             max_attempts=3, wait_time=14):
         """
@@ -371,7 +434,7 @@ class GenplanChecker:
         )
         time.sleep(1)
 
-        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ
+        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (БЕЗ АВТОРИЗАЦИИ)
 
         new_genplan_checks = [
             # (url, name, title_xpath, check_css)
@@ -407,6 +470,28 @@ class GenplanChecker:
             )
             time.sleep(1)
 
+        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (С АВТОРИЗАЦИЕЙ)
+
+        new_genplan_auth_checks = [
+            # (url, name, credentials_key, title_xpath, check_css)
+            ('https://syn98.lp.moigektar.ru',
+             'syn_98 - Оазис в Завидово',
+             '98_cred',
+             '//*[text()[contains(.,"Генеральный план «Оазис в Завидово»")]]',
+             '#sm-oasis2-map .ol-zoom-in'),
+            # Сюда можно добавить другие проверки с авторизацией
+        ]
+
+        for url, name, credentials_key, title_xpath, check_css in new_genplan_auth_checks:
+            self.check_new_genplan_with_auth(
+                url,
+                name,
+                credentials_key,
+                title_xpath=title_xpath,
+                check_css=check_css
+            )
+            time.sleep(1)
+
         # vazuza2 (другой селектор)
         self.check_genplan(
             'https://vazuza2.lp.moigektar.ru',
@@ -414,14 +499,7 @@ class GenplanChecker:
             title_xpath='(//*[text()[contains(.,"Генеральный")]])[1]'
         )
 
-        # # 89 (другой селектор)
-        # self.check_genplan(
-        #     'https://syn89.lp.moigektar.ru',
-        #     'syn_89',
-        #     title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
-        # )
-
-        # syn_111 - с авторизацией
+        # syn_111 - с авторизацией (старый тип генплана)
         self.check_with_auth(
             'https://syn111.lp.moigektar.ru',
             'syn_111',
