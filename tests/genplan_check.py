@@ -11,11 +11,11 @@ import time
 import json
 import socket
 
-
 # Проверка работы генпланов на сайтах
 
 # Засекаем время начала теста
 start_time = time.time()
+
 
 class GenplanChecker:
     """Класс для проверки загрузки генпланов на сайтах посёлков"""
@@ -127,6 +127,53 @@ class GenplanChecker:
                     except:
                         pass
                     time.sleep(2)
+
+        return False
+
+    def check_genplan_without_click(self, url, name, title_xpath, check_css, wait_time=14):
+        """
+        Проверка наличия элемента на странице без клика (генпланы нового типа)
+        Просто скроллим к элементу и проверяем видимость другого элемента
+
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            title_xpath: XPath элемента, к которому нужно проскроллить
+            check_css: CSS селектор элемента, который должен быть видим
+            wait_time: Время ожидания элементов
+        """
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        try:
+            # Ожидание появления элемента
+            title = wait(self.driver, wait_time).until(
+                EC.presence_of_element_located((By.XPATH, title_xpath))
+            )
+
+            # Скролл к элементу
+            self.actions.move_to_element(title).perform()
+            time.sleep(1)  # небольшая пауза после скролла
+
+            # Проверка видимости целевого элемента
+            check_element = wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+            )
+
+            if check_element:
+                print(f'     OK: {name}')
+                return True
+
+        except Exception as e:
+            print(f'ERROR: {name} (проверка без клика) - {str(e)}')
+            return False
 
         return False
 
@@ -294,6 +341,7 @@ class GenplanChecker:
             ('https://syn35.lp.moigektar.ru', 'syn_35'),
             ('https://syn39.lp.moigektar.ru', 'syn_39'),
             ('https://syn42.lp.moigektar.ru', 'syn_42'),
+            ('https://syn47.lp.moigektar.ru', 'syn_47'),
             ('https://syn48.lp.moigektar.ru', 'syn_48'),
             ('https://syn52.lp.moigektar.ru', 'syn_52'),
             ('https://syn53.lp.moigektar.ru', 'syn_53'),
@@ -308,6 +356,7 @@ class GenplanChecker:
             ('https://syn95.lp.moigektar.ru', 'syn_95'),
             ('https://syn99.lp.moigektar.ru', 'syn_99'),
             ('https://syn447.lp.moigektar.ru', 'syn_447'),
+            ('https://settlements.lp.moigektar.ru', 'Родовые поселения'),
         ]
 
         for url, name in standard_sites:
@@ -317,9 +366,46 @@ class GenplanChecker:
         # syn34 (другой селектор)
         self.check_genplan(
             'https://syn34.lp.moigektar.ru',
-            'syn_34 старый план',
+            'syn_34 - старый план',
             title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
         )
+        time.sleep(1)
+
+        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ
+
+        new_genplan_checks = [
+            # (url, name, title_xpath, check_css)
+            ('https://syn34.lp.moigektar.ru',
+             'syn_34 - Усадьба в Подмосковье',
+             '//*[text()[contains(.,"Генеральный план «Усадьба в Подмосковье»")]]',
+             '#plan2-map .ol-zoom-in'),
+            ('https://syn34.lp.moigektar.ru',
+             'syn_34 - Экополис',
+             '//*[text()[contains(.,"Генеральный план «Экополиса»")]]',
+             '#plan1-map .ol-zoom-in'),
+
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - оазис на Осуге',
+             '//*[text()[contains(.,"Генеральный план «Оазис на Осуге»")]]',
+             '#sm-osuga-map .ol-zoom-in'),
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - клубный Оазис',
+             '//*[text()[contains(.,"Генеральный план «Клубный Оазис»")]]',
+             '#sm-oasis-map .ol-zoom-in'),
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - усадьба на Большом озере',
+             '//*[text()[contains(.,"Генеральный план «Усадьба на Большом озере»")]]',
+             '#sm-big-lake-map .ol-zoom-in'),
+        ]
+
+        for url, name, title_xpath, check_css in new_genplan_checks:
+            self.check_genplan_without_click(
+                url,
+                name,
+                title_xpath=title_xpath,
+                check_css=check_css
+            )
+            time.sleep(1)
 
         # vazuza2 (другой селектор)
         self.check_genplan(
@@ -367,7 +453,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 
 # Вычисляем и выводим время выполнения теста
 end_time = time.time()
