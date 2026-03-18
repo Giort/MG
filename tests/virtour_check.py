@@ -133,6 +133,7 @@ TITLE_34_2 = (By.XPATH, '(//*[text()[contains(., "«Экополис»")]])[1]')
 TITLE_89_1 = (By.XPATH, '(//h5[text()[contains(., "Оазис на Осуге")]])[1]')
 TITLE_89_2 = (By.XPATH, '(//h5[text()[contains(., "на озере Шитовское")]])[1]')
 TITLE_89_3 = (By.XPATH, '(//h5[text()[contains(., "на Большом озере")]])[1]')
+TITLE_98 = (By.XPATH, '(//h5[text()[contains(., "Оазис в Завидово")]])[1]')
 BTN_TOUR_CLASS = (By.XPATH, '//*[(contains(@class, "w-tour__btn"))]')
 BTN_TOUR_ICON = (By.XPATH, '//*[(contains(@class, "w-tour__icon"))]')
 BTN_PLAN_CLASS = (By.XPATH, '(//*[(contains(@class, "w-plan__btn"))])[1]')
@@ -141,6 +142,7 @@ BTN_34_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
 BTN_89_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
 BTN_89_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
 BTN_89_3 = (By.XPATH, '(//img[@src="/img/360.svg"])[3]')
+BTN_98 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
 
 # Конфигурации проверок
 tour_configs = [
@@ -183,6 +185,27 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '3056',
+    },
+    {
+        'name': 'syn_33',
+        'url': 'https://syn33.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_PLAN_CLASS,
+        'z_index': '3101',
+    },
+    {
+        'name': 'syn_34_1',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_1,
+        'btn_locator': BTN_34_1,
+        'z_index': '350',
+    },
+    {
+        'name': 'syn_34_2',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_2,
+        'btn_locator': BTN_34_2,
+        'z_index': '176',
     },
     {
         'name': 'syn_35',
@@ -258,6 +281,14 @@ tour_configs = [
         'wait_time': 3,
     },
     {
+        'name': 'syn_74',
+        'url': 'https://syn74.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_TOUR_ICON,
+        'z_index': '188',
+        'wait_time': 3,
+    },
+    {
         'name': 'syn_84',
         'url': 'https://syn84.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
@@ -278,6 +309,27 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '230',
+    },
+    {
+        'name': 'syn_89_1',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_1,
+        'btn_locator': BTN_89_1,
+        'z_index': '161',
+    },
+    {
+        'name': 'syn_89_2',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_2,
+        'btn_locator': BTN_89_2,
+        'z_index': '155',
+    },
+    {
+        'name': 'syn_89_3',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_3,
+        'btn_locator': BTN_89_3,
+        'z_index': '176',
     },
     {
         'name': 'syn_92',
@@ -306,59 +358,7 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '263',
-    },
-
-    # Проекты с другими локаторами
-    {
-        'name': 'syn_74',
-        'url': 'https://syn74.lp.moigektar.ru/',
-        'title_locator': TITLE_BY_ID_TOUR,
-        'btn_locator': BTN_TOUR_ICON,
-        'z_index': '188',
-        'wait_time': 3,
-    },
-    {
-        'name': 'syn_33',
-        'url': 'https://syn33.lp.moigektar.ru/',
-        'title_locator': TITLE_BY_ID_TOUR,
-        'btn_locator': BTN_PLAN_CLASS,
-        'z_index': '3101',
-    },
-    {
-        'name': 'syn_34_1',
-        'url': 'https://syn34.lp.moigektar.ru/',
-        'title_locator': TITLE_34_1,
-        'btn_locator': BTN_34_1,
-        'z_index': '350',
-    },
-    {
-        'name': 'syn_34_2',
-        'url': 'https://syn34.lp.moigektar.ru/',
-        'title_locator': TITLE_34_2,
-        'btn_locator': BTN_34_2,
-        'z_index': '176',
-    },
-    {
-        'name': 'syn_89_1',
-        'url': 'https://syn89.lp.moigektar.ru/',
-        'title_locator': TITLE_89_1,
-        'btn_locator': BTN_89_1,
-        'z_index': '161',
-    },
-    {
-        'name': 'syn_89_2',
-        'url': 'https://syn89.lp.moigektar.ru/',
-        'title_locator': TITLE_89_2,
-        'btn_locator': BTN_89_2,
-        'z_index': '155',
-    },
-    {
-        'name': 'syn_89_3',
-        'url': 'https://syn89.lp.moigektar.ru/',
-        'title_locator': TITLE_89_3,
-        'btn_locator': BTN_89_3,
-        'z_index': '176',
-    },
+    }
 ]
 
 
@@ -399,6 +399,16 @@ def main():
                 'auth': data.get("111_cred", {}),
             }
             check_tour(driver, actions, syn111_config)
+
+            syn98_config = {
+                'name': 'syn_98',
+                'url': 'https://syn98.lp.moigektar.ru/',
+                'title_locator': TITLE_98,
+                'btn_locator': BTN_98,
+                'z_index': '158',
+                'auth': data.get("98_cred", {}),
+            }
+            check_tour(driver, actions, syn98_config)
 
     finally:
         time.sleep(5)
