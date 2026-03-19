@@ -358,7 +358,59 @@ tour_configs = [
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
         'z_index': '263',
-    }
+    },
+
+    # Проекты с другими локаторами
+    {
+        'name': 'syn_74',
+        'url': 'https://syn74.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_TOUR_ICON,
+        'z_index': '188',
+        'wait_time': 3,
+    },
+    {
+        'name': 'syn_33',
+        'url': 'https://syn33.lp.moigektar.ru/',
+        'title_locator': TITLE_BY_ID_TOUR,
+        'btn_locator': BTN_PLAN_CLASS,
+        'z_index': '3101',
+    },
+    {
+        'name': 'syn_34_1',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_1,
+        'btn_locator': BTN_34_1,
+        'z_index': '350',
+    },
+    {
+        'name': 'syn_34_2',
+        'url': 'https://syn34.lp.moigektar.ru/',
+        'title_locator': TITLE_34_2,
+        'btn_locator': BTN_34_2,
+        'z_index': '176',
+    },
+    {
+        'name': 'syn_89_1',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_1,
+        'btn_locator': BTN_89_1,
+        'z_index': '161',
+    },
+    {
+        'name': 'syn_89_2',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_2,
+        'btn_locator': BTN_89_2,
+        'z_index': '155',
+    },
+    {
+        'name': 'syn_89_3',
+        'url': 'https://syn89.lp.moigektar.ru/',
+        'title_locator': TITLE_89_3,
+        'btn_locator': BTN_89_3,
+        'z_index': '176',
+    },
 ]
 
 
