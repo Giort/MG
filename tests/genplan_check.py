@@ -11,19 +11,21 @@ import time
 import json
 import socket
 
-# Проверка работы генпланов на сайтах
-
-# Засекаем время начала теста
 start_time = time.time()
 
 
 class GenplanChecker:
     """Класс для проверки загрузки генпланов на сайтах посёлков"""
 
-    def __init__(self):
+    def __init__(self, projects_path='../data/project_list.json',
+                 genplan_config_path='../data/genplan_config.json'):
         self.driver = self._init_driver()
         self.actions = ActionChains(self.driver)
-        self.data = self._load_data()
+        self.creds_data = self._load_json('../data/data.json')
+        self.projects = self._load_json(projects_path)
+        self.genplan_config = self._load_json(genplan_config_path)
+        self.current_url = None
+        self.is_authenticated = False
 
     def _init_driver(self):
         """Инициализация драйвера Chrome"""
@@ -38,18 +40,33 @@ class GenplanChecker:
         driver.set_page_load_timeout(30)
         return driver
 
-    def _load_data(self):
-        """Загрузка конфигурации из JSON"""
+    def _load_json(self, path):
+        """Загрузка JSON файла"""
         try:
-            with open('../data/data.json', 'r') as file:
+            with open(path, 'r') as file:
                 return json.load(file)
         except FileNotFoundError:
+            print(f'WARNING: Файл {path} не найден')
+            return {}
+        except json.JSONDecodeError as e:
+            print(f'ERROR: Ошибка парсинга JSON {path}: {e}')
             return {}
 
-    print(f"\n     Проверка доступности блока генплана на сайтах \n")
+    def _get_project_url(self, project_name):
+        """Получить первый URL проекта по имени"""
+        for resource in self.projects.get('resources', []):
+            # Проверяем поле project_name
+            if resource.get('project_name') == project_name:
+                domains = resource.get('domains', [])
+                if domains:
+                    return domains[0].get('url')
+            # Проверяем поле name (для обычных ресурсов)
+            if resource.get('name') == project_name:
+                return resource.get('url')
+        return None
 
     def _check_domain(self, url, max_attempts=3, wait_time=2):
-
+        """Проверка доступности домена"""
         try:
             domain = url.split('//')[1].split('/')[0]
         except:
@@ -62,197 +79,89 @@ class GenplanChecker:
                 return True
             except socket.gaierror as e:
                 if attempt == max_attempts - 1:
-                    print(f'ERROR: Домен {domain} недоступен после {max_attempts} попыток - {str(e)}')
+                    print(f'ERROR: Домен {domain} недоступен - {str(e)}')
                     return False
-                else:
-                    time.sleep(wait_time)
+                time.sleep(wait_time)
             except Exception as e:
-                print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
+                print(f'ERROR: Ошибка проверки домена {domain}: {str(e)}')
                 return False
-
         return False
 
-    # Проверка загрузки генплана старого типа (нужно нажать на обложку для загрузки)
-    def check_genplan(self, url, name, title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
-                      genplan_css='ymaps.ymaps-2-1-79-inner-panes',
-                      max_attempts=3, wait_time=14):
-        """
-        Args:
-            url: URL страницы
-            name: Название посёлка для логов
-            title_xpath: XPath для кликабельного элемента открытия генплана
-            genplan_css: CSS селектор для элемента генплана
-            max_attempts: Максимальное количество попыток
-            wait_time: Время ожидания элементов
-        """
-
-        if not self._check_domain(url, max_attempts=3, wait_time=2):
+    def _authenticate(self, credentials_key):
+        """Авторизация на текущей странице"""
+        if not self._check_domain(self.driver.current_url):
             return False
 
         try:
-            self.driver.get(url)
+            creds = self.creds_data.get(credentials_key, {})
+            login_input = wait(self.driver, 10).until(
+                EC.presence_of_element_located((By.ID, 'loginconfig-username'))
+            )
+            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
+            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
+
+            login_input.send_keys(str(creds.get("login", "")))
+            password_input.send_keys(str(creds.get("password", "")))
+            submit_btn.click()
+            time.sleep(2)
+            self.is_authenticated = True
+            return True
         except Exception as e:
-            print(f'ERROR: Ошибка загрузки {name}: {str(e)}')
+            print(f'ERROR: Ошибка авторизации - {str(e)}')
             return False
 
-        for attempt in range(max_attempts):
-            try:
-                # Ожидание и скролл к элементу
-                title = wait(self.driver, wait_time).until(
-                    EC.presence_of_element_located((By.XPATH, title_xpath))
-                )
-                self.actions.move_to_element(title).perform()
-
-                # Клик для открытия генплана
-                title.click()
-
-                # Проверка загрузки генплана
-                genplan_elem = wait(self.driver, wait_time).until(
-                    EC.visibility_of_element_located((By.CSS_SELECTOR, genplan_css))
-                )
-
-                if genplan_elem:
-                    print(f'     OK: {name}')
-                    return True
-
-            except Exception as e:
-                if attempt == max_attempts - 1:
-                    print(f'ERROR: генплан на {name}')
-                    return False
-                else:
-                    try:
-                        time.sleep(1)
-                        self.driver.refresh()
-                    except:
-                        pass
-                    time.sleep(2)
-
-        return False
-
-    def check_genplan_without_click(self, url, name, title_xpath, check_css, wait_time=14):
-        """
-        Проверка наличия элемента на странице без клика (генпланы нового типа)
-        Просто скроллим к элементу и проверяем видимость другого элемента
-
-        Args:
-            url: URL страницы
-            name: Название посёлка для логов
-            title_xpath: XPath элемента, к которому нужно проскроллить
-            check_css: CSS селектор элемента, который должен быть видим
-            wait_time: Время ожидания элементов
-        """
+    def _load_page(self, url, auth=False, credentials_key=None):
+        """Загрузка страницы с возможной авторизацией"""
         if not self._check_domain(url):
-            print(f'ERROR: Домен недоступен: {name} ({url})')
             return False
+
+        # Если страница уже загружена и авторизована, не перезагружаем
+        if self.current_url == url and self.is_authenticated:
+            return True
 
         try:
             self.driver.get(url)
+            self.current_url = url
+            self.is_authenticated = False
         except Exception as e:
-            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            print(f'ERROR: Ошибка загрузки {url}: {str(e)}')
             return False
 
+        # Авторизация, если нужно
+        if auth and credentials_key:
+            return self._authenticate(credentials_key)
+
+        return True
+
+    def check_genplan_old(self, name, title_xpath, genplan_css, wait_time=14):
+        """Проверка генплана старого типа (с кликом)"""
         try:
-            # Ожидание появления элемента
+            # Ожидание и скролл к элементу
             title = wait(self.driver, wait_time).until(
                 EC.presence_of_element_located((By.XPATH, title_xpath))
             )
-
-            # Скролл к элементу
             self.actions.move_to_element(title).perform()
-            time.sleep(1)  # небольшая пауза после скролла
 
-            # Проверка видимости целевого элемента
-            check_element = wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+            # Клик для открытия генплана
+            title.click()
+
+            # Проверка загрузки генплана
+            genplan_elem = wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, genplan_css))
             )
 
-            if check_element:
+            if genplan_elem:
                 print(f'     OK: {name}')
                 return True
 
         except Exception as e:
-            print(f'ERROR: {name} (проверка без клика) - {str(e)}')
+            print(f'ERROR: генплан на {name}')
             return False
 
         return False
 
-    # Проверка генплана с авторизацией
-    def check_with_auth(self, url, name, credentials_key,
-                        title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
-                        genplan_css='ymaps.ymaps-2-1-79-inner-panes'):
-        """
-        Args:
-            url: URL страницы
-            name: Название посёлка для логов
-            credentials_key: Ключ для получения креденшелов из data.json
-            title_xpath: XPath для кликабельного элемента открытия генплана
-            genplan_css: CSS селектор для элемента генплана
-        """
-        if not self._check_domain(url):
-            print(f'ERROR: Домен недоступен: {name} ({url})')
-            return False
-
-        try:
-            self.driver.get(url)
-        except Exception as e:
-            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
-            return False
-
-        # Авторизация
-        try:
-            creds = self.data.get(credentials_key, {})
-            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
-            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
-            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
-
-            login_input.send_keys(str(creds.get("login", "")))
-            password_input.send_keys(str(creds.get("password", "")))
-            submit_btn.click()
-            time.sleep(2)
-        except Exception as e:
-            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
-            return False
-
-        # Проверка генплана
-        return self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
-
-    # Проверка генплана нового типа с авторизацией
-    def check_new_genplan_with_auth(self, url, name, credentials_key, title_xpath, check_css, wait_time=14):
-        """
-        Args:
-            url: URL страницы
-            name: Название посёлка для логов
-            credentials_key: Ключ для получения креденшелов из data.json
-            title_xpath: XPath элемента, к которому нужно проскроллить
-            check_css: CSS селектор элемента, который должен быть видим
-            wait_time: Время ожидания элементов
-        """
-        if not self._check_domain(url):
-            print(f'ERROR: Домен недоступен: {name} ({url})')
-            return False
-
-        try:
-            self.driver.get(url)
-        except Exception as e:
-            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
-            return False
-
-        # Авторизация
-        try:
-            creds = self.data.get(credentials_key, {})
-            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
-            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
-            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
-
-            login_input.send_keys(str(creds.get("login", "")))
-            password_input.send_keys(str(creds.get("password", "")))
-            submit_btn.click()
-            time.sleep(2)
-        except Exception as e:
-            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
-            return False
-
-        # Проверка генплана нового типа
+    def check_genplan_new(self, name, title_xpath, check_css, wait_time=14):
+        """Проверка генплана нового типа (без клика)"""
         try:
             # Ожидание появления элемента
             title = wait(self.driver, wait_time).until(
@@ -273,39 +182,30 @@ class GenplanChecker:
                 return True
 
         except Exception as e:
-            print(f'ERROR: {name} (проверка нового генплана с авторизацией) - {str(e)}')
+            print(f'ERROR: {name} (проверка нового генплана) - {str(e)}')
             return False
 
         return False
 
-    # Проверка загрузки генплана в каталоге
-    def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
-                            max_attempts=3, wait_time=14):
-        """
-        Args:
-            url: URL страницы каталога
-            name: Название для логов
-            max_attempts: Максимальное количество попыток
-            wait_time: Время ожидания элементов
-        """
-        try:
-            self.driver.get(url)
-        except Exception as e:
-            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+    def check_catalogue_map(self, config):
+        """Проверка загрузки карты в каталоге"""
+        url = config.get('url', 'https://moigektar.ru/catalogue-no-auth')
+        name = config.get('name', 'Каталог МГ')
+        max_attempts = 3
+        wait_time = 14
+
+        if not self._load_page(url):
             return False
 
-        # PAGE_DOWN делаем только один раз при первой загрузке
         self.actions.send_keys(Keys.PAGE_DOWN).perform()
 
         for attempt in range(max_attempts):
             try:
-                # Ожидание и клик на кнопку "На карте"
                 map_button = wait(self.driver, wait_time).until(
                     EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(., "На карте")]])[1]'))
                 )
                 map_button.click()
 
-                # Проверка появления элемента "3D-ТУР" (признак загрузки генплана)
                 tour_element = wait(self.driver, wait_time).until(
                     EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Слои")]]'))
                 )
@@ -319,7 +219,6 @@ class GenplanChecker:
                     print(f'ERROR: {name} - {str(e)}')
                     return False
                 else:
-                    # При refresh не делаем повторный PAGE_DOWN
                     try:
                         time.sleep(1)
                         self.driver.refresh()
@@ -329,36 +228,27 @@ class GenplanChecker:
 
         return False
 
-    # Проверка загрузки генплана на странице актива
-    def check_asset_genplan(self, url='https://moigektar.ru/batches-no-auth/60786', name='Страница участка',
-                            max_attempts=3, wait_time=14):
-        """
-        Args:
-            url: URL страницы актива
-            name: Название для логов
-            max_attempts: Максимальное количество попыток
-            wait_time: Время ожидания элементов
-        """
-        try:
-            self.driver.get(url)
-        except Exception as e:
-            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+    def check_asset_genplan(self, config):
+        """Проверка загрузки генплана на странице актива"""
+        url = config.get('url', 'https://moigektar.ru/batches-no-auth/60786')
+        name = config.get('name', 'Страница участка')
+        max_attempts = 3
+        wait_time = 14
+
+        if not self._load_page(url):
             return False
 
         for attempt in range(max_attempts):
             try:
-                # Ожидание кнопки "Генеральный"
                 genplan_button = wait(self.driver, wait_time).until(
                     EC.element_to_be_clickable((By.XPATH, '//*[text()[contains(.,"Генеральный")]]'))
                 )
 
-                # Прокрутка делается только при первой попытке
                 if attempt == 0:
                     self.actions.move_to_element(genplan_button).perform()
 
                 genplan_button.click()
 
-                # Проверка появления элемента "На участок" (признак загрузки генплана)
                 to_plot_element = wait(self.driver, wait_time).until(
                     EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"На участок")]]'))
                 )
@@ -382,141 +272,60 @@ class GenplanChecker:
         return False
 
     def run_checks(self):
-        """Запуск всех проверок"""
+        """Запуск всех проверок из конфига"""
+        print(f"\n     Проверка доступности блока генплана на сайтах \n")
 
-        # Проверка карты в каталоге moigektar.ru
-        self.check_catalogue_map()
-        time.sleep(1)
-
-        # Проверка генплана на странице актива moigektar.ru
-        self.check_asset_genplan()
-        time.sleep(1)
-
-        # Сайты с одинаковыми селекторами
-        standard_sites = [
-            ('https://syn9.lp.moigektar.ru', 'syn_9'),
-            ('https://syn33.lp.moigektar.ru', 'syn_33'),
-            ('https://syn35.lp.moigektar.ru', 'syn_35'),
-            ('https://syn39.lp.moigektar.ru', 'syn_39'),
-            ('https://syn42.lp.moigektar.ru', 'syn_42'),
-            ('https://syn47.lp.moigektar.ru', 'syn_47'),
-            ('https://syn48.lp.moigektar.ru', 'syn_48'),
-            ('https://syn52.lp.moigektar.ru', 'syn_52'),
-            ('https://syn53.lp.moigektar.ru', 'syn_53'),
-            ('https://syn56.lp.moigektar.ru', 'syn_56'),
-            ('https://syn67.lp.moigektar.ru', 'syn_67'),
-            ('https://syn73.lp.moigektar.ru', 'syn_73'),
-            ('https://syn74.lp.moigektar.ru', 'syn_74'),
-            ('https://syn84.lp.moigektar.ru', 'syn_84'),
-            ('https://syn85.lp.moigektar.ru', 'syn_85'),
-            ('https://syn87.lp.moigektar.ru', 'syn_87'),
-            ('https://syn92.lp.moigektar.ru', 'syn_92'),
-            ('https://syn95.lp.moigektar.ru', 'syn_95'),
-            ('https://syn99.lp.moigektar.ru', 'syn_99'),
-            ('https://syn447.lp.moigektar.ru', 'syn_447'),
-            ('https://settlements.lp.moigektar.ru', 'Родовые поселения'),
-        ]
-
-        for url, name in standard_sites:
-            self.check_genplan(url, name)
+        # Проверка каталога
+        if 'catalogue' in self.genplan_config:
+            self.check_catalogue_map(self.genplan_config['catalogue'])
             time.sleep(1)
 
-        # syn34 (другой селектор)
-        self.check_genplan(
-            'https://syn34.lp.moigektar.ru',
-            'syn_34 - старый план',
-            title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
-        )
-        time.sleep(1)
-
-        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (БЕЗ АВТОРИЗАЦИИ)
-
-        new_genplan_checks = [
-            # (url, name, title_xpath, check_css)
-            ('https://syn34.lp.moigektar.ru',
-             'syn_34 - Усадьба в Подмосковье',
-             '//*[text()[contains(.,"Генеральный план «Усадьба в Подмосковье»")]]',
-             '#plan2-map .ol-zoom-in'),
-            ('https://syn34.lp.moigektar.ru',
-             'syn_34 - Экополис',
-             '//*[text()[contains(.,"Генеральный план «Экополиса»")]]',
-             '#plan1-map .ol-zoom-in'),
-
-            ('https://syn89.lp.moigektar.ru',
-             'syn_89 - оазис на Осуге',
-             '//*[text()[contains(.,"Генеральный план «Оазис на Осуге»")]]',
-             '#sm-osuga-map .ol-zoom-in'),
-            ('https://syn89.lp.moigektar.ru',
-             'syn_89 - клубный Оазис',
-             '//*[text()[contains(.,"Генеральный план «Клубный Оазис»")]]',
-             '#sm-oasis-map .ol-zoom-in'),
-            ('https://syn89.lp.moigektar.ru',
-             'syn_89 - усадьба на Большом озере',
-             '//*[text()[contains(.,"Генеральный план «Усадьба на Большом озере»")]]',
-             '#sm-big-lake-map .ol-zoom-in'),
-        ]
-
-        for url, name, title_xpath, check_css in new_genplan_checks:
-            self.check_genplan_without_click(
-                url,
-                name,
-                title_xpath=title_xpath,
-                check_css=check_css
-            )
+        # Проверка страницы актива
+        if 'asset' in self.genplan_config:
+            self.check_asset_genplan(self.genplan_config['asset'])
             time.sleep(1)
 
-        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (С АВТОРИЗАЦИЕЙ)
+        # Проверка лендингов по конфигу генпланов
+        for genplan in self.genplan_config.get('genplans', []):
+            project_name = genplan.get('project_name')
+            url = self._get_project_url(project_name)
 
-        new_genplan_auth_checks = [
-            # (url, name, credentials_key, title_xpath, check_css)
-            ('https://syn98.lp.moigektar.ru',
-             'syn_98 - Оазис в Завидово',
-             '98_cred',
-             '//*[text()[contains(.,"Генеральный план «Оазис в Завидово»")]]',
-             '#sm-oasis2-map .ol-zoom-in'),
-            # Сюда можно добавить другие проверки с авторизацией
-        ]
+            if not url:
+                print(f'WARNING: Не найден URL для проекта {project_name}')
+                continue
 
-        for url, name, credentials_key, title_xpath, check_css in new_genplan_auth_checks:
-            self.check_new_genplan_with_auth(
-                url,
-                name,
-                credentials_key,
-                title_xpath=title_xpath,
-                check_css=check_css
-            )
+            # Формируем название для вывода
+            plan_name = genplan.get('name')
+            if plan_name:
+                # Если есть name, выводим project_name - name
+                display_name = f"{project_name} - {plan_name}"
+            else:
+                # Если нет name, выводим только project_name
+                display_name = project_name
+
+            auth = genplan.get('auth', False)
+            credentials_key = genplan.get('credentials_key')
+            genplan_type = genplan.get('type')
+
+            # Загружаем страницу
+            if not self._load_page(url, auth, credentials_key):
+                continue
+
+            # Проверяем в зависимости от типа
+            if genplan_type == 'old':
+                self.check_genplan_old(
+                    display_name,
+                    genplan.get('title_xpath'),
+                    genplan.get('genplan_css', 'ymaps.ymaps-2-1-79-inner-panes')
+                )
+            elif genplan_type == 'new':
+                self.check_genplan_new(
+                    display_name,
+                    genplan.get('title_xpath'),
+                    genplan.get('check_css')
+                )
+
             time.sleep(1)
-
-        # syn98 (другой селектор)
-        # не использую здесь авторизацию, так как проверка идёт в той же сессии браузера и логин уже был выполнен ранее
-        self.check_genplan(
-            'https://syn98.lp.moigektar.ru',
-            'syn_98 - старый план',
-            title_xpath='(//*[text()[contains(.,"Генеральный")]])[4]'
-        )
-        time.sleep(1)
-
-        # vazuza2 (другой селектор)
-        self.check_genplan(
-            'https://vazuza2.lp.moigektar.ru',
-            'Вазуза',
-            title_xpath='(//*[text()[contains(.,"Генеральный")]])[1]'
-        )
-
-        # syn_111 - с авторизацией (старый тип генплана)
-        self.check_with_auth(
-            'https://syn111.lp.moigektar.ru',
-            'syn_111',
-            '111_cred'
-        )
-
-        # турпортал Едем на Вазузу - с авторизацией и особым селектором
-        self.check_with_auth(
-            'https://едемнавазузу.рф',
-            'ТурПортал',
-            'turporlal_cred',
-            title_xpath='(//*[text()[contains(.,"Интерактивная")]])[1]'
-        )
 
     def cleanup(self):
         """Закрытие драйвера"""
@@ -536,7 +345,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-# Вычисляем и выводим время выполнения теста
 end_time = time.time()
 elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)

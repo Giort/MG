@@ -171,7 +171,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_24 Княжьи Горы",
+      "project_name": "syn_24 Княжьи горы",
       "domains": [
         {
           "name": "syn_24",
@@ -209,7 +209,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_33",
+      "project_name": "syn_33 Лисицыно",
       "domains": [
         {
           "name": "syn_33",
@@ -236,7 +236,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_34",
+      "project_name": "syn_34 Усадьба в Подмосковье",
       "domains": [
         {
           "name": "syn_34",
@@ -313,7 +313,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_39 Лесная Усадьба",
+      "project_name": "syn_39 Лесная усадьба",
       "domains": [
         {
           "name": "syn_39",
@@ -396,7 +396,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_53 Новая Жизнь",
+      "project_name": "syn_53 Новая жизнь",
       "domains": [
         {
           "name": "syn_53",
@@ -464,7 +464,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_67 Моё Поместье",
+      "project_name": "syn_67 Моё поместье",
       "domains": [
         {
           "name": "syn_67",
@@ -487,7 +487,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_73 Ясные Зори",
+      "project_name": "syn_73 Ясные зори",
       "domains": [
         {
           "name": "syn_73",
@@ -517,7 +517,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_83-84 Малая Родина",
+      "project_name": "syn_83-84 Малая родина",
       "domains": [
         {
           "name": "syn_83",
@@ -582,7 +582,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_89 Долина Озёр",
+      "project_name": "syn_89 Долина озёр",
       "domains": [
         {
           "name": "syn_89",
@@ -628,7 +628,7 @@
       "auth": false
     },
     {
-      "project_name": "syn_95 Усадьба Императрицы",
+      "project_name": "syn_95 Усадьба императрицы",
       "domains": [
         {
           "name": "syn_95",
@@ -662,7 +662,7 @@
       "auth": "syn_98"
     },
     {
-      "project_name": "syn_99 Лесные Озёра",
+      "project_name": "syn_99 Лесные озёра",
       "domains": [
         {
           "name": "syn_99",
@@ -768,7 +768,7 @@
       "auth": false
     },
     {
-      "name": "сайт \"Онлайн-показ\"",
+      "name": "сайт Онлайн-показ",
       "url": "https://presentation.lp.moigektar.ru",
       "selector": "//span[text()[contains(., \"онлайн-показ\")]]",
       "auth": false
@@ -858,7 +858,7 @@
       "auth": false
     },
     {
-      "name": "сайт \"mail.bug.land\"",
+      "name": "сайт mail.bug.land",
       "url": "https://mail.bug.land",
       "selector": "//*[@id=\"userNameLabel\"]",
       "auth": false
@@ -894,7 +894,7 @@
       "auth": "turportal"
     },
     {
-      "name": "\"Родовые поселения\"",
+      "name": "Родовые поселения",
       "url": "https://settlements.lp.moigektar.ru",
       "selector": "//*[text()[contains(., \"участником\")]]",
       "auth": false

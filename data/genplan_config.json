@@ -1,0 +1,248 @@
+{
+  "catalogue": {
+    "url": "https://moigektar.ru/catalogue-no-auth",
+    "name": "Каталог МГ"
+  },
+  "asset": {
+    "url": "https://moigektar.ru/batches-no-auth/60786",
+    "name": "Страница участка"
+  },
+  "genplans": [
+    {
+      "project_name": "syn_9 Бологое",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_33 Лисицыно",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_34 Усадьба в Подмосковье",
+      "name": "новый: Усадьба в Подмосковье",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье»\")]]",
+      "check_css": "#plan2-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_34 Усадьба в Подмосковье",
+      "name": "новый: Экополис",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Экополиса»\")]]",
+      "check_css": "#plan1-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_34 Усадьба в Подмосковье",
+      "name": "старый",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[5]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_35 Усадьба подо Ржевом",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_39 Лесная усадьба",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_42 Усадьба в Завидово",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_47 Synergy Island",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_48-97-105 Парк Патриот",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_52 Долина Волги",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_53 Новая жизнь",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_29-56 Усадьба на Волге 1 и 6",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "vazuza2 Долина Вазузы",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[1]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_67 Моё поместье",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_73 Ясные зори",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_74 Междуречье syn_75 Устье",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_83-84 Малая родина",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_85 Междуречье на Валдае",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_19-44-87 Москва-Тверская",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_89 Долина озёр",
+      "name": "Оазис на Осуге",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Оазис на Осуге»\")]]",
+      "check_css": "#sm-osuga-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_89 Долина озёр",
+      "name": "Клубный Оазис",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Клубный Оазис»\")]]",
+      "check_css": "#sm-oasis-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_89 Долина озёр",
+      "name": "Усадьба на Большом озере",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба на Большом озере»\")]]",
+      "check_css": "#sm-big-lake-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_92 Усадьба в Дубровке",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_95 Усадьба императрицы",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_98 Оазис в Завидово",
+      "name": "новый: Оазис в Завидово",
+      "type": "new",
+      "auth": true,
+      "credentials_key": "98_cred",
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Оазис в Завидово»\")]]",
+      "check_css": "#sm-oasis2-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_98 Оазис в Завидово",
+      "name": "старый",
+      "type": "old",
+      "auth": true,
+      "credentials_key": "98_cred",
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[4]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_99 Лесные озёра",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_111 Технопарк",
+      "type": "old",
+      "auth": true,
+      "credentials_key": "111_cred",
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "syn_447 Усадьба на Байкале",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "сайт турпортала",
+      "type": "old",
+      "auth": true,
+      "credentials_key": "turporlal_cred",
+      "title_xpath": "(//*[text()[contains(.,\"Интерактивная\")]])[1]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "Родовые поселения",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    }
+  ]
+}
