@@ -1,354 +1,535 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
+import socket
 
-# Проверка наличия блоков на главной МГ
+# Проверка работы генпланов на сайтах
 
 # Засекаем время начала теста
 start_time = time.time()
 
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
 
+class GenplanChecker:
+    """Класс для проверки загрузки генпланов на сайтах посёлков"""
 
-# MG_BASE_URL = "http://moigektar.localhost"
+    def __init__(self):
+        self.driver = self._init_driver()
+        self.actions = ActionChains(self.driver)
+        self.data = self._load_data()
 
-
-class PageBlocksChecker:
-    def __init__(self, mg_base_url):
-        self.mg_base_url = mg_base_url.rstrip('/')
-        self.driver = None
-
-    def init_driver(self):
+    def _init_driver(self):
+        """Инициализация драйвера Chrome"""
+        service = ChromeService(executable_path=ChromeDriverManager().install())
         ch_options = Options()
         ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
-        service = ChromeService(executable_path=ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=ch_options)
-        self.driver.set_window_size(1680, 1000)
-        self.driver.implicitly_wait(10)
-        return self.driver
 
-    def remove_popup(self):
-        """Удаление попапа посетителей"""
+        driver = webdriver.Chrome(service=service, options=ch_options)
+        driver.set_window_size(1920, 1080)
+        driver.implicitly_wait(10)
+        driver.set_page_load_timeout(30)
+        return driver
+
+    def _load_data(self):
+        """Загрузка конфигурации из JSON"""
         try:
-            # Удаляем попап посетителей
-            popup_visitors = self.driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-            self.driver.execute_script("arguments[0].remove();", popup_visitors)
-        except Exception:
-            pass
+            with open('../data/data.json', 'r') as file:
+                return json.load(file)
+        except FileNotFoundError:
+            return {}
 
-        try:
-            # Удаляем попап вебинара
-            popup_webinar = self.driver.find_element(by=By.XPATH,
-                                                     value="//*[contains(@class, 'js-webinar-running-event-modal')]")
-            self.driver.execute_script("arguments[0].remove();", popup_webinar)
-        except Exception:
-            pass
+    print(f"\n     Проверка доступности блока генплана на сайтах \n")
 
-    def check_block_visibility(self, block_config, timeout=10):
-        """Проверка видимости конкретного блока по его конфигурации"""
-        block_name = block_config['name']
-
-        # Список для сбора отсутствующих элементов
-        missing_elements = []
+    def _check_domain(self, url, max_attempts=3, wait_time=2):
 
         try:
-            # Проверяем каждый элемент в блоке
-            for element_config in block_config['elements']:
-                element_name = element_config['name']
-                xpath = element_config['xpath']
-
-                try:
-                    element = WebDriverWait(self.driver, timeout).until(
-                        EC.visibility_of_element_located((By.XPATH, xpath))
-                    )
-
-                    # Прокручиваем к элементу
-                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                                               element)
-                    time.sleep(0.3)
-
-                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                                               element)
-                    time.sleep(0.3)
-
-                    # Дополнительная проверка видимости
-                    if not element.is_displayed():
-                        missing_elements.append(element_name)
-
-                except (TimeoutException, Exception):
-                    missing_elements.append(element_name)
-
-            # Формируем результат
-            if not missing_elements:
-                print(f"     OK: {block_name}")
-                return True
-            else:
-                # Формируем строку только с отсутствующими элементами
-                missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
-                print(f" ERROR: {block_name} - {missing_str}")
-                return False
-
-        except Exception as e:
-            print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
+            domain = url.split('//')[1].split('/')[0]
+        except:
+            print(f'ERROR: Не удалось извлечь домен из URL: {url}')
             return False
 
-    def check_all_blocks(self, blocks_config, delay=1):
-        """Проверка всех блоков из конфигурации"""
-        print(f"\n     Проверка видимости блоков на странице: {self.mg_base_url}/ \n")
+        for attempt in range(max_attempts):
+            try:
+                socket.gethostbyname(domain)
+                return True
+            except socket.gaierror as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: Домен {domain} недоступен после {max_attempts} попыток - {str(e)}')
+                    return False
+                else:
+                    time.sleep(wait_time)
+            except Exception as e:
+                print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
+                return False
 
-        results = {}
+        return False
 
-        for block_config in blocks_config:
-            result = self.check_block_visibility(block_config)
+    def check_genplan(self, url, name, title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
+                      genplan_css='ymaps.ymaps-2-1-79-inner-panes',
+                      max_attempts=3, wait_time=14):
+        """
+        Проверка загрузки генплана на странице
 
-            # Собираем информацию о проблемных элементах для сводки
-            problematic_elements = []
-            if not result:
-                for element_config in block_config['elements']:
-                    element_name = element_config['name']
-                    xpath = element_config['xpath']
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            title_xpath: XPath для кликабельного элемента открытия генплана
+            genplan_css: CSS селектор для элемента генплана
+            max_attempts: Максимальное количество попыток
+            wait_time: Время ожидания элементов
+        """
+
+        if not self._check_domain(url, max_attempts=3, wait_time=2):
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Ошибка загрузки {name}: {str(e)}')
+            return False
+
+        for attempt in range(max_attempts):
+            try:
+                # Ожидание и скролл к элементу
+                title = wait(self.driver, wait_time).until(
+                    EC.presence_of_element_located((By.XPATH, title_xpath))
+                )
+                self.actions.move_to_element(title).perform()
+
+                # Клик для открытия генплана
+                title.click()
+
+                # Проверка загрузки генплана
+                genplan_elem = wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located((By.CSS_SELECTOR, genplan_css))
+                )
+
+                if genplan_elem:
+                    print(f'     OK: {name}')
+                    return True
+
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: генплан на {name}')
+                    return False
+                else:
                     try:
-                        self.driver.find_element(By.XPATH, xpath)
+                        time.sleep(1)
+                        self.driver.refresh()
                     except:
-                        problematic_elements.append(element_name)
+                        pass
+                    time.sleep(2)
 
-            results[block_config['name']] = {
-                'visible': result,
-                'problematic_elements': problematic_elements
-            }
-            time.sleep(delay)
+        return False
 
-        return results
+    def check_genplan_without_click(self, url, name, title_xpath, check_css, wait_time=14):
+        """
+        Проверка наличия элемента на странице без клика (генпланы нового типа)
+        Просто скроллим к элементу и проверяем видимость другого элемента
 
-    def print_summary(self, results):
-        """Вывод сводки результатов"""
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            title_xpath: XPath элемента, к которому нужно проскроллить
+            check_css: CSS селектор элемента, который должен быть видим
+            wait_time: Время ожидания элементов
+        """
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
 
-        total = len(results)
-        visible = sum(1 for r in results.values() if r['visible'])
-        not_visible = total - visible
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
 
-        print(f"\n{'=' * 60}")
-        print("     Результат")
+        try:
+            # Ожидание появления элемента
+            title = wait(self.driver, wait_time).until(
+                EC.presence_of_element_located((By.XPATH, title_xpath))
+            )
 
-        if not_visible > 0:
-            print(f"\n     БЛОКИ С ПРОБЛЕМАМИ:")
-            for name, info in results.items():
-                if not info['visible'] and info['problematic_elements']:
-                    # Показываем только проблемные элементы для каждого блока
-                    elements_str = ", ".join(info['problematic_elements'])
-                    print(f"     {name}: {elements_str}")
-        else:
-            print(f"\n     ОШИБОК НЕТ")
+            # Скролл к элементу
+            self.actions.move_to_element(title).perform()
+            time.sleep(1)  # небольшая пауза после скролла
 
-    def close(self):
-        if self.driver:
-            self.driver.quit()
+            # Проверка видимости целевого элемента
+            check_element = wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+            )
 
+            if check_element:
+                print(f'     OK: {name}')
+                return True
 
-# КОНФИГУРАЦИЯ БЛОКОВ ДЛЯ ПРОВЕРКИ
-BLOCKS_CONFIG = [
-    {
-        'name': 'Хедер',
-        'elements': [
-            {
-                'name': 'Логотип',
-                'xpath': '(//div[contains(@class, "w-navbar")]//img[@src="/img/logo.svg"])[1]'
-            },
-            {
-                'name': 'Ссылка на каталог',
-                'xpath': '(//div[contains(@class, "w-navbar")]//a[@href="/catalogue"])[1]'
-            },
-            {
-                'name': 'Кнопка "Каталог участков" (квиз)',
-                'xpath': '//div[contains(@class, "w-navbar")]//a[contains(@role, "button") and contains(., "Каталог участков")]'
-            },
-            {
-                'name': 'Кнопка авторизации',
-                'xpath': '(//div[contains(@class, "w-navbar")]//a[@href="#modal-auth-lk"])[1]'
-            }
+        except Exception as e:
+            print(f'ERROR: {name} (проверка без клика) - {str(e)}')
+            return False
+
+        return False
+
+    def check_with_auth(self, url, name, credentials_key,
+                        title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
+                        genplan_css='ymaps.ymaps-2-1-79-inner-panes'):
+        """
+        Проверка генплана с авторизацией
+
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            credentials_key: Ключ для получения креденшелов из data.json
+            title_xpath: XPath для кликабельного элемента открытия генплана
+            genplan_css: CSS селектор для элемента генплана
+        """
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        # Авторизация
+        try:
+            creds = self.data.get(credentials_key, {})
+            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
+            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
+            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
+
+            login_input.send_keys(str(creds.get("login", "")))
+            password_input.send_keys(str(creds.get("password", "")))
+            submit_btn.click()
+            time.sleep(2)
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
+            return False
+
+        # Проверка генплана
+        return self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
+
+    def check_new_genplan_with_auth(self, url, name, credentials_key, title_xpath, check_css, wait_time=14):
+        """
+        Проверка генплана нового типа с авторизацией
+
+        Args:
+            url: URL страницы
+            name: Название посёлка для логов
+            credentials_key: Ключ для получения креденшелов из data.json
+            title_xpath: XPath элемента, к которому нужно проскроллить
+            check_css: CSS селектор элемента, который должен быть видим
+            wait_time: Время ожидания элементов
+        """
+        if not self._check_domain(url):
+            print(f'ERROR: Домен недоступен: {name} ({url})')
+            return False
+
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        # Авторизация
+        try:
+            creds = self.data.get(credentials_key, {})
+            login_input = self.driver.find_element(By.ID, 'loginconfig-username')
+            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
+            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
+
+            login_input.send_keys(str(creds.get("login", "")))
+            password_input.send_keys(str(creds.get("password", "")))
+            submit_btn.click()
+            time.sleep(2)
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на {name} - {str(e)}')
+            return False
+
+        # Проверка генплана нового типа
+        try:
+            # Ожидание появления элемента
+            title = wait(self.driver, wait_time).until(
+                EC.presence_of_element_located((By.XPATH, title_xpath))
+            )
+
+            # Скролл к элементу
+            self.actions.move_to_element(title).perform()
+            time.sleep(1)
+
+            # Проверка видимости целевого элемента
+            check_element = wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+            )
+
+            if check_element:
+                print(f'     OK: {name}')
+                return True
+
+        except Exception as e:
+            print(f'ERROR: {name} (проверка нового генплана с авторизацией) - {str(e)}')
+            return False
+
+        return False
+
+    def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
+                            max_attempts=3, wait_time=14):
+        """
+        Проверка загрузки карты в каталоге
+
+        Args:
+            url: URL страницы каталога
+            name: Название для логов
+            max_attempts: Максимальное количество попыток
+            wait_time: Время ожидания элементов
+        """
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        # PAGE_DOWN делаем только один раз при первой загрузке
+        self.actions.send_keys(Keys.PAGE_DOWN).perform()
+
+        for attempt in range(max_attempts):
+            try:
+                # Ожидание и клик на кнопку "На карте"
+                map_button = wait(self.driver, wait_time).until(
+                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(., "На карте")]])[1]'))
+                )
+                map_button.click()
+
+                # Проверка появления элемента "3D-ТУР" (признак загрузки генплана)
+                tour_element = wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Слои")]]'))
+                )
+
+                if tour_element:
+                    print(f'     OK: {name}')
+                    return True
+
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: {name} - {str(e)}')
+                    return False
+                else:
+                    # При refresh не делаем повторный PAGE_DOWN
+                    try:
+                        time.sleep(1)
+                        self.driver.refresh()
+                    except:
+                        pass
+                    time.sleep(2)
+
+        return False
+
+    def check_asset_genplan(self, url='https://moigektar.ru/batches-no-auth/60786', name='Страница участка',
+                            max_attempts=3, wait_time=14):
+        """
+        Проверка загрузки генплана на странице актива
+
+        Args:
+            url: URL страницы актива
+            name: Название для логов
+            max_attempts: Максимальное количество попыток
+            wait_time: Время ожидания элементов
+        """
+        try:
+            self.driver.get(url)
+        except Exception as e:
+            print(f'ERROR: Не удалось загрузить {name} - {str(e)}')
+            return False
+
+        for attempt in range(max_attempts):
+            try:
+                # Ожидание кнопки "Генеральный"
+                genplan_button = wait(self.driver, wait_time).until(
+                    EC.element_to_be_clickable((By.XPATH, '//*[text()[contains(.,"Генеральный")]]'))
+                )
+
+                # Прокрутка делается только при первой попытке
+                if attempt == 0:
+                    self.actions.move_to_element(genplan_button).perform()
+
+                genplan_button.click()
+
+                # Проверка появления элемента "На участок" (признак загрузки генплана)
+                to_plot_element = wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"На участок")]]'))
+                )
+
+                if to_plot_element:
+                    print(f'     OK: {name}')
+                    return True
+
+            except Exception as e:
+                if attempt == max_attempts - 1:
+                    print(f'ERROR: {name} - {str(e)}')
+                    return False
+                else:
+                    try:
+                        time.sleep(1)
+                        self.driver.refresh()
+                    except:
+                        pass
+                    time.sleep(2)
+
+        return False
+
+    def run_checks(self):
+        """Запуск всех проверок"""
+
+        # Проверка карты в каталоге moigektar.ru
+        self.check_catalogue_map()
+        time.sleep(1)
+
+        # Проверка генплана на странице актива moigektar.ru
+        self.check_asset_genplan()
+        time.sleep(1)
+
+        # Сайты с одинаковыми селекторами
+        standard_sites = [
+            ('https://syn9.lp.moigektar.ru', 'syn_9'),
+            ('https://syn33.lp.moigektar.ru', 'syn_33'),
+            ('https://syn35.lp.moigektar.ru', 'syn_35'),
+            ('https://syn39.lp.moigektar.ru', 'syn_39'),
+            ('https://syn42.lp.moigektar.ru', 'syn_42'),
+            ('https://syn47.lp.moigektar.ru', 'syn_47'),
+            ('https://syn48.lp.moigektar.ru', 'syn_48'),
+            ('https://syn52.lp.moigektar.ru', 'syn_52'),
+            ('https://syn53.lp.moigektar.ru', 'syn_53'),
+            ('https://syn56.lp.moigektar.ru', 'syn_56'),
+            ('https://syn67.lp.moigektar.ru', 'syn_67'),
+            ('https://syn73.lp.moigektar.ru', 'syn_73'),
+            ('https://syn74.lp.moigektar.ru', 'syn_74'),
+            ('https://syn84.lp.moigektar.ru', 'syn_84'),
+            ('https://syn85.lp.moigektar.ru', 'syn_85'),
+            ('https://syn87.lp.moigektar.ru', 'syn_87'),
+            ('https://syn92.lp.moigektar.ru', 'syn_92'),
+            ('https://syn95.lp.moigektar.ru', 'syn_95'),
+            ('https://syn99.lp.moigektar.ru', 'syn_99'),
+            ('https://syn447.lp.moigektar.ru', 'syn_447'),
+            ('https://settlements.lp.moigektar.ru', 'Родовые поселения'),
         ]
-    },
-    {
-        'name': 'Главный экран',
-        'elements': [
-            {
-                'name': 'Заголовок "Гектар"',
-                'xpath': '//div[contains (@class, "w-main") and contains (@id, "main")]//p/span[contains(text(), "Гектар")]'
-            },
-            {
-                'name': 'Подзаголовок с текстом о поселениях',
-                'xpath': '//div[contains (@class, "w-main") and contains (@id, "main")]//div[contains(@class, "w-main-bg")]//p[contains(text(), "нового типа")]'
-            },
-            {
-                'name': 'Кнопка "Каталог участков"',
-                'xpath': '//div[contains (@class, "w-main") and contains (@id, "main")]//a[contains(text(), "Каталог участков")]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Гектар для реализации всех идей"',
-        'elements': [
-            {
-                'name': 'Заголовок',
-                'xpath': '//div[@id="w-gektar-idea"]/h2[contains(text(), "Гектар для реализации всех идей")]'
-            },
-            {
-                'name': '1-й блок: кнопка запуска видео',
-                'xpath': '(//div[@id="w-gektar-idea"]//a[contains(@data-type, "iframe")])[1]'
-            },
-            {
-                'name': '1-й блок: кнопка вызова квиза',
-                'xpath': '(//div[@id="w-gektar-idea"]//a[contains(text(), "Подобрать участок")])[1]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Преимущества проекта"',
-        'elements': [
-            {
-                'name': 'Заголовок',
-                'xpath': '//div[@id="project_advantages"]//h2[contains(text(), "Преимущества проекта")]'
-            },
-            {
-                'name': '1-я ячейка сетки, картинка',
-                'xpath': '(//div[@id="project_advantages"]//div[contains(@class, "uk-grid")]//img[@src="img/project-advantages/1.svg"])[1]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Описание проекта"',
-        'elements': [
-            {
-                'name': 'Заголовок "Описание проекта"',
-                'xpath': '//h2[contains(text(), "Описание проекта")]'
-            },
-            {
-                'name': '1-я секция: кнопка видео',
-                'xpath': '(//div[@id="w-descr"]//div[contains(text(), "Смотреть ")])[1]'
-            },
-            {
-                'name': '1-я секция: фото',
-                'xpath': '(//div[@id="w-descr"]//img[contains(@class, "uk-visible@l")])[1]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок СП',
-        'elements': [
-            {
-                'name': '1-я карточка СП, фото',
-                'xpath': '(//div[@id="catalogueSpecial"]//a//div/img)[1]'
-            },
-            {
-                'name': '1-я карточка СП, бейдж скидки',
-                'xpath': '(//div[@id="catalogueSpecial"]//div[@data-src="/img/catalogue/label-sale.svg"])[1]'
-            },
-            {
-                'name': '1-я карточка СП, бейдж СП',
-                'xpath': '(//div[@id="catalogueSpecial"]//span[contains(text(), "Спецпредложение")])[1]'
-            },
-            {
-                'name': 'Кнопка перехода в каталог',
-                'xpath': '//div[@id="catalogueSpecial"]//a[contains(@href, "https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=26&clusterIds%5B1%5D=91&clusterIds%5B2%5D=92") and contains(text(), "Перейти в каталог")]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Лучшие поселения"',
-        'elements': [
-            {
-                'name': 'Заголовок',
-                'xpath': '//*[@id="catalogue"]//h2[contains(text(), "Лучшие поселения месяца")]'
-            },
-            {
-                'name': 'Кнопка запуска тура',
-                'xpath': '(//*[@id="catalogue"]//lord-icon[@src="/dist/icons/air-balloon.json"])[1]'
-            },
-            {
-                'name': '1-я карточка: вызов модалки',
-                'xpath': '(//*[@id="catalogue"]//a[@href="#modal_syn-376"])[1]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Распродажа инвестпроектов"',
-        'elements': [
-            {
-                'name': 'Заголовок',
-                'xpath': '//div[@id="catalogueSpecial11"]//h2[contains (text(), "Распродажа инвестпроектов")]'
-            },
-            {
-                'name': '1-я карточка СП, фото',
-                'xpath': '(//div[@id="catalogueSpecial11"]//a//div/img)[1]'
-            },
-            {
-                'name': '1-я карточка СП, бейдж скидки',
-                'xpath': '(//div[@id="catalogueSpecial11"]//div[@data-src="/img/catalogue/label-sale.svg"])[1]'
-            },
-            {
-                'name': '1-я карточка СП, бейдж СП',
-                'xpath': '(//div[@id="catalogueSpecial11"]//span[contains(text(), "Спецпредложение")])[1]'
-            },
-            {
-                'name': 'Кнопка перехода в каталог',
-                'xpath': '//div[@id="catalogueSpecial11"]//a[contains(@href, "/catalogue?popularChoiceIds%5B%5D=11") and contains(text(), "Перейти в каталог")]'
-            }
-        ]
-    },
-    {
-        'name': 'Блок "Образ будущих поселений"',
-        'elements': [
-            {
-                'name': 'Заголовок',
-                'xpath': '//*[@id="tour"]//h3[contains (text(), "Образ будущих")]'
-            },
-            {
-                'name': 'Кнопка Play',
-                'xpath': '//*[@id="tour"]//img[@src="/img/play.svg"]'
-            },
-            {
-                'name': 'Видео',
-                'xpath': '//*[@id="tour"]//a[@href="https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0"]'
-            }
-        ]
-    }
 
-]
+        for url, name in standard_sites:
+            self.check_genplan(url, name)
+            time.sleep(1)
+
+        # syn34 (другой селектор)
+        self.check_genplan(
+            'https://syn34.lp.moigektar.ru',
+            'syn_34 - старый план',
+            title_xpath='(//*[text()[contains(.,"Генеральный")]])[5]'
+        )
+        time.sleep(1)
+
+        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (БЕЗ АВТОРИЗАЦИИ)
+
+        new_genplan_checks = [
+            # (url, name, title_xpath, check_css)
+            ('https://syn34.lp.moigektar.ru',
+             'syn_34 - Усадьба в Подмосковье',
+             '//*[text()[contains(.,"Генеральный план «Усадьба в Подмосковье»")]]',
+             '#plan2-map .ol-zoom-in'),
+            ('https://syn34.lp.moigektar.ru',
+             'syn_34 - Экополис',
+             '//*[text()[contains(.,"Генеральный план «Экополиса»")]]',
+             '#plan1-map .ol-zoom-in'),
+
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - оазис на Осуге',
+             '//*[text()[contains(.,"Генеральный план «Оазис на Осуге»")]]',
+             '#sm-osuga-map .ol-zoom-in'),
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - клубный Оазис',
+             '//*[text()[contains(.,"Генеральный план «Клубный Оазис»")]]',
+             '#sm-oasis-map .ol-zoom-in'),
+            ('https://syn89.lp.moigektar.ru',
+             'syn_89 - усадьба на Большом озере',
+             '//*[text()[contains(.,"Генеральный план «Усадьба на Большом озере»")]]',
+             '#sm-big-lake-map .ol-zoom-in'),
+        ]
+
+        for url, name, title_xpath, check_css in new_genplan_checks:
+            self.check_genplan_without_click(
+                url,
+                name,
+                title_xpath=title_xpath,
+                check_css=check_css
+            )
+            time.sleep(1)
+
+        # САЙТЫ С НОВЫМ ГЕНПЛАНОМ (С АВТОРИЗАЦИЕЙ)
+
+        new_genplan_auth_checks = [
+            # (url, name, credentials_key, title_xpath, check_css)
+            ('https://syn98.lp.moigektar.ru',
+             'syn_98 - Оазис в Завидово',
+             '98_cred',
+             '//*[text()[contains(.,"Генеральный план «Оазис в Завидово»")]]',
+             '#sm-oasis2-map .ol-zoom-in'),
+            # Сюда можно добавить другие проверки с авторизацией
+        ]
+
+        for url, name, credentials_key, title_xpath, check_css in new_genplan_auth_checks:
+            self.check_new_genplan_with_auth(
+                url,
+                name,
+                credentials_key,
+                title_xpath=title_xpath,
+                check_css=check_css
+            )
+            time.sleep(1)
+
+        # vazuza2 (другой селектор)
+        self.check_genplan(
+            'https://vazuza2.lp.moigektar.ru',
+            'Вазуза',
+            title_xpath='(//*[text()[contains(.,"Генеральный")]])[1]'
+        )
+
+        # syn_111 - с авторизацией (старый тип генплана)
+        self.check_with_auth(
+            'https://syn111.lp.moigektar.ru',
+            'syn_111',
+            '111_cred'
+        )
+
+        # турпортал Едем на Вазузу - с авторизацией и особым селектором
+        self.check_with_auth(
+            'https://едемнавазузу.рф',
+            'ТурПортал',
+            'turporlal_cred',
+            title_xpath='(//*[text()[contains(.,"Интерактивная")]])[1]'
+        )
+
+    def cleanup(self):
+        """Закрытие драйвера"""
+        time.sleep(5)
+        self.driver.quit()
 
 
 def main():
-    checker = PageBlocksChecker(MG_BASE_URL)
-
+    """Основная функция запуска проверок"""
+    checker = GenplanChecker()
     try:
-        checker.init_driver()
-
-        # Загружаем главную страницу
-        checker.driver.get(f"{MG_BASE_URL}/")
-        time.sleep(3)
-        checker.remove_popup()
-
-        # Проверяем все блоки
-        results = checker.check_all_blocks(BLOCKS_CONFIG)
-
-        # Выводим сводку
-        checker.print_summary(results)
-
-    except Exception as e:
-        print(f" Критическая ошибка: {e}")
+        checker.run_checks()
     finally:
-        checker.close()
+        checker.cleanup()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 
 # Вычисляем и выводим время выполнения теста

@@ -159,7 +159,7 @@ tour_configs = [
         'url': 'https://moigektar.ru',
         'title_locator': TITLE_MG_MAIN_PAGE,
         'btn_locator': (By.XPATH, '(//*[@class="w-lord"])[2]'),
-        'z_index': '209',
+        'z_index': '332',
     },
     {
         'name': 'МГ, тур3 на главной',
@@ -256,7 +256,7 @@ tour_configs = [
         'url': 'https://syn53.lp.moigektar.ru/',
         'title_locator': TITLE_BY_ID_TOUR,
         'btn_locator': BTN_TOUR_CLASS,
-        'z_index': '306',
+        'z_index': '332',
     },
     {
         'name': 'syn_56',

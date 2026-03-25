@@ -72,12 +72,11 @@ class GenplanChecker:
 
         return False
 
+    # Проверка загрузки генплана старого типа (нужно нажать на обложку для загрузки)
     def check_genplan(self, url, name, title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
                       genplan_css='ymaps.ymaps-2-1-79-inner-panes',
                       max_attempts=3, wait_time=14):
         """
-        Проверка загрузки генплана на странице
-
         Args:
             url: URL страницы
             name: Название посёлка для логов
@@ -177,12 +176,11 @@ class GenplanChecker:
 
         return False
 
+    # Проверка генплана с авторизацией
     def check_with_auth(self, url, name, credentials_key,
                         title_xpath='(//*[text()[contains(.,"Генеральный")]])[3]',
                         genplan_css='ymaps.ymaps-2-1-79-inner-panes'):
         """
-        Проверка генплана с авторизацией
-
         Args:
             url: URL страницы
             name: Название посёлка для логов
@@ -218,10 +216,9 @@ class GenplanChecker:
         # Проверка генплана
         return self.check_genplan(self.driver.current_url, name, title_xpath, genplan_css)
 
+    # Проверка генплана нового типа с авторизацией
     def check_new_genplan_with_auth(self, url, name, credentials_key, title_xpath, check_css, wait_time=14):
         """
-        Проверка генплана нового типа с авторизацией
-
         Args:
             url: URL страницы
             name: Название посёлка для логов
@@ -281,11 +278,10 @@ class GenplanChecker:
 
         return False
 
+    # Проверка загрузки генплана в каталоге
     def check_catalogue_map(self, url='https://moigektar.ru/catalogue-no-auth', name='Каталог МГ',
                             max_attempts=3, wait_time=14):
         """
-        Проверка загрузки карты в каталоге
-
         Args:
             url: URL страницы каталога
             name: Название для логов
@@ -333,11 +329,10 @@ class GenplanChecker:
 
         return False
 
+    # Проверка загрузки генплана на странице актива
     def check_asset_genplan(self, url='https://moigektar.ru/batches-no-auth/60786', name='Страница участка',
                             max_attempts=3, wait_time=14):
         """
-        Проверка загрузки генплана на странице актива
-
         Args:
             url: URL страницы актива
             name: Название для логов
@@ -491,6 +486,15 @@ class GenplanChecker:
                 check_css=check_css
             )
             time.sleep(1)
+
+        # syn98 (другой селектор)
+        # не использую здесь авторизацию, так как проверка идёт в той же сессии браузера и логин уже был выполнен ранее
+        self.check_genplan(
+            'https://syn98.lp.moigektar.ru',
+            'syn_98 - старый план',
+            title_xpath='(//*[text()[contains(.,"Генеральный")]])[4]'
+        )
+        time.sleep(1)
 
         # vazuza2 (другой селектор)
         self.check_genplan(
