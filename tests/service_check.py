@@ -46,7 +46,7 @@ def check_domain(url, max_attempts=3, wait_time=2):
             if attempt > 0:
                 print(f'     == Домен {domain} доступен после {attempt + 1} попытки')
             return True
-        except socket.gaierror as e:
+        except socket.gaierror:
             if attempt == max_attempts - 1:
                 return False
             else:
@@ -135,7 +135,7 @@ def check_single_resource(driver, resource, auth_data):
                 driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
                 time.sleep(5)
         except Exception as e:
-            print(f'WARNING: Ошибка авторизации на {name}: {e}')
+            print(f'WARNING: Ошибка авторизации на {name}: {str(e)[:100]}')
 
     # Проверка элемента
     for attempt in range(max_attempts):
@@ -153,7 +153,7 @@ def check_single_resource(driver, resource, auth_data):
                 return True
         except Exception as e:
             if attempt == max_attempts - 1:
-                print(f'ERROR: {name}')
+                print(f'ERROR: {name}: {str(e)[:100]}')
 
                 if clear_cookies:
                     driver.delete_all_cookies()
@@ -208,7 +208,7 @@ def check_project_with_domains(driver, project, auth_data):
         # Загрузка страницы
         try:
             driver.get(url)
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
             print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]}')
             all_success = False
@@ -232,7 +232,7 @@ def check_project_with_domains(driver, project, auth_data):
                     driver.find_element(By.CSS_SELECTOR, 'div button').click()
                     time.sleep(2)
             except Exception as e:
-                print(f'WARNING: Ошибка авторизации на {display_name}: {e}')
+                print(f'WARNING: Ошибка авторизации на {display_name}: {str(e)[:100]}')
 
         # Проверка элемента
         success = False

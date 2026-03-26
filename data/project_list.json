@@ -337,10 +337,6 @@
         {
           "name": "syn_42",
           "url": "https://syn42.lp.moigektar.ru"
-        },
-        {
-          "name": "усадьба-завидово.рф",
-          "url": "https://усадьба-завидово.рф"
         }
       ],
       "selector": "//a[@href=\"#w-descr\"]",
@@ -652,6 +648,10 @@
         {
           "name": "усадьба-в-завидово.рф",
           "url": "https://усадьба-в-завидово.рф"
+        },
+        {
+          "name": "усадьба-завидово.рф",
+          "url": "https://усадьба-завидово.рф"
         },
         {
           "name": "lakes-valley-oazis.lp.moigektar.ru",
