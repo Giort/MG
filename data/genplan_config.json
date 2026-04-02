@@ -110,6 +110,14 @@
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
+      "project_name": "сайт турпортала",
+      "type": "old",
+      "auth": true,
+      "credentials_key": "turporlal_cred",
+      "title_xpath": "(//*[text()[contains(.,\"Интерактивная\")]])[1]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
       "project_name": "syn_67 Моё поместье",
       "type": "old",
       "auth": false,
@@ -118,6 +126,13 @@
     },
     {
       "project_name": "syn_73 Ясные зори",
+      "type": "old",
+      "auth": false,
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
+      "project_name": "Родовые поселения",
       "type": "old",
       "auth": false,
       "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
@@ -230,17 +245,10 @@
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
-      "project_name": "сайт турпортала",
+      "project_name": "Крым",
       "type": "old",
       "auth": true,
-      "credentials_key": "turporlal_cred",
-      "title_xpath": "(//*[text()[contains(.,\"Интерактивная\")]])[1]",
-      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
-    },
-    {
-      "project_name": "Родовые поселения",
-      "type": "old",
-      "auth": false,
+      "credentials_key": "krym_cred",
       "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     }

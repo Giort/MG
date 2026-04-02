@@ -55,5 +55,10 @@
     {
         "login" : "moigektar",
         "password" : "moigektar"
+    },
+  "krym_cred":
+    {
+        "login" : "moigektar",
+        "password" : "moigektar"
     }
 }

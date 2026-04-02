@@ -445,6 +445,36 @@
       "auth": false
     },
     {
+      "name": "сайт турпортала",
+      "domains": [
+        {
+          "name": "едемнавазузу.рф",
+          "url": "https://едемнавазузу.рф"
+        },
+        {
+          "name": "турпортал-вазуза.рф",
+          "url": "https://турпортал-вазуза.рф"
+        }
+      ],
+      "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
+      "auth": "turportal"
+    },
+    {
+      "name": "сайт инвесттура",
+      "domains": [
+        {
+          "name": "инвест-тур.рф",
+          "url": "https://инвест-тур.рф"
+        },
+        {
+          "name": "invest-tour.lp.moigektar.ru",
+          "url": "https://invest-tour.lp.moigektar.ru"
+        }
+      ],
+      "selector": "(//span[text()[contains(., \"Записаться на тур\")]])[1]",
+      "auth": false
+    },
+    {
       "project_name": "syn_61 Долина Селигера (Антоново)",
       "domains": [
         {
@@ -495,6 +525,12 @@
         }
       ],
       "selector": "//a[@href=\"#w-descr\"]",
+      "auth": false
+    },
+    {
+      "name": "Родовые поселения",
+      "url": "https://settlements.lp.moigektar.ru",
+      "selector": "//*[text()[contains(., \"участником\")]]",
       "auth": false
     },
     {
@@ -726,6 +762,21 @@
       "auth": false
     },
     {
+      "project_name": "Крым",
+      "domains": [
+        {
+          "name": "крымские-земли.рф",
+          "url": "https://крымские-земли.рф"
+        },
+        {
+          "name": "krym.lp.moigektar.ru",
+          "url": "https://krym.lp.moigektar.ru"
+        }
+      ],
+      "selector": "//*[text()[contains(., \"лучших регионах полуострова\")]]",
+      "auth": true
+    },
+    {
       "name": "YouTrack",
       "url": "https://youtrack.bug.land",
       "selector": "(//*[text()[contains(.,\"Войти в YouTrack\")]])[2]",
@@ -885,18 +936,6 @@
       "name": "Бронницы",
       "url": "https://здание-бронницы.рф",
       "selector": "(//*[text()[contains(., \"Отдельно стоящее здание\")]])[1]",
-      "auth": false
-    },
-    {
-      "name": "сайт турпортала",
-      "url": "https://турпортал-вазуза.рф",
-      "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
-      "auth": "turportal"
-    },
-    {
-      "name": "Родовые поселения",
-      "url": "https://settlements.lp.moigektar.ru",
-      "selector": "//*[text()[contains(., \"участником\")]]",
       "auth": false
     },
     {
