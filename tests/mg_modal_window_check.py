@@ -311,6 +311,14 @@ class ModalWindowChecker:
                     ('(//*[@id="broker-main-modal"]//*[@value="lg_broker_modal"])[1]',
                      'стр. для брокеров, 1-й экран, модалка "Оставьте заявку!", lgForm')
                 ]
+            },
+            'b2b': {
+                'name': 'для b2b',
+                'url': f'{self.base_url}/b2b',
+                'checks': [
+                    ('(//*[@id="b2b-main-modal"]//*[@value="b2b_modal"])[1]',
+                     'стр. b2b, 1-й экран, модалка "Оставьте заявку!", lgForm')
+                ]
             }
         }
 

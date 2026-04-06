@@ -348,6 +348,7 @@ class FormChecker:
             ("/gift", "Подарочный сертификат", "Арина", "mg_gift_page_callback", "Ариной"),
             ("/cabinet", "раздел личного кабинета", "Арина", "mg_lk_page_page_arina_callback", "Ариной"),
             ("/invest-batch", "страница про инвестиции", "Максим", "mg_invest_batch_page_callback", "Максимом"),
+            ("/b2b", "страница b2b", "Алексей", "b2b_page_ahmadeev_callback", "Алексеем"),
         ]
 
         for path, page_name, consultant_keyword, lg_form_value, consultant_name_instrumental in pages:
@@ -428,6 +429,14 @@ class FormChecker:
             'Вебинар "Глэмпинг"', "1-я инлайн-форма", "lgForm"
         )
 
+    def check_b2b_page(self):
+        """Проверка формы для запроса презентации в разделе b2b"""
+        self.driver.get(f"{self.BASE_URL}/b2b")
+        self.check_element(
+            "(//*[contains(@id, 'cfw')]//*[@value='b2b_page_presentation'])[1]",
+            "раздел b2b", "инлайн-форма презентации", "lgForm"
+        )
+
     def check_public_event_page(self):
         """Проверка раздела регистрации от стойки"""
         self.driver.get(f"{self.BASE_URL}/public-event")
@@ -458,6 +467,7 @@ class FormChecker:
         self.check_actions_section()
         self.check_other_pages()
         self.check_webinar_page()
+        self.check_b2b_page()
         self.check_public_event_page()
         self.check_closed_offer_page()
 

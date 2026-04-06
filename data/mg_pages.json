@@ -718,6 +718,12 @@
         "requires_auth": false
     },
     {
+        "name": "страница b2b",
+        "path": "b2b",
+        "xpath": "//*[text()[contains(.,'Готовые решения «под ключ»')]]",
+        "requires_auth": false
+    },
+    {
         "name": "страница регистрации клиента от стойки",
         "path": "public-event",
         "xpath": "//input[@id='publiceventform-name']",
