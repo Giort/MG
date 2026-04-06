@@ -134,6 +134,9 @@ TITLE_89_1 = (By.XPATH, '(//h5[text()[contains(., "Оазис на Осуге")]
 TITLE_89_2 = (By.XPATH, '(//h5[text()[contains(., "на озере Шитовское")]])[1]')
 TITLE_89_3 = (By.XPATH, '(//h5[text()[contains(., "на Большом озере")]])[1]')
 TITLE_98 = (By.XPATH, '(//h5[text()[contains(., "Оазис в Завидово")]])[1]')
+TITLE_krym_1 = (By.XPATH, '//h3[text()[contains(., "Ивановка")]]')
+TITLE_krym_2 = (By.XPATH, '//h3[text()[contains(., "Равнополье")]]')
+TITLE_krym_3 = (By.XPATH, '//h3[text()[contains(., "Камышинка")]]')
 BTN_TOUR_CLASS = (By.XPATH, '//*[(contains(@class, "w-tour__btn"))]')
 BTN_TOUR_ICON = (By.XPATH, '//*[(contains(@class, "w-tour__icon"))]')
 BTN_PLAN_CLASS = (By.XPATH, '(//*[(contains(@class, "w-plan__btn"))])[1]')
@@ -143,6 +146,9 @@ BTN_89_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
 BTN_89_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
 BTN_89_3 = (By.XPATH, '(//img[@src="/img/360.svg"])[3]')
 BTN_98 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
+BTN_krym_1 = (By.XPATH, '(//img[@src="/img/360.svg"])[1]')
+BTN_krym_2 = (By.XPATH, '(//img[@src="/img/360.svg"])[2]')
+BTN_krym_3 = (By.XPATH, '(//img[@src="/img/360.svg"])[3]')
 
 # Конфигурации проверок
 tour_configs = [
@@ -461,6 +467,36 @@ def main():
                 'auth': data.get("98_cred", {}),
             }
             check_tour(driver, actions, syn98_config)
+
+            krym_1_config = {
+                'name': 'krym',
+                'url': 'https://krym.lp.moigektar.ru',
+                'title_locator': TITLE_krym_1,
+                'btn_locator': BTN_krym_1,
+                'z_index': '161',
+                'auth': data.get("krym_cred", {}),
+            }
+            check_tour(driver, actions, krym_1_config)
+
+            # krym_2_config = {
+            #     'name': 'krym',
+            #     'url': 'https://krym.lp.moigektar.ru',
+            #     'title_locator': TITLE_krym_2,
+            #     'btn_locator': BTN_krym_2,
+            #     'z_index': '124',
+            #     'auth': data.get("krym_cred", {}),
+            # }
+            # check_tour(driver, actions, krym_2_config)
+            #
+            # krym_3_config = {
+            #     'name': 'krym',
+            #     'url': 'https://krym.lp.moigektar.ru',
+            #     'title_locator': TITLE_krym_3,
+            #     'btn_locator': BTN_krym_3,
+            #     'z_index': '185',
+            #     'auth': data.get("krym_cred", {}),
+            # }
+            # check_tour(driver, actions, krym_3_config)
 
     finally:
         time.sleep(5)

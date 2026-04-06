@@ -445,11 +445,11 @@
       "auth": false
     },
     {
-      "name": "сайт турпортала",
+      "project_name": "сайт турпортала",
       "domains": [
         {
           "name": "едемнавазузу.рф",
-          "url": "https://едемнавазузу.рф"
+          "url": "https://xn--80aafgebra4bk4eb.xn--p1ai"
         },
         {
           "name": "турпортал-вазуза.рф",
