@@ -182,7 +182,7 @@ class GenplanChecker:
                 return True
 
         except Exception as e:
-            print(f'ERROR: {name} (проверка нового генплана) - {str(e)}')
+            print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]}')
             return False
 
         return False

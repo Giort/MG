@@ -32,6 +32,14 @@
     },
     {
       "project_name": "syn_34 Усадьба в Подмосковье",
+      "name": "новый: Артёмки",
+      "type": "new",
+      "auth": false,
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье». д. Артёмки\")]]",
+      "check_css": "#plan3-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_34 Усадьба в Подмосковье",
       "name": "новый: Экополис",
       "type": "new",
       "auth": false,
@@ -43,7 +51,7 @@
       "name": "старый",
       "type": "old",
       "auth": false,
-      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[5]",
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[6]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
