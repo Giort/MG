@@ -238,6 +238,13 @@ def check_project_with_domains(driver, project, auth_data):
                         str(auth_data.get("98_cred", {}).get("password", "")))
                     driver.find_element(By.CSS_SELECTOR, 'div button').click()
                     time.sleep(2)
+                if auth_type == 'krym':
+                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
+                        str(auth_data.get("krym_cred", {}).get("login", "")))
+                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
+                        str(auth_data.get("krym_cred", {}).get("password", "")))
+                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
+                    time.sleep(2)
             except Exception as e:
                 print(f'WARNING: Ошибка авторизации на {display_name}: {str(e)[:100]}')
 

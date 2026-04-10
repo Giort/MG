@@ -1,13 +1,13 @@
 {
   "resources": [
     {
-      "name": "МГ",
+      "name": "МГ главная",
       "url": "https://moigektar.ru",
       "selector": "//h2[text()[contains(.,\"Описание проекта\")]]",
       "auth": false
     },
     {
-      "name": "ЛК",
+      "name": "ЛК главная",
       "url": "https://cabinet.moigektar.ru",
       "selector": "(//*[text()[contains(.,\"Вы находитесь в демо-версии личного кабинета\")]])[2]",
       "auth": false,
@@ -60,16 +60,8 @@
     },
     {
       "project_name": "syn_11 Синергия-Мирный",
-      "domains": [
-        {
-          "name": "syn_11",
-          "url": "https://syn11.lp.moigektar.ru"
-        },
-        {
-          "name": "синергия-мирный.рф",
-          "url": "http://синергия-мирный.рф"
-        }
-      ],
+      "name": "syn_11",
+      "url": "https://syn11.lp.moigektar.ru",
       "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
       "auth": false
     },
@@ -79,10 +71,6 @@
         {
           "name": "syn_12",
           "url": "https://syn12.lp.moigektar.ru"
-        },
-        {
-          "name": "синергия-волга.рф",
-          "url": "http://синергия-волга.рф"
         },
         {
           "name": "1za-100.ru",
@@ -116,16 +104,8 @@
     },
     {
       "project_name": "syn_16 Синергия-Митино",
-      "domains": [
-        {
-          "name": "syn_16",
-          "url": "https://syn16.lp.moigektar.ru"
-        },
-        {
-          "name": "синергия-митино.рф",
-          "url": "http://синергия-митино.рф"
-        }
-      ],
+      "name": "syn_16",
+      "url": "https://syn16.lp.moigektar.ru",
       "selector": "//span[text()[contains(.,\"Интерактивный\")]]",
       "auth": false
     },
@@ -460,7 +440,7 @@
       "auth": "turportal"
     },
     {
-      "name": "сайт инвесттура",
+      "project_name": "сайт инвесттура",
       "domains": [
         {
           "name": "инвест-тур.рф",
@@ -773,8 +753,8 @@
           "url": "https://krym.lp.moigektar.ru"
         }
       ],
-      "selector": "//*[text()[contains(., \"лучших регионах полуострова\")]]",
-      "auth": true
+      "selector": "(//*[text()[contains(., \"регионах полуострова\")]])[1]",
+      "auth": "krym"
     },
     {
       "name": "YouTrack",
