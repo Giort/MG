@@ -10,20 +10,14 @@ import time
 import json
 import os
 
-
-# Проверка доступности страниц на МГ
-
-# Проверяемый урл
 MG_BASE_URL = "https://moigektar.ru"
 LK_BASE_URL = "https://cabinet.moigektar.ru"
-# MG_BASE_URL = "http://moigektar.localhost"
-# LK_BASE_URL = "http://cabinet.moigektar.localhost"
 
 with open('../data/data.json', 'r') as file:
     data = json.load(file)
 
-# Засекаем время начала теста
 start_time = time.time()
+
 
 class PageChecker:
     def __init__(self, mg_base_url):
@@ -31,7 +25,6 @@ class PageChecker:
         self.driver = None
 
     def init_driver(self):
-
         ch_options = Options()
         ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
@@ -42,7 +35,6 @@ class PageChecker:
         return self.driver
 
     def auth(self):
-        """ Авторизация """
         try:
             self.driver.get("https://moigektar.ru//")
             self.driver.get("https://moigektar.ru//")
@@ -63,7 +55,6 @@ class PageChecker:
             return False
 
     def check_page(self, page_config, timeout=20):
-
         page_path = page_config['path']
         page_name = page_config['name']
         xpath_selector = page_config['xpath']
@@ -95,14 +86,13 @@ class PageChecker:
                     return False
 
     def check_all_pages(self, pages_config, delay=1):
-
         print(f"\n     Проверка всех страниц МГ \n")
 
-        # сначала авторизуемся
         self.auth()
         time.sleep(6)
 
         results = {}
+
         for page_config in pages_config:
             result = self.check_page(page_config)
             results[page_config['name']] = result
@@ -110,19 +100,13 @@ class PageChecker:
 
         return results
 
-
     def close(self):
-
         if self.driver:
             self.driver.quit()
 
 
 def load_pages_config(config_file='../data/mg_pages.json'):
-    """
-    Загружает конфигурацию страниц из JSON файла
-    """
     try:
-        # Проверяем существование файла
         if not os.path.exists(config_file):
             raise FileNotFoundError(f" ERROR: Файл конфигурации не найден: {config_file}")
 
@@ -136,15 +120,10 @@ def load_pages_config(config_file='../data/mg_pages.json'):
         raise
     except Exception as e:
         print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        # Возвращаем конфигурацию по умолчанию
         return get_default_pages_config()
 
 
 def get_default_pages_config():
-    """
-    Возвращает конфигурацию по умолчанию
-    (на случай, если файл не найден)
-    """
     return [
         {
             'name': 'Главная страница',
@@ -173,6 +152,22 @@ def main():
         checker.init_driver()
         results = checker.check_all_pages(pages_config, delay=1)
 
+        # ===== ДОБАВЛЕННЫЙ ОТЧЁТ =====
+        failed_pages = [name for name, res in results.items() if not res]
+
+        print(f"\n     Итоги проверки:")
+        print(f"     Всего страниц: {len(results)}")
+        print(f"     Успешно: {len(results) - len(failed_pages)}")
+        print(f"     Ошибок: {len(failed_pages)}")
+
+        if failed_pages:
+            print(f"\n     Недоступные страницы:")
+            for page in failed_pages:
+                print(f"       - {page}")
+        else:
+            print(f"\n     Все страницы доступны ✅")
+        # ==============================
+
     except Exception as e:
         print(f" Критическая ошибка: {e}")
     finally:
@@ -182,8 +177,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# Вычисляем и выводим время выполнения теста
 end_time = time.time()
 elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)
