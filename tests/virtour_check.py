@@ -87,6 +87,28 @@ class VirtourChecker:
                 return False
         return False
 
+    def _get_auth_from_project_list(self, project_name):
+        """
+        Получить настройки авторизации для проекта из project_list.json
+
+        Returns:
+            tuple: (нужна_ли_авторизация, ключ_для_credentials)
+        """
+        for resource in self.projects.get('resources', []):
+            if resource.get('project_name') == project_name:
+                auth_config = resource.get('auth', False)
+
+                if not auth_config:
+                    return False, None
+                elif isinstance(auth_config, str):
+                    return True, auth_config
+                elif isinstance(auth_config, bool) and auth_config is True:
+                    return True, project_name
+                else:
+                    return False, None
+
+        return False, None
+
     def _authenticate(self, credentials_key):
         """Авторизация на текущей странице"""
         if not self._check_domain(self.driver.current_url):
@@ -262,18 +284,30 @@ class VirtourChecker:
 
         return False
 
-
     def run_checks(self):
         """Запуск всех проверок из конфига"""
         print(f"\n     Проверка доступности виртуальных туров на сайтах \n")
 
         # Проверка тура на странице актива
         if 'asset_tour' in self.virtour_config:
-            self.check_tour(self.virtour_config['asset_tour'])
+            # Для asset_tour тоже нужно получить project_name
+            asset_config = self.virtour_config['asset_tour']
+            project_name = asset_config.get('project_name')
+            if project_name:
+                auth, credentials_key = self._get_auth_from_project_list(project_name)
+                # Временно подменяем параметры в конфиге
+                asset_config['auth'] = auth
+                asset_config['credentials_key'] = credentials_key
+            self.check_tour(asset_config)
             time.sleep(1)
 
         # Проверка туров на лендингах по конфигу
         for tour in self.virtour_config.get('tours', []):
+            project_name = tour.get('project_name')
+            if project_name:
+                auth, credentials_key = self._get_auth_from_project_list(project_name)
+                tour['auth'] = auth
+                tour['credentials_key'] = credentials_key
             self.check_tour(tour)
             time.sleep(1)
 

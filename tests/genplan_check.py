@@ -87,6 +87,28 @@ class GenplanChecker:
                 return False
         return False
 
+    def _get_auth_from_project_list(self, project_name):
+        """
+        Получить настройки авторизации для проекта из project_list.json
+
+        Returns:
+            tuple: (нужна_ли_авторизация, ключ_для_credentials)
+        """
+        for resource in self.projects.get('resources', []):
+            if resource.get('project_name') == project_name:
+                auth_config = resource.get('auth', False)
+
+                if not auth_config:
+                    return False, None
+                elif isinstance(auth_config, str):
+                    return True, auth_config
+                elif isinstance(auth_config, bool) and auth_config is True:
+                    return True, project_name
+                else:
+                    return False, None
+
+        return False, None
+
     def _authenticate(self, credentials_key):
         """Авторизация на текущей странице"""
         if not self._check_domain(self.driver.current_url):
@@ -297,14 +319,13 @@ class GenplanChecker:
             # Формируем название для вывода
             plan_name = genplan.get('name')
             if plan_name:
-                # Если есть name, выводим project_name - name
                 display_name = f"{project_name} - {plan_name}"
             else:
-                # Если нет name, выводим только project_name
                 display_name = project_name
 
-            auth = genplan.get('auth', False)
-            credentials_key = genplan.get('credentials_key')
+            # ПОЛУЧАЕМ АВТОРИЗАЦИЮ ИЗ PROJECT_LIST
+            auth, credentials_key = self._get_auth_from_project_list(project_name)
+
             genplan_type = genplan.get('type')
 
             # Загружаем страницу

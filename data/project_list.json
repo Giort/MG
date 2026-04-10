@@ -437,7 +437,7 @@
         }
       ],
       "selector": "//h3[text()[contains(., \"Уникальный экокурорт\")]]",
-      "auth": "turportal"
+      "auth": "turporlal_cred"
     },
     {
       "project_name": "сайт инвесттура",
@@ -675,7 +675,7 @@
         }
       ],
       "selector": "//*[text()[contains(., \"для реализации всех идей\")]]",
-      "auth": "syn_98"
+      "auth": "98_cred"
     },
     {
       "project_name": "syn_99 Лесные озёра",
@@ -724,7 +724,7 @@
         }
       ],
       "selector": "//a[@href=\"#w-descr\"]",
-      "auth": "syn_111"
+      "auth": "111_cred"
     },
     {
       "project_name": "syn_447 Усадьба на Байкале",
@@ -754,7 +754,7 @@
         }
       ],
       "selector": "(//*[text()[contains(., \"регионах полуострова\")]])[1]",
-      "auth": "krym"
+      "auth": "krym_cred"
     },
     {
       "name": "YouTrack",

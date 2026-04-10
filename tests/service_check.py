@@ -10,6 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
 import os
+import socket
 
 # Проверка доступности веб-интерфейсов сервисов по наличию на страницах ключевых элементов
 
@@ -17,8 +18,8 @@ import os
 start_time = time.time()
 
 
-# Инициализация драйвера
 def init_driver():
+    """Инициализация драйвера Chrome"""
     ch_options = Options()
     ch_options.add_argument('--headless')
     ch_options.page_load_strategy = 'eager'
@@ -32,8 +33,6 @@ def init_driver():
 
 def check_domain(url, max_attempts=3, wait_time=2):
     """Проверка доступности домена с несколькими попытками"""
-    import socket
-
     try:
         domain = url.split('//')[1].split('/')[0]
     except:
@@ -54,17 +53,12 @@ def check_domain(url, max_attempts=3, wait_time=2):
         except Exception as e:
             print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
             return False
-
     return False
-
-
-print(f"\n     Проверка доступности сайтов \n")
 
 
 def load_resources():
     """Загрузка конфигурации ресурсов из JSON файла"""
     try:
-        # Путь к файлу: /data/project_list.json относительно корня проекта
         current_dir = os.path.dirname(os.path.abspath(__file__))
         json_path = os.path.join(os.path.dirname(current_dir), 'data', 'project_list.json')
 
@@ -72,7 +66,7 @@ def load_resources():
             data = json.load(file)
             return data.get('resources', [])
     except FileNotFoundError:
-        print(f"ERROR: Файл project_list.json не найден по пути: {json_path}")
+        print(f"ERROR: Файл project_list.json не найден")
         return []
     except json.JSONDecodeError as e:
         print(f"ERROR: Ошибка парсинга JSON: {e}")
@@ -98,12 +92,78 @@ def load_auth_data():
         return {}
 
 
+def get_auth_credentials(auth_config, project_name):
+    """
+    Получить данные для авторизации на основе конфига auth
+
+    Args:
+        auth_config: значение поля auth из project_list.json
+        project_name: имя проекта
+
+    Returns:
+        tuple: (нужна_ли_авторизация, ключ_для_credentials)
+    """
+    if not auth_config:
+        return False, None
+
+    if isinstance(auth_config, str):
+        # Если строка - используем её как ключ
+        return True, auth_config
+    elif isinstance(auth_config, bool) and auth_config is True:
+        # Если True - используем project_name как ключ
+        return True, project_name
+    else:
+        return False, None
+
+
+def perform_auth(driver, auth_config, project_name, auth_data):
+    """
+    Универсальная авторизация на странице
+
+    Args:
+        driver: WebDriver
+        auth_config: значение поля auth из конфига
+        project_name: имя проекта
+        auth_data: словарь с данными авторизации
+
+    Returns:
+        bool: успешность авторизации
+    """
+    need_auth, credentials_key = get_auth_credentials(auth_config, project_name)
+
+    if not need_auth or not auth_data:
+        return True
+
+    try:
+        # Пробуем найти поля авторизации
+        login_input = wait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'loginconfig-username'))
+        )
+        password_input = driver.find_element(By.ID, 'loginconfig-password')
+        submit_btn = driver.find_element(By.CSS_SELECTOR, 'div button, button[type]')
+
+        # Получаем credentials
+        creds = auth_data.get(credentials_key, {})
+        login = str(creds.get("login", ""))
+        password = str(creds.get("password", ""))
+
+        login_input.send_keys(login)
+        password_input.send_keys(password)
+        submit_btn.click()
+        time.sleep(2)
+
+        return True
+    except Exception as e:
+        print(f'WARNING: Ошибка авторизации - {str(e)[:100]}')
+        return False
+
+
 def check_single_resource(driver, resource, auth_data):
     """Проверка одного ресурса (одиночный URL)"""
     url = resource['url']
     name = resource['name']
     selector = resource['selector']
-    auth_type = resource.get('auth', False)
+    auth_config = resource.get('auth', False)
     clear_cookies = resource.get('clear_cookies', False)
     max_attempts = 3
     wait_timeout = 14
@@ -125,17 +185,7 @@ def check_single_resource(driver, resource, auth_data):
         return False
 
     # Авторизация, если нужна
-    if auth_type and auth_data:
-        try:
-            if auth_type == 'turportal':
-                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-username]').send_keys(
-                    str(auth_data.get("turporlal_cred", {}).get("login", "")))
-                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-password]').send_keys(
-                    str(auth_data.get("turporlal_cred", {}).get("password", "")))
-                driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
-                time.sleep(5)
-        except Exception as e:
-            print(f'WARNING: Ошибка авторизации на {name}: {str(e)[:100]}')
+    perform_auth(driver, auth_config, name, auth_data)
 
     # Проверка элемента
     for attempt in range(max_attempts):
@@ -148,7 +198,7 @@ def check_single_resource(driver, resource, auth_data):
 
                 if clear_cookies:
                     driver.delete_all_cookies()
-                    time.sleep(10)
+                    time.sleep(5)
 
                 return True
         except Exception as e:
@@ -166,17 +216,7 @@ def check_single_resource(driver, resource, auth_data):
                     time.sleep(2)
 
                     # Повторная авторизация после обновления
-                    if auth_type and auth_data:
-                        try:
-                            if auth_type == 'turportal':
-                                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-username]').send_keys(
-                                    str(auth_data.get("turporlal_cred", {}).get("login", "")))
-                                driver.find_element(By.CSS_SELECTOR, 'input[id=loginconfig-password]').send_keys(
-                                    str(auth_data.get("turporlal_cred", {}).get("password", "")))
-                                driver.find_element(By.CSS_SELECTOR, 'button[type]').click()
-                                time.sleep(5)
-                        except:
-                            pass
+                    perform_auth(driver, auth_config, name, auth_data)
                 except:
                     pass
 
@@ -188,7 +228,8 @@ def check_project_with_domains(driver, project, auth_data):
     project_name = project['project_name']
     domains = project['domains']
     selector = project['selector']
-    auth_type = project.get('auth', False)
+    auth_config = project.get('auth', False)
+    clear_cookies = project.get('clear_cookies', False)
 
     all_success = True
 
@@ -214,39 +255,8 @@ def check_project_with_domains(driver, project, auth_data):
             all_success = False
             continue
 
-        # Авторизация, если нужна
-        if auth_type and auth_data:
-            try:
-                if auth_type == 'syn_111':
-                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
-                        str(auth_data.get("111_cred", {}).get("login", "")))
-                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
-                        str(auth_data.get("111_cred", {}).get("password", "")))
-                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
-                    time.sleep(2)
-                if auth_type == 'syn_98':
-                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
-                        str(auth_data.get("98_cred", {}).get("login", "")))
-                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
-                        str(auth_data.get("98_cred", {}).get("password", "")))
-                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
-                    time.sleep(2)
-                if auth_type == 'turportal':
-                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
-                        str(auth_data.get("98_cred", {}).get("login", "")))
-                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
-                        str(auth_data.get("98_cred", {}).get("password", "")))
-                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
-                    time.sleep(2)
-                if auth_type == 'krym':
-                    driver.find_element(By.ID, 'loginconfig-username').send_keys(
-                        str(auth_data.get("krym_cred", {}).get("login", "")))
-                    driver.find_element(By.ID, 'loginconfig-password').send_keys(
-                        str(auth_data.get("krym_cred", {}).get("password", "")))
-                    driver.find_element(By.CSS_SELECTOR, 'div button').click()
-                    time.sleep(2)
-            except Exception as e:
-                print(f'WARNING: Ошибка авторизации на {display_name}: {str(e)[:100]}')
+        # Авторизация, если нужна (универсальный метод)
+        perform_auth(driver, auth_config, project_name, auth_data)
 
         # Проверка элемента
         success = False
@@ -258,15 +268,27 @@ def check_project_with_domains(driver, project, auth_data):
                 if elem:
                     print(f'     OK: {display_name}')
                     success = True
+
+                    if clear_cookies:
+                        driver.delete_all_cookies()
+                        time.sleep(5)
+
                     break
-            except:
+            except Exception as e:
                 if attempt == 2:
-                    print(f'ERROR: {display_name}')
+                    print(f'ERROR: {display_name} - {str(e)[:100]}')
+
+                    if clear_cookies:
+                        driver.delete_all_cookies()
+                        time.sleep(0.5)
+
                     all_success = False
                 else:
                     try:
                         driver.refresh()
                         time.sleep(2)
+                        # Повторная авторизация после обновления
+                        perform_auth(driver, auth_config, project_name, auth_data)
                     except:
                         pass
 
@@ -277,6 +299,7 @@ def check_project_with_domains(driver, project, auth_data):
 
 def main():
     """Основная функция запуска проверок"""
+    print(f"\n     Проверка доступности сайтов \n")
 
     # Загрузка данных
     resources = load_resources()
@@ -319,7 +342,8 @@ def main():
         print(f"     Всего ресурсов: {total_resources}")
         print(f"     Успешно: {successful}")
         print(f"     Ошибок: {failed}")
-        print(f"     Доступность: {successful / total_resources * 100:.1f}%")
+        if total_resources > 0:
+            print(f"     Доступность: {successful / total_resources * 100:.1f}%")
 
     finally:
         time.sleep(2)
@@ -329,13 +353,13 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Вычисляем и выводим время выполнения теста
-end_time = time.time()
-elapsed_time = end_time - start_time
-minutes = int(elapsed_time // 60)
-seconds = int(elapsed_time % 60)
+    # Вычисляем и выводим время выполнения теста
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    minutes = int(elapsed_time // 60)
+    seconds = int(elapsed_time % 60)
 
-if minutes > 0:
-    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
-else:
-    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    if minutes > 0:
+        print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    else:
+        print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
