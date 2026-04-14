@@ -9,8 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 
-from tests.mg_availability_uspages_check import MG_BASE_URL
-
 # Засекаем время начала теста
 start_time = time.time()
 
@@ -76,7 +74,7 @@ class PageChecker:
     STATES = {
         'unauth': {
             'page_keys': ['catalogue', 'asset', 'wishlist', 'compare'],
-            'page_source': PAGES,  # откуда брать страницы
+            'page_source': PAGES,
             'xpath_suffix': 'unauth',
             'need_auth': False,
             'need_demo': False,
@@ -94,7 +92,7 @@ class PageChecker:
         },
         'noauth': {
             'page_keys': ['catalogue_noauth', 'asset', 'wishlist', 'compare'],
-            'page_source': {**PAGES, **SPECIAL_PAGES},  # объединяем оба словаря
+            'page_source': {**PAGES, **SPECIAL_PAGES},
             'xpath_suffix': 'noauth',
             'need_auth': False,
             'need_demo': False,
@@ -120,7 +118,7 @@ class PageChecker:
     def init_driver(self):
         """Инициализация драйвера Chrome"""
         ch_options = Options()
-        ch_options.add_argument('--headless')
+        # ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -143,6 +141,7 @@ class PageChecker:
 
     def _demo_auth(self):
         """Авторизация как демо-пользователь (через открытие ЛК)"""
+
         try:
             self.driver.get(self.lk_base_url)
             time.sleep(2)
@@ -156,6 +155,8 @@ class PageChecker:
         try:
             self.driver.get(f"{self.mg_base_url}/")
             time.sleep(1)
+
+            self._remove_popups()
 
             # Открываем модальное окно авторизации
             self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
@@ -175,7 +176,7 @@ class PageChecker:
             submit_btn.click()
 
             time.sleep(5)
-            self._remove_popups()
+
             return True
         except Exception as e:
             print(f" ERROR: Не удалось авторизоваться - {str(e)}")
@@ -294,14 +295,11 @@ class PageChecker:
 
     def run_all_checks(self, delay=1):
         """Запуск всех проверок последовательно"""
-        all_results = {}
         for state in self.STATES.keys():
             self.init_driver()
-            results = self.run_check(state, delay)
-            all_results[state] = results
+            self.run_check(state, delay)
             self.close()
             time.sleep(2)
-        return all_results
 
     def close(self):
         """Закрытие драйвера"""
@@ -312,27 +310,13 @@ class PageChecker:
 def main():
     """Основная функция"""
 
+    # Выводим заголовок в самом начале
+    print(f"\n     Проверка состояний пользовательских страниц на домене {MG_BASE_URL}")
+
     checker = PageChecker()
 
     try:
-        # Запустить все проверки
-
-        checker.init_driver()
-        results = checker.run_all_checks()
-
-        # Сводка результатов
-        print("\n     Сводка результатов:")
-        state_names = {
-            'unauth': 'Неавторизованный',
-            'demo': 'Демо-пользователь',
-            'noauth': 'No-auth',
-            'auth': 'Авторизованный'
-        }
-
-        for state, state_results in results.items():
-            print(f"\n  {state_names.get(state, state)}:")
-            for page, status in state_results.items():
-                print(f"    {page}: {'✓' if status else '✗'}")
+        checker.run_all_checks()
 
     except Exception as e:
         print(f" Критическая ошибка: {e}")
