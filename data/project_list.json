@@ -885,7 +885,7 @@
     {
       "name": "сервис статей",
       "url": "https://a.bigland.ru",
-      "selector": "//*[@id=\"loginform-username\"]",
+      "selector": "//*[@id=\"loginconfig-username\"]",
       "auth": false
     },
     {

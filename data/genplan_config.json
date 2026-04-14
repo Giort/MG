@@ -183,7 +183,7 @@
       "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
-    {
+        {
       "project_name": "syn_98 Оазис в Завидово",
       "name": "новый: Оазис в Завидово",
       "type": "new",
@@ -192,9 +192,16 @@
     },
     {
       "project_name": "syn_98 Оазис в Завидово",
+      "name": "новый: Конаковские дачи",
+      "type": "new",
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Конаковские дачи»\")]]",
+      "check_css": "#sm-konakovo-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_98 Оазис в Завидово",
       "name": "старый",
       "type": "old",
-      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[4]",
+      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[5]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
