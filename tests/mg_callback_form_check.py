@@ -8,21 +8,23 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 # Засекаем время начала теста
 start_time = time.time()
+
 
 class FormChecker:
     """Класс для проверки форм обратной связи на сайте МойГектар"""
 
     # Базовый URL сайта - можно легко переключаться между prod и local
     BASE_URL = "https://moigektar.ru"
+
     # BASE_URL = "http://moigektar.localhost"
 
     def __init__(self, headless=False):
         self.driver = self._init_driver(headless)
         self.actions = ActionChains(self.driver)
         self.test_data = self._load_test_data()
+        self.errors = []  # Список для сбора ошибок
 
     def _init_driver(self, headless):
         """Инициализация Chrome WebDriver"""
@@ -66,7 +68,9 @@ class FormChecker:
                     time.sleep(2)
                 else:
                     error_msg = str(e).split('\n')[0]
-                    print(f"ERROR: {page_name}, {form_name}, {element_type} — {error_msg}")
+                    error_text = f"ERROR: {page_name}, {form_name}, {element_type} — {error_msg}"
+                    print(error_text)
+                    self.errors.append(error_text)
                     return False
 
     def remove_popup(self):
@@ -84,6 +88,11 @@ class FormChecker:
         for _ in range(8):
             self.actions.send_keys(Keys.PAGE_DOWN).perform()
             time.sleep(1)
+
+    def _log_error(self, error_text):
+        """Логирование ошибки"""
+        print(error_text)
+        self.errors.append(error_text)
 
     def check_sofia_form_1_with_submit(self):
         """Проверка формы с Софией №1 на главной странице с отправкой данных"""
@@ -127,11 +136,13 @@ class FormChecker:
                 print("     ОК: главная, форма с Софией №1, отправка через форму")
             except Exception as e:
                 error_msg = str(e).split('\n')[0]
-                print(f"ERROR: главная, форма с Софией №1, отправка через форму — {error_msg}")
+                error_text = f"ERROR: главная, форма с Софией №1, отправка через форму — {error_msg}"
+                self._log_error(error_text)
 
         except Exception as e:
             error_msg = str(e).split('\n')[0]
-            print(f"ERROR: главная, форма с Софией №1 — {error_msg}")
+            error_text = f"ERROR: главная, форма с Софией №1 — {error_msg}"
+            self._log_error(error_text)
 
     def check_main_page_forms(self):
         """Проверка всех форм на главной странице"""
@@ -187,7 +198,7 @@ class FormChecker:
             "главная", "форма с Максимом", "lgForm"
         )
         self.check_element(
-            "(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Расскажу про развитие участка')]])[2]",
+            "(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'которых нет на сайте')]])[3]",
             "главная", "форма с Максимом", "заголовок"
         )
 
@@ -453,6 +464,17 @@ class FormChecker:
             "раздел закрытого предложения", "инлайн-форма", "lgForm"
         )
 
+    def print_report(self):
+        """Вывод отчёта о результатах проверки"""
+
+        if not self.errors:
+            print("\n     ОШИБОК НЕТ")
+        else:
+            print(f"\n     НАЙДЕНО ОШИБОК: {len(self.errors)}")
+            print("\n     Список ошибок:")
+            for i, error in enumerate(self.errors, 1):
+                print(f"     {i}. {error}")
+
     def run_all_checks(self):
         """Запуск всех проверок"""
         print("\n     Проверка форм на сайте МойГектар \n")
@@ -465,13 +487,16 @@ class FormChecker:
         self.check_faq_page()
         self.check_news_page()
         self.check_actions_section()
+        self.check_b2b_page()
         self.check_other_pages()
         self.check_webinar_page()
-        self.check_b2b_page()
         self.check_public_event_page()
         self.check_closed_offer_page()
 
         print("\n     Проверка завершена")
+
+        # Выводим отчёт
+        self.print_report()
 
     def close(self):
         """Закрытие браузера"""
@@ -486,7 +511,6 @@ if __name__ == "__main__":
     finally:
         checker.close()
 
-
 # Вычисляем и выводим время выполнения теста
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -497,4 +521,3 @@ if minutes > 0:
     print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
     print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
-

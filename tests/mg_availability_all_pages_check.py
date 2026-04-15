@@ -165,7 +165,7 @@ def main():
             for page in failed_pages:
                 print(f"       - {page}")
         else:
-            print(f"\n     Все страницы доступны ✅")
+            print(f"\n     ОШИБОК НЕТ")
         # ==============================
 
     except Exception as e:
