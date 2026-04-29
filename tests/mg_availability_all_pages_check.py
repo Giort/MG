@@ -10,9 +10,32 @@ import time
 import json
 import os
 
-# MG_BASE_URL = "https://moigektar.ru"
-MG_BASE_URL = "http://moigektar.localhost"
-LK_BASE_URL = "https://cabinet.moigektar.ru"
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "local"
+# ============================================================
+
+ENV_CONFIG = {
+    "prod": {
+        "mg_base_url": "https://moigektar.ru",
+        "lk_base_url": "https://cabinet.moigektar.ru",
+        "cred_key":    "LK_cred",
+        "auth_url":    "https://moigektar.ru/",
+        "skip_auth":   False,
+    },
+    "local": {
+        "mg_base_url": "http://moigektar.localhost",
+        "lk_base_url": "http://cabinet.moigektar.localhost",
+        "cred_key":    "LK_local_cred",
+        "auth_url":    "http://moigektar.localhost/",
+        "skip_auth":   False,
+    },
+}
+
+config     = ENV_CONFIG[ENV]
+MG_BASE_URL = config["mg_base_url"]
+LK_BASE_URL = config["lk_base_url"]
 
 with open('../data/data.json', 'r') as file:
     data = json.load(file)
@@ -27,7 +50,7 @@ class PageChecker:
 
     def init_driver(self):
         ch_options = Options()
-        ch_options.add_argument('--headless')
+        # ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -36,18 +59,19 @@ class PageChecker:
         return self.driver
 
     def auth(self):
+        creds = data[config["cred_key"]]
+        auth_url = config["auth_url"]
         try:
-            self.driver.get("https://moigektar.ru//")
-            self.driver.get("https://moigektar.ru//")
+            self.driver.get(auth_url)
             self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
             time.sleep(2)
-            tab = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-            name = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+            tab      = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
+            name     = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
             password = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
+            btn      = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
             tab.click()
-            name.send_keys(str(data["LK_cred"]["login"]))
-            password.send_keys(str(data["LK_cred"]["password"]))
+            name.send_keys(str(creds["login"]))
+            password.send_keys(str(creds["password"]))
             btn.click()
             time.sleep(5)
             return True
@@ -56,8 +80,8 @@ class PageChecker:
             return False
 
     def check_page(self, page_config, timeout=20):
-        page_path = page_config['path']
-        page_name = page_config['name']
+        page_path      = page_config['path']
+        page_name      = page_config['name']
         xpath_selector = page_config['xpath']
 
         full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
@@ -65,11 +89,9 @@ class PageChecker:
         for attempt in range(3):
             try:
                 self.driver.get(full_url)
-
-                element = WebDriverWait(self.driver, timeout).until(
+                WebDriverWait(self.driver, timeout).until(
                     EC.visibility_of_element_located((By.XPATH, xpath_selector))
                 )
-
                 print(f"     OK: {page_name}")
                 return True
 
@@ -87,14 +109,15 @@ class PageChecker:
                     return False
 
     def check_all_pages(self, pages_config, delay=1):
-        print(f"\n     Проверка доступности всех страниц МГ на домене {MG_BASE_URL}\n")
+        print(f"\n     Проверка доступности всех страниц МГ на домене {MG_BASE_URL}  [{ENV.upper()}]\n")
 
-        self.driver.get('http://moigektar.localhost/catalogue-no-auth')
-        # self.auth()
-        time.sleep(6)
+        if config["skip_auth"]:
+            self.driver.get(f'{self.mg_base_url}/catalogue-no-auth')
+            time.sleep(6)
+        else:
+            self.auth()
 
         results = {}
-
         for page_config in pages_config:
             result = self.check_page(page_config)
             results[page_config['name']] = result
@@ -113,9 +136,9 @@ def load_pages_config(config_file='../data/mg_pages.json'):
             raise FileNotFoundError(f" ERROR: Файл конфигурации не найден: {config_file}")
 
         with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
+            config_data = json.load(f)
 
-        return config
+        return config_data
 
     except json.JSONDecodeError as e:
         print(f" ERROR: Ошибка в формате JSON файла {config_file}: {e}")
@@ -128,20 +151,20 @@ def load_pages_config(config_file='../data/mg_pages.json'):
 def get_default_pages_config():
     return [
         {
-            'name': 'Главная страница',
-            'path': '',
+            'name':  'Главная страница',
+            'path':  '',
             'xpath': "//h1[contains(., 'Мой гекатар')]",
         },
         {
-            'name': 'Страница актива',
-            'path': 'batches/30608',
+            'name':  'Страница актива',
+            'path':  'batches/30608',
             'xpath': "(//*[@uk-toggle='target: #modal-batch-detail'])[2]",
         },
         {
-            'name': 'Страница для брокеров',
-            'path': 'broker',
+            'name':  'Страница для брокеров',
+            'path':  'broker',
             'xpath': "(//*[contains(@class, 'uk-inline-clip') and contains(.,'Усадьба Императрицы')])[1]",
-        }
+        },
     ]
 
 
@@ -154,7 +177,6 @@ def main():
         checker.init_driver()
         results = checker.check_all_pages(pages_config, delay=1)
 
-        # ===== ДОБАВЛЕННЫЙ ОТЧЁТ =====
         failed_pages = [name for name, res in results.items() if not res]
 
         print(f"\n     Итоги проверки:")
@@ -168,7 +190,6 @@ def main():
                 print(f"       - {page}")
         else:
             print(f"\n     ОШИБОК НЕТ")
-        # ==============================
 
     except Exception as e:
         print(f" Критическая ошибка: {e}")
