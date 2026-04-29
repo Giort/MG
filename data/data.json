@@ -46,6 +46,11 @@
         "login" : "89533527075",
         "password" : "Prostoparol`"
     },
+  "LK_local_cred":
+    {
+        "login" : "user-13",
+        "password" : "password"
+    },
   "turporlal_cred":
     {
         "login" : "moigektar",

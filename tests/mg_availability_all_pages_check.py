@@ -10,7 +10,8 @@ import time
 import json
 import os
 
-MG_BASE_URL = "https://moigektar.ru"
+# MG_BASE_URL = "https://moigektar.ru"
+MG_BASE_URL = "http://moigektar.localhost"
 LK_BASE_URL = "https://cabinet.moigektar.ru"
 
 with open('../data/data.json', 'r') as file:
@@ -86,9 +87,10 @@ class PageChecker:
                     return False
 
     def check_all_pages(self, pages_config, delay=1):
-        print(f"\n     Проверка всех страниц МГ \n")
+        print(f"\n     Проверка доступности всех страниц МГ на домене {MG_BASE_URL}\n")
 
-        self.auth()
+        self.driver.get('http://moigektar.localhost/catalogue-no-auth')
+        # self.auth()
         time.sleep(6)
 
         results = {}

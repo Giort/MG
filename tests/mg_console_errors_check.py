@@ -19,8 +19,8 @@ logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
 # Проверка страниц МГ на ошибки в консоли
 
 # Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
-# MG_BASE_URL = "http://moigektar.localhost"
+# MG_BASE_URL = "https://moigektar.ru"
+MG_BASE_URL = "http://moigektar.localhost"
 
 # Настройки исключаемых типов страниц
 DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
@@ -648,6 +648,8 @@ class PageChecker:
         # Быстрая проверка картинок перед тестами
         self.quick_image_health_check()
 
+        self.driver.get('http://moigektar.localhost/catalogue-no-auth')
+
         """
         Проверка всех страниц из конфигурации
         """
@@ -885,7 +887,7 @@ def main():
             return
 
         # Выполняем авторизацию (если нужно)
-        checker.auth()
+        # checker.auth()
 
         # Проверяем все страницы
         results = checker.check_all_pages(pages_config, delay=1)
