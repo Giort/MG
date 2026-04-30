@@ -18,9 +18,29 @@ logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
 
 # Проверка страниц МГ на ошибки в консоли
 
-# Проверяемый урл
-# MG_BASE_URL = "https://moigektar.ru"
-MG_BASE_URL = "http://moigektar.localhost"
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
+
+ENV_CONFIG = {
+    "prod": {
+        "mg_base_url": "https://moigektar.ru",
+        "cred_key":    "LK_cred",
+        "auth_url":    "https://moigektar.ru/",
+        "skip_auth":   False,
+    },
+    "local": {
+        "mg_base_url": "http://moigektar.localhost",
+        "cred_key":    "LK_local_cred",
+        "auth_url":    "http://moigektar.localhost/",
+        "skip_auth":   False,
+    },
+}
+
+config      = ENV_CONFIG[ENV]
+MG_BASE_URL = config["mg_base_url"]
 
 # Настройки исключаемых типов страниц
 DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
@@ -96,7 +116,7 @@ class PageChecker:
             # Регистрируем обработчик для перехвата консольных ошибок
             self._setup_console_monitoring()
 
-            print("\n     Проверка всех страниц МГ на ошибки в консоли\n")
+            print(f"\n     Проверка всех страниц МГ на ошибки в консоли на домене {MG_BASE_URL}  [{ENV.upper()}]\n")
             return True
         except Exception as e:
             logger.error(f"Ошибка инициализации WebDriver: {e}")
@@ -248,7 +268,7 @@ class PageChecker:
         return match.group(0)[:200] if match else 'unknown'
 
 
-    def check_http_status(self, url, timeout=25):
+    def check_http_status(self, url, timeout=60):
         """
         Проверка HTTP статуса страницы
         Возвращает (status_code, error_message, response_time)
@@ -439,7 +459,7 @@ class PageChecker:
                 all_ok = False
 
         if all_ok:
-            print("\n     ОК: Все критичные изображения доступны")
+            print("\n     ОК: Все критичные изображения доступны\n")
         else:
             print("  \033[31m⚠ Есть проблемы с изображениями!\033[0m")
 
@@ -644,16 +664,19 @@ class PageChecker:
 
 
     def check_all_pages(self, pages_config, delay=1):
+        """
+        Проверка всех страниц из конфигурации
+        """
 
         # Быстрая проверка картинок перед тестами
         self.quick_image_health_check()
 
-        self.driver.get('http://moigektar.localhost/catalogue-no-auth')
+        if config["skip_auth"]:
+            self.driver.get(f'{MG_BASE_URL}/catalogue-no-auth')
+        else:
+            self.auth()
 
-        """
-        Проверка всех страниц из конфигурации
-        """
-        print(f"\n     Начинаем проверку страниц")
+        print(f"\n     Начинаем проверку страниц [{ENV.upper()}]")
         print(f"     Исключаемые типы: {', '.join(self.excluded_types)}")
 
         total_pages = len(pages_config)
@@ -776,9 +799,11 @@ class PageChecker:
 
     def auth(self):
         """Авторизация в системе"""
+        creds    = data[config["cred_key"]]
+        auth_url = config["auth_url"]
         try:
             print("     Выполняем авторизацию...")
-            self.driver.get(f"{self.base_url}/")
+            self.driver.get(auth_url)
             auth_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '(//*[@href="#modal-auth-lk"])[1]'))
             )
@@ -791,12 +816,12 @@ class PageChecker:
             time.sleep(0.5)
 
             # Заполняем форму
-            name_field = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+            name_field    = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
             password_field = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            submit_button = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
+            submit_button  = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
 
-            name_field.send_keys(str(data["LK_cred"]["login"]))
-            password_field.send_keys(str(data["LK_cred"]["password"]))
+            name_field.send_keys(str(creds["login"]))
+            password_field.send_keys(str(creds["password"]))
             submit_button.click()
 
             # Ждем успешной авторизации

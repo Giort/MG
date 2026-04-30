@@ -255,7 +255,7 @@ class GenplanChecker:
         url = config.get('url', 'https://moigektar.ru/batches-no-auth/60786')
         name = config.get('name', 'Страница участка')
         max_attempts = 3
-        wait_time = 14
+        wait_time = 30
 
         if not self._load_page(url):
             return False
