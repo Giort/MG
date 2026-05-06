@@ -14,21 +14,21 @@
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 188'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]"
     },
     {
       "name": "МГ главная, тур 2",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[2]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
     },
     {
       "name": "МГ главная, тур 3",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[3]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 176'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]"
     },
     {
       "name": "syn_9 Бологое",
@@ -197,7 +197,7 @@
       "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
      {
-      "name": "syn_98 Оазис в Завидово - основной (1)",
+      "name": "syn_98 Оазис в Завидово - Оазис в Завидово (1)",
       "project_name": "syn_98 Оазис в Завидово",
       "title_locator": ["xpath", "(//h5[text()[contains(., 'Оазис в Завидово')]])[1]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
@@ -206,7 +206,7 @@
     {
       "name": "syn_98 Оазис в Завидово - Конаковские дачи (2)",
       "project_name": "syn_98 Оазис в Завидово",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'Конаковские дачи')]])[1]"],
+      "title_locator": ["xpath", "(//h5[text()[contains(., 'Экопарк Конаково')]])[1]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[2]"],
       "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
     },

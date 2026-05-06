@@ -675,7 +675,7 @@
         }
       ],
       "selector": "//*[text()[contains(., \"для реализации всех идей\")]]",
-      "auth": "98_cred"
+      "auth": false
     },
     {
       "project_name": "syn_99 Лесные озёра",

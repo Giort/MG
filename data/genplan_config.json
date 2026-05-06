@@ -192,9 +192,9 @@
     },
     {
       "project_name": "syn_98 Оазис в Завидово",
-      "name": "новый: Конаковские дачи",
+      "name": "новый: Экопарк Конаково",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Конаковские дачи»\")]]",
+      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Экопарк Конаково»\")]]",
       "check_css": "#sm-konakovo-map .ol-zoom-in"
     },
     {
