@@ -3,20 +3,16 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import json
+import time
 import os
-import requests
-from urllib.parse import urljoin
-import logging
-logging.getLogger('WDM').setLevel(logging.WARNING)
-logging.getLogger('webdriver_manager').setLevel(logging.WARNING)
 
 
-# Проверка страниц МГ на ошибки в консоли
+# МГ: проверка доступности и атрибутов модальных окон
 
 # ============================================================
 #  Переключение окружения: "prod" или "local"
@@ -26,909 +22,272 @@ ENV = "prod"
 
 ENV_CONFIG = {
     "prod": {
-        "mg_base_url": "https://moigektar.ru",
-        "cred_key":    "LK_cred",
-        "auth_url":    "https://moigektar.ru/",
-        "skip_auth":   False,
+        "base_url": "https://moigektar.ru",
     },
     "local": {
-        "mg_base_url": "http://moigektar.localhost",
-        "cred_key":    "LK_local_cred",
-        "auth_url":    "http://moigektar.localhost/",
-        "skip_auth":   False,
+        "base_url": "http://moigektar.localhost",
     },
 }
 
-config      = ENV_CONFIG[ENV]
-MG_BASE_URL = config["mg_base_url"]
+config = ENV_CONFIG[ENV]
+BASE_URL = config["base_url"]
 
-# Настройки исключаемых типов страниц
-DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
-
-# Список страниц для проверки
-PAGES_CONFIG_FILE = '../data/mg_pages.json'
-
-# Настройка логирования
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('page_checker.log', encoding='utf-8'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
-
-with open('../data/data.json', 'r') as file:
-    data = json.load(file)
-
-# Засекаем время начала теста
 start_time = time.time()
 
 
-class PageChecker:
-    def __init__(self, base_url, excluded_types=None):
-        self.base_url = base_url.rstrip('/')
-        self.driver = None
-        self.session = requests.Session()
+class ModalChecker:
+    def __init__(self):
+        ch_options = Options()
+        ch_options.add_argument('--headless')
+        ch_options.page_load_strategy = 'eager'
+        ch_options.add_argument('--no-sandbox')
+        ch_options.add_argument('--disable-dev-shm-usage')
 
-        # Настраиваем исключаемые типы
-        if excluded_types is None:
-            self.excluded_types = DEFAULT_EXCLUDED_PAGE_TYPES
-        else:
-            self.excluded_types = excluded_types
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=ch_options)
+        self.driver.set_window_size(1660, 1000)
+        self.wait = WebDriverWait(self.driver, 10)
+        self.actions = ActionChains(self.driver)
 
-        # Настраиваем сессию для проверки HTTP
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        })
-        self.session.timeout = 25
-        self.results = {
-            'success': [],
-            'errors': []
-        }
+        self.results = {'success': [], 'failed': []}
 
-    def init_driver(self):
-        """Инициализация WebDriver"""
+    # ------------------------------------------------------------------
+    # Вспомогательные методы
+    # ------------------------------------------------------------------
+
+    def _set_mobile_viewport(self):
+        self.driver.set_window_size(390, 844)
+
+    def _set_desktop_viewport(self):
+        self.driver.set_window_size(1660, 1000)
+
+    def _remove_popup(self):
+        """Закрывает попап посетителей если он появился"""
         try:
-            ch_options = Options()
-            ch_options.add_argument('--headless')
-            ch_options.add_argument('--no-sandbox')
-            ch_options.add_argument('--disable-dev-shm-usage')
-            ch_options.add_argument('--disable-gpu')
-            ch_options.page_load_strategy = 'eager'
-
-            # Включаем логирование консоли
-            ch_options.set_capability('goog:loggingPrefs', {
-                'browser': 'ALL',
-                'performance': 'ALL'
-            })
-
-            service = ChromeService(executable_path=ChromeDriverManager().install())
-            self.driver = webdriver.Chrome(service=service, options=ch_options)
-            self.driver.set_window_size(1680, 1000)
-            self.driver.implicitly_wait(5)
-
-            # Включаем мониторинг сети через CDP
-            self.driver.execute_cdp_cmd('Network.enable', {})
-
-            # Регистрируем обработчик для перехвата консольных ошибок
-            self._setup_console_monitoring()
-
-            print(f"\n     Проверка всех страниц МГ на ошибки в консоли на домене {MG_BASE_URL}  [{ENV.upper()}]\n")
-            return True
-        except Exception as e:
-            logger.error(f"Ошибка инициализации WebDriver: {e}")
-            return False
-
-
-    def _setup_console_monitoring(self):
-        """Настройка мониторинга консоли и сети"""
-        # Скрипт для перехвата ошибок в JavaScript
-        js_script = """
-        // Сохраняем оригинальные методы
-        const originalError = console.error;
-        const originalWarn = console.warn;
-
-        // Массивы для хранения ошибок
-        window._capturedConsoleErrors = [];
-        window._capturedNetworkErrors = [];
-
-        // Перехватываем console.error
-        console.error = function(...args) {
-            const message = args.join(' ');
-            window._capturedConsoleErrors.push({
-                type: 'console.error',
-                message: message,
-                timestamp: Date.now(),
-                stack: new Error().stack
-            });
-            return originalError.apply(console, args);
-        };
-
-        // Перехватываем console.warn
-        console.warn = function(...args) {
-            const message = args.join(' ');
-            if (message.includes('403') || message.includes('404') || 
-                message.includes('500') || message.includes('Failed')) {
-                window._capturedConsoleErrors.push({
-                    type: 'console.warn',
-                    message: message,
-                    timestamp: Date.now()
-                });
-            }
-            return originalWarn.apply(console, args);
-        };
-
-        // Перехватываем ошибки загрузки ресурсов
-        window.addEventListener('error', function(e) {
-            if (e.target && (e.target.tagName === 'SCRIPT' || 
-                             e.target.tagName === 'LINK' || 
-                             e.target.tagName === 'IMG')) {
-                window._capturedNetworkErrors.push({
-                    type: 'resource_error',
-                    url: e.target.src || e.target.href,
-                    tag: e.target.tagName,
-                    message: 'Failed to load resource'
-                });
-            }
-        }, true);
-        """
-
-        self.driver.execute_script(js_script)
-
-
-    def capture_browser_errors(self):
-        """Сбор ошибок из консоли браузера"""
-        critical_errors = []  # Критические (4xx, 5xx)
-        non_critical_errors = []  # Некритические (предупреждения и т.д.)
-
-        try:
-            # Собираем логи из консоли браузера
-            browser_logs = self.driver.get_log('browser')
-
-            for entry in browser_logs:
-                message = entry.get('message', '')
-                level = entry.get('level', '').upper()
-
-                # Пропускаем информационные сообщения
-                if level not in ['SEVERE', 'ERROR', 'WARNING']:
-                    continue
-
-                # Определяем, критическая ли ошибка
-                is_critical = False
-                status_code = None
-                url = 'unknown'
-
-                # Проверяем на сетевые ошибки (403, 404, 500 и т.д.)
-                if any(error_code in message for error_code in
-                       [' 403 ', ' 404 ', ' 500 ', ' 502 ', ' 503 ', ' 504 ']):
-                    # Это сетевая ошибка - критическая
-                    is_critical = True
-                    status_code = self._extract_status_code(message)
-
-                    # Извлекаем URL
-                    import re
-                    url_pattern = r'https?://[^\s\'"]+'
-                    urls = re.findall(url_pattern, message)
-                    url = urls[0] if urls else 'unknown'
-
-                # Также считаем критические JS ошибки
-                elif level == 'SEVERE' and any(phrase in message for phrase in
-                                               ['Uncaught', 'SyntaxError', 'TypeError']):
-                    is_critical = True
-
-                error_data = {
-                    'level': level,
-                    'message': message,
-                    'url': url,
-                    'status': status_code,
-                    'source': 'browser_console'
-                }
-
-                if is_critical:
-                    critical_errors.append(error_data)
-                else:
-                    non_critical_errors.append(error_data)
-
-        except Exception as e:
-            logger.warning(f"Ошибка при сборе ошибок из браузера: {e}")
-
-        return critical_errors, non_critical_errors
-
-
-    def _extract_status_code(self, message):
-        """Извлекает статус код и определяет, критический ли он"""
-        import re
-
-        # Ищем статус коды
-        patterns = [
-            r'\s(\d{3})\s+\([^)]+\)',  # " 403 (Forbidden)"
-            r'status[=:]\s*(\d{3})',  # "status=403"
-            r'\"status\":\s*(\d{3})',  # "status": 403
-        ]
-
-        for pattern in patterns:
-            match = re.search(pattern, message)
-            if match:
-                status = int(match.group(1))
-                # Критические только 4xx и 5xx
-                if 400 <= status < 600:
-                    return status
-
-        return None
-
-
-    def _extract_url_from_message(self, message):
-        """Извлекает URL из сообщения об ошибке"""
-        import re
-        url_pattern = r'https?://[^\s\']+'
-        match = re.search(url_pattern, message)
-        return match.group(0)[:200] if match else 'unknown'
-
-
-    def check_http_status(self, url, timeout=60):
-        """
-        Проверка HTTP статуса страницы
-        Возвращает (status_code, error_message, response_time)
-        """
-        try:
-            start = time.time()
-            response = self.session.get(
-                url,
-                timeout=timeout,
-                allow_redirects=True
+            popup_close = self.driver.find_element(
+                By.XPATH, '//*[contains(@class,"js-visitor-popup-close")]'
             )
-            response_time = time.time() - start
+            popup_close.click()
+            time.sleep(0.5)
+        except NoSuchElementException:
+            pass
 
-            status_code = response.status_code
-
-            # Классификация ошибок
-            if 400 <= status_code < 500:
-                error_type = f"Клиентская ошибка {status_code}"
-                return status_code, error_type, response_time
-            elif 500 <= status_code < 600:
-                error_type = f"Серверная ошибка {status_code}"
-                return status_code, error_type, response_time
-            else:
-                return status_code, None, response_time
-
-        except requests.exceptions.Timeout:
-            return None, f"Таймаут ({timeout} секунд)", None
-        except requests.exceptions.ConnectionError as e:
-            return None, f"Ошибка подключения: {str(e)}", None
-        except requests.exceptions.TooManyRedirects:
-            return None, "Слишком много перенаправлений", None
-        except requests.exceptions.RequestException as e:
-            return None, f"Ошибка запроса: {str(e)}", None
-        except Exception as e:
-            return None, f"Неизвестная ошибка: {str(e)}", None
-
-
-    def _log_error(self, page_name, url, error_type, error_message,
-                   http_status, response_time, critical_errors=None, non_critical_errors=None):
-
-        """Логирование ошибки"""
-        error_info = {
-            'page': page_name,
-            'url': url,
-            'error_type': error_type,
-            'error_message': error_message,
-            'http_status': http_status,
-            'response_time': response_time,
-            'critical_errors': critical_errors or [],
-            'non_critical_errors': non_critical_errors or [],
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        self.results['errors'].append(error_info)
-
-
-    def _log_success(self, page_name, url, http_status, response_time, non_critical_errors=None):
-        """Логирование успешной проверки"""
-        success_info = {
-            'page': page_name,
-            'url': url,
-            'http_status': http_status,
-            'response_time': response_time,
-            'non_critical_errors': non_critical_errors or [],
-            'has_non_critical_errors': bool(non_critical_errors),
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        self.results['success'].append(success_info)
-
-    def print_slowest_pages(self, top_n=6):
-        """
-        Выводит топ-N самых медленных страниц
-        """
-
-        def get_load_time_level(response_time):
-            """Определяет уровень загрузки"""
-            if response_time > 5.0:
-                return "critical", "\033[31m", "⚠ Критично: страница загружалась дольше 5 секунд"
-            elif response_time > 3.0:
-                return "warning", "\033[33m", "⚠ Внимание: страница загружалась дольше 3 секунд"
-            elif response_time > 1.0:
-                return "normal", "\033[32m", ""
-            else:
-                return "fast", "\033[32m", ""
-
-        # Собираем все страницы с временем ответа
-        all_pages = []
-
-        # Собираем успешные страницы
-        for success in self.results['success']:
-            if 'response_time' in success and success['response_time'] is not None:
-                all_pages.append({
-                    'type': 'success',
-                    'name': success['page'],
-                    'url': success['url'],
-                    'response_time': success['response_time'],
-                    'status': success['http_status']
-                })
-
-        # Собираем страницы с ошибками
-        for error in self.results['errors']:
-            if 'response_time' in error and error['response_time'] is not None:
-                all_pages.append({
-                    'type': 'error',
-                    'name': error['page'],
-                    'url': error['url'],
-                    'response_time': error['response_time'],
-                    'status': error.get('http_status', 'error')
-                })
-
-        # Сортируем по времени ответа (от большего к меньшему)
-        all_pages.sort(key=lambda x: x['response_time'], reverse=True)
-
-        # Выводим топ-N
-        if all_pages:
-            print(f"\n     Топ-{min(top_n, len(all_pages))} самых медленных страниц:")
-
-            for i, page in enumerate(all_pages[:top_n], 1):
-
-                # Определяем уровень загрузки
-                level, time_color, warning_message = get_load_time_level(page['response_time'])
-
-                print(f"     {i}. {page['response_time']:.2f} сек - {page['name']} ({page['url']})")
-
-                # Выводим предупреждение, если есть
-                if warning_message:
-                    print(f"         {time_color}{warning_message}\033[0m")
-
-        else:
-            print(f"\n     Нет данных о времени загрузки страниц")
-
-    def print_performance_summary(self):
-        """
-        Выводит сводку по производительности
-        """
-        # Собираем все времена ответа
-        response_times = []
-
-        for success in self.results['success']:
-            if 'response_time' in success and success['response_time'] is not None:
-                response_times.append(success['response_time'])
-
-        for error in self.results['errors']:
-            if 'response_time' in error and error['response_time'] is not None:
-                response_times.append(error['response_time'])
-
-        if response_times:
-            avg_time = sum(response_times) / len(response_times)
-            max_time = max(response_times)
-            min_time = min(response_times)
-
-            print(f"\n     {'=' * 40}")
-            print("     СВОДКА ПО ПРОИЗВОДИТЕЛЬНОСТИ:")
-            # print(f"\n     Всего измерений: {len(response_times)}")
-            # print(f"     Среднее время: {avg_time:.2f} сек")
-            # print(f"     Минимальное: {min_time:.2f} сек")
-            # print(f"     Максимальное: {max_time:.2f} сек")
-            #
-            # # Распределение по диапазонам (с исправленной логикой)
-            # fast = len([t for t in response_times if t < 1.0])
-            # normal = len([t for t in response_times if 1.0 <= t < 3.0])
-            # slow = len([t for t in response_times if 3.0 <= t < 5.0])
-            # very_slow = len([t for t in response_times if t >= 5.0])
-            #
-            # print(f"\n     Распределение по скорости:")
-            # print(f"       Быстрые (<1 сек): {fast} ({fast / len(response_times) * 100:.1f}%)")
-            # print(f"       Нормальные (1-3 сек): {normal} ({normal / len(response_times) * 100:.1f}%)")
-            # print(f"       Медленные (3-5 сек): {slow} ({slow / len(response_times) * 100:.1f}%)")
-            # print(f"       Очень медленные (≥5 сек): {very_slow} ({very_slow / len(response_times) * 100:.1f}%)")
-
-
-    def quick_image_health_check(self):
-        """Быстрая проверка здоровья сервера картинок"""
-
-        test_urls = [
-            "https://i.bigland.ru/images/f64bad331de9d257296fee7ee50966a8173a91c9d3c37434120a2de378dadd0a/2xl",
-        ]
-
-        all_ok = True
-        for url in test_urls:
-            try:
-                response = self.session.head(url, timeout=10)
-
-                if response.status_code != 200:
-                    all_ok = False
-
-            except Exception as e:
-                print(f"  \033[31m✗\033[0m {url}... - ERROR: {str(e)}")
-                all_ok = False
-
-        if all_ok:
-            print("\n     ОК: Все критичные изображения доступны\n")
-        else:
-            print("  \033[31m⚠ Есть проблемы с изображениями!\033[0m")
-
-        return all_ok
-
-
-    def check_page_elements(self, url, xpath_selector, timeout=20):
-        """
-        Проверка наличия элементов на странице
-        """
+    def _navigate(self, url: str) -> bool:
+        """Переходит на страницу и убирает попап"""
         try:
             self.driver.get(url)
-
-            # Проверяем, что страница загрузилась (заголовок не пустой)
-            if self.driver.title is None or self.driver.title.strip() == "":
-                logger.warning(f"Страница загружена с пустым заголовком: {url}")
-
-            # Ждем появления элемента
-            element = WebDriverWait(self.driver, timeout).until(
-                EC.presence_of_element_located((By.XPATH, xpath_selector))
-            )
-
-            # Дополнительная проверка, что элемент видим
-            if element.is_displayed():
-                print(f"     ОК: Элемент найден и видим")
-                return True, None
-            else:
-                # Если элемент не видим, прокручиваем к нему
-                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                                           element)
-                time.sleep(0.5)
-
-                if element.is_displayed():
-                    logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки")
-                    return True, None
-                else:
-                    return False, f"Элемент найден, но не видим"
-
-        except TimeoutException:
-            error_msg = f"Таймаут ({timeout} сек) при ожидании элемента: {xpath_selector}..."
-
-            # Пытаемся сделать скриншот при ошибке
-            try:
-                screenshot_name = f"error_{time.strftime('%Y%m%d_%H%M%S')}.png"
-                self.driver.save_screenshot(screenshot_name)
-                error_msg += f" (скриншот сохранен: {screenshot_name})"
-            except:
-                pass
-
-            return False, error_msg
-        except NoSuchElementException:
-            return False, f"Элемент не найден: {xpath_selector}..."
-        except Exception as e:
-            return False, f"Ошибка Selenium: {str(e)}"
-
-
-    def check_page(self, page_config, delay=1, max_attempts=3):
-        """
-        Полная проверка одной страницы
-        """
-        page_name = page_config['name']
-        page_path = page_config['path']
-        xpath_selector = page_config['xpath']
-
-        full_url = f"{self.base_url}/{page_path.lstrip('/')}"
-
-        # Исключение для страницы ошибки 404
-        is_error_page = page_path == '123'
-
-        # Шаг 1: Проверка HTTP статуса
-        http_status, http_error, response_time = self.check_http_status(full_url)
-
-        if http_error and not is_error_page:
-            # Обычная страница - ошибка критическая
-            print(f"HTTP ошибка: {http_error}")
-            # Логируем HTTP ошибку
-            self._log_error(
-                page_name, full_url, 'HTTP_ERROR', http_error,
-                http_status, response_time
-            )
-            return False
-        elif http_error and is_error_page:
-            # Страница ошибки - проверяем что это именно 404
-            if http_status == 404:
-                print(f"     Ожидаемая ошибка 404 (страница не найдена)")
-            else:
-                print(f"HTTP ошибка: {http_error} (неожиданный статус)")
-                return False
-        elif not http_error and is_error_page:
-            # Если страница ошибки вернула не 404 - это проблема
-            if http_status != 404:
-                print(f"ОШИБКА: страница ошибки вернула {http_status} вместо 404")
-                return False
-
-        print(f"     HTTP статус: {http_status} (время ответа: {response_time:.2f} сек)")
-
-        # Шаг 2: Попытки загрузки страницы и проверки элементов
-        for attempt in range(1, max_attempts + 1):
-
-            try:
-                # Загружаем страницу
-                self.driver.get(full_url)
-
-                # Проверяем, что страница загрузилась (заголовок не пустой)
-                if self.driver.title is None or self.driver.title.strip() == "":
-                    logger.warning(f"Страница загружена с пустым заголовком: {full_url}")
-
-                # Ждем появления элемента
-                element = WebDriverWait(self.driver, 20).until(
-                    EC.presence_of_element_located((By.XPATH, xpath_selector))
-                )
-
-                # Дополнительная проверка, что элемент видим
-                if element.is_displayed():
-                    print(f"     ОК: Элемент найден и видим")
-                    elements_ok, elements_error = True, None
-                else:
-                    # Если элемент не видим, прокручиваем к нему
-                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
-                                               element)
-                    time.sleep(0.5)
-
-                    if element.is_displayed():
-                        logger.debug(f"     ОК: Элемент найден и стал видимым после прокрутки")
-                        elements_ok, elements_error = True, None
-                    else:
-                        elements_ok, elements_error = False, f"Элемент найден, но не видим"
-
-                # Если элемент найден, собираем ошибки из консоли
-                if elements_ok:
-                    time.sleep(1)  # Даем время для выполнения запросов
-                    critical_errors, non_critical_errors = self.capture_browser_errors()
-
-                    # Проверяем критические ошибки
-                    if critical_errors and not is_error_page:
-                        logger.warning(f"     Попытка {attempt}: найдено критических ошибок: {len(critical_errors)}")
-
-                        # Если это не последняя попытка, пробуем перезагрузить
-                        if attempt < max_attempts:
-                            time.sleep(2)  # Пауза перед следующей попыткой
-                            continue
-                        else:
-                            # Последняя попытка, логируем ошибки
-                            logger.warning(f" ERROR:  Найдено критических ошибок: {len(critical_errors)}")
-                            for error in critical_errors[:3]:
-                                status = f"[{error.get('status', '?')}] " if error.get('status') else ""
-                                url_display = error.get('url', '')[:50] if error.get('url') != 'unknown' else ''
-                                print(f"  - {status}{url_display}")
-
-                            # Логируем детали критической ошибки
-                            error_message = f"Найдено {len(critical_errors)} критических ошибок в консоли"
-                            self._log_error(
-                                page_name, full_url, 'CONSOLE_ERRORS', error_message,
-                                http_status, response_time, critical_errors, non_critical_errors
-                            )
-                            return False
-
-                    # Если нет критических ошибок или это страница ошибки 404
-                    self._log_success(
-                        page_name, full_url, http_status, response_time,
-                        non_critical_errors
-                    )
-                    return True
-                else:
-                    # Элемент не найден
-                    if attempt < max_attempts:
-                        print(f"     Перезагружаем страницу из-за отсутствия элемента...")
-                        time.sleep(2)
-                    else:
-                        # Последняя попытка, логируем ошибку
-                        print(f" ERROR: {elements_error}")
-                        self._log_error(page_name, full_url, 'ELEMENT_ERROR', elements_error,
-                                        http_status, response_time)
-                        return False
-
-            except TimeoutException:
-                if attempt < max_attempts:
-                    print(f"     Таймаут при загрузке. Пробуем снова...")
-                    time.sleep(2)
-                else:
-                    error_msg = f"Таймаут при ожидании элемента: {xpath_selector}..."
-                    print(f" ERROR: {error_msg}")
-                    self._log_error(page_name, full_url, 'TIMEOUT_ERROR', error_msg,
-                                    http_status, response_time)
-                    return False
-
-            except Exception as e:
-                if attempt < max_attempts:
-                    print(f"     Ошибка: {str(e)[:80]}. Пробуем снова...")
-                    time.sleep(2)
-                else:
-                    print(f" ERROR: Ошибка Selenium: {str(e)}")
-                    self._log_error(page_name, full_url, 'SELENIUM_ERROR', str(e),
-                                    http_status, response_time)
-                    return False
-
-        # Пауза между проверками разных страниц
-        time.sleep(delay)
-
-        # Если дошли до этой точки, что-то пошло не так
-        return False
-
-
-    def check_all_pages(self, pages_config, delay=1):
-        """
-        Проверка всех страниц из конфигурации
-        """
-
-        # Быстрая проверка картинок перед тестами
-        self.quick_image_health_check()
-
-        if config["skip_auth"]:
-            self.driver.get(f'{MG_BASE_URL}/catalogue-no-auth')
-        else:
-            self.auth()
-
-        print(f"\n     Начинаем проверку страниц [{ENV.upper()}]")
-        print(f"     Исключаемые типы: {', '.join(self.excluded_types)}")
-
-        total_pages = len(pages_config)
-        successful = 0
-        failed = 0
-        skipped = 0
-
-        for i, page_config in enumerate(pages_config, 1):
-            page_name = page_config['name']
-
-            # Пропускаем страницы с исключенными типами
-            page_type = page_config.get('page_type', '')
-            if page_type in self.excluded_types:
-                skip_reason = f"page_type: {page_type}"
-                print(f"\n     Страница {i}/{total_pages}: {page_name} - \033[33mПРОПУЩЕНА ({skip_reason})\033[0m")
-                skipped += 1
-                continue
-
-            print(f"\n     Страница {i}/{total_pages}: {page_name}")
-
-            try:
-                if self.check_page(page_config, delay=delay, max_attempts=3):
-                    successful += 1
-                else:
-                    failed += 1
-
-            except Exception as e:
-                logger.error(f" Критическая ошибка при проверке страницы: {e}")
-                failed += 1
-                error_info = {
-                    'page': page_config['name'],
-                    'url': f"{self.base_url}/{page_config['path'].lstrip('/')}",
-                    'error_type': 'CRITICAL_ERROR',
-                    'error_message': str(e),
-                    'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
-                }
-                self.results['errors'].append(error_info)
-
-        # Вывод итогового отчета
-        self.print_summary(total_pages, successful, failed, skipped)
-
-        # Выводим информацию о производительности
-        if successful + failed > 0:  # Если были проверки
-            self.print_performance_summary()
-            self.print_slowest_pages(top_n=6)
-
-        return self.results
-
-
-    def print_summary(self, total, successful, failed, skipped=0):
-        """
-        Вывод отчета
-        """
-
-        print(f"\n {' #' * 80}")
-        print("     ОТЧЕТ")
-
-        print(f"\n     Статистика:")
-        print(f"       Всего проверено страниц: {total}")
-        print(f"       Пропущено (типы: {', '.join(self.excluded_types)}): {skipped}")
-        print(f"       Проверено страниц: {total - skipped}")
-
-        if total - skipped > 0:
-            success_percent = (successful / (total - skipped)) * 100
-            failed_percent = (failed / (total - skipped)) * 100
-        else:
-            success_percent = 0
-            failed_percent = 0
-
-        print(f"       Успешно: {successful} ({success_percent:.1f}%)")
-        print(f"       С ошибками: {failed} ({failed_percent:.1f}%)")
-
-        # Собираем все критические ошибки
-        all_critical_errors = []
-        for error in self.results['errors']:
-            if 'critical_errors' in error:
-                all_critical_errors.extend(error['critical_errors'])
-
-        # Группируем критические ошибки по типу
-        if all_critical_errors:
-            print(f"\n     КРИТИЧЕСКИЕ ОШИБКИ ПО ТИПАМ:")
-
-            # Сетевые ошибки (4xx, 5xx)
-            network_errors = [e for e in all_critical_errors if e.get('status')]
-            if network_errors:
-                print(f"\n       Сетевые ошибки:")
-                error_counts = {}
-                for error in network_errors:
-                    status = error.get('status', 'unknown')
-                    error_counts[status] = error_counts.get(status, 0) + 1
-
-                for status, count in sorted(error_counts.items()):
-                    print(f"     {status}: {count} ошибок")
-
-            # JS ошибки
-            js_errors = [e for e in all_critical_errors if not e.get('status')]
-            if js_errors:
-                print(f"       JavaScript ошибки: {len(js_errors)}")
-
-        # Выводим детали по страницам с критическими ошибками
-        if self.results['errors']:
-            print(f"\n     СТРАНИЦЫ С КРИТИЧЕСКИМИ ОШИБКАМИ:")
-            for error in self.results['errors']:
-                print(f"\n       Страница: {error['page']} ({error['url']})")
-                print(f"         Тип ошибки: {error['error_type']}")
-                print(f"         Сообщение: {error['error_message']}")
-
-                # Выводим только критические ошибки
-                if 'critical_errors' in error and error['critical_errors']:
-                    print(f"         Критические ошибки:")
-                    for crit_err in error['critical_errors'][:3]:  # Первые 3
-                        if crit_err.get('status'):
-                            status = crit_err.get('status', '?')
-                            url_display = crit_err.get('url', '')
-                            print(f"         [{status}] {url_display}...")
-                        else:
-                            msg = crit_err.get('message', '')
-                            print(f"         JS: {msg}...")
-
-
-    def auth(self):
-        """Авторизация в системе"""
-        creds    = data[config["cred_key"]]
-        auth_url = config["auth_url"]
-        try:
-            print("     Выполняем авторизацию...")
-            self.driver.get(auth_url)
-            auth_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@href="#modal-auth-lk"])[1]'))
-            )
-            auth_button.click()
             time.sleep(1)
-
-            # Переключаемся на вход по паролю
-            password_tab = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-            password_tab.click()
-            time.sleep(0.5)
-
-            # Заполняем форму
-            name_field    = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-            password_field = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            submit_button  = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
-
-            name_field.send_keys(str(creds["login"]))
-            password_field.send_keys(str(creds["password"]))
-            submit_button.click()
-
-            # Ждем успешной авторизации
-            time.sleep(3)
-
-            # Проверяем, что авторизация прошла успешно
-            try:
-                self.driver.find_element(By.XPATH, '(//a[@href="https://moigektar.ru/catalogue/compare"])[1]')
-                print("     Авторизация успешна")
-                return True
-            except:
-                logger.warning("Авторизация возможно не удалась")
-                return True  # Все равно продолжаем проверку
-
+            self._remove_popup()
+            return True
         except Exception as e:
-            logger.error(f"Ошибка авторизации: {e}")
+            print(f"     ERROR: Не удалось открыть {url} — {e}")
             return False
+
+    def _scroll_to_element(self, selector: str) -> object | None:
+        """Находит элемент и скроллит к нему"""
+        from selenium.common.exceptions import MoveTargetOutOfBoundsException
+        try:
+            btn = self.driver.find_element(By.XPATH, selector)
+            try:
+                self.actions.move_to_element(btn).perform()
+            except MoveTargetOutOfBoundsException:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+            time.sleep(0.5)
+            return btn
+        except NoSuchElementException:
+            return None
+
+    def _click_button(self, btn) -> bool:
+        """Кликает по кнопке"""
+        try:
+            btn.click()
+            return True
+        except Exception:
+            try:
+                self.driver.execute_script("arguments[0].click();", btn)
+                return True
+            except Exception as e:
+                print(f"     ERROR: Не удалось кликнуть — {e}")
+                return False
+
+    def _wait_modal_open(self, modal_id: str, timeout: int = 8) -> bool:
+        """Ждёт появления модалки с классом uk-open"""
+        try:
+            self.wait.until(
+                EC.presence_of_element_located((
+                    By.XPATH,
+                    f'//*[@id="{modal_id}" and contains(@class,"uk-open")]'
+                ))
+            )
+            return True
+        except TimeoutException:
+            return False
+
+    def _check_phone_clickable(self, modal_id: str, phone_selector: str = None) -> bool:
+        """Проверяет что телефонный инпут внутри модалки кликабелен"""
+        try:
+            xpath = phone_selector if phone_selector else \
+                f'(//*[@id="{modal_id}"]//input[@id="consultationform-phone"])'
+            phone_input = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
+            )
+            return phone_input.is_displayed() and phone_input.is_enabled()
+        except TimeoutException:
+            return False
+
+    def _get_lgform_value(self, modal_id: str, lgform_selector: str = None) -> str | None:
+        """Читает значение скрытого поля lgForm внутри открытой модалки"""
+        try:
+            xpath = lgform_selector if lgform_selector else \
+                f'//*[@id="{modal_id}"]//input[@id="consultationform-lgform"]'
+            lgform_input = self.driver.find_element(By.XPATH, xpath)
+            return lgform_input.get_attribute('value')
+        except NoSuchElementException:
+            return None
+
+    def _close_modal(self, modal_id: str):
+        """Закрывает модалку нажатием Escape"""
+        try:
+            from selenium.webdriver.common.keys import Keys
+            self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
+            time.sleep(0.5)
+        except Exception:
+            pass
+
+    # ------------------------------------------------------------------
+    # Основная проверка одной модалки
+    # ------------------------------------------------------------------
+
+    def check_modal(self, modal_config: dict) -> bool:
+        """
+        Полный цикл проверки одной модалки:
+        1. Переход на страницу
+        2. Скролл к кнопке
+        3. Клик по кнопке
+        4. Ожидание открытия модалки
+        5. Проверка кликабельности инпута (видимость для пользователя)
+        6. Проверка значения lgForm
+        """
+        name = modal_config['name']
+        url_name = modal_config['url_name']
+        url = BASE_URL + modal_config['url']
+        btn_selector = modal_config['btn_selector']
+        modal_id = modal_config['modal_id']
+        expected_lgform = modal_config['lgform']
+        phone_selector = modal_config.get('phone_selector', None) # у большинства мод. одинаковые селекторы инпута
+        # телефона, но у некоторых нужно задавать другой
+        lgform_selector = modal_config.get('lgform_selector', None) # у большинства мод. одинаковые селекторы lgForm,
+        # но у некоторых нужно задавать другой
+
+        label = f'[{url_name}] {name}'
+
+        is_mobile = modal_config.get('mobile', False)
+        if is_mobile:
+            self._set_mobile_viewport()
+        else:
+            self._set_desktop_viewport()
+
+        # 1. Переход на страницу
+        if not self._navigate(url):
+            self._record_result(label, False, 'не удалось открыть страницу')
+            return False
+
+        # 2. Скролл к кнопке
+        btn = self._scroll_to_element(btn_selector)
+        if btn is None:
+            self._record_result(label, False, 'кнопка не найдена')
+            return False
+
+        # 3. Клик
+        if not self._click_button(btn):
+            self._record_result(label, False, 'не удалось кликнуть по кнопке')
+            return False
+
+        # 4. Ожидание открытия модалки
+        if not self._wait_modal_open(modal_id):
+            self._record_result(label, False, 'модалка не открылась (нет класса uk-open)')
+            return False
+
+        # 5. Проверка видимости инпута
+        if not self._check_phone_clickable(modal_id, phone_selector):
+            self._record_result(label, False, 'телефонный инпут не кликабелен')
+            return False
+
+        # 6. Проверка lgForm
+        actual_lgform = self._get_lgform_value(modal_id, lgform_selector)
+        if actual_lgform != expected_lgform:
+            msg = f'lgForm: ожидалось "{expected_lgform}", получено "{actual_lgform}"'
+            self._record_result(label, False, msg)
+            return False
+
+        self._record_result(label, True)
+        self._close_modal(modal_id)
+        return True
+
+    def _record_result(self, label: str, success: bool, error: str = ''):
+        if success:
+            print(f"     OK: {label}")
+            self.results['success'].append(label)
+        else:
+            print(f" ERROR: {label} — {error}")
+            self.results['failed'].append(f"{label} ({error})")
+
+    # ------------------------------------------------------------------
+    # Запуск всех проверок
+    # ------------------------------------------------------------------
+
+    def run(self, modals_config: list):
+        print(f"\n     Проверка модальных окон МГ [{ENV.upper()}]  {BASE_URL}\n")
+
+        for modal_config in modals_config:
+            self.check_modal(modal_config)
+
+        self._print_summary()
+
+    def _print_summary(self):
+        total = len(self.results['success']) + len(self.results['failed'])
+        success = len(self.results['success'])
+        failed = len(self.results['failed'])
+
+        print(f"\n     {'=' * 50}")
+        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
+
+        if self.results['failed']:
+            print(f"\n     Проблемные модалки:")
+            for item in self.results['failed']:
+                print(f"       - {item}")
+        else:
+            print(f"\n     ОШИБОК НЕТ")
 
     def close(self):
-        """Закрытие ресурсов"""
         if self.driver:
             self.driver.quit()
-        self.session.close()
 
 
-def load_pages_config(config_file=None):
-    """
-    Загружает конфигурацию страниц из JSON файла
-    """
-    # Если файл не указан, используем глобальную константу
-    if config_file is None:
-        config_file = PAGES_CONFIG_FILE
-
+def load_modals_config(config_file: str) -> list:
     try:
-        # Проверяем существование файла
         if not os.path.exists(config_file):
-            raise FileNotFoundError(f" ERROR: Файл конфигурации не найден: {config_file}")
-
+            raise FileNotFoundError(f"Файл конфигурации не найден: {config_file}")
         with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-
-        return config
-
-    except json.JSONDecodeError as e:
-        print(f" ERROR: Ошибка в формате JSON файла {config_file}: {e}")
-        raise
+            data = json.load(f)
+        return data['modals']
     except Exception as e:
         print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        # Возвращаем конфигурацию по умолчанию
-        return get_default_pages_config()
-
-
-def get_default_pages_config():
-    """
-    Возвращает конфигурацию по умолчанию
-    (на случай, если файл не найден)
-    """
-    return [
-        {
-            'name': 'Главная страница',
-            'path': '',
-            'xpath': "//h1[contains(., 'Мой гекатар')]",
-        },
-        {
-            'name': 'Страница актива',
-            'path': 'batches/30608',
-            'xpath': "(//*[@uk-toggle='target: #modal-batch-detail'])[2]",
-        },
-        {
-            'name': 'Страница для брокеров',
-            'path': 'broker',
-            'xpath': "(//*[contains(@class, 'uk-inline-clip') and contains(.,'Усадьба Императрицы')])[1]",
-        }
-    ]
+        raise
 
 
 def main():
-    """Основная функция"""
-    checker = PageChecker(MG_BASE_URL)
+    modals_config = load_modals_config('../data/modal_mg_list_test.json')
 
+    checker = ModalChecker()
     try:
-
-        pages_config = load_pages_config()
-
-        # Инициализируем драйвер
-        if not checker.init_driver():
-            logger.error("Не удалось инициализировать WebDriver")
-            return
-
-        # Выполняем авторизацию (если нужно)
-        # checker.auth()
-
-        # Проверяем все страницы
-        results = checker.check_all_pages(pages_config, delay=1)
-
-    except Exception as e:
-        logger.error(f"Критическая ошибка в main: {e}")
-        import traceback
-        traceback.print_exc()
+        checker.run(modals_config)
     finally:
         checker.close()
-        print("\n     Ресурсы освобождены")
 
 
 if __name__ == "__main__":
     main()
-
 
 # Время выполнения
 end_time = time.time()
@@ -936,9 +295,8 @@ elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
-print(f"\n{'=' * 80}")
 if minutes > 0:
-    print(f"     Общее время выполнения: {minutes} мин {seconds} сек")
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
-    print(f"     Общее время выполнения: {seconds:.1f} сек")
-print(f"{'=' * 80}")
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+

@@ -1,0 +1,592 @@
+{
+  "modals": [
+    {
+      "name": "Модалка авторизации в хедере",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//nav//a[@role='button'])[7]",
+      "modal_id": "modal-auth-lk",
+      "lgform": "catalog_auth_request"
+    },
+    {
+      "name": "Баннер 'Распродажа на Волге'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//*[@id='banner-promo']",
+      "modal_id": "promo-volga-2026",
+      "lgform": "callback_main_promo_volga_2026"
+    },
+    {
+      "name": "'Лучшие поселения месяца', карточка 'Новая жизнь'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//*[@id='catalogue']//a)[4]",
+      "modal_id": "modal_syn-53",
+      "lgform": "lg_main_catalog_new_gizn"
+    },
+    {
+      "name": "'Лучшие поселения месяца', карточка 'Усадьба в Завидово'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//*[@id='catalogue']//a)[8]",
+      "modal_id": "modal_syn-98",
+      "lgform": "lg_main_catalog_usadba_v_zavidovo"
+    },
+    {
+      "name": "'Лучшие поселения месяца', карточка 'Усадьба в Подмосковье'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//*[@id='catalogue']//a)[12]",
+      "modal_id": "modal_syn-63",
+      "lgform": "lg_main_catalog_usadba_v_podmoskovie"
+    },
+    {
+      "name": "'Реализуйте продукцию...', 1-я карточка",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//a[contains (text(), 'РЕАЛИЗОВАТЬ ₽')])[1]",
+      "modal_id": "product-card-modal",
+      "lgform": "mg_main_page_product_card_callback"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', 1-я карточка",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//button[contains (text(), 'Подробнее')])[1]",
+      "modal_id": "modal-descr-invest-batch-1",
+      "lgform": "mg_main_page_business_area"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', кнопка 'Подобрать бизнес-план'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//a[contains (text(), 'подобрать бизнес-план')])[1]",
+      "modal_id": "modal-descr-invest-batch",
+      "lgform": "mg_invest_batch_page"
+    },
+    {
+      "name": "'Примеры строений', кнопка 'Оставить заявку'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//a[contains (text(), 'оставить заявку')]",
+      "modal_id": "examples-of-building-modal",
+      "lgform": "lg_examples_of_buildings"
+    },
+    {
+      "name": "'Приглашаем на встречу в офис', кнопка 'Записаться на встречу в офис'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//a[contains (text(), 'Записаться на встречу')]",
+      "modal_id": "modal-meeting-meeting",
+      "lgform": "meeting_book"
+    },
+    {
+      "name": "'Приглашаем на встречу в офис', кнопка 'Записаться на встречу'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//a[contains (text(), 'Записаться на встречу')])[2]",
+      "modal_id": "modal-meeting-meeting",
+      "lgform": "meeting_book"
+    },
+    {
+      "name": "Футер",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//button[contains (text(), 'Связаться')]",
+      "modal_id": "modal-main-consultation",
+      "lgform": "callback_main"
+    },
+    {
+      "name": "Мобильный режим, фикс. кнопка 'Подобрать участок'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//*[contains (@class, 'w-fixed-buttons')]//*[contains (text(), 'Подобрать участок')]",
+      "modal_id": "modal-fixed",
+      "lgform": "callback_fixed_btn",
+      "mobile": true,
+      "phone_selector": "(//*[@id=\"modal-fixed\"]//input[@id=\"consultationform-phone\"])[3]"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "стр. актива",
+      "url": "/batches-no-auth/31243",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[2]",
+      "modal_id": "modal-batch-detail",
+      "lgform": "buy-batch-modal",
+      "phone_selector": "(//*[@id=\"modal-batch-detail\"]//input[@id=\"buybatchform-userphonenumber\"])[1]",
+      "lgform_selector": "//*[@id=\"modal-batch-detail\"]//input[@id=\"buybatchform-lgform\"]"
+    },
+    {
+      "name": "Баннер 'Начисляем кешбэк'",
+      "url_name": "стр. актива",
+      "url": "/batches-no-auth/31243",
+      "btn_selector": "(//*[contains (@class, 'w-cashback-ban')])[1]",
+      "modal_id": "modal-cashback-banner",
+      "lgform": "batch_cashback"
+    },
+    {
+      "name": "'Рассчитайте рассрочку', кнопка 'Оставить заявку'",
+      "url_name": "стр. актива",
+      "url": "/batches-no-auth/31243",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[3]",
+      "modal_id": "modal-batch-installment",
+      "lgform": "batch_installment_special_offer"
+    },
+    {
+      "name": "'Как это работает?..', кнопка 'Записаться на собеседование'",
+      "url_name": "стр. СК",
+      "url": "/service-company",
+      "btn_selector": "//*[contains (text(), 'Записаться на собеседование')]",
+      "modal_id": "sk-how-interview",
+      "lgform": "mg_service_company_interview_callback"
+    },
+    {
+      "name": "'Как это работает?..', кнопка 'Записаться на сессию'",
+      "url_name": "стр. СК",
+      "url": "/service-company",
+      "btn_selector": "//*[contains (text(), 'Записаться на сессию')]",
+      "modal_id": "sk-how-coach",
+      "lgform": "mg_service_company_coach_callback"
+    },
+    {
+      "name": "'Сервисная компания...', кнопка 'Оставить заявку!'",
+      "url_name": "стр. СК",
+      "url": "/service-company",
+      "btn_selector": "//*[contains (text(), 'Оставить заявку!')]",
+      "modal_id": "sk-main-modal",
+      "lgform": "mg_service_company_page_callback"
+    },
+            {
+      "name": "Кнопка 'Задать вопрос'",
+      "url_name": "Развитие - Развитие поселков",
+      "url": "/growth",
+      "btn_selector": "//*[contains (text(), 'Задать вопрос')]",
+      "modal_id": "modal-main-consultation",
+      "lgform": "callback_main"
+    },
+    {
+      "name": "Кнопка 'Задать вопрос'",
+      "url_name": "Развитие - Детальная стр. услуги",
+      "url": "/growth/view?uuid=33067acf-f6e7-4579-8a88-237ef05cc9ff",
+      "btn_selector": "//*[contains (text(), 'Задать вопрос')]",
+      "modal_id": "modal-main-consultation",
+      "lgform": "callback_main"
+    },
+    {
+      "name": "'Доходность инвестиций', кнопка 'Получить расчет доходности'",
+      "url_name": "Развитие - Глазами инвестора",
+      "url": "/investment",
+      "btn_selector": "//button[contains (text(), 'Получить расчет доходности')]",
+      "modal_id": "modal-calculation",
+      "lgform": "invest_profit"
+    },
+    {
+      "name": "'Доходность инвестиций', кнопка 'Подобрать участок с высокой доходностью'",
+      "url_name": "Развитие - Глазами инвестора",
+      "url": "/investment",
+      "btn_selector": "//span[contains (text(), 'с высокой доходностью')]",
+      "modal_id": "modal-select",
+      "lgform": "invest_profit"
+    },
+    {
+      "name": "Кнопка 'Запросить расчет'",
+      "url_name": "Развитие - Капитализация",
+      "url": "/investment/capitalization",
+      "btn_selector": "//*[contains (text(), 'Запросить расчет')]",
+      "modal_id": "modal-capitalization",
+      "lgform": "callback_main"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Развитие - Базовая стратегия",
+      "url": "/investment/basic",
+      "btn_selector": "//*[contains (text(), 'Оставить заявку')]",
+      "modal_id": "modal-select",
+      "lgform": "mg_invest_basic_page_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Развитие - Предприниматель",
+      "url": "/investment/businessman",
+      "btn_selector": "//*[contains (text(), 'Оставить заявку')]",
+      "modal_id": "modal-select",
+      "lgform": "capitalization_count"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Развитие - Садовод",
+      "url": "/investment/farmer",
+      "btn_selector": "//*[contains (text(), 'Оставить заявку')]",
+      "modal_id": "modal-select",
+      "lgform": "invest_profit"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Развитие - Усадьба",
+      "url": "/investment/family",
+      "btn_selector": "//*[contains (text(), 'Оставить заявку')]",
+      "modal_id": "modal-select",
+      "lgform": "invest_profit"
+    },
+    {
+      "name": "Первая карточка, кнопка 'Узнать больше'",
+      "url_name": "Бизнес-планы",
+      "url": "/business-plans",
+      "btn_selector": "(//*[contains (text(), 'Узнать больше')])[1]",
+      "modal_id": "modal-main",
+      "lgform": "callback_business"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 1",
+      "url": "/actions/1",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_large_family_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 2",
+      "url": "/actions/2",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_svo_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 3",
+      "url": "/actions/3",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_veteran_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 4",
+      "url": "/actions/4",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_facilities_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 5",
+      "url": "/actions/5",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_certificate_friend_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 6",
+      "url": "/actions/6",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_refugees_callback"
+    },
+    {
+      "name": "Кнопка 'Оставить заявку'",
+      "url_name": "Акции - Акция 7",
+      "url": "/actions/7",
+      "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[1]",
+      "modal_id": "modal-meeting-consultation",
+      "lgform": "mg_action_page_sum_callback"
+    },
+    {
+      "name": "1-й экран, 1-й слайд, кнопка 'Подать анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "//*[@aria-label='1 of 2']//*[contains (text(), 'Подать анкету')]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "1-й экран, 2-й слайд, кнопка 'Подать анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "//*[@aria-label='2 of 2']//*[contains (text(), 'Подать анкету')]",
+      "modal_id": "hr-main-modal-2",
+      "lgform": "callback_hr_partner"
+    },
+    {
+      "name": "Блок с цифрами, секция 1, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[1]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "Блок с цифрами, секция 2, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[2]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "Блок с цифрами, секция 3, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[3]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "Блок с цифрами, секция 4, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[4]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "Блок с цифрами, секция 5, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[5]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "Блок с цифрами, секция 6, кнопка 'Отправить анкету'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "(//*[@id='w-descr']//*[contains (text(), 'Отправить анкету')])[6]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "'Выберите свое направление', кнопка 'Запишитесь на собеседование'",
+      "url_name": "Вакансии",
+      "url": "/hr",
+      "btn_selector": "//*[contains (text(), 'запишитесь на собеседование')]",
+      "modal_id": "hr-main-modal",
+      "lgform": "callback_hr"
+    },
+    {
+      "name": "'Приглашаем на встречу...', кнопка 'Записаться на встречу в офис'",
+      "url_name": "Контакты",
+      "url": "/contacts",
+      "btn_selector": "//a[contains (text(), 'Записаться на встречу')]",
+      "modal_id": "modal-meeting-meeting",
+      "lgform": "meeting_book"
+    },
+    {
+      "name": "1-й экран, кнопка 'Подобрать участок'",
+      "url_name": "Стр. глэмпинга",
+      "url": "/goal/glamping",
+      "btn_selector": "//*[contains(@class, 'uk-visible')]//a[contains (text(), 'Подобрать участок')]",
+      "modal_id": "glamp-main-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "'Развивайте', кнопка 'Узнать подробнее'",
+      "url_name": "Стр. глэмпинга",
+      "url": "/goal/glamping",
+      "btn_selector": "(//button[contains (text(), 'Узнать подробнее')])[1]",
+      "modal_id": "glamp-gos-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "1-й экран, кнопка 'Подобрать участок'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "//*[contains(@class, 'uk-visible')]//a[contains (text(), 'Подобрать участок')]",
+      "modal_id": "farm-main-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "'Преимущества работы...', 1-я секция, кнопка 'Подобрать участок'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "//*[@id='w-descr']//button[contains (text(), 'Подобрать участок')]",
+      "modal_id": "farm-main-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "'Преимущества работы...', 4-я секция, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "//*[@id='w-descr']//button[contains (text(), 'узнать подробнее')]",
+      "modal_id": "farm-advantages-modal",
+      "lgform": "callback_main_invest"
+    },
+    {
+      "name": "'Реализуйте продукцию...', 1-я карточка, кнопка 'РЕАЛИЗОВАТЬ ₽'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "(//*[contains (text(), 'РЕАЛИЗОВАТЬ ₽')])[1]",
+      "modal_id": "product-card-modal",
+      "lgform": "mg_main_page_product_card_callback"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', 1-я карточка, кнопка 'Подробнее'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "(//button[contains (text(), 'Подробнее')])[1]",
+      "modal_id": "modal-descr-invest-batch-1",
+      "lgform": "mg_main_page_business_area"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', кнопка 'Подобрать бизнес-план'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "(//a[contains (text(), 'подобрать бизнес-план')])[1]",
+      "modal_id": "modal-descr-invest-batch",
+      "lgform": "mg_invest_batch_page"
+    },
+    {
+      "name": "'Развивайте агробизнес', кнопка 'Узнать подробнее'",
+      "url_name": "Стр. ферм",
+      "url": "/goal/farm",
+      "btn_selector": "//*[contains(@class, 'uk-visible')]//a[contains (text(), 'Подобрать участок')]",
+      "modal_id": "farm-gos-modal",
+      "lgform": "lg_goal_modal"
+    },
+{
+      "name": "1-й экран, кнопка 'Подобрать участок'",
+      "url_name": "Стр. глэмпинга",
+      "url": "/goal/glamping",
+      "btn_selector": "(//a[contains (text(), 'Подобрать участок')])[1]",
+      "modal_id": "glamp-main-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "'Развивайте туристическое...', кнопка 'Узнать подробнее'",
+      "url_name": "Стр. глэмпинга",
+      "url": "/goal/glamping",
+      "btn_selector": "(//button[contains (text(), 'Узнать подробнее')])[1]",
+      "modal_id": "glamp-gos-modal",
+      "lgform": "lg_goal_modal"
+    },
+    {
+      "name": "1-й экран, кнопка 'Подобрать участок'",
+      "url_name": "Стр. родовых поселений",
+      "url": "/goal/settlements",
+      "btn_selector": "//*[@class='btn-mquiz']",
+      "modal_id": "settlements-main-modal",
+      "lgform": "callback_main_settlements"
+    },
+    {
+      "name": "'Преимущества работы', секция 1, кнопка 'Подобрать участок'",
+      "url_name": "Стр. родовых поселений",
+      "url": "/goal/settlements",
+      "btn_selector": "//*[@id='w-descr']//button[contains (text(), 'Подобрать участок')]",
+      "modal_id": "settlements-descr-modal",
+      "lgform": "callback_descr_settlements"
+    },
+    {
+      "name": "'Преимущества работы', секция 4, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. родовых поселений",
+      "url": "/goal/settlements",
+      "btn_selector": "//*[@id='w-descr']//button[contains (text(), 'узнать подробнее')]",
+      "modal_id": "settlements-descr-modal",
+      "lgform": "callback_descr_settlements"
+    },
+    {
+      "name": "1-й экран, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. для брокеров",
+      "url": "/broker",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Узнать подробнее')]",
+      "modal_id": "broker-main-modal",
+      "lgform": "lg_broker_modal"
+    },
+    {
+      "name": "1-й экран, кнопка 'Подарить'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "//*[contains (@class, 'w-gift-main')]//button[contains (text(), 'Подарить')]",
+      "modal_id": "gift-main-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Подарочный сертификат — это:', карточка 'Лучший подарок...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить сертификат')])[1]",
+      "modal_id": "plot-certificate-parents-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Подарочный сертификат — это:', карточка 'Запоминающийся...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить сертификат')])[2]",
+      "modal_id": "plot-certificate-friend-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Подарочный сертификат — это:', карточка 'Подарок для партнера...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить сертификат')])[3]",
+      "modal_id": "plot-certificate-business-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Виды сертификатов', карточка 'Электронный...', кнопка 'Подарить'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить')])[4]",
+      "modal_id": "gift-option-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Виды сертификатов', карточка 'Подарочный...', кнопка 'Подарить'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить')])[5]",
+      "modal_id": "gift-option-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Виды сертификатов', карточка 'Корпоративным...', кнопка 'Подарить'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-plot')]//button[contains (text(), 'Подарить')])[6]",
+      "modal_id": "gift-option-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Удивляйте и радуйте...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "//*[contains (@class, 'w-certificate')]//button[contains (text(), 'Подарить сертификат')]",
+      "modal_id": "gift-certificate-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Проект «Мой гектар»...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "//*[contains (@class, 'w-option')]//button[contains (text(), 'Подарить сертификат')]",
+      "modal_id": "gift-option-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Выберите подходящий...', карточка '...на участок', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-select-certificate')]//button[contains (text(), 'Подарить сертификат')])[1]",
+      "modal_id": "select-certificate-plot-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Выберите подходящий...', карточка '...на сумму', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "(//*[contains (@class, 'w-select-certificate')]//button[contains (text(), 'Подарить сертификат')])[2]",
+      "modal_id": "select-certificate-sum-modal",
+      "lgform": "lg_cert"
+    },
+    {
+      "name": "'Для подарка...', кнопка 'Подарить сертификат'",
+      "url_name": "Стр. подарочного сертификата",
+      "url": "/gift",
+      "btn_selector": "//*[contains (@class, 'w-land')]//button[contains (text(), 'Подарить сертификат')]",
+      "modal_id": "gift-land-modal",
+      "lgform": "lg_cert"
+    }
+  ]
+}
