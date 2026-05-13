@@ -26,6 +26,7 @@ class GenplanChecker:
         self.genplan_config = self._load_json(genplan_config_path)
         self.current_url = None
         self.is_authenticated = False
+        self.results = {'success': [], 'failed': []}
 
     def _init_driver(self):
         """Инициализация драйвера Chrome"""
@@ -174,12 +175,15 @@ class GenplanChecker:
 
             if genplan_elem:
                 print(f'     OK: {name}')
+                self._record_result(name, True)
                 return True
 
         except Exception as e:
             print(f'ERROR: генплан на {name}')
+            self._record_result(name, False)
             return False
 
+        self._record_result(name, False)
         return False
 
     def check_genplan_new(self, name, title_xpath, check_css, wait_time=14):
@@ -201,12 +205,15 @@ class GenplanChecker:
 
             if check_element:
                 print(f'     OK: {name}')
+                self._record_result(name, True)
                 return True
 
         except Exception as e:
             print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]}')
+            self._record_result(name, False)
             return False
 
+        self._record_result(name, False)
         return False
 
     def check_catalogue_map(self, config):
@@ -234,11 +241,13 @@ class GenplanChecker:
 
                 if tour_element:
                     print(f'     OK: {name}')
+                    self._record_result(name, True)
                     return True
 
             except Exception as e:
                 if attempt == max_attempts - 1:
                     print(f'ERROR: {name} - {str(e)}')
+                    self._record_result(name, False)
                     return False
                 else:
                     try:
@@ -277,11 +286,13 @@ class GenplanChecker:
 
                 if to_plot_element:
                     print(f'     OK: {name}')
+                    self._record_result(name, True)
                     return True
 
             except Exception as e:
                 if attempt == max_attempts - 1:
                     print(f'ERROR: {name} - {str(e)}')
+                    self._record_result(name, False)
                     return False
                 else:
                     try:
@@ -292,6 +303,27 @@ class GenplanChecker:
                     time.sleep(2)
 
         return False
+
+    def _record_result(self, name: str, success: bool):
+        if success:
+            self.results['success'].append(name)
+        else:
+            self.results['failed'].append(name)
+
+    def _print_summary(self):
+        total   = len(self.results['success']) + len(self.results['failed'])
+        success = len(self.results['success'])
+        failed  = len(self.results['failed'])
+
+        print(f"\n     {'=' * 50}")
+        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
+
+        if self.results['failed']:
+            print(f"\n     Недоступные генпланы:")
+            for item in self.results['failed']:
+                print(f"       - {item}")
+        else:
+            print(f"\n     ОШИБОК НЕТ")
 
     def run_checks(self):
         """Запуск всех проверок из конфига"""
@@ -347,6 +379,8 @@ class GenplanChecker:
                 )
 
             time.sleep(1)
+
+        self._print_summary()
 
     def cleanup(self):
         """Закрытие драйвера"""

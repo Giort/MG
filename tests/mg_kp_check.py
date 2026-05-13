@@ -47,11 +47,11 @@ time.sleep(10)
 
 # сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
-driver.get("https://moigektar.ru/catalogue?clusterIds%5B%5D=88")
+driver.get("https://moigektar.ru/catalogue?sortId=price")
 time.sleep(2)
 actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
 time.sleep(2)
-btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-card-special-icon-click-download"))])[1]')
+btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-card-special-icon-click-download"))])[2]')
 btn.click()
 window_after = driver.window_handles[1]
 driver.switch_to.window(window_after)

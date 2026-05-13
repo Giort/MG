@@ -26,6 +26,7 @@ class VirtourChecker:
         self.virtour_config = self._load_json(virtour_config_path)
         self.current_url = None
         self.is_authenticated = False
+        self.results = {'success': [], 'failed': []}
 
     def _init_driver(self):
         """Инициализация драйвера Chrome"""
@@ -269,6 +270,7 @@ class VirtourChecker:
 
                 if elem:
                     print(f'     OK: {name}')
+                    self._record_result(name, True)
                     self.driver.switch_to.default_content()
                     return True
 
@@ -277,12 +279,34 @@ class VirtourChecker:
                 count += 1
                 if count == max_attempts:
                     print(f'ERROR: не загрузился виртуальный тур на {name} - {str(e)[:400]}')
+                    self._record_result(name, False)
                     return False
                 else:
                     self.driver.refresh()
                     time.sleep(2)
 
         return False
+
+    def _record_result(self, name: str, success: bool):
+        if success:
+            self.results['success'].append(name)
+        else:
+            self.results['failed'].append(name)
+
+    def _print_summary(self):
+        total   = len(self.results['success']) + len(self.results['failed'])
+        success = len(self.results['success'])
+        failed  = len(self.results['failed'])
+
+        print(f"\n     {'=' * 50}")
+        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
+
+        if self.results['failed']:
+            print(f"\n     Недоступные туры:")
+            for item in self.results['failed']:
+                print(f"       - {item}")
+        else:
+            print(f"\n     ОШИБОК НЕТ")
 
     def run_checks(self):
         """Запуск всех проверок из конфига"""
@@ -310,6 +334,8 @@ class VirtourChecker:
                 tour['credentials_key'] = credentials_key
             self.check_tour(tour)
             time.sleep(1)
+
+        self._print_summary()
 
     def cleanup(self):
         """Закрытие драйвера"""
