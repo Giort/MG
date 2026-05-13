@@ -197,17 +197,10 @@
       "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
      {
-      "name": "syn_98 Оазис в Завидово - Оазис в Завидово (1)",
+      "name": "syn_98 Оазис в Завидово",
       "project_name": "syn_98 Оазис в Завидово",
       "title_locator": ["xpath", "(//h5[text()[contains(., 'Оазис в Завидово')]])[1]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
-    },
-    {
-      "name": "syn_98 Оазис в Завидово - Конаковские дачи (2)",
-      "project_name": "syn_98 Оазис в Завидово",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'Экопарк Конаково')]])[1]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[2]"],
       "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
     },
     {
