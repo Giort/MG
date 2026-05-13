@@ -440,7 +440,7 @@
       "name": "'Развивайте агробизнес', кнопка 'Узнать подробнее'",
       "url_name": "Стр. ферм",
       "url": "/goal/farm",
-      "btn_selector": "//*[contains(@class, 'uk-visible')]//a[contains (text(), 'Подобрать участок')]",
+      "btn_selector": "//*[@id='gos']//button[contains (@class, 'uk-visible@s') and contains(text(), 'Узнать подробнее')]",
       "modal_id": "farm-gos-modal",
       "lgform": "lg_goal_modal"
     },
@@ -587,6 +587,30 @@
       "btn_selector": "//*[contains (@class, 'w-land')]//button[contains (text(), 'Подарить сертификат')]",
       "modal_id": "gift-land-modal",
       "lgform": "lg_cert"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', 1-я карточка",
+      "url_name": "Стр. инвестиций",
+      "url": "/invest-batch",
+      "btn_selector": "(//button[contains (text(), 'Подробнее')])[1]",
+      "modal_id": "modal-descr-invest-batch-1",
+      "lgform": "mg_main_page_business_area"
+    },
+    {
+      "name": "'Зарабатывайте на гектаре...', красная кнопка",
+      "url_name": "Стр. инвестиций",
+      "url": "/invest-batch",
+      "btn_selector": "(//a[contains (text(), 'подобрать бизнес-план')])[1]",
+      "modal_id": "modal-descr-invest-batch",
+      "lgform": "mg_invest_batch_page"
+    },
+    {
+      "name": "1-й экран, кнопка 'Выбрать поселок'",
+      "url_name": "Стр. b2b",
+      "url": "/b2b",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'выбрать поселок')]",
+      "modal_id": "b2b-main-modal",
+      "lgform": "b2b_modal"
     }
   ]
 }

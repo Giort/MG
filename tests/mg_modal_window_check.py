@@ -1,377 +1,295 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import json
 import time
-from typing import Dict, List, Tuple
+import os
 
 
-# Засекаем время начала теста
+# МГ: проверка доступности и атрибутов модальных окон
+
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
+
+ENV_CONFIG = {
+    "prod": {
+        "base_url": "https://moigektar.ru",
+    },
+    "local": {
+        "base_url": "http://moigektar.localhost",
+    },
+}
+
+config = ENV_CONFIG[ENV]
+BASE_URL = config["base_url"]
+
 start_time = time.time()
 
-class ModalWindowChecker:
-    def __init__(self, headless: bool = True, base_url: str = "https://moigektar.ru"):
-        """Инициализация драйвера с настройками"""
 
-        self.base_url = base_url.rstrip('/')  # Убираем trailing slash если есть
+class ModalChecker:
+    def __init__(self):
+        ch_options = Options()
+        ch_options.add_argument('--headless')
+        ch_options.page_load_strategy = 'eager'
+        ch_options.add_argument('--no-sandbox')
+        ch_options.add_argument('--disable-dev-shm-usage')
 
-        self.options = Options()
-        if headless:
-            self.options.add_argument('--headless')
-        self.options.page_load_strategy = 'eager'
-        self.options.add_argument('--no-sandbox')
-        self.options.add_argument('--disable-dev-shm-usage')
-
-        self.driver = webdriver.Chrome(options=self.options)
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=ch_options)
         self.driver.set_window_size(1660, 1000)
-        self.wait = WebDriverWait(self.driver, 10)
+        self.wait = WebDriverWait(self.driver, 30)
         self.actions = ActionChains(self.driver)
 
-        # Загрузка тестовых данных
-        self.data = self._load_test_data()
+        self.results = {'success': [], 'failed': []}
 
-    def _load_test_data(self) -> dict:
-        """Загружает тестовые данные из JSON файла"""
+    # ------------------------------------------------------------------
+    # Вспомогательные методы
+    # ------------------------------------------------------------------
+
+    def _set_mobile_viewport(self):
+        self.driver.set_window_size(390, 844)
+
+    def _set_desktop_viewport(self):
+        self.driver.set_window_size(1660, 1000)
+
+    def _remove_popup(self):
+        """Закрывает попап посетителей если он появился"""
         try:
-            with open('../data/data.json', 'r', encoding='utf-8') as file:
-                return json.load(file)
-        except FileNotFoundError:
-            print("Предупреждение: файл data.json не найден")
-            return {}
-
-    def remove_popup(driver):
-        """Удаление попапа посетителей"""
-        try:
-            # Удаляем попап посетителей
-            popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-            driver.execute_script("arguments[0].remove();", popup_visitors)
-        except Exception:
-            pass
-
-        try:
-            # Удаляем попап вебинара
-            popup_webinar = driver.find_element(by=By.XPATH,
-                                                value="//*[contains(@class, 'js-webinar-running-event-modal')]")
-            driver.execute_script("arguments[0].remove();", popup_webinar)
-        except Exception:
-            pass
-
-    def _format_error_message(self, error: Exception) -> str:
-        """Форматирует сообщение об ошибке для вывода"""
-        error_str = str(error).strip()
-
-        # Если строка пустая или содержит только "Message: ", берем название класса исключения
-        if not error_str or error_str == "Message:" or error_str == "Message: ":
-            return f"{type(error).__name__}: элемент не найден"
-
-        # Разделяем по строкам и берем первую информативную строку
-        lines = error_str.split('\n')
-        for line in lines:
-            line = line.strip()
-            if line and line != "Message:" and not line.startswith("Stacktrace:"):
-                # Удаляем лишний префикс "Message: " если он есть
-                if line.startswith("Message: "):
-                    line = line[9:]  # убираем "Message: "
-                return line if line else f"{type(error).__name__}: элемент не найден"
-
-        # Если все строки пустые или содержат только служебную информацию
-        return f"{type(error).__name__}: элемент не найден"
-
-    def _check_element(self, xpath: str, description: str, max_attempts: int = 3) -> bool:
-        """Проверяет наличие элемента по XPath с повторными попытками
-
-        Args:
-            xpath: XPath селектор элемента
-            description: Описание проверки для логирования
-            max_attempts: Максимальное количество попыток (по умолчанию 3)
-        """
-        for attempt in range(1, max_attempts + 1):
-            try:
-                self.driver.find_element(By.XPATH, xpath)
-                print(f'     ОК: {description}')
-                return True
-            except NoSuchElementException as e:
-                if attempt < max_attempts:
-                    self.driver.refresh()
-                    time.sleep(2)
-                else:
-                    error_msg = self._format_error_message(e)
-                    print(f'ОШИБКА: {description} — {error_msg}')
-                    return False
-
-    def _safe_navigate(self, url: str, max_retries: int = 3) -> bool:
-        """Безопасная навигация с повторными попытками"""
-        for attempt in range(max_retries):
-            try:
-                self.driver.get(url)
-                # Ждем загрузки страницы
-                self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-                return True
-            except TimeoutException:
-                print(f"Попытка {attempt + 1}/{max_retries} загрузки {url} не удалась")
-                if attempt == max_retries - 1:
-                    print(f"Не удалось загрузить {url}")
-                    return False
-        return False
-
-    def check_main_page(self) -> List[bool]:
-        """Проверяет модальные окна на главной странице"""
-
-        if not self._safe_navigate(self.base_url):
-            return [False] * 8
-
-        time.sleep(3)
-        self.remove_popup()
-
-        results = []
-
-        # Список проверок для главной страницы
-        checks = [
-            ('(//*[@id="modal-auth-lk"]//*[@value="catalog_auth_request"])[1]',
-             'главная, модалка "Доступ в личный кабинет", lgForm'),
-            ('(//*[@id="promo-volga-2026"]//*[@value="callback_main_promo_volga_2026"])[1]',
-             'главная, модалка на баннере "Распродажа участков на Волге", lgForm'),
-            ('(//*[@id="modal_syn-53"]//*[@value="lg_main_catalog_new_gizn"])[1]',
-             'главная, модалка син_53 (Новая жизнь) в блоке "Лучшие поселения месяца", lgForm'),
-            ('(//*[@id="modal_syn-98"]//*[@value="lg_main_catalog_usadba_v_zavidovo"])[1]',
-             'главная, модалка син_98 (Оазис в Завидово) в блоке "Лучшие поселения месяца", lgForm'),
-            ('(//*[@id="modal_syn-63"]//*[@value="lg_main_catalog_usadba_v_podmoskovie"])[1]',
-             'главная, модалка син_63 (Усадьба в Подмосковье) в блоке "Лучшие поселения месяца", lgForm'),
-            ('(//*[@id="product-card-modal"]//*[@value="mg_main_page_product_card_callback"])[1]',
-             'главная, модалка в блоке "Реализуйте продукцию ...", lgForm'),
-            ('(//*[@id="modal-descr-invest-batch-1"]//*[@value="mg_main_page_business_area"])[1]',
-             'главная, модалка на карточке 1 в блоке "Зарабатывайте на гектаре", lgForm'),
-            ('(//*[@id="modal-descr-invest-batch"]//*[@value="mg_invest_batch_page"])[1]',
-             'главная, модалка на красной кнопке в блоке "Зарабатывайте на гектаре", lgForm'),
-            ('(//*[@id="modal-main-consultation"]//*[@value="callback_main"])[1]',
-             'главная, модалка "Получить консультацию" в футере, lgForm'),
-            ('(//*[@id="modal-fixed"]//*[@value="callback_fixed_btn"])[1]',
-             'главная, модалка "Получить консультацию" на фикс. кнопке, lgForm'),
-            ('(//*[@id="modal-meeting-meeting"]//*[@value="meeting_book"])[1]',
-             'главная, модалка "Записаться на встречу", lgForm')
-        ]
-
-        for xpath, description in checks:
-            results.append(self._check_element(xpath, description))
-
-        # Проверка модалки "Записаться на встречу" с заполнением формы
-        results.append(self._check_meeting_modal())
-
-        return results
-
-    def _check_meeting_modal(self) -> bool:
-        """Проверяет модалку 'Записаться на встречу' с заполнением формы"""
-        try:
-            # Находим и нажимаем кнопку "Записаться на встречу"
-            btn = self.driver.find_element(By.XPATH, "(//*[text()[contains(.,'Записаться на встречу')]])[2]")
-            self.actions.move_to_element(btn).perform()
-            self.actions.send_keys(Keys.ARROW_DOWN).perform()
-            btn.click()
-
-            # Ждем появления модального окна и заполняем телефон
-            phone_field = self.wait.until(
-                EC.presence_of_element_located(
-                    (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-phone"])[1]'))
+            popup_close = self.driver.find_element(
+                By.XPATH, '//*[contains(@class,"js-visitor-popup-close")]'
             )
-            phone_field.click()
-            phone_number = str(self.data["test_data_valid"]["phone"])
-            time.sleep(2)
-            phone_field.send_keys(phone_number)
-            time.sleep(2)
+            popup_close.click()
+            time.sleep(0.5)
+        except NoSuchElementException:
+            pass
 
-            # Нажимаем кнопку отправки
-            submit_btn = self.driver.find_element(By.XPATH,
-                                                  '(//*[@id="modal-meeting-meeting"]//*[text()[contains(.,"Отправить заявку")]])[1]')
-            submit_btn.click()
-            time.sleep(2)
-
-            # Пытаемся найти поле имени - если оно появилось, значит форма успешно отправлена
-            try:
-                name_input = self.wait.until(EC.element_to_be_clickable(
-                    (By.XPATH, '(//*[@id="modal-meeting-meeting"]//*[@id="consultationform-name"])[2]')))
-                name_input.click()
-                print(
-                    '     ОК: главная, модалка "Записаться на встречу", ОТПРАВКА ДАННЫХ через форму (использован номер ' + phone_number + ')')
-                return True  # Возвращаем True при успешной отправке
-
-            except Exception as e:
-                error_msg = self._format_error_message(e)
-                print(f'ОШИБКА: главная, модалка "Записаться на встречу" — {error_msg}')
-                return False  # Возвращаем False при ошибке отправки
-
-        except TimeoutException as e:
-            error_msg = f"Таймаут ожидания: {self._format_error_message(e)}"
-            print(f'ОШИБКА: главная, модалка "Записаться на встречу" — {error_msg}')
-            return False
+    def _navigate(self, url: str) -> bool:
+        """Переходит на страницу и убирает попап"""
+        try:
+            self.driver.get(url)
+            time.sleep(1)
+            self._remove_popup()
+            return True
         except Exception as e:
-            error_msg = self._format_error_message(e)
-            print(f'ОШИБКА: главная, модалка "Записаться на встречу" — {error_msg}')
+            print(f"     ERROR: Не удалось открыть {url} — {e}")
             return False
 
-    def check_pages(self) -> Dict[str, List[bool]]:
-        """Проверяет все страницы с модальными окнами"""
-        results = {}
+    def _scroll_to_element(self, selector: str) -> object | None:
+        """Находит элемент и скроллит к нему"""
+        from selenium.common.exceptions import MoveTargetOutOfBoundsException
+        try:
+            btn = self.driver.find_element(By.XPATH, selector)
+            try:
+                self.actions.move_to_element(btn).perform()
+            except MoveTargetOutOfBoundsException:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+            time.sleep(0.5)
+            return btn
+        except NoSuchElementException:
+            return None
 
-        # Конфигурация страниц для проверки
-        page_configs = {
-            'catalog': {
-                'name': 'Каталог',
-                'url': f'{self.base_url}/catalogue',
-                'checks': [
-                    ('(//*[@id="modal-auth"]//*[@value="catalog_auth_request"])[1]',
-                     'стр. каталога, модалка "Доступ в каталог", lgForm')
-                ]
-            },
-            'batch_detail': {
-                'name': 'Страница актива',
-                'url': f'{self.base_url}/batches/55302',
-                'checks': [
-                    ('(//*[@id="modal-batch-detail"]//*[@value="buy-batch-modal"])[1]',
-                     'стр. актива, модалка "Заявка на консультацию", lgForm'),
-                    ('(//*[@id="modal-cashback-banner"]//*[@value="batch_cashback"])[1]',
-                     'стр. актива, модалка "Оставьте заявку" на кешбэке, lgForm'),
-                    ('(//*[@id="modal-batch-installment"]//*[@value="batch_installment_special_offer"])[1]',
-                     'стр. актива, модалка "Рассчитайте рассрочку", lgForm')
-                ]
-            },
-            'service_company': {
-                'name': 'Сервисная компания',
-                'url': f'{self.base_url}/service-company',
-                'checks': [
-                    ('(//*[@id="sk-how-interview"]//*[@value="mg_service_company_interview_callback"])[1]',
-                     'стр. СК, модалка "Запись на собеседование", lgForm'),
-                    ('(//*[@id="sk-how-coach"]//*[@value="mg_service_company_coach_callback"])[1]',
-                     'стр. СК, модалка "Запись на коуч-сессию, lgForm'),
-                    ('(//*[@id="sk-main-modal"]//*[@value="mg_service_company_page_callback"])[1]',
-                     'стр. СК, модалка "Начать развитие", lgForm')
-                ]
-            },
-            'investment_basic': {
-                'name': 'Инвестор (базовая)',
-                'url': f'{self.base_url}/investment/basic',
-                'checks': [
-                    ('(//*[@id="modal-select"]//*[@value="mg_invest_basic_page_callback"])[1]',
-                     'стр. "Базовая стратегия", модалка "Заказать услугу", lgForm')
-                ]
-            },
-            'investment_businessman': {
-                'name': 'Инвестор (предприниматель)',
-                'url': f'{self.base_url}/investment/businessman',
-                'checks': [
-                    ('(//*[@id="modal-select"]//*[@value="capitalization_count"])[1]',
-                     'стр. "Предприниматель", модалка "Заказать услугу", lgForm')
-                ]
-            },
-            'business_plans': {
-                'name': 'Бизнес-планы',
-                'url': f'{self.base_url}/business-plans',
-                'checks': [
-                    ('(//*[@id="modal-main"]//*[@value="callback_business"])[1]',
-                     'стр. "Бизнес-планы", модалка "Получить консультацию", lgForm')
-                ]
-            },
-            'gift': {
-                'name': 'Подарочный сертификат',
-                'url': f'{self.base_url}/gift',
-                'checks': [
-                    ('(//*[@id="gift-main-modal"]//*[@value="lg_cert"])[1]',
-                     'стр. "Подарочный сертификат", модалка "Оставьте заявку!", lgForm')
-                ]
-            },
-            'hr': {
-                'name': 'Вакансии',
-                'url': f'{self.base_url}/hr',
-                'checks': [
-                    ('(//*[@id="hr-main-modal"]//*[@value="callback_hr"])[1]',
-                     'стр. "Вакансии", модалка "Оставьте анкету ...", lgForm'),
-                    ('(//*[@id="hr-main-modal-2"]//*[@value="callback_hr_partner"])[1]',
-                     'стр. "Вакансии", модалка "Станьте партнером ...", lgForm')
-                ]
-            },
-            'settlements': {
-                'name': 'Родовые поселения',
-                'url': f'{self.base_url}/goal/settlements',
-                'checks': [
-                    ('(//*[@id="settlements-main-modal"]//*[@value="callback_main_settlements"])[1]',
-                     'стр. "Родовые поселения", 1-й экран, модалка "Оставьте заявку!", lgForm'),
-                    ('(//*[@id="settlements-descr-modal"]//*[@value="callback_descr_settlements"])[1]',
-                     'стр. "Родовые поселения", описание, модалка "Оставьте заявку!", lgForm')
-                ]
-            },
-            'broker': {
-                'name': 'для брокеров',
-                'url': f'{self.base_url}/broker',
-                'checks': [
-                    ('(//*[@id="broker-main-modal"]//*[@value="lg_broker_modal"])[1]',
-                     'стр. для брокеров, 1-й экран, модалка "Оставьте заявку!", lgForm')
-                ]
-            },
-            'b2b': {
-                'name': 'для b2b',
-                'url': f'{self.base_url}/b2b',
-                'checks': [
-                    ('(//*[@id="b2b-main-modal"]//*[@value="b2b_modal"])[1]',
-                     'стр. b2b, 1-й экран, модалка "Оставьте заявку!", lgForm')
-                ]
-            }
-        }
+    def _click_button(self, btn) -> bool:
+        """Кликает по кнопке"""
+        try:
+            btn.click()
+            return True
+        except Exception:
+            try:
+                self.driver.execute_script("arguments[0].click();", btn)
+                return True
+            except Exception as e:
+                print(f"     ERROR: Не удалось кликнуть — {e}")
+                return False
 
-        # Проверяем каждую страницу
-        for page_name, config in page_configs.items():
-            page_results = []
+    def _wait_modal_open(self, modal_id: str, timeout: int = 8) -> bool:
+        """Ждёт появления модалки с классом uk-open"""
+        try:
+            self.wait.until(
+                EC.presence_of_element_located((
+                    By.XPATH,
+                    f'//*[@id="{modal_id}" and contains(@class,"uk-open")]'
+                ))
+            )
+            return True
+        except TimeoutException:
+            return False
 
-            if self._safe_navigate(config['url']):
-                for xpath, description in config['checks']:
-                    page_results.append(self._check_element(xpath, description))
-            else:
-                page_results = [False] * len(config['checks'])
+    def _check_phone_clickable(self, modal_id: str, phone_selector: str = None) -> bool:
+        """Проверяет что телефонный инпут внутри модалки кликабелен"""
+        try:
+            xpath = phone_selector if phone_selector else \
+                f'(//*[@id="{modal_id}"]//input[@id="consultationform-phone"])'
+            phone_input = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
+            )
+            return phone_input.is_displayed() and phone_input.is_enabled()
+        except TimeoutException:
+            return False
 
-            results[page_name] = page_results
+    def _get_lgform_value(self, modal_id: str, lgform_selector: str = None) -> str | None:
+        """Читает значение скрытого поля lgForm внутри открытой модалки"""
+        try:
+            xpath = lgform_selector if lgform_selector else \
+                f'//*[@id="{modal_id}"]//input[@id="consultationform-lgform"]'
+            lgform_input = self.driver.find_element(By.XPATH, xpath)
+            return lgform_input.get_attribute('value')
+        except NoSuchElementException:
+            return None
 
-        return results
+    def _close_modal(self, modal_id: str):
+        """Закрывает модалку нажатием Escape"""
+        try:
+            from selenium.webdriver.common.keys import Keys
+            self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
+            time.sleep(0.5)
+        except Exception:
+            pass
 
-    def run_all_checks(self) -> Dict[str, any]:
-        """Запускает все проверки"""
-        print(f"\n     Проверка модальных окон на домене {self.base_url} \n")
+    # ------------------------------------------------------------------
+    # Основная проверка одной модалки
+    # ------------------------------------------------------------------
 
-        results = {
-            'main_page': self.check_main_page(),
-            'other_pages': self.check_pages()
-        }
+    def check_modal(self, modal_config: dict) -> bool:
+        """
+        Полный цикл проверки одной модалки:
+        1. Переход на страницу
+        2. Скролл к кнопке
+        3. Клик по кнопке
+        4. Ожидание открытия модалки
+        5. Проверка кликабельности инпута (видимость для пользователя)
+        6. Проверка значения lgForm
+        """
+        name = modal_config['name']
+        url_name = modal_config['url_name']
+        url = BASE_URL + modal_config['url']
+        btn_selector = modal_config['btn_selector']
+        modal_id = modal_config['modal_id']
+        expected_lgform = modal_config['lgform']
+        phone_selector = modal_config.get('phone_selector', None) # у большинства мод. одинаковые селекторы инпута
+        # телефона, но у некоторых нужно задавать другой
+        lgform_selector = modal_config.get('lgform_selector', None) # у большинства мод. одинаковые селекторы lgForm,
+        # но у некоторых нужно задавать другой
 
-        return results
+        label = f'[{url_name}] {name}'
 
-    def __del__(self):
-        """Закрывает драйвер при уничтожении объекта"""
-        if hasattr(self, 'driver'):
+        is_mobile = modal_config.get('mobile', False)
+        if is_mobile:
+            self._set_mobile_viewport()
+        else:
+            self._set_desktop_viewport()
+
+        # 1. Переход на страницу
+        if not self._navigate(url):
+            self._record_result(label, False, 'не удалось открыть страницу')
+            return False
+
+        # 2. Скролл к кнопке
+        btn = self._scroll_to_element(btn_selector)
+        if btn is None:
+            self._record_result(label, False, 'кнопка не найдена')
+            return False
+
+        # 3. Клик
+        if not self._click_button(btn):
+            self._record_result(label, False, 'не удалось кликнуть по кнопке')
+            return False
+
+        # 4. Ожидание открытия модалки
+        if not self._wait_modal_open(modal_id):
+            self._record_result(label, False, 'модалка не открылась (нет класса uk-open)')
+            return False
+
+        # 5. Проверка видимости инпута
+        if not self._check_phone_clickable(modal_id, phone_selector):
+            self._record_result(label, False, 'телефонный инпут не кликабелен')
+            return False
+
+        # 6. Проверка lgForm
+        actual_lgform = self._get_lgform_value(modal_id, lgform_selector)
+        if actual_lgform != expected_lgform:
+            msg = f'lgForm: ожидалось "{expected_lgform}", получено "{actual_lgform}"'
+            self._record_result(label, False, msg)
+            return False
+
+        self._record_result(label, True)
+        self._close_modal(modal_id)
+        return True
+
+    def _record_result(self, label: str, success: bool, error: str = ''):
+        if success:
+            print(f"     OK: {label}")
+            self.results['success'].append(label)
+        else:
+            print(f" ERROR: {label} — {error}")
+            self.results['failed'].append(f"{label} ({error})")
+
+    # ------------------------------------------------------------------
+    # Запуск всех проверок
+    # ------------------------------------------------------------------
+
+    def run(self, modals_config: list):
+        print(f"\n     Проверка модальных окон МГ [{ENV.upper()}]  {BASE_URL}\n")
+
+        for modal_config in modals_config:
+            self.check_modal(modal_config)
+
+        self._print_summary()
+
+    def _print_summary(self):
+        total = len(self.results['success']) + len(self.results['failed'])
+        success = len(self.results['success'])
+        failed = len(self.results['failed'])
+
+        print(f"\n     {'=' * 50}")
+        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
+
+        if self.results['failed']:
+            print(f"\n     Проблемные модалки:")
+            for item in self.results['failed']:
+                print(f"       - {item}")
+        else:
+            print(f"\n     ОШИБОК НЕТ")
+
+    def close(self):
+        if self.driver:
             self.driver.quit()
 
 
-def main():
-    """Основная функция"""
-    # Для быстрого переключения домена измените base_url:
-    # Продакшн: base_url="https://moigektar.ru"
-    # Локальный: base_url="http://moigektar.localhost"
-    checker = ModalWindowChecker(headless=True, base_url="https://moigektar.ru")
-
+def load_modals_config(config_file: str) -> list:
     try:
-        results = checker.run_all_checks()
-        return results
+        if not os.path.exists(config_file):
+            raise FileNotFoundError(f"Файл конфигурации не найден: {config_file}")
+        with open(config_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data['modals']
+    except Exception as e:
+        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
+        raise
+
+
+def main():
+    modals_config = load_modals_config('../data/modal_mg_list.json')
+
+    checker = ModalChecker()
+    try:
+        checker.run(modals_config)
     finally:
-        checker.driver.quit()
+        checker.close()
 
 
 if __name__ == "__main__":
     main()
 
-
-# Вычисляем и выводим время выполнения теста
+# Время выполнения
 end_time = time.time()
 elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)
@@ -381,3 +299,4 @@ if minutes > 0:
     print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
     print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+
