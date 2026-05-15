@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 import os
+from helpers.auth import auth_mg
 import requests
 from urllib.parse import urljoin
 import logging
@@ -674,7 +675,7 @@ class PageChecker:
         if config["skip_auth"]:
             self.driver.get(f'{MG_BASE_URL}/catalogue-no-auth')
         else:
-            self.auth()
+            auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
         print(f"\n     Начинаем проверку страниц [{ENV.upper()}]")
         print(f"     Исключаемые типы: {', '.join(self.excluded_types)}")
@@ -797,49 +798,6 @@ class PageChecker:
                             print(f"         JS: {msg}...")
 
 
-    def auth(self):
-        """Авторизация в системе"""
-        creds    = data[config["cred_key"]]
-        auth_url = config["auth_url"]
-        try:
-            print("     Выполняем авторизацию...")
-            self.driver.get(auth_url)
-            auth_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '(//*[@href="#modal-auth-lk"])[1]'))
-            )
-            auth_button.click()
-            time.sleep(1)
-
-            # Переключаемся на вход по паролю
-            password_tab = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-            password_tab.click()
-            time.sleep(0.5)
-
-            # Заполняем форму
-            name_field    = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-            password_field = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            submit_button  = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
-
-            name_field.send_keys(str(creds["login"]))
-            password_field.send_keys(str(creds["password"]))
-            submit_button.click()
-
-            # Ждем успешной авторизации
-            time.sleep(3)
-
-            # Проверяем, что авторизация прошла успешно
-            try:
-                self.driver.find_element(By.XPATH, '(//a[@href="https://moigektar.ru/catalogue/compare"])[1]')
-                print("     Авторизация успешна")
-                return True
-            except:
-                logger.warning("Авторизация возможно не удалась")
-                return True  # Все равно продолжаем проверку
-
-        except Exception as e:
-            logger.error(f"Ошибка авторизации: {e}")
-            return False
-
     def close(self):
         """Закрытие ресурсов"""
         if self.driver:
@@ -910,9 +868,6 @@ def main():
         if not checker.init_driver():
             logger.error("Не удалось инициализировать WebDriver")
             return
-
-        # Выполняем авторизацию (если нужно)
-        # checker.auth()
 
         # Проверяем все страницы
         results = checker.check_all_pages(pages_config, delay=1)
