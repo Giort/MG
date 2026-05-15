@@ -14,6 +14,7 @@ from selenium.webdriver.common.keys import Keys
 sw_options = {'disable_capture': False}
 import json
 from datetime import datetime
+from helpers.auth import auth_mg
 
 
 # Засекаем время начала теста
@@ -22,11 +23,27 @@ start_time = time.time()
 with open('../data/data.json', 'r') as file:
     data = json.load(file)
 
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
-#MG_BASE_URL = "http://moigektar.localhost"
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
 
-print(f"\n     Проверка отправки целей на моб. МГ на домене {MG_BASE_URL} \n")
+ENV_CONFIG = {
+    "prod": {
+        "base_url": "https://moigektar.ru",
+        "cred_key": "LK_cred",
+    },
+    "local": {
+        "base_url": "http://moigektar.localhost",
+        "cred_key": "LK_local_cred",
+    },
+}
+
+config      = ENV_CONFIG[ENV]
+MG_BASE_URL = config["base_url"]
+
+print(f"\n     Проверка отправки целей на моб. МГ на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
 
 def init_driver():
     """Инициализация драйвера"""
@@ -51,26 +68,6 @@ def remove_popup(driver):
         driver.execute_script("arguments[0].remove();", popup_webinar)
     except Exception:
         pass
-
-def auth_user(driver):
-    """Авторизация пользователя"""
-    try:
-        driver.get("https://moigektar.ru/?__counters=1")
-        driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
-        time.sleep(2)
-        tab = driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-        name = driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-        password = driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-        btn = driver.find_element(By.XPATH, '//*[text()="Войти"]')
-        tab.click()
-        name.send_keys(str(data["LK_cred"]["login"]))
-        password.send_keys(str(data["LK_cred"]["password"]))
-        btn.click()
-        time.sleep(10)
-        return True
-    except Exception as e:
-        print(f" ERROR: Не удалось авторизоваться - {str(e)}")
-        return False
 
 
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
@@ -135,12 +132,12 @@ def check_catalog_modal_auth_show(tests, max_attempts=3):
 # Параметры для check_catalog_modal_auth_show
 modal_tests = [
     {
-        'url': 'https://moigektar.ru/catalogue/?__counters=1',
+        'url': f'{MG_BASE_URL}/catalogue/?__counters=1',
         'text': 'каталога без авторизации',
         'goal': 'catalog_v4.authwall_shown'
     },
     {
-        'url': 'https://moigektar.ru/batches/59228?__counters=1',
+        'url': f'{MG_BASE_URL}/batches/59228?__counters=1',
         'text': 'стр. актива без авторизации',
         'goal': 'catalog_v4.authwall_shown'
     }
@@ -163,7 +160,7 @@ def check_header_auth_modal_goal(text, max_attempts=3):
         driver = None
         try:
             driver = init_driver()
-            driver.get('https://moigektar.ru/?__counters=1')
+            driver.get(f'{MG_BASE_URL}/?__counters=1')
             button = driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]')
             button.click()
             time.sleep(5)
@@ -213,7 +210,7 @@ def check_catalog_modal_auth_back_to_main_goal(text, max_attempts=3):
         try:
             driver = init_driver()
             # Открываем страницу каталога
-            driver.get('https://moigektar.ru/catalogue/?__counters=1')
+            driver.get(f'{MG_BASE_URL}/catalogue/?__counters=1')
             back_button = driver.find_element(By.XPATH, '//*[text()[contains(., "Вернуться на главную")]]')
             time.sleep(1)
             back_button.click()
@@ -270,7 +267,7 @@ def check_catalog_modal_social_media_btn_goal(tests, max_attempts=3):
                     continue
 
                 try:
-                    driver.get('https://moigektar.ru/?__counters=1')
+                    driver.get(f'{MG_BASE_URL}/?__counters=1')
                     driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[6]').click()
                     button = driver.find_element(By.CLASS_NAME, test['btn_selector'])
                     button.click()
@@ -352,7 +349,7 @@ def check_quiz_btn_goal(tests, max_attempts=3):
                 driver = init_driver()
                 actions = ActionChains(driver)
 
-                driver.get('https://moigektar.ru/?__counters=1')
+                driver.get(f'{MG_BASE_URL}/?__counters=1')
                 remove_popup(driver)
                 btn = driver.find_element(By.XPATH, test['quiz_btn'])
                 actions.move_to_element(btn).perform()
@@ -432,7 +429,7 @@ def check_batch_card_goal(text, max_attempts=3):
         try:
             driver = init_driver()
             actions = ActionChains(driver)
-            driver.get('https://moigektar.ru/?__counters=1')
+            driver.get(f'{MG_BASE_URL}/?__counters=1')
             remove_popup(driver)
             card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[9]')
             actions.move_to_element(card).perform()
@@ -485,7 +482,7 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
         try:
             driver = init_driver()
             actions = ActionChains(driver)
-            driver.get("https://moigektar.ru/?__counters=1")
+            driver.get(f"{MG_BASE_URL}/?__counters=1")
             time.sleep(5)
             remove_popup(driver)
 
@@ -575,7 +572,7 @@ def check_news_button_goal(text, max_attempts=3):
         try:
             driver = init_driver()
             actions = ActionChains(driver)
-            driver.get('https://moigektar.ru/?__counters=1')
+            driver.get(f'{MG_BASE_URL}/?__counters=1')
 
             remove_popup(driver)
 
@@ -633,7 +630,7 @@ def check_locations_button_goal(text, max_attempts=3):
         try:
             driver = init_driver()
             actions = ActionChains(driver)
-            driver.get('https://moigektar.ru/?__counters=1')
+            driver.get(f'{MG_BASE_URL}/?__counters=1')
 
             remove_popup(driver)
 
@@ -701,7 +698,7 @@ def check_catalogue_button_goal(button_tests, max_attempts=3):
                     continue
 
                 try:
-                    driver.get("https://moigektar.ru/catalogue-no-auth/?__counters=1")
+                    driver.get(f"{MG_BASE_URL}/catalogue-no-auth/?__counters=1")
                     time.sleep(5)
                     if not test['goal'] == "catalog_v4.filter_button_click":
                         actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
