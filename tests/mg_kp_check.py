@@ -29,10 +29,30 @@ start_time = time.time()
 with open('../data/data.json', 'r') as file:
     data = json.load(file)
 
-print(f"\n     Проверка генерации КП \n")
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
+
+ENV_CONFIG = {
+    "prod": {
+        "base_url":  "https://moigektar.ru",
+        "cred_key":  "LK_cred",
+    },
+    "local": {
+        "base_url":  "http://moigektar.localhost",
+        "cred_key":  "LK_local_cred",
+    },
+}
+
+config   = ENV_CONFIG[ENV]
+BASE_URL = config["base_url"]
+
+print(f"\n     Проверка генерации КП на домене {BASE_URL} | [{ENV.upper()}]\n")
 
 # логин
-driver.get("https://moigektar.ru/catalogue")
+driver.get(f"{BASE_URL}/catalogue")
 
 tab = driver.find_element(by=By.XPATH, value='(//*[text()="По паролю"])[2]')
 name = driver.find_element(by=By.XPATH, value='(//*[@id="authform-login"])[2]')
@@ -40,14 +60,14 @@ password = driver.find_element(by=By.XPATH, value='(//*[@id="authform-password"]
 btn = driver.find_element(by=By.XPATH, value='(//*[text()="Войти"])[2]')
 
 tab.click()
-name.send_keys(str(data["LK_cred"]["login"]))
-password.send_keys(str(data["LK_cred"]["password"]))
+name.send_keys(str(data[config["cred_key"]]["login"]))
+password.send_keys(str(data[config["cred_key"]]["password"]))
 btn.click()
 time.sleep(10)
 
 # сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
-driver.get("https://moigektar.ru/catalogue?sortId=price")
+driver.get(f"{BASE_URL}/catalogue?sortId=price")
 time.sleep(2)
 actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
 time.sleep(2)

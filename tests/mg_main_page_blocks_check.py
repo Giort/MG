@@ -14,11 +14,22 @@ import json
 # Засекаем время начала теста
 start_time = time.time()
 
-# Проверяемый урл
-MG_BASE_URL = "https://moigektar.ru"
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
 
+ENV_CONFIG = {
+    "prod": {
+        "base_url": "https://moigektar.ru",
+    },
+    "local": {
+        "base_url": "http://moigektar.localhost",
+    },
+}
 
-# MG_BASE_URL = "http://moigektar.localhost"
+MG_BASE_URL = ENV_CONFIG[ENV]["base_url"]
 
 
 class PageBlocksChecker:
@@ -103,7 +114,6 @@ class PageBlocksChecker:
 
     def check_all_blocks(self, blocks_config, delay=1):
         """Проверка всех блоков из конфигурации"""
-        print(f"\n     Проверка видимости блоков на странице: {self.mg_base_url}/ \n")
 
         results = {}
 
@@ -327,6 +337,8 @@ BLOCKS_CONFIG = [
 
 def main():
     checker = PageBlocksChecker(MG_BASE_URL)
+
+    print(f"\n     Проверка состояний пользовательских разделов на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
 
     try:
         checker.init_driver()

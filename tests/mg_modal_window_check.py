@@ -237,7 +237,7 @@ class ModalChecker:
     # ------------------------------------------------------------------
 
     def run(self, modals_config: list):
-        print(f"\n     Проверка модальных окон МГ [{ENV.upper()}]  {BASE_URL}\n")
+        print(f"\n     Проверка модальных окон МГ на домене {BASE_URL} | [{ENV.upper()}]\n")
 
         for modal_config in modals_config:
             self.check_modal(modal_config)
