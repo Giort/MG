@@ -16,9 +16,28 @@ start_time = time.time()
 with open('../data/data.json', 'r') as file:
     data = json.load(file)
 
-# Базовые URL
-MG_BASE_URL = "https://moigektar.ru"
-LK_BASE_URL = "https://cabinet.moigektar.ru"
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "local"
+# ============================================================
+
+ENV_CONFIG = {
+    "prod": {
+        "mg_base_url": "https://moigektar.ru",
+        "lk_base_url": "https://cabinet.moigektar.ru",
+        "cred_key":    "LK_cred",
+    },
+    "local": {
+        "mg_base_url": "http://moigektar.localhost",
+        "lk_base_url": "http://cabinet.moigektar.localhost",
+        "cred_key":    "LK_local_cred",
+    },
+}
+
+config      = ENV_CONFIG[ENV]
+MG_BASE_URL = config["mg_base_url"]
+LK_BASE_URL = config["lk_base_url"]
 
 # Конфигурация страниц
 PAGES = {
@@ -171,8 +190,8 @@ class PageChecker:
             password_input = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
             submit_btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
 
-            name_input.send_keys(str(data.get("LK_cred", {}).get("login", "")))
-            password_input.send_keys(str(data.get("LK_cred", {}).get("password", "")))
+            name_input.send_keys(str(data.get(config["cred_key"], {}).get("login", "")))
+            password_input.send_keys(str(data.get(config["cred_key"], {}).get("password", "")))
             submit_btn.click()
 
             time.sleep(5)
@@ -311,7 +330,7 @@ def main():
     """Основная функция"""
 
     # Выводим заголовок в самом начале
-    print(f"\n     Проверка состояний пользовательских страниц на домене {MG_BASE_URL}")
+    print(f"\n     Проверка состояний пользовательских страниц на домене {MG_BASE_URL} | [{ENV.upper()}]")
 
     checker = PageChecker()
 

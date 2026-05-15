@@ -15,10 +15,22 @@ start_time = time.time()
 class FormChecker:
     """Класс для проверки форм обратной связи на сайте МойГектар"""
 
-    # Базовый URL сайта - можно легко переключаться между prod и local
-    BASE_URL = "https://moigektar.ru"
+    # ============================================================
+    #  Переключение окружения: "prod" или "local"
+    # ============================================================
+    ENV = "local"
+    # ============================================================
 
-    # BASE_URL = "http://moigektar.localhost"
+    ENV_CONFIG = {
+        "prod": {
+            "base_url": "https://moigektar.ru",
+        },
+        "local": {
+            "base_url": "http://moigektar.localhost",
+        },
+    }
+
+    BASE_URL = ENV_CONFIG[ENV]["base_url"]
 
     def __init__(self, headless=False):
         self.driver = self._init_driver(headless)
@@ -477,7 +489,7 @@ class FormChecker:
 
     def run_all_checks(self):
         """Запуск всех проверок"""
-        print("\n     Проверка форм на сайте МойГектар \n")
+        print(f"\n     Проверка форм на сайте МойГектар {self.BASE_URL} | [{self.ENV.upper()}]\n")
 
         self.check_main_page_forms()
         self.check_catalog_forms()

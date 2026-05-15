@@ -3,285 +3,342 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
-import json
 import time
-import os
+import json
 
+# Засекаем время начала теста
+start_time = time.time()
 
-# МГ: проверка доступности и атрибутов модальных окон
+# Загрузка данных авторизации
+with open('../data/data.json', 'r') as file:
+    data = json.load(file)
 
 # ============================================================
 #  Переключение окружения: "prod" или "local"
 # ============================================================
-ENV = "prod"
+ENV = "local"
 # ============================================================
 
 ENV_CONFIG = {
     "prod": {
-        "base_url": "https://moigektar.ru",
+        "mg_base_url": "https://moigektar.ru",
+        "lk_base_url": "https://cabinet.moigektar.ru",
+        "cred_key":    "LK_cred",
     },
     "local": {
-        "base_url": "http://moigektar.localhost",
+        "mg_base_url": "http://moigektar.localhost",
+        "lk_base_url": "http://cabinet.moigektar.localhost",
+        "cred_key":    "LK_local_cred",
     },
 }
 
-config = ENV_CONFIG[ENV]
-BASE_URL = config["base_url"]
+config      = ENV_CONFIG[ENV]
+MG_BASE_URL = config["mg_base_url"]
+LK_BASE_URL = config["lk_base_url"]
 
-start_time = time.time()
+# Конфигурация страниц
+PAGES = {
+    'catalogue': {
+        'name': 'каталог',
+        'path': 'catalogue',
+        'xpath_unauth': '//*[text()[contains(.,"Доступ в каталог")]]',
+        'xpath_noauth': '(//*[(contains(@class, "js-batch-name"))])[1]',
+        'xpath_auth': '(//*[(contains(@class, "js-batch-name"))])[1]',
+    },
+    'asset': {
+        'name': 'страница актива',
+        'path': 'batches/30608',
+        'xpath_unauth': '//*[text()[contains(.,"Доступ в каталог")]]',
+        'xpath_noauth': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',
+        'xpath_auth': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',
+    },
+    'wishlist': {
+        'name': 'избранное',
+        'path': 'catalogue/wishlist',
+        'xpath_unauth': '//*[text()[contains(.,"для авторизованных пользователей.")]]',
+        'xpath_noauth': '//*[text()[contains(.,"для авторизованных пользователей.")]]',
+        'xpath_auth': '//*[text()[contains(.,"Мои подборки")]]',
+    },
+    'compare': {
+        'name': 'сравнения',
+        'path': 'catalogue/compare',
+        'xpath_unauth': '//*[text()[contains(.,"для авторизованных пользователей.")]]',
+        'xpath_noauth': '//*[text()[contains(.,"для авторизованных пользователей.")]]',
+        'xpath_auth': '//*[text()[contains(.,"Выбранные участки")]]',
+    }
+}
+
+# Специальные страницы с нестандартными путями
+SPECIAL_PAGES = {
+    'catalogue_noauth': {
+        'name': 'каталог',
+        'path': 'catalogue-no-auth',
+        'xpath_unauth': None,  # не используется
+        'xpath_noauth': '(//*[(contains(@class, "js-batch-name"))])[1]',
+        'xpath_auth': '(//*[(contains(@class, "js-batch-name"))])[1]',
+    }
+}
 
 
-class ModalChecker:
-    def __init__(self):
+class PageChecker:
+    """
+    Универсальный класс для проверки доступности страниц
+    с разными состояниями авторизации
+    """
+
+    # Конфигурации состояний
+    STATES = {
+        'unauth': {
+            'page_keys': ['catalogue', 'asset', 'wishlist', 'compare'],
+            'page_source': PAGES,
+            'xpath_suffix': 'unauth',
+            'need_auth': False,
+            'need_demo': False,
+            'need_noauth_prefix': False,
+            'description': 'неавторизованного пользователя'
+        },
+        'demo': {
+            'page_keys': ['catalogue', 'asset', 'wishlist', 'compare'],
+            'page_source': PAGES,
+            'xpath_suffix': 'unauth',
+            'need_auth': False,
+            'need_demo': True,
+            'need_noauth_prefix': False,
+            'description': 'демо-пользователя'
+        },
+        'noauth': {
+            'page_keys': ['catalogue_noauth', 'asset', 'wishlist', 'compare'],
+            'page_source': {**PAGES, **SPECIAL_PAGES},
+            'xpath_suffix': 'noauth',
+            'need_auth': False,
+            'need_demo': False,
+            'need_noauth_prefix': True,
+            'description': 'при входе по no-auth'
+        },
+        'auth': {
+            'page_keys': ['catalogue_noauth', 'asset', 'wishlist', 'compare'],
+            'page_source': {**PAGES, **SPECIAL_PAGES},
+            'xpath_suffix': 'auth',
+            'need_auth': True,
+            'need_demo': False,
+            'need_noauth_prefix': False,
+            'description': 'авторизованного пользователя'
+        }
+    }
+
+    def __init__(self, mg_base_url=MG_BASE_URL, lk_base_url=LK_BASE_URL):
+        self.mg_base_url = mg_base_url.rstrip('/')
+        self.lk_base_url = lk_base_url.rstrip('/')
+        self.driver = None
+
+    def init_driver(self):
+        """Инициализация драйвера Chrome"""
         ch_options = Options()
         ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
-        ch_options.add_argument('--no-sandbox')
-        ch_options.add_argument('--disable-dev-shm-usage')
-
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
-        self.driver.set_window_size(1660, 1000)
-        self.wait = WebDriverWait(self.driver, 10)
-        self.actions = ActionChains(self.driver)
+        self.driver.set_window_size(1680, 1000)
+        self.driver.implicitly_wait(10)
+        return self.driver
 
-        self.results = {'success': [], 'failed': []}
+    def _remove_popups(self):
+        """Удаление всплывающих окон"""
+        popup_selectors = [
+            "//div[@id='visitors-popup']",
+            "//*[contains(@class, 'js-webinar-running-event-modal')]"
+        ]
+        for selector in popup_selectors:
+            try:
+                popup = self.driver.find_element(By.XPATH, selector)
+                self.driver.execute_script("arguments[0].remove();", popup)
+            except Exception:
+                pass
 
-    # ------------------------------------------------------------------
-    # Вспомогательные методы
-    # ------------------------------------------------------------------
+    def _demo_auth(self):
+        """Авторизация как демо-пользователь (через открытие ЛК)"""
 
-    def _set_mobile_viewport(self):
-        self.driver.set_window_size(390, 844)
-
-    def _set_desktop_viewport(self):
-        self.driver.set_window_size(1660, 1000)
-
-    def _remove_popup(self):
-        """Закрывает попап посетителей если он появился"""
         try:
-            popup_close = self.driver.find_element(
-                By.XPATH, '//*[contains(@class,"js-visitor-popup-close")]'
-            )
-            popup_close.click()
-            time.sleep(0.5)
-        except NoSuchElementException:
-            pass
-
-    def _navigate(self, url: str) -> bool:
-        """Переходит на страницу и убирает попап"""
-        try:
-            self.driver.get(url)
-            time.sleep(1)
-            self._remove_popup()
+            self.driver.get(self.lk_base_url)
+            time.sleep(2)
             return True
         except Exception as e:
-            print(f"     ERROR: Не удалось открыть {url} — {e}")
+            print(f" ERROR: Не удалось выполнить демо-авторизацию - {str(e)}")
             return False
 
-    def _scroll_to_element(self, selector: str) -> object | None:
-        """Находит элемент и скроллит к нему"""
-        from selenium.common.exceptions import MoveTargetOutOfBoundsException
+    def _full_auth(self):
+        """Полноценная авторизация с логином и паролем"""
         try:
-            btn = self.driver.find_element(By.XPATH, selector)
-            try:
-                self.actions.move_to_element(btn).perform()
-            except MoveTargetOutOfBoundsException:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
-            time.sleep(0.5)
-            return btn
-        except NoSuchElementException:
-            return None
+            self.driver.get(f"{self.mg_base_url}/")
+            time.sleep(1)
 
-    def _click_button(self, btn) -> bool:
-        """Кликает по кнопке"""
-        try:
-            btn.click()
+            self._remove_popups()
+
+            # Открываем модальное окно авторизации
+            self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
+            time.sleep(1)
+
+            # Переключаемся на вкладку "По паролю"
+            self.driver.find_element(By.XPATH, '//*[text()="По паролю"]').click()
+            time.sleep(0.5)
+
+            # Вводим данные
+            name_input = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
+            password_input = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
+            submit_btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
+
+            name_input.send_keys(str(data.get(config["cred_key"], {}).get("login", "")))
+            password_input.send_keys(str(data.get(config["cred_key"], {}).get("password", "")))
+            submit_btn.click()
+
+            time.sleep(5)
+
             return True
-        except Exception:
+        except Exception as e:
+            print(f" ERROR: Не удалось авторизоваться - {str(e)}")
+            return False
+
+    def _get_pages_for_state(self, state):
+        """
+        Получить список страниц для конкретного состояния
+
+        Args:
+            state: ключ состояния ('unauth', 'demo', 'noauth', 'auth')
+
+        Returns:
+            list: список словарей с параметрами страниц
+        """
+        state_config = self.STATES.get(state)
+        if not state_config:
+            return []
+
+        pages = []
+        for page_key in state_config['page_keys']:
+            page = state_config['page_source'].get(page_key)
+            if page:
+                xpath_key = f"xpath_{state_config['xpath_suffix']}"
+                xpath = page.get(xpath_key)
+
+                # Пропускаем страницы, для которых нет XPath для этого состояния
+                if xpath is None:
+                    continue
+
+                pages.append({
+                    'name': page['name'],
+                    'path': page['path'],
+                    'xpath': xpath
+                })
+
+        return pages
+
+    def check_page(self, page_config, timeout=20):
+        """
+        Проверка отдельной страницы
+
+        Args:
+            page_config: словарь с параметрами страницы
+            timeout: время ожидания элемента
+        """
+        page_path = page_config['path']
+        page_name = page_config['name']
+        xpath_selector = page_config['xpath']
+
+        full_url = f"{self.mg_base_url}/{page_path.lstrip('/')}"
+
+        for attempt in range(3):
             try:
-                self.driver.execute_script("arguments[0].click();", btn)
+                self.driver.get(full_url)
+
+                element = WebDriverWait(self.driver, timeout).until(
+                    EC.visibility_of_element_located((By.XPATH, xpath_selector))
+                )
+
+                print(f"     OK: {page_name}")
                 return True
+
+            except TimeoutException:
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - элемент не найден")
+                    return False
             except Exception as e:
-                print(f"     ERROR: Не удалось кликнуть — {e}")
-                return False
+                if attempt < 2:
+                    time.sleep(1)
+                else:
+                    print(f" ERROR: {page_name} - {str(e)}")
+                    return False
 
-    def _wait_modal_open(self, modal_id: str, timeout: int = 8) -> bool:
-        """Ждёт появления модалки с классом uk-open"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located((
-                    By.XPATH,
-                    f'//*[@id="{modal_id}" and contains(@class,"uk-open")]'
-                ))
-            )
-            return True
-        except TimeoutException:
-            return False
+        return False
 
-    def _check_phone_clickable(self, modal_id: str, phone_selector: str = None) -> bool:
-        """Проверяет что телефонный инпут внутри модалки кликабелен"""
-        try:
-            xpath = phone_selector if phone_selector else \
-                f'(//*[@id="{modal_id}"]//input[@id="consultationform-phone"])'
-            phone_input = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
-            )
-            return phone_input.is_displayed() and phone_input.is_enabled()
-        except TimeoutException:
-            return False
-
-    def _get_lgform_value(self, modal_id: str, lgform_selector: str = None) -> str | None:
-        """Читает значение скрытого поля lgForm внутри открытой модалки"""
-        try:
-            xpath = lgform_selector if lgform_selector else \
-                f'//*[@id="{modal_id}"]//input[@id="consultationform-lgform"]'
-            lgform_input = self.driver.find_element(By.XPATH, xpath)
-            return lgform_input.get_attribute('value')
-        except NoSuchElementException:
-            return None
-
-    def _close_modal(self, modal_id: str):
-        """Закрывает модалку нажатием Escape"""
-        try:
-            from selenium.webdriver.common.keys import Keys
-            self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-            time.sleep(0.5)
-        except Exception:
-            pass
-
-    # ------------------------------------------------------------------
-    # Основная проверка одной модалки
-    # ------------------------------------------------------------------
-
-    def check_modal(self, modal_config: dict) -> bool:
+    def run_check(self, state='unauth', delay=1):
         """
-        Полный цикл проверки одной модалки:
-        1. Переход на страницу
-        2. Скролл к кнопке
-        3. Клик по кнопке
-        4. Ожидание открытия модалки
-        5. Проверка кликабельности инпута (видимость для пользователя)
-        6. Проверка значения lgForm
+        Запуск проверки для определённого состояния
+
+        Args:
+            state: состояние ('unauth', 'demo', 'noauth', 'auth')
+            delay: задержка между проверками
         """
-        name = modal_config['name']
-        url_name = modal_config['url_name']
-        url = BASE_URL + modal_config['url']
-        btn_selector = modal_config['btn_selector']
-        modal_id = modal_config['modal_id']
-        expected_lgform = modal_config['lgform']
-        phone_selector = modal_config.get('phone_selector', None) # у большинства мод. одинаковые селекторы инпута
-        # телефона, но у некоторых нужно задавать другой
-        lgform_selector = modal_config.get('lgform_selector', None) # у большинства мод. одинаковые селекторы lgForm,
-        # но у некоторых нужно задавать другой
+        state_config = self.STATES.get(state)
+        if not state_config:
+            print(f" ERROR: Неизвестное состояние '{state}'")
+            return {}
 
-        label = f'[{url_name}] {name}'
+        print(f"\n     Проверка страниц для {state_config['description']}")
 
-        is_mobile = modal_config.get('mobile', False)
-        if is_mobile:
-            self._set_mobile_viewport()
-        else:
-            self._set_desktop_viewport()
+        # Подготовка перед проверками
+        if state_config.get('need_demo'):
+            if not self._demo_auth():
+                return {}
+            time.sleep(6)
 
-        # 1. Переход на страницу
-        if not self._navigate(url):
-            self._record_result(label, False, 'не удалось открыть страницу')
-            return False
+        if state_config.get('need_auth'):
+            if not self._full_auth():
+                return {}
+            time.sleep(6)
 
-        # 2. Скролл к кнопке
-        btn = self._scroll_to_element(btn_selector)
-        if btn is None:
-            self._record_result(label, False, 'кнопка не найдена')
-            return False
+        # Получаем страницы для этого состояния
+        pages = self._get_pages_for_state(state)
 
-        # 3. Клик
-        if not self._click_button(btn):
-            self._record_result(label, False, 'не удалось кликнуть по кнопке')
-            return False
+        # Проверка страниц
+        results = {}
+        for page_config in pages:
+            result = self.check_page(page_config)
+            results[page_config['name']] = result
+            time.sleep(delay)
 
-        # 4. Ожидание открытия модалки
-        if not self._wait_modal_open(modal_id):
-            self._record_result(label, False, 'модалка не открылась (нет класса uk-open)')
-            return False
+        return results
 
-        # 5. Проверка видимости инпута
-        if not self._check_phone_clickable(modal_id, phone_selector):
-            self._record_result(label, False, 'телефонный инпут не кликабелен')
-            return False
-
-        # 6. Проверка lgForm
-        actual_lgform = self._get_lgform_value(modal_id, lgform_selector)
-        if actual_lgform != expected_lgform:
-            msg = f'lgForm: ожидалось "{expected_lgform}", получено "{actual_lgform}"'
-            self._record_result(label, False, msg)
-            return False
-
-        self._record_result(label, True)
-        self._close_modal(modal_id)
-        return True
-
-    def _record_result(self, label: str, success: bool, error: str = ''):
-        if success:
-            print(f"     OK: {label}")
-            self.results['success'].append(label)
-        else:
-            print(f" ERROR: {label} — {error}")
-            self.results['failed'].append(f"{label} ({error})")
-
-    # ------------------------------------------------------------------
-    # Запуск всех проверок
-    # ------------------------------------------------------------------
-
-    def run(self, modals_config: list):
-        print(f"\n     Проверка модальных окон МГ [{ENV.upper()}]  {BASE_URL}\n")
-
-        for modal_config in modals_config:
-            self.check_modal(modal_config)
-
-        self._print_summary()
-
-    def _print_summary(self):
-        total = len(self.results['success']) + len(self.results['failed'])
-        success = len(self.results['success'])
-        failed = len(self.results['failed'])
-
-        print(f"\n     {'=' * 50}")
-        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
-
-        if self.results['failed']:
-            print(f"\n     Проблемные модалки:")
-            for item in self.results['failed']:
-                print(f"       - {item}")
-        else:
-            print(f"\n     ОШИБОК НЕТ")
+    def run_all_checks(self, delay=1):
+        """Запуск всех проверок последовательно"""
+        for state in self.STATES.keys():
+            self.init_driver()
+            self.run_check(state, delay)
+            self.close()
+            time.sleep(2)
 
     def close(self):
+        """Закрытие драйвера"""
         if self.driver:
             self.driver.quit()
 
 
-def load_modals_config(config_file: str) -> list:
-    try:
-        if not os.path.exists(config_file):
-            raise FileNotFoundError(f"Файл конфигурации не найден: {config_file}")
-        with open(config_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return data['modals']
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        raise
-
-
 def main():
-    modals_config = load_modals_config('../data/modal_mg_list_test.json')
+    """Основная функция"""
 
-    checker = ModalChecker()
+    # Выводим заголовок в самом начале
+    print(f"\n     Проверка состояний пользовательских страниц на домене {MG_BASE_URL} | [{ENV.upper()}]")
+
+    checker = PageChecker()
+
     try:
-        checker.run(modals_config)
+        checker.run_all_checks()
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
     finally:
         checker.close()
 
@@ -289,14 +346,13 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Время выполнения
-end_time = time.time()
-elapsed_time = end_time - start_time
-minutes = int(elapsed_time // 60)
-seconds = int(elapsed_time % 60)
+    # Вычисляем и выводим время выполнения теста
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    minutes = int(elapsed_time // 60)
+    seconds = int(elapsed_time % 60)
 
-if minutes > 0:
-    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
-else:
-    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
-
+    if minutes > 0:
+        print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    else:
+        print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
