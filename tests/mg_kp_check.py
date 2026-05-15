@@ -19,6 +19,8 @@ from selenium.common.exceptions import ElementNotVisibleException
 from selenium.webdriver.common.keys import Keys
 import time
 import json
+from helpers.auth import auth_mg
+
 driver.set_window_size(1600, 1000)
 driver.implicitly_wait(10)
 
@@ -39,10 +41,12 @@ ENV_CONFIG = {
     "prod": {
         "base_url":  "https://moigektar.ru",
         "cred_key":  "LK_cred",
+        "auth_url":    "https://moigektar.ru/",
     },
     "local": {
         "base_url":  "http://moigektar.localhost",
         "cred_key":  "LK_local_cred",
+        "auth_url":    "http://moigektar.localhost/",
     },
 }
 
@@ -54,16 +58,7 @@ print(f"\n     Проверка генерации КП на домене {BASE_
 # логин
 driver.get(f"{BASE_URL}/catalogue")
 
-tab = driver.find_element(by=By.XPATH, value='(//*[text()="По паролю"])[2]')
-name = driver.find_element(by=By.XPATH, value='(//*[@id="authform-login"])[2]')
-password = driver.find_element(by=By.XPATH, value='(//*[@id="authform-password"])[2]')
-btn = driver.find_element(by=By.XPATH, value='(//*[text()="Войти"])[2]')
-
-tab.click()
-name.send_keys(str(data[config["cred_key"]]["login"]))
-password.send_keys(str(data[config["cred_key"]]["password"]))
-btn.click()
-time.sleep(10)
+auth_mg(driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
 # сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
@@ -91,8 +86,6 @@ while count_kp < 21:
             break
         else:
             driver.refresh()
-
-
 
 time.sleep(3)
 driver.quit()
