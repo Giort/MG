@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 import os
+from helpers.auth import auth_mg
 
 # ============================================================
 #  Переключение окружения: "prod" или "local"
@@ -50,34 +51,13 @@ class PageChecker:
 
     def init_driver(self):
         ch_options = Options()
-        ch_options.add_argument('--headless')
+        # ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
         self.driver.set_window_size(1680, 1000)
         self.driver.implicitly_wait(10)
         return self.driver
-
-    def auth(self):
-        creds = data[config["cred_key"]]
-        auth_url = config["auth_url"]
-        try:
-            self.driver.get(auth_url)
-            self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
-            time.sleep(2)
-            tab      = self.driver.find_element(By.XPATH, '//*[text()="По паролю"]')
-            name     = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-            password = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            btn      = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
-            tab.click()
-            name.send_keys(str(creds["login"]))
-            password.send_keys(str(creds["password"]))
-            btn.click()
-            time.sleep(5)
-            return True
-        except Exception as e:
-            print(f" ERROR: Не удалось авторизоваться - {str(e)}")
-            return False
 
     def check_page(self, page_config, timeout=20):
         page_path      = page_config['path']
@@ -115,7 +95,7 @@ class PageChecker:
             self.driver.get(f'{self.mg_base_url}/catalogue-no-auth')
             time.sleep(6)
         else:
-            self.auth()
+            auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
         results = {}
         for page_config in pages_config:
