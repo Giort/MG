@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
+from helpers.auth import auth_mg
 
 # Засекаем время начала теста
 start_time = time.time()
@@ -27,11 +28,13 @@ ENV_CONFIG = {
         "mg_base_url": "https://moigektar.ru",
         "lk_base_url": "https://cabinet.moigektar.ru",
         "cred_key":    "LK_cred",
+        "auth_url":    "https://moigektar.ru/",
     },
     "local": {
         "mg_base_url": "http://moigektar.localhost",
         "lk_base_url": "http://cabinet.moigektar.localhost",
         "cred_key":    "LK_local_cred",
+        "auth_url":    "http://moigektar.localhost/",
     },
 }
 
@@ -137,7 +140,7 @@ class PageChecker:
     def init_driver(self):
         """Инициализация драйвера Chrome"""
         ch_options = Options()
-        ch_options.add_argument('--headless')
+        # ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -167,38 +170,6 @@ class PageChecker:
             return True
         except Exception as e:
             print(f" ERROR: Не удалось выполнить демо-авторизацию - {str(e)}")
-            return False
-
-    def _full_auth(self):
-        """Полноценная авторизация с логином и паролем"""
-        try:
-            self.driver.get(f"{self.mg_base_url}/")
-            time.sleep(1)
-
-            self._remove_popups()
-
-            # Открываем модальное окно авторизации
-            self.driver.find_element(By.XPATH, '(//*[@href="#modal-auth-lk"])[1]').click()
-            time.sleep(1)
-
-            # Переключаемся на вкладку "По паролю"
-            self.driver.find_element(By.XPATH, '//*[text()="По паролю"]').click()
-            time.sleep(0.5)
-
-            # Вводим данные
-            name_input = self.driver.find_element(By.XPATH, '//*[@id="authform-login"]')
-            password_input = self.driver.find_element(By.XPATH, '//*[@id="authform-password"]')
-            submit_btn = self.driver.find_element(By.XPATH, '//*[text()="Войти"]')
-
-            name_input.send_keys(str(data.get(config["cred_key"], {}).get("login", "")))
-            password_input.send_keys(str(data.get(config["cred_key"], {}).get("password", "")))
-            submit_btn.click()
-
-            time.sleep(5)
-
-            return True
-        except Exception as e:
-            print(f" ERROR: Не удалось авторизоваться - {str(e)}")
             return False
 
     def _get_pages_for_state(self, state):
@@ -296,7 +267,10 @@ class PageChecker:
             time.sleep(6)
 
         if state_config.get('need_auth'):
-            if not self._full_auth():
+            self.driver.get(f"{self.mg_base_url}/")
+            time.sleep(1)
+            self._remove_popups()
+            if not auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]]):
                 return {}
             time.sleep(6)
 
