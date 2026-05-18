@@ -14,6 +14,7 @@ from selenium.webdriver.common.keys import Keys
 sw_options = {'disable_capture': False}
 import json
 from helpers.auth import auth_mg
+from helpers.popups import remove_popups
 
 
 # Засекаем время начала теста
@@ -53,24 +54,8 @@ def init_driver():
         options=ch_options)
     return driver
 
-def remove_popup(driver):
-    """Удаление попапа посетителей"""
-    try:
-        # Удаляем попап посетителей
-        popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-        driver.execute_script("arguments[0].remove();", popup_visitors)
-    except Exception:
-        pass
-
-    try:
-        # Удаляем попап вебинара
-        popup_webinar = driver.find_element(by=By.XPATH,
-                                            value="//*[contains(@class, 'js-webinar-running-event-modal')]")
-        driver.execute_script("arguments[0].remove();", popup_webinar)
-    except Exception:
-        pass
-
 print()
+
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
 def check_catalog_modal_auth_show(tests, max_attempts=3):
     # Словарь для хранения результатов каждого теста
@@ -674,7 +659,8 @@ def check_news_button_goal(text, max_attempts=3):
             actions = ActionChains(driver)
             driver.get(f'{MG_BASE_URL}/?__counters=1')
 
-            remove_popup(driver)
+            time.sleep(2)
+            remove_popups(driver)
 
             title = driver.find_element(By.XPATH, '(//*[text()[contains(., "Отзывы о проекте")]])[2]')
             actions.move_to_element(title).perform()
@@ -731,7 +717,8 @@ def check_locations_button_goal(text, max_attempts=3):
             actions = ActionChains(driver)
             driver.get(f'{MG_BASE_URL}/?__counters=1')
 
-            remove_popup(driver)
+            time.sleep(2)
+            remove_popups(driver)
 
             title = driver.find_element(By.XPATH, '//*[text()[contains(., "Выбери участок")]]')
             actions.move_to_element(title).perform()
