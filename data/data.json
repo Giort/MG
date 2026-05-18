@@ -15,7 +15,13 @@
                             "mg_cur_release_2" : "/?mg_20241204_75=version_2"
     },
 
-    "test_data_valid":
+    "submit_data_prod":
+    {
+        "name" : "Тест",
+        "phone" : "9533527075",
+        "email" : "test@bugland.ru"
+    },
+  "submit_data_local":
     {
         "name" : "Тест",
         "phone" : "9127777777",
