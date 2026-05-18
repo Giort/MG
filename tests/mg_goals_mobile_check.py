@@ -13,6 +13,7 @@ from selenium.webdriver.common.keys import Keys
 # Включаем перехват запросов
 sw_options = {'disable_capture': False}
 import json
+from helpers.popups import remove_popups
 from datetime import datetime
 from helpers.auth import auth_mg
 
@@ -51,23 +52,6 @@ def init_driver():
         seleniumwire_options=sw_options,
         options=ch_options)
     return driver
-
-def remove_popup(driver):
-    """Удаление попапа посетителей"""
-    try:
-        # Удаляем попап посетителей
-        popup_visitors = driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-        driver.execute_script("arguments[0].remove();", popup_visitors)
-    except Exception:
-        pass
-
-    try:
-        # Удаляем попап вебинара
-        popup_webinar = driver.find_element(by=By.XPATH,
-                                            value="//*[contains(@class, 'js-webinar-running-event-modal')]")
-        driver.execute_script("arguments[0].remove();", popup_webinar)
-    except Exception:
-        pass
 
 
 # мод. авторизации в каталоге: отправляется цель, когда модалка показана
@@ -350,7 +334,10 @@ def check_quiz_btn_goal(tests, max_attempts=3):
                 actions = ActionChains(driver)
 
                 driver.get(f'{MG_BASE_URL}/?__counters=1')
-                remove_popup(driver)
+
+                time.sleep(2)
+                remove_popups(driver)
+
                 btn = driver.find_element(By.XPATH, test['quiz_btn'])
                 actions.move_to_element(btn).perform()
                 actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
@@ -430,7 +417,10 @@ def check_batch_card_goal(text, max_attempts=3):
             driver = init_driver()
             actions = ActionChains(driver)
             driver.get(f'{MG_BASE_URL}/?__counters=1')
-            remove_popup(driver)
+
+            time.sleep(2)
+            remove_popups(driver)
+
             card = driver.find_element(By.XPATH, '(//div[@id="catalogueSpecial"]//li)[9]')
             actions.move_to_element(card).perform()
             actions.send_keys(Keys.ARROW_DOWN).perform()
@@ -483,8 +473,9 @@ def check_batch_card_button_goal_unauth(button_tests, max_attempts=3):
             driver = init_driver()
             actions = ActionChains(driver)
             driver.get(f"{MG_BASE_URL}/?__counters=1")
-            time.sleep(5)
-            remove_popup(driver)
+
+            time.sleep(2)
+            remove_popups(driver)
 
             for test in button_tests:
                 # Если тест уже успешно пройден, пропускаем
@@ -574,7 +565,8 @@ def check_news_button_goal(text, max_attempts=3):
             actions = ActionChains(driver)
             driver.get(f'{MG_BASE_URL}/?__counters=1')
 
-            remove_popup(driver)
+            time.sleep(2)
+            remove_popups(driver)
 
             title = driver.find_element(By.XPATH, '(//*[text()[contains(., "Отзывы о проекте")]])[2]')
             actions.move_to_element(title).perform()
@@ -632,7 +624,8 @@ def check_locations_button_goal(text, max_attempts=3):
             actions = ActionChains(driver)
             driver.get(f'{MG_BASE_URL}/?__counters=1')
 
-            remove_popup(driver)
+            time.sleep(2)
+            remove_popups(driver)
 
             title = driver.find_element(By.XPATH, '//*[text()[contains(., "Выбери участок")]]')
             actions.move_to_element(title).perform()
