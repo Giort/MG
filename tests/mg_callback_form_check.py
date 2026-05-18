@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from webdriver_manager.chrome import ChromeDriverManager
+from helpers.popups import remove_popups
 
 # Засекаем время начала теста
 start_time = time.time()
@@ -85,16 +86,6 @@ class FormChecker:
                     self.errors.append(error_text)
                     return False
 
-    def remove_popup(self):
-        """Удаление всплывающего окна, которое может перекрывать элементы"""
-        try:
-            self.driver.get(self.BASE_URL)
-            time.sleep(1)
-            popup_w = self.driver.find_element(by=By.XPATH, value="//div[@id='visitors-popup']")
-            self.driver.execute_script("arguments[0].remove();", popup_w)
-        except:
-            print("Popup not found")
-
     def scroll_page(self):
         """Прокрутка страницы вниз для каталога"""
         for _ in range(8):
@@ -159,7 +150,7 @@ class FormChecker:
     def check_main_page_forms(self):
         """Проверка всех форм на главной странице"""
         self.driver.get(self.BASE_URL)
-        self.remove_popup()
+        remove_popups(self.driver)
 
         # София №1 с отправкой
         self.check_sofia_form_1_with_submit()
