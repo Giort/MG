@@ -10,6 +10,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import json
 import time
 import os
+from helpers.popups import remove_popups
 
 
 # МГ: проверка доступности и атрибутов модальных окон
@@ -61,23 +62,12 @@ class ModalChecker:
     def _set_desktop_viewport(self):
         self.driver.set_window_size(1660, 1000)
 
-    def _remove_popup(self):
-        """Закрывает попап посетителей если он появился"""
-        try:
-            popup_close = self.driver.find_element(
-                By.XPATH, '//*[contains(@class,"js-visitor-popup-close")]'
-            )
-            popup_close.click()
-            time.sleep(0.5)
-        except NoSuchElementException:
-            pass
-
     def _navigate(self, url: str) -> bool:
         """Переходит на страницу и убирает попап"""
         try:
             self.driver.get(url)
-            time.sleep(1)
-            self._remove_popup()
+            time.sleep(2)
+            remove_popups(self.driver)
             return True
         except Exception as e:
             print(f"     ERROR: Не удалось открыть {url} — {e}")
