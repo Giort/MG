@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
 from helpers.auth import auth_mg
+from helpers.popups import remove_popups
 
 # Засекаем время начала теста
 start_time = time.time()
@@ -20,7 +21,7 @@ with open('../data/data.json', 'r') as file:
 # ============================================================
 #  Переключение окружения: "prod" или "local"
 # ============================================================
-ENV = "local"
+ENV = "prod"
 # ============================================================
 
 ENV_CONFIG = {
@@ -148,19 +149,6 @@ class PageChecker:
         self.driver.implicitly_wait(10)
         return self.driver
 
-    def _remove_popups(self):
-        """Удаление всплывающих окон"""
-        popup_selectors = [
-            "//div[@id='visitors-popup']",
-            "//*[contains(@class, 'js-webinar-running-event-modal')]"
-        ]
-        for selector in popup_selectors:
-            try:
-                popup = self.driver.find_element(By.XPATH, selector)
-                self.driver.execute_script("arguments[0].remove();", popup)
-            except Exception:
-                pass
-
     def _demo_auth(self):
         """Авторизация как демо-пользователь (через открытие ЛК)"""
 
@@ -268,8 +256,8 @@ class PageChecker:
 
         if state_config.get('need_auth'):
             self.driver.get(f"{self.mg_base_url}/")
-            time.sleep(1)
-            self._remove_popups()
+            time.sleep(2)
+            remove_popups(self.driver)
             if not auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]]):
                 return {}
             time.sleep(6)
