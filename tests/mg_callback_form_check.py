@@ -124,7 +124,7 @@ class FormChecker:
                 self.driver.find_element(
                     by=By.XPATH,
                     value=f"(//div[@id='{form_id}']//*[@id='consultationform-phone'])[1]"
-                ).send_keys(str(self.test_data["test_data_valid"]["phone"]))
+                ).send_keys(str(self.test_data["submit_data_prod"]["phone"]))
 
                 self.driver.find_element(
                     by=By.XPATH,
