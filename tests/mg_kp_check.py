@@ -20,6 +20,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import json
 from helpers.auth import auth_mg
+from helpers.popups import remove_popups
 
 driver.set_window_size(1600, 1000)
 driver.implicitly_wait(10)
@@ -57,6 +58,9 @@ print(f"\n     Проверка генерации КП на домене {BASE_
 
 # логин
 driver.get(f"{BASE_URL}/catalogue")
+
+time.sleep(2)
+remove_popups(driver)
 
 auth_mg(driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
