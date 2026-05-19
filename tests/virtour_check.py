@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import json
 import socket
+from helpers.popups import remove_popups
 
 start_time = time.time()
 
@@ -233,6 +234,9 @@ class VirtourChecker:
         # Загружаем страницу
         if not self._load_page(url, auth, credentials_key):
             return False
+
+        if config.get('remove_popups'):
+            remove_popups(self.driver)
 
         count = 0
         while count < max_attempts:

@@ -6,7 +6,8 @@
     "title_locator": ["xpath", "(//a[@data-type='iframe'])[6]"],
     "btn_locator": ["xpath", "(//a[@data-type='iframe'])[6]"],
     "elem_xpath": "//div[(contains(@style, 'z-index: 182'))]",
-    "iframe_class": "uk-lightbox-iframe"
+    "iframe_class": "uk-lightbox-iframe",
+    "remove_webinar_popup": true
   },
   "tours": [
     {
@@ -14,21 +15,24 @@
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]",
+      "remove_webinar_popup": true
     },
     {
       "name": "МГ главная, тур 2",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[2]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]",
+      "remove_webinar_popup": true
     },
     {
       "name": "МГ главная, тур 3",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[3]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]",
+      "remove_webinar_popup": true
     },
     {
       "name": "syn_9 Бологое",
