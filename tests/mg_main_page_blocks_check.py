@@ -323,7 +323,7 @@ BLOCKS_CONFIG = [
 def main():
     checker = PageBlocksChecker(MG_BASE_URL)
 
-    print(f"\n     Проверка состояний пользовательских разделов на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
+    print(f"\n     Проверка главной страницы на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
 
     try:
         checker.init_driver()

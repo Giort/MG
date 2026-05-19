@@ -39,7 +39,7 @@ class FormSubmitChecker:
 
     def _init_driver(self, headless):
         ch_options = Options()
-        # ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),

@@ -74,8 +74,23 @@
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
+      "name": "новый: д. Подсухино",
+      "type": "new",
+      "title_xpath": "//*[@id='plan1-map']",
+      "check_css": "#plan1-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_48-97-105 Парк Патриот",
+      "name": "новый: д. Подсухино",
+      "type": "new",
+      "title_xpath": "//*[@id='plan2-map']",
+      "check_css": "#plan2-map .ol-zoom-in"
+    },
+    {
+      "project_name": "syn_48-97-105 Парк Патриот",
+      "name": "старый",
       "type": "old",
-      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
+      "title_xpath": "//*[contains(@class, 'js-select-overlay')]//*[text()[contains(.,\"территории поселка\")]]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
@@ -183,7 +198,7 @@
       "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[3]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
-        {
+    {
       "project_name": "syn_98 Оазис в Завидово",
       "name": "новый: Оазис в Завидово",
       "type": "new",
