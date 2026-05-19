@@ -10,6 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
 import socket
+from helpers.popups import remove_popups
 
 start_time = time.time()
 
@@ -226,6 +227,8 @@ class GenplanChecker:
         if not self._load_page(url):
             return False
 
+        remove_popups(self.driver)
+
         self.actions.send_keys(Keys.PAGE_DOWN).perform()
 
         for attempt in range(max_attempts):
@@ -268,6 +271,8 @@ class GenplanChecker:
 
         if not self._load_page(url):
             return False
+
+        remove_popups(self.driver)
 
         for attempt in range(max_attempts):
             try:
