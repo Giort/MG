@@ -102,12 +102,43 @@ class FormChecker:
                     self.errors.append(error_text)
                     return False
 
+    def check_phone_clickable(self, lgform_xpath, page_name, form_name, max_attempts=3):
+        """
+        Проверяет кликабельность инпута телефона внутри формы.
+        Поднимается от lgform_xpath до контейнера cfw и ищет инпут внутри него.
+        """
+        phone_xpath = f"({lgform_xpath}/ancestor::div[contains(@id, 'cfw')]//input[contains(@class, 'js-phone') and @type='tel'])[1]"
+
+        for attempt in range(1, max_attempts + 1):
+            try:
+                from selenium.webdriver.support.ui import WebDriverWait
+                from selenium.webdriver.support import expected_conditions as EC
+                phone_input = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable((By.XPATH, phone_xpath))
+                )
+                if phone_input.is_displayed() and phone_input.is_enabled():
+                    print(f"     ОК: {page_name}: {form_name} — инпут телефона кликабелен")
+                    self.success_count += 1
+                    return True
+                else:
+                    raise Exception("инпут не отображается или недоступен")
+            except Exception as e:
+                if attempt < max_attempts:
+                    self.driver.refresh()
+                    time.sleep(2)
+                else:
+                    error_msg = f"инпут телефона не кликабелен"
+                    error_text = f" ERROR: {page_name}, {form_name} — {error_msg}"
+                    print(error_text)
+                    self.errors.append(error_text)
+                    return False
+
     def check_form(self, form_config):
         """
         Проверка одной формы из конфига:
         - загружает страницу
         - при необходимости прокручивает
-        - проверяет lgForm и заголовок
+        - проверяет lgForm, заголовок и кликабельность инпута телефона
         """
         page_name = form_config['page_name']
         form_name = form_config.get('form_name', '')
@@ -124,6 +155,8 @@ class FormChecker:
 
         if form_config.get('header_xpath'):
             self.check_element(form_config['header_xpath'], page_name, form_name, 'заголовок')
+
+        self.check_phone_clickable(form_config['lgform_xpath'], page_name, form_name)
 
     def run_all_checks(self, config_path='../data/mg_callback_form_config.json'):
         """Запуск всех проверок из конфига"""
