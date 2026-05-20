@@ -123,11 +123,15 @@
       {
         "name": "Кнопка перехода в каталог",
         "xpath": "//div[@id=\"catalogueSpecial\"]//a[contains(@href, \"https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=26&clusterIds%5B1%5D=64\") and contains(text(), \"Перейти в каталог\")]"
+      },
+      {
+        "name": "Количество карточек - 6",
+        "xpath": "(//div[@id=\"catalogueSpecial\"]//a//div/img)[6]"
       }
     ]
   },
   {
-    "name": "Блок \"Лучшие поселения\"",
+    "name": "Блок \"Лучшие поселения месяца\"",
     "elements": [
       {
         "name": "Заголовок",
@@ -143,28 +147,53 @@
       }
     ]
   },
-  {
-    "name": "Блок \"Распродажа инвестпроектов\"",
+    {
+    "name": "Форма №1 с Софией",
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//div[@id=\"catalogueSpecial11\"]//h2[contains (text(), \"Распродажа инвестпроектов\")]"
+        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//div[@class='uk-visible@s']//*[text()[contains(.,'проконсультирую')]])[1]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//img[contains(@class, \"uk-visible@l\")])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//input[@type=\"tel\"])[1]"
+      },
+      {
+        "name": "Кнопка \"Отправить\"",
+        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//button[@type=\"submit\"])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Лучшие участки у воды\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id=\"catalogueSpecial11\"]//h2[contains (text(), \"Лучшие участки у воды\")]"
       },
       {
         "name": "1-я карточка СП, фото",
-        "xpath": "(//div[@id=\"catalogueSpecial11\"]//a//div/img)[1]"
+        "xpath": "(//h2[contains (text(), \"Лучшие участки у воды\")]/ancestor::div[@id=\"catalogueSpecial11\"]//img)[1]"
       },
       {
         "name": "1-я карточка СП, бейдж скидки",
-        "xpath": "(//div[@id=\"catalogueSpecial11\"]//div[@data-src=\"/img/catalogue/label-sale.svg\"])[1]"
+        "xpath": "(//h2[contains (text(), \"Лучшие участки у воды\")]/ancestor::div[@id=\"catalogueSpecial11\"]//div[@data-src=\"/img/catalogue/label-sale.svg\"])[1]"
       },
       {
         "name": "1-я карточка СП, бейдж СП",
-        "xpath": "(//div[@id=\"catalogueSpecial11\"]//span[contains(text(), \"Спецпредложение\")])[1]"
+        "xpath": "(//h2[contains (text(), \"Лучшие участки у воды\")]/ancestor::div[@id=\"catalogueSpecial11\"]//span[contains(text(), \"Спецпредложение\")])[1]"
       },
       {
         "name": "Кнопка перехода в каталог",
-        "xpath": "//div[@id=\"catalogueSpecial11\"]//a[contains(@href, \"/catalogue?popularChoiceIds%5B%5D=11\") and contains(text(), \"Перейти в каталог\")]"
+        "xpath": "//h2[contains (text(), \"Лучшие участки у воды\")]/ancestor::div[@id=\"catalogueSpecial11\"]//a[contains(@href, \"/catalogue?popularChoiceIds%5B%5D=4\") and contains(text(), \"Перейти в каталог\")]"
+      },
+      {
+        "name": "Количество карточек - 4",
+        "xpath": "(//h2[contains (text(), \"Лучшие участки у воды\")]/ancestor::div[@id=\"catalogueSpecial11\"]//img)[19]"
       }
     ]
   },
@@ -182,6 +211,35 @@
       {
         "name": "Видео",
         "xpath": "//*[@id=\"tour\"]//a[@href=\"https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0\"]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Распродажа инвестпроектов\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id=\"catalogueSpecial11\"]//h2[contains (text(), \"Распродажа инвестпроектов\")]"
+      },
+      {
+        "name": "1-я карточка СП, фото",
+        "xpath": "(//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//img)[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж скидки",
+        "xpath": "(//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//div[@data-src=\"/img/catalogue/label-sale.svg\"])[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж СП",
+        "xpath": "(//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//span[contains(text(), \"Спецпредложение\")])[1]"
+      },
+      {
+        "name": "Кнопка перехода в каталог",
+        "xpath": "//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//a[contains(@href, \"/catalogue?popularChoiceIds%5B%5D=11\") and contains(text(), \"Перейти в каталог\")]"
+      },
+      {
+        "name": "Количество карточек - 4",
+        "xpath": "(//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//img)[19]"
       }
     ]
   }
