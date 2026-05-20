@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Хедер",
+    "elements": [
+      {
+        "name": "Логотип",
+        "xpath": "(//div[contains(@class, \"w-navbar\")]//img[@src=\"/img/logo.svg\"])[1]"
+      },
+      {
+        "name": "Ссылка на каталог",
+        "xpath": "(//div[contains(@class, \"w-navbar\")]//a[@href=\"/catalogue\"])[1]"
+      },
+      {
+        "name": "Кнопка \"Каталог участков\" (квиз)",
+        "xpath": "//div[contains(@class, \"w-navbar\")]//a[contains(@role, \"button\") and contains(., \"Каталог участков\")]"
+      },
+      {
+        "name": "Кнопка авторизации",
+        "xpath": "(//div[contains(@class, \"w-navbar\")]//a[@href=\"#modal-auth-lk\"])[1]"
+      }
+    ]
+  },
+  {
+    "name": "1-й экран",
+    "elements": [
+      {
+        "name": "Заголовок \"Гектар\"",
+        "xpath": "//div[contains (@class, \"w-main\") and contains (@id, \"main\")]//p/span[contains(text(), \"Гектар\")]"
+      },
+      {
+        "name": "Подзаголовок с текстом о поселениях",
+        "xpath": "//div[contains (@class, \"w-main\") and contains (@id, \"main\")]//div[contains(@class, \"w-main-bg\")]//p[contains(text(), \"нового типа\")]"
+      },
+      {
+        "name": "Кнопка \"Каталог участков\"",
+        "xpath": "//div[contains (@class, \"w-main\") and contains (@id, \"main\")]//a[contains(text(), \"Каталог участков\")]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Гектар для реализации всех идей\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id=\"w-gektar-idea\"]/h2[contains(text(), \"Гектар для реализации всех идей\")]"
+      },
+      {
+        "name": "1-й блок: кнопка запуска видео",
+        "xpath": "(//div[@id=\"w-gektar-idea\"]//a[contains(@data-type, \"iframe\")])[1]"
+      },
+      {
+        "name": "1-й блок: кнопка вызова квиза",
+        "xpath": "(//div[@id=\"w-gektar-idea\"]//a[contains(text(), \"Подобрать участок\")])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Преимущества проекта\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id=\"project_advantages\"]//h2[contains(text(), \"Преимущества проекта\")]"
+      },
+      {
+        "name": "1-я ячейка сетки, картинка",
+        "xpath": "(//div[@id=\"project_advantages\"]//div[contains(@class, \"uk-grid\")]//img[@src=\"img/project-advantages/1.svg\"])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Описание проекта\"",
+    "elements": [
+      {
+        "name": "Заголовок \"Описание проекта\"",
+        "xpath": "//h2[contains(text(), \"Описание проекта\")]"
+      },
+      {
+        "name": "1-я секция: кнопка видео",
+        "xpath": "(//div[@id=\"w-descr\"]//div[contains(text(), \"Смотреть \")])[1]"
+      },
+      {
+        "name": "1-я секция: фото",
+        "xpath": "(//div[@id=\"w-descr\"]//img[contains(@class, \"uk-visible@l\")])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Баннер \"Распродажа на Волге\"",
+    "elements": [
+      {
+        "name": "Заголовок \"Распродажа участков на Волге\"",
+        "xpath": "//*[@id=\"banner-promo\"]//*[contains(text(), \"участков на Волге\")]"
+      },
+      {
+        "name": "ссылка на модалку",
+        "xpath": "//*[(contains(@id, \"banner-promo\")) and (contains (@uk-toggle, \"target: #promo-volga-2026\"))]"
+      },
+      {
+        "name": "счётчик",
+        "xpath": "//*[@id=\"banner-promo\"]//*[@class=\"w-special-counter\"]"
+      },
+      {
+        "name": "фоновое фото",
+        "xpath": "//*[@id=\"banner-promo\"]//*[(contains (@class, \"uk-visible@l\")) and (contains(@src, \"/img/extended-banner/bg-volga.jpg\"))]"
+      }
+    ]
+  },
+  {
+    "name": "Блок СП",
+    "elements": [
+      {
+        "name": "1-я карточка СП, фото",
+        "xpath": "(//div[@id=\"catalogueSpecial\"]//a//div/img)[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж скидки",
+        "xpath": "(//div[@id=\"catalogueSpecial\"]//div[@data-src=\"/img/catalogue/label-sale.svg\"])[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж СП",
+        "xpath": "(//div[@id=\"catalogueSpecial\"]//span[contains(text(), \"Спецпредложение\")])[1]"
+      },
+      {
+        "name": "Кнопка перехода в каталог",
+        "xpath": "//div[@id=\"catalogueSpecial\"]//a[contains(@href, \"https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=26&clusterIds%5B1%5D=64\") and contains(text(), \"Перейти в каталог\")]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Лучшие поселения\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id=\"catalogue\"]//h2[contains(text(), \"Лучшие поселения месяца\")]"
+      },
+      {
+        "name": "Кнопка запуска тура",
+        "xpath": "(//*[@id=\"catalogue\"]//lord-icon[@src=\"/dist/icons/air-balloon.json\"])[1]"
+      },
+      {
+        "name": "1-я карточка: вызов модалки",
+        "xpath": "(//*[@id=\"catalogue\"]//a[@href=\"#modal_syn-53\"])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Распродажа инвестпроектов\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id=\"catalogueSpecial11\"]//h2[contains (text(), \"Распродажа инвестпроектов\")]"
+      },
+      {
+        "name": "1-я карточка СП, фото",
+        "xpath": "(//div[@id=\"catalogueSpecial11\"]//a//div/img)[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж скидки",
+        "xpath": "(//div[@id=\"catalogueSpecial11\"]//div[@data-src=\"/img/catalogue/label-sale.svg\"])[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж СП",
+        "xpath": "(//div[@id=\"catalogueSpecial11\"]//span[contains(text(), \"Спецпредложение\")])[1]"
+      },
+      {
+        "name": "Кнопка перехода в каталог",
+        "xpath": "//div[@id=\"catalogueSpecial11\"]//a[contains(@href, \"/catalogue?popularChoiceIds%5B%5D=11\") and contains(text(), \"Перейти в каталог\")]"
+      }
+    ]
+  },
+  {
+    "name": "Блок \"Образ будущих поселений\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id=\"tour\"]//h3[contains (text(), \"Образ будущих\")]"
+      },
+      {
+        "name": "Кнопка Play",
+        "xpath": "//*[@id=\"tour\"]//img[@src=\"/img/play.svg\"]"
+      },
+      {
+        "name": "Видео",
+        "xpath": "//*[@id=\"tour\"]//a[@href=\"https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0\"]"
+      }
+    ]
+  }
+]

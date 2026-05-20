@@ -1,164 +1,196 @@
-import json
-import time
-import sys
-import os
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from webdriver_manager.chrome import ChromeDriverManager
-
-sys.path.insert(0, os.path.dirname(__file__))
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import json
 from helpers.popups import remove_popups
 
+# Проверка доступности блоков на главной МГ
+# В каждом блоке несколько элементов проверяются на видимость
 
-# Проверка форм обратной связи.
-# Находим форму по подзаголовку, проверяем, что установлен правильный lgForm и правильный заголовок
-
+# Хедер
+# 1-й экран
+# Блок "Гектар для реализации всех идей"
+# Блок "Преимущества проекта"
+# Блок "Описание проекта"
+# Блок СП
+# Блок "Лучшие поселения"
+# Блок "Распродажа инвестпроектов"
+# Блок "Образ будущих поселений"
 
 # Засекаем время начала теста
 start_time = time.time()
 
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
 
-class FormChecker:
-    """Класс для проверки форм обратной связи на сайте МойГектар"""
+ENV_CONFIG = {
+    "prod": {
+        "base_url": "https://moigektar.ru",
+    },
+    "local": {
+        "base_url": "http://moigektar.localhost",
+    },
+}
 
-    # ============================================================
-    #  Переключение окружения: "prod" или "local"
-    # ============================================================
-    ENV = "prod"
-    # ============================================================
+MG_BASE_URL = ENV_CONFIG[ENV]["base_url"]
 
-    ENV_CONFIG = {
-        "prod": {
-            "base_url": "https://moigektar.ru",
-        },
-        "local": {
-            "base_url": "http://moigektar.localhost",
-        },
-    }
 
-    BASE_URL = ENV_CONFIG[ENV]["base_url"]
+class PageBlocksChecker:
+    def __init__(self, mg_base_url):
+        self.mg_base_url = mg_base_url.rstrip('/')
+        self.driver = None
 
-    def __init__(self, headless=False):
-        self.driver = self._init_driver(headless)
-        self.actions = ActionChains(self.driver)
-        self.errors = []
-        self.success_count = 0
-
-    def _init_driver(self, headless):
-        """Инициализация Chrome WebDriver"""
+    def init_driver(self):
         ch_options = Options()
-        if headless:
-            ch_options.add_argument('--headless')
+        ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=ch_options)
+        self.driver.set_window_size(1680, 1000)
+        self.driver.implicitly_wait(10)
+        return self.driver
 
-        driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=ch_options
-        )
-        driver.implicitly_wait(10)
-        driver.set_window_size(1660, 1000)
-        return driver
 
-    def _load_config(self, config_path='../data/mg_callback_form_config.json'):
-        """Загрузка конфигурации форм"""
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    def check_block_visibility(self, block_config, timeout=10):
+        """Проверка видимости конкретного блока по его конфигурации"""
+        block_name = block_config['name']
 
-    def _scroll_page(self):
-        """Прокрутка страницы вниз"""
-        for _ in range(8):
-            self.actions.send_keys(Keys.PAGE_DOWN).perform()
-            time.sleep(1)
+        # Список для сбора отсутствующих элементов
+        missing_elements = []
 
-    def check_element(self, xpath, page_name, form_name, check_type, max_attempts=3):
-        """
-        Универсальная проверка элемента на странице с повторными попытками
+        try:
+            # Проверяем каждый элемент в блоке
+            for element_config in block_config['elements']:
+                element_name = element_config['name']
+                xpath = element_config['xpath']
 
-        Args:
-            xpath:        XPath селектор элемента
-            page_name:    название страницы для логирования
-            form_name:    название формы для логирования
-            check_type:   тип проверки (lgForm / заголовок)
-            max_attempts: максимальное количество попыток
-        """
-        for attempt in range(1, max_attempts + 1):
-            try:
-                self.driver.find_element(By.XPATH, xpath)
-                print(f"     ОК: {page_name}: {form_name} — {check_type}")
-                self.success_count += 1
+                try:
+                    element = WebDriverWait(self.driver, timeout).until(
+                        EC.visibility_of_element_located((By.XPATH, xpath))
+                    )
+
+                    # Прокручиваем к элементу
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
+
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
+
+                    # Дополнительная проверка видимости
+                    if not element.is_displayed():
+                        missing_elements.append(element_name)
+
+                except (TimeoutException, Exception):
+                    missing_elements.append(element_name)
+
+            # Формируем результат
+            if not missing_elements:
+                print(f"     OK: {block_name}")
                 return True
-            except Exception as e:
-                if attempt < max_attempts:
-                    self.driver.refresh()
-                    time.sleep(2)
-                else:
-                    error_msg = str(e).split('\n')[0]
-                    error_text = f" ERROR: {page_name}, {form_name} — {check_type} — {error_msg}"
-                    print(error_text)
-                    self.errors.append(error_text)
-                    return False
+            else:
+                # Формируем строку только с отсутствующими элементами
+                missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
+                print(f" ERROR: {block_name} - {missing_str}")
+                return False
 
-    def check_form(self, form_config):
-        """
-        Проверка одной формы из конфига:
-        - загружает страницу
-        - при необходимости прокручивает
-        - проверяет lgForm и заголовок
-        """
-        page_name = form_config['page_name']
-        form_name = form_config.get('form_name', '')
-        url       = self.BASE_URL + form_config['url']
-        scroll    = form_config.get('scroll', False)
+        except Exception as e:
+            print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
+            return False
 
-        self.driver.get(url)
-        remove_popups(self.driver)
+    def check_all_blocks(self, blocks_config, delay=1):
+        """Проверка всех блоков из конфигурации"""
 
-        if scroll:
-            self._scroll_page()
+        results = {}
 
-        self.check_element(form_config['lgform_xpath'], page_name, form_name, 'lgForm')
+        for block_config in blocks_config:
+            result = self.check_block_visibility(block_config)
 
-        if form_config.get('header_xpath'):
-            self.check_element(form_config['header_xpath'], page_name, form_name, 'заголовок')
+            # Собираем информацию о проблемных элементах для сводки
+            problematic_elements = []
+            if not result:
+                for element_config in block_config['elements']:
+                    element_name = element_config['name']
+                    xpath = element_config['xpath']
+                    try:
+                        self.driver.find_element(By.XPATH, xpath)
+                    except:
+                        problematic_elements.append(element_name)
 
-    def run_all_checks(self, config_path='../data/mg_callback_form_config.json'):
-        """Запуск всех проверок из конфига"""
-        print(f"\n     Проверка форм на сайте МойГектар на домене {self.BASE_URL} | [{self.ENV.upper()}]\n")
+            results[block_config['name']] = {
+                'visible': result,
+                'problematic_elements': problematic_elements
+            }
+            time.sleep(delay)
 
-        forms = self._load_config(config_path)
-        for form_config in forms:
-            self.check_form(form_config)
+        return results
 
-        self.print_report(total=len(forms))
+    def print_summary(self, results):
+        """Вывод сводки результатов"""
 
-    def print_report(self, total):
-        """Вывод отчёта о результатах"""
-        print(f"\n     {'=' * 50}")
-        print(f"     Итого форм: {total}  |  OK: {self.success_count}  |  Ошибок: {len(self.errors)}")
+        total = len(results)
+        visible = sum(1 for r in results.values() if r['visible'])
+        not_visible = total - visible
 
-        if self.errors:
-            print(f"\n     Список ошибок:")
-            for i, error in enumerate(self.errors, 1):
-                print(f"     {i}. {error}")
+        print(f"\n{'=' * 60}")
+        print("     Результат")
+
+        if not_visible > 0:
+            print(f"\n     БЛОКИ С ПРОБЛЕМАМИ:")
+            for name, info in results.items():
+                if not info['visible'] and info['problematic_elements']:
+                    # Показываем только проблемные элементы для каждого блока
+                    elements_str = ", ".join(info['problematic_elements'])
+                    print(f"     {name}: {elements_str}")
         else:
             print(f"\n     ОШИБОК НЕТ")
 
     def close(self):
-        """Закрытие браузера"""
+        if self.driver:
+            self.driver.quit()
+
+
+def main():
+    checker = PageBlocksChecker(MG_BASE_URL)
+
+    print(f"\n     Проверка главной страницы на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
+
+    try:
+        checker.init_driver()
+
+        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
+            blocks_config = json.load(f)
+
+        # Загружаем главную страницу
+        checker.driver.get(f"{MG_BASE_URL}/")
+
         time.sleep(3)
-        self.driver.quit()
+        remove_popups(checker.driver)
+
+        # Проверяем все блоки
+        results = checker.check_all_blocks(blocks_config)
+
+        # Выводим сводку
+        checker.print_summary(results)
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
+    finally:
+        checker.close()
 
 
 if __name__ == "__main__":
-    checker = FormChecker(headless=True)
-    try:
-        checker.run_all_checks()
-    finally:
-        checker.close()
+    main()
 
 # Вычисляем и выводим время выполнения теста
 end_time = time.time()
