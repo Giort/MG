@@ -74,7 +74,7 @@
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
-      "name": "новый: д. Подсухино",
+      "name": "новый: д. Харино",
       "type": "new",
       "title_xpath": "//*[@id='plan1-map']",
       "check_css": "#plan1-map .ol-zoom-in"

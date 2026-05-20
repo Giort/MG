@@ -374,7 +374,7 @@ class GenplanChecker:
                 self.check_genplan_old(
                     display_name,
                     genplan.get('title_xpath'),
-                    genplan.get('genplan_css', 'ymaps.ymaps-2-1-79-inner-panes')
+                    genplan.get('genplan_css')
                 )
             elif genplan_type == 'new':
                 self.check_genplan_new(
