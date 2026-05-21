@@ -3,17 +3,60 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
-import json
 import time
-import os
+import json
 from helpers.popups import remove_popups
 
+# Проверка доступности блоков на главной МГ
+# В каждом блоке несколько элементов проверяются на видимость
 
-# МГ: проверка доступности и атрибутов модальных окон
+# Хедер
+# 1-й экран
+# Блок "Гектар для реализации всех идей"
+# Блок "Преимущества проекта"
+# Блок "Описание проекта"
+# Баннер "Распродажа на Волге"
+# Блок СП
+# Блок "Лучшие поселения месяца"
+# Форма №1 с Софией
+# Блок "Лучшие участки у воды"
+# Блок "Образ будущих поселений"
+# Блок "Распродажа инвестпроектов"
+
+# Блок "Успешные примеры проекта"
+# Блок "Территория для ваших идей"
+# Блок "Ваш доход с гектара"
+# Блок "Реализуйте продукцию"
+# Блок "Зорабатывайте на гектаре..."
+# Блок "Государственная поддержка отрасли"
+# Блок "Награды проекта..."
+# Форма №1 с Ариной
+# Блок "Проект От сохи до сохи"
+# Блок "Отзывы о проекте"
+# Блок "Сми о проекте"
+# Форма №2 с Ариной
+# Блок "Выбери участок в лучшей локации"
+# Блок "Новости развития поселков"
+# Блок "Непрерывное развитие поселков"
+# Форма с Анастасией
+# Блок "Популярные вопросы"
+# Форма №2 с Софией
+# Блок "Видео, которое вам стоит увидеть"
+# Блок "Строительство на землях сельхозназначения"
+# Блок "Рекомендованные фундаменты"
+# Блок "Примеры строений"
+# Блок "Федеральный закон"
+# Блок "Приглашаем на встречу в офис"
+# Форма с Максимом
+# Футер
+
+
+
+# Засекаем время начала теста
+start_time = time.time()
 
 # ============================================================
 #  Переключение окружения: "prod" или "local"
@@ -30,257 +73,188 @@ ENV_CONFIG = {
     },
 }
 
-config = ENV_CONFIG[ENV]
-BASE_URL = config["base_url"]
-
-start_time = time.time()
+MG_BASE_URL = ENV_CONFIG[ENV]["base_url"]
 
 
-class ModalChecker:
-    def __init__(self):
+class PageBlocksChecker:
+    def __init__(self, mg_base_url):
+        self.mg_base_url = mg_base_url.rstrip('/')
+        self.driver = None
+
+    def init_driver(self):
         ch_options = Options()
         ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
-        ch_options.add_argument('--no-sandbox')
-        ch_options.add_argument('--disable-dev-shm-usage')
-
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
-        self.driver.set_window_size(1660, 1000)
-        self.wait = WebDriverWait(self.driver, 30)
-        self.actions = ActionChains(self.driver)
+        self.driver.set_window_size(1680, 1000)
+        self.driver.implicitly_wait(10)
+        return self.driver
 
-        self.results = {'success': [], 'failed': []}
 
-    # ------------------------------------------------------------------
-    # Вспомогательные методы
-    # ------------------------------------------------------------------
+    def check_block_visibility(self, block_config, timeout=10):
+        """Проверка видимости конкретного блока по его конфигурации"""
+        block_name = block_config['name']
 
-    def _set_mobile_viewport(self):
-        self.driver.set_window_size(390, 844)
+        # Список для сбора отсутствующих элементов
+        missing_elements = []
 
-    def _set_desktop_viewport(self):
-        self.driver.set_window_size(1660, 1000)
-
-    def _navigate(self, url: str) -> bool:
-        """Переходит на страницу и убирает попап"""
         try:
-            self.driver.get(url)
-            time.sleep(2)
-            remove_popups(self.driver)
-            return True
-        except Exception as e:
-            print(f"     ERROR: Не удалось открыть {url} — {e}")
-            return False
+            # Проверяем каждый элемент в блоке
+            for element_config in block_config['elements']:
+                element_name = element_config['name']
+                xpath = element_config['xpath']
 
-    def _scroll_to_element(self, selector: str) -> object | None:
-        """Находит элемент, ждёт его появления и скроллит к нему"""
-        from selenium.common.exceptions import MoveTargetOutOfBoundsException
-        try:
-            btn = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, selector))
-            )
-            try:
-                self.actions.move_to_element(btn).perform()
-            except MoveTargetOutOfBoundsException:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
-            time.sleep(0.5)
-            return btn
-        except (NoSuchElementException, TimeoutException):
-            return None
+                try:
+                    element = WebDriverWait(self.driver, timeout).until(
+                        EC.visibility_of_element_located((By.XPATH, xpath))
+                    )
 
-    def _click_button(self, btn) -> bool:
-        """Кликает по кнопке"""
-        try:
-            btn.click()
-            return True
-        except Exception:
-            try:
-                self.driver.execute_script("arguments[0].click();", btn)
+                    # Прокручиваем к элементу
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
+
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
+
+                    # Дополнительная проверка видимости
+                    if not element.is_displayed():
+                        missing_elements.append(element_name)
+
+                except (TimeoutException, Exception):
+                    missing_elements.append(element_name)
+
+            # Формируем результат
+            if not missing_elements:
+                print(f"     OK: {block_name}")
                 return True
-            except Exception as e:
-                print(f"     ERROR: Не удалось кликнуть — {e}")
+            else:
+                # Формируем строку только с отсутствующими элементами
+                missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
+                print(f" ERROR: {block_name} - {missing_str}")
                 return False
 
-    def _wait_modal_open(self, modal_id: str, timeout: int = 8) -> bool:
-        """Ждёт появления модалки с классом uk-open"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located((
-                    By.XPATH,
-                    f'//*[@id="{modal_id}" and contains(@class,"uk-open")]'
-                ))
-            )
-            return True
-        except TimeoutException:
+        except Exception as e:
+            print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
             return False
 
-    def _check_phone_clickable(self, modal_id: str, phone_selector: str = None) -> bool:
-        """Проверяет что телефонный инпут внутри модалки кликабелен"""
-        try:
-            xpath = phone_selector if phone_selector else \
-                f'(//*[@id="{modal_id}"]//input[@id="consultationform-phone"])'
-            phone_input = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
-            )
-            return phone_input.is_displayed() and phone_input.is_enabled()
-        except TimeoutException:
-            return False
+    def check_all_blocks(self, blocks_config, delay=1):
+        """Проверка всех блоков из конфигурации"""
 
-    def _get_lgform_value(self, modal_id: str, lgform_selector: str = None) -> str | None:
-        """Читает значение скрытого поля lgForm внутри открытой модалки"""
-        try:
-            xpath = lgform_selector if lgform_selector else \
-                f'//*[@id="{modal_id}"]//input[@id="consultationform-lgform"]'
-            lgform_input = self.driver.find_element(By.XPATH, xpath)
-            return lgform_input.get_attribute('value')
-        except NoSuchElementException:
-            return None
+        results = {}
 
-    def _close_modal(self, modal_id: str):
-        """Закрывает модалку нажатием Escape"""
-        try:
-            from selenium.webdriver.common.keys import Keys
-            self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-            time.sleep(0.5)
-        except Exception:
-            pass
+        for block_config in blocks_config:
+            result = self.check_block_visibility(block_config)
 
-    # ------------------------------------------------------------------
-    # Основная проверка одной модалки
-    # ------------------------------------------------------------------
+            # Собираем информацию о проблемных элементах для сводки
+            problematic_elements = []
+            if not result:
+                for element_config in block_config['elements']:
+                    element_name = element_config['name']
+                    xpath = element_config['xpath']
+                    try:
+                        self.driver.find_element(By.XPATH, xpath)
+                    except:
+                        problematic_elements.append(element_name)
 
-    def check_modal(self, modal_config: dict) -> bool:
-        """
-        Полный цикл проверки одной модалки:
-        1. Переход на страницу
-        2. Скролл к кнопке
-        3. Клик по кнопке
-        4. Ожидание открытия модалки
-        5. Проверка кликабельности инпута (видимость для пользователя)
-        6. Проверка значения lgForm
-        """
-        name = modal_config['name']
-        url_name = modal_config['url_name']
-        url = BASE_URL + modal_config['url']
-        btn_selector = modal_config['btn_selector']
-        modal_id = modal_config['modal_id']
-        expected_lgform = modal_config['lgform']
-        phone_selector = modal_config.get('phone_selector', None) # у большинства мод. одинаковые селекторы инпута
-        # телефона, но у некоторых нужно задавать другой
-        lgform_selector = modal_config.get('lgform_selector', None) # у большинства мод. одинаковые селекторы lgForm,
-        # но у некоторых нужно задавать другой
+            results[block_config['name']] = {
+                'visible': result,
+                'problematic_elements': problematic_elements
+            }
+            time.sleep(delay)
 
-        label = f'[{url_name}] {name}'
+        return results
 
-        is_mobile = modal_config.get('mobile', False)
-        if is_mobile:
-            self._set_mobile_viewport()
-        else:
-            self._set_desktop_viewport()
+    def print_summary(self, results):
+        """Вывод сводки результатов"""
 
-        # 1. Переход на страницу
-        if not self._navigate(url):
-            self._record_result(label, False, 'не удалось открыть страницу')
-            return False
+        total = len(results)
+        visible = sum(1 for r in results.values() if r['visible'])
+        not_visible = total - visible
 
-        # 2. Скролл к кнопке
-        btn = self._scroll_to_element(btn_selector)
-        if btn is None:
-            # Одна повторная попытка после перезагрузки страницы
-            time.sleep(2)
-            self.driver.refresh()
-            time.sleep(2)
-            remove_popups(self.driver)
-            btn = self._scroll_to_element(btn_selector)
-        if btn is None:
-            self._record_result(label, False, 'кнопка не найдена')
-            return False
+        print(f"\n{'=' * 60}")
+        print("     Результат")
 
-        # 3. Клик
-        if not self._click_button(btn):
-            self._record_result(label, False, 'не удалось кликнуть по кнопке')
-            return False
-
-        # 4. Ожидание открытия модалки
-        if not self._wait_modal_open(modal_id):
-            self._record_result(label, False, 'модалка не открылась (нет класса uk-open)')
-            return False
-
-        # 5. Проверка видимости инпута
-        if not self._check_phone_clickable(modal_id, phone_selector):
-            self._record_result(label, False, 'телефонный инпут не кликабелен')
-            return False
-
-        # 6. Проверка lgForm
-        actual_lgform = self._get_lgform_value(modal_id, lgform_selector)
-        if actual_lgform != expected_lgform:
-            msg = f'lgForm: ожидалось "{expected_lgform}", получено "{actual_lgform}"'
-            self._record_result(label, False, msg)
-            return False
-
-        self._record_result(label, True)
-        self._close_modal(modal_id)
-        return True
-
-    def _record_result(self, label: str, success: bool, error: str = ''):
-        if success:
-            print(f"     OK: {label}")
-            self.results['success'].append(label)
-        else:
-            print(f" ERROR: {label} — {error}")
-            self.results['failed'].append(f"{label} ({error})")
-
-    # ------------------------------------------------------------------
-    # Запуск всех проверок
-    # ------------------------------------------------------------------
-
-    def run(self, modals_config: list):
-        print(f"\n     Проверка модальных окон МГ на домене {BASE_URL} | [{ENV.upper()}]\n")
-
-        for modal_config in modals_config:
-            self.check_modal(modal_config)
-
-        self._print_summary()
-
-    def _print_summary(self):
-        total = len(self.results['success']) + len(self.results['failed'])
-        success = len(self.results['success'])
-        failed = len(self.results['failed'])
-
-        print(f"\n     {'=' * 50}")
-        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
-
-        if self.results['failed']:
-            print(f"\n     Проблемные модалки:")
-            for item in self.results['failed']:
-                print(f"       - {item}")
+        if not_visible > 0:
+            print(f"\n     БЛОКИ С ПРОБЛЕМАМИ:")
+            for name, info in results.items():
+                if not info['visible'] and info['problematic_elements']:
+                    # Показываем только проблемные элементы для каждого блока
+                    elements_str = ", ".join(info['problematic_elements'])
+                    print(f"     {name}: {elements_str}")
         else:
             print(f"\n     ОШИБОК НЕТ")
+
+    def check_blocks_order(self, blocks_config):
+        """Проверяет что блоки идут сверху вниз в правильном порядке"""
+        positions = []
+
+        for block_config in blocks_config:
+            if block_config.get('skip_order_check'):
+                continue
+            anchor_xpath = block_config['elements'][0]['xpath']
+            try:
+                element = self.driver.find_element(By.XPATH, anchor_xpath)
+                y = element.location['y']
+                positions.append((block_config['name'], y))
+            except Exception:
+                pass  # если блок не найден — его уже поймает check_block_visibility
+
+        # Сортируем по фактическому положению на странице
+        sorted_by_y = sorted(positions, key=lambda x: x[1])
+        expected_order = [name for name, _ in positions]
+        actual_order   = [name for name, _ in sorted_by_y]
+
+        order_errors = []
+        for i, (expected, actual) in enumerate(zip(expected_order, actual_order)):
+            if expected != actual:
+                actual_index = actual_order.index(expected)
+                order_errors.append(
+                    f'«{expected}» ожидается на позиции {i + 1}, фактически на позиции {actual_index + 1}'
+                )
+
+        return order_errors
 
     def close(self):
         if self.driver:
             self.driver.quit()
 
 
-def load_modals_config(config_file: str) -> list:
-    try:
-        if not os.path.exists(config_file):
-            raise FileNotFoundError(f"Файл конфигурации не найден: {config_file}")
-        with open(config_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return data['modals']
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        raise
-
-
 def main():
-    modals_config = load_modals_config('../data/modal_mg_list.json')
+    checker = PageBlocksChecker(MG_BASE_URL)
 
-    checker = ModalChecker()
+    print(f"\n     Проверка главной страницы на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
+
     try:
-        checker.run(modals_config)
+        checker.init_driver()
+
+        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
+            blocks_config = json.load(f)
+
+        # Загружаем главную страницу
+        checker.driver.get(f"{MG_BASE_URL}/")
+
+        time.sleep(3)
+        remove_popups(checker.driver)
+
+        # Проверяем все блоки
+        results = checker.check_all_blocks(blocks_config)
+
+        # Проверяем порядок блоков
+        order_errors = checker.check_blocks_order(blocks_config)
+
+        # Выводим сводку
+        checker.print_summary(results)
+
+        if order_errors:
+            print(f"\n     НАРУШЕН ПОРЯДОК БЛОКОВ:")
+            for err in order_errors:
+                print(f"       - {err}")
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
     finally:
         checker.close()
 
@@ -288,7 +262,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Время выполнения
+# Вычисляем и выводим время выполнения теста
 end_time = time.time()
 elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)

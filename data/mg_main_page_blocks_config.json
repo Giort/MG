@@ -1,6 +1,7 @@
 [
   {
     "name": "Хедер",
+    "skip_order_check": true,
     "elements": [
       {
         "name": "Логотип",

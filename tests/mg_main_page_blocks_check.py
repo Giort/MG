@@ -26,6 +26,34 @@ from helpers.popups import remove_popups
 # Блок "Образ будущих поселений"
 # Блок "Распродажа инвестпроектов"
 
+# Блок "Успешные примеры проекта"
+# Блок "Территория для ваших идей"
+# Блок "Ваш доход с гектара"
+# Блок "Реализуйте продукцию"
+# Блок "Зорабатывайте на гектаре..."
+# Блок "Государственная поддержка отрасли"
+# Блок "Награды проекта..."
+# Форма №1 с Ариной
+# Блок "Проект От сохи до сохи"
+# Блок "Отзывы о проекте"
+# Блок "Сми о проекте"
+# Форма №2 с Ариной
+# Блок "Выбери участок в лучшей локации"
+# Блок "Новости развития поселков"
+# Блок "Непрерывное развитие поселков"
+# Форма с Анастасией
+# Блок "Популярные вопросы"
+# Форма №2 с Софией
+# Блок "Видео, которое вам стоит увидеть"
+# Блок "Строительство на землях сельхозназначения"
+# Блок "Рекомендованные фундаменты"
+# Блок "Примеры строений"
+# Блок "Федеральный закон"
+# Блок "Приглашаем на встречу в офис"
+# Форма с Максимом
+# Футер
+
+
 
 # Засекаем время начала теста
 start_time = time.time()
@@ -159,6 +187,36 @@ class PageBlocksChecker:
         else:
             print(f"\n     ОШИБОК НЕТ")
 
+    def check_blocks_order(self, blocks_config):
+        """Проверяет что блоки идут сверху вниз в правильном порядке"""
+        positions = []
+
+        for block_config in blocks_config:
+            if block_config.get('skip_order_check'):
+                continue
+            anchor_xpath = block_config['elements'][0]['xpath']
+            try:
+                element = self.driver.find_element(By.XPATH, anchor_xpath)
+                y = element.location['y']
+                positions.append((block_config['name'], y))
+            except Exception:
+                pass  # если блок не найден — его уже поймает check_block_visibility
+
+        # Сортируем по фактическому положению на странице
+        sorted_by_y = sorted(positions, key=lambda x: x[1])
+        expected_order = [name for name, _ in positions]
+        actual_order   = [name for name, _ in sorted_by_y]
+
+        order_errors = []
+        for i, (expected, actual) in enumerate(zip(expected_order, actual_order)):
+            if expected != actual:
+                actual_index = actual_order.index(expected)
+                order_errors.append(
+                    f'«{expected}» ожидается на позиции {i + 1}, фактически на позиции {actual_index + 1}'
+                )
+
+        return order_errors
+
     def close(self):
         if self.driver:
             self.driver.quit()
@@ -184,8 +242,16 @@ def main():
         # Проверяем все блоки
         results = checker.check_all_blocks(blocks_config)
 
+        # Проверяем порядок блоков
+        order_errors = checker.check_blocks_order(blocks_config)
+
         # Выводим сводку
         checker.print_summary(results)
+
+        if order_errors:
+            print(f"\n     НАРУШЕН ПОРЯДОК БЛОКОВ:")
+            for err in order_errors:
+                print(f"       - {err}")
 
     except Exception as e:
         print(f" Критическая ошибка: {e}")
