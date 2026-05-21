@@ -25,8 +25,8 @@ from helpers.popups import remove_popups
 # Блок "Лучшие участки у воды"
 # Блок "Образ будущих поселений"
 # Блок "Распродажа инвестпроектов"
-
 # Блок "Успешные примеры проекта"
+
 # Блок "Территория для ваших идей"
 # Блок "Ваш доход с гектара"
 # Блок "Реализуйте продукцию"
@@ -230,7 +230,7 @@ def main():
     try:
         checker.init_driver()
 
-        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
+        with open('../data/mg_main_page_blocks_config_test.json', 'r', encoding='utf-8') as f:
             blocks_config = json.load(f)
 
         # Загружаем главную страницу

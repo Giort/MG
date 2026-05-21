@@ -243,5 +243,38 @@
         "xpath": "(//h2[contains (text(), \"Распродажа инвестпроектов\")]/ancestor::div[@id=\"catalogueSpecial11\"]//img)[19]"
       }
     ]
+  },
+  {
+    "name": "Блок \"Успешные примеры проекта\"",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id=\"best-example\"]//h2[contains (text(), \"Успешные примеры проекта\")]"
+      },
+      {
+        "name": "1-й таб 'Готовый поселок'",
+        "xpath": "//*[@id=\"best-example\"]//li[contains(@class, \"uk-active\")]//*[contains (text(), \"Готовый поселок\")]"
+      },
+      {
+        "name": "Видео в 1-м блоке",
+        "xpath": "//*[@id=\"best-example\"]//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']"
+      },
+      {
+        "name": "Кнопка видео в 1-м блоке",
+        "xpath": "//*[@id=\"best-example\"]//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']//img[@src='/img/play.svg']"
+      },
+      {
+        "name": "Заголовок и текст в 1-м блоке",
+        "xpath": "//*[@id=\"best-example\"]//h4[text()='Готовое поселение на гектарах']/ancestor::div[1]//p[text()[contains(., 'поселок с участками площадью 1 гектар')]]"
+      },
+      {
+        "name": "Кнопка вызова квиза в 1-м блоке",
+        "xpath": "//*[@id=\"best-example\"]//h4[text()='Готовое поселение на гектарах']/ancestor::div[1]//a[contains(@class, 'js-analytics-quiz-btn-v2')]"
+      },
+      {
+        "name": "2-й таб есть, всего 8 табов",
+        "xpath": "//*[@id=\"best-example\"]//li[@aria-label='2 of 8']//a/*[contains (text(), \"Княжьи горы\")]"
+      }
+    ]
   }
 ]
