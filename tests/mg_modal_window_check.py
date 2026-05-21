@@ -74,17 +74,19 @@ class ModalChecker:
             return False
 
     def _scroll_to_element(self, selector: str) -> object | None:
-        """Находит элемент и скроллит к нему"""
+        """Находит элемент, ждёт его появления и скроллит к нему"""
         from selenium.common.exceptions import MoveTargetOutOfBoundsException
         try:
-            btn = self.driver.find_element(By.XPATH, selector)
+            btn = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, selector))
+            )
             try:
                 self.actions.move_to_element(btn).perform()
             except MoveTargetOutOfBoundsException:
                 self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
             time.sleep(0.5)
             return btn
-        except NoSuchElementException:
+        except (NoSuchElementException, TimeoutException):
             return None
 
     def _click_button(self, btn) -> bool:
@@ -184,6 +186,13 @@ class ModalChecker:
 
         # 2. Скролл к кнопке
         btn = self._scroll_to_element(btn_selector)
+        if btn is None:
+            # Одна повторная попытка после перезагрузки страницы
+            time.sleep(2)
+            self.driver.refresh()
+            time.sleep(2)
+            remove_popups(self.driver)
+            btn = self._scroll_to_element(btn_selector)
         if btn is None:
             self._record_result(label, False, 'кнопка не найдена')
             return False
@@ -289,4 +298,3 @@ if minutes > 0:
     print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
 else:
     print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
-
