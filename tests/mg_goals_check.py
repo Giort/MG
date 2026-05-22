@@ -785,7 +785,7 @@ def check_catalogue_button_goal(button_tests, max_attempts=3):
                 try:
                     driver.get(f"{MG_BASE_URL}/catalogue-no-auth/?__counters=1")
                     time.sleep(5)
-                    if not test['goal'] == "catalog_v4.filter_button_click":
+                    if not test['goal'] in ("catalog_v4.filter_button_click", "filter_interaction.business_toggle"):
                         actions.send_keys(Keys.PAGE_DOWN).perform()
                     elem = driver.find_element(By.XPATH, test['loc'])
                     if test['goal'] == "catalog_v4.list_view_toggle":

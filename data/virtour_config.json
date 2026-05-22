@@ -3,8 +3,8 @@
     "name": "МГ, тур на странице актива",
     "project_name": "МГ",
     "url": "https://moigektar.ru/batches-no-auth/29305",
-    "title_locator": ["xpath", "(//a[@data-type='iframe'])[6]"],
-    "btn_locator": ["xpath", "(//a[@data-type='iframe'])[6]"],
+    "title_locator": ["xpath", "(//a[@data-type='iframe'])[7]"],
+    "btn_locator": ["xpath", "(//a[@data-type='iframe'])[7]"],
     "elem_xpath": "//div[(contains(@style, 'z-index: 182'))]",
     "iframe_class": "uk-lightbox-iframe",
     "remove_webinar_popup": true
@@ -229,18 +229,18 @@
       "elem_xpath": "//div[(contains(@style, 'z-index: 263'))]"
     },
     {
-      "name": "Крым - Ивановка (1)",
-      "project_name": "Крым",
-      "title_locator": ["xpath", "//h3[text()[contains(., 'Ивановка')]]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[1]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 161'))]"
-    },
-    {
-      "name": "Крым - Равнополье (2)",
+      "name": "Крым - Равнополье (1)",
       "project_name": "Крым",
       "title_locator": ["xpath", "//h3[text()[contains(., 'Равнополье')]]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[2]"],
+      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[1]"],
       "elem_xpath": "(//div[(contains(@style, 'z-index: 4'))])[4]"
+    },
+    {
+      "name": "Крым - Ивановка (2)",
+      "project_name": "Крым",
+      "title_locator": ["xpath", "//h3[text()[contains(., 'Ивановка')]]"],
+      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[2]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 161'))]"
     },
     {
       "name": "Крым - Камышинка (3)",

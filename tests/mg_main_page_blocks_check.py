@@ -230,7 +230,7 @@ def main():
     try:
         checker.init_driver()
 
-        with open('../data/mg_main_page_blocks_config_test.json', 'r', encoding='utf-8') as f:
+        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
             blocks_config = json.load(f)
 
         # Загружаем главную страницу
