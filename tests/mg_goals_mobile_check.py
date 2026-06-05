@@ -387,7 +387,7 @@ quiz_tests = [
         'place': 'в хедере'
     },
     {
-        'quiz_btn': '(//*[@id="w-descr"]//a)[3]',
+        'quiz_btn': '//*[@id="w-descr"]//a[contains(@class, "uk-button-danger")]',
         'goal': 'quiz_btn_v2',
         'place': 'в "Описании проекта"'
     },

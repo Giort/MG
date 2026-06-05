@@ -282,7 +282,7 @@ class VirtourChecker:
                 self.driver.switch_to.default_content()
                 count += 1
                 if count == max_attempts:
-                    print(f'ERROR: не загрузился виртуальный тур на {name} - {str(e)[:400]}')
+                    print(f'ERROR: не загрузился виртуальный тур на {name} - {str(e)[:100]}')
                     self._record_result(name, False)
                     return False
                 else:

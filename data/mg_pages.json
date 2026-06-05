@@ -12,28 +12,28 @@
         "requires_auth": true
     },
     {
-        "name": "каталог чпу - новорижское шоссе",
+        "name": "каталог чпу - Новорижское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-novorizhskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
         "requires_auth": true,
         "page_type": "chpu"
     },
     {
-        "name": "каталог чпу - ленинградское шоссе",
+        "name": "каталог чпу - Ленинградское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-leningradskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
         "requires_auth": true,
         "page_type": "chpu"
     },
     {
-        "name": "каталог чпу - минское шоссе",
+        "name": "каталог чпу - Минское шоссе",
         "path": "catalogue/zemelnye-uchastki-na-minskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
         "requires_auth": true,
         "page_type": "chpu"
     },
     {
-        "name": "каталог чпу - ярославское шоссе",
+        "name": "каталог чпу - Ярославское шоссе",
         "path": "catalogue/uchastki-na-yaroslavskom-shosse",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
         "requires_auth": true,
@@ -708,7 +708,7 @@
     {
         "name": "страница для брокеров",
         "path": "broker",
-        "xpath": "(//*[contains(@class, 'uk-inline-clip') and contains(.,'Усадьба Императрицы')])[1]",
+        "xpath": "//h2[contains(text(), 'Лучшие поселки проекта')]",
         "requires_auth": false
     },
     {
