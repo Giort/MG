@@ -153,19 +153,19 @@
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//div[@class='uk-visible@s']//*[text()[contains(.,'проконсультирую')]])[1]"
+        "xpath": "//*[@id='form-main-cons4']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'проконсультирую')]]"
       },
       {
         "name": "Фото",
-        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//img[contains(@class, 'uk-visible@l')])[1]"
+        "xpath": "(//*[@id='form-main-cons4']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/sof'))])[1]"
       },
       {
         "name": "Поле ввода",
-        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//input[@type='tel'])[1]"
+        "xpath": "//*[@id='form-main-cons4']//input[@type='tel']"
       },
       {
         "name": "Кнопка 'Отправить'",
-        "xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//button[@type='submit'])[1]"
+        "xpath": "//*[@id='form-main-cons4']//li[@class='uk-active']//button[@type='submit']"
       }
     ]
   },
@@ -389,26 +389,505 @@
     {
   "name": "Блок 'Награды проекта'",
   "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains(text(), 'Награды проекта')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//img[contains(@class, 'uk-visible@l')]"
+      },
+      {
+        "name": "Кнопка 'Перейти' на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//p[contains(@class, 'uk-text-link')]"
+      },
+      {
+        "name": "Стрелка прокрутки слайдер вправо",
+        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'uk-slidenav-next')])[1]"
+      },
+      {
+        "name": "Видны три дотса",
+        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//ul[contains(@class, 'uk-dotnav')]//li)[9]"
+      }
+    ]
+  },
+  {
+  "name": "Форма №1 с Ариной",
+  "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons2']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'оставьте свой номер')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons2']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/arina'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons2']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons2']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
     {
-      "name": "Заголовок",
-      "xpath": "//h2[contains(text(), 'Награды проекта')]"
-    },
+    "name": "Блок 'Проект От сохи до сохи'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains(text(), 'От сохи до сохи')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//div[contains(@class, 'w-project-sohi')]//a[contains(@class, 'w-project-sohi-img')])[1]//img[contains(@class, 'uk-visible@l')]"
+      },
+      {
+        "name": "Кнопка запуска видео на 1-й карточке",
+        "xpath": "(//div[contains(@class, 'w-project-sohi')]//a[contains(@class, 'w-project-sohi-img')])[1]//img[contains(@class, 'w-project-sohi-img-play')]"
+      },
+      {
+        "name": "Стрелка вправо",
+        "xpath": "(//div[contains(@class, 'w-project-sohi')]//a[contains(@class, 'uk-slidenav-next')])[1]"
+      },
+      {
+        "name": "Кнопка 'Посмотреть больше'",
+        "xpath": "//div[contains(@class, 'w-project-sohi')]//a[@href='/news/list/ot-sohi-do-sohi']"
+      }
+    ]
+  },
     {
-      "name": "Фото 1-й карточки",
-      "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//img[contains(@class, 'uk-visible@l')]"
-    },
+    "name": "Блок 'Отзывы о проекте'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains(text(), 'Отзывы о проекте')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[1]//img)[1]"
+      },
+      {
+        "name": "Кнопка запуска видео на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//li)[1]//img[@src='/img/play.svg']"
+      },
+      {
+        "name": "Текст описания на 1-й карточке",
+        "xpath": "//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//div[text() [contains(., 'всю жизнь')]]"
+      },
+      {
+        "name": "Дата на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//li)[1]//p[contains(@class, 'uk-text-secondary-dark')]"
+      },
+      {
+        "name": "6-я карточка",
+        "xpath": "(//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//li)[6]"
+      },
+      {
+        "name": "Кнопка 'Посмотреть больше'",
+        "xpath": "//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//a[@href='/about/reviews']"
+      }
+    ]
+  },
     {
-      "name": "Кнопка 'Перейти' на 1-й карточке",
-      "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//p[contains(@class, 'uk-text-link')]"
-    },
+    "name": "Блок 'Сми о проекте'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains(text(), 'СМИ о проекте')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]//img)[1]"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]//div[contains(@class, 'uk-text-bold')])[1]"
+      },
+      {
+        "name": "Кнопка на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]//div[text() [contains(., 'Перейти')]])[1]"
+      },
+      {
+        "name": "Дата на 1-й карточке",
+        "xpath": "(//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]//div[contains(@class, 'uk-text-secondary-dark')])[1]"
+      },
+      {
+        "name": "4-я карточка",
+        "xpath": "(//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]/div[contains(@class, 'uk-grid')]/div)[4]"
+      },
+      {
+        "name": "Кнопка 'Показать еще'",
+        "xpath": "//h2[contains(text(), 'СМИ о проекте')]/ancestor::div[1]//button[text() [contains(., 'Показать еще')]]"
+      }
+    ]
+  },
+  {
+  "name": "Форма №2 с Ариной",
+  "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons7']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'лучший участок')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons7']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/arina'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons7']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons7']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
+  {
+  "name": "Блок 'Выбери участок в лучшей локации'",
+  "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='w-location']//h2[text()[contains(.,'в лучшей локации')]]"
+      },
+      {
+        "name": "1-й таб активен",
+        "xpath": "//*[@id='w-location']//li[contains(@class, 'uk-active')]//p[contains (text(), 'На Волге')]"
+      },
+      {
+        "name": "Фото 1-го таба",
+        "xpath": "(//*[@id='w-location']//img[contains(@class, 'uk-object-cover')])[7]"
+      },
+      {
+        "name": "Текст 1-го таба",
+        "xpath": "//*[@id='w-location']//div[contains (text(), 'красивых рек')]"
+      },
+      {
+        "name": "Кнопка 'Смотреть участки'",
+        "xpath": "(//*[@id='w-location']//a[contains (text(), 'Смотреть участки')])[1]"
+      }
+    ]
+  },
+      {
+    "name": "Блок 'Новости развития поселков'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[contains(@class, 'w-news-wrapper')]//h2[contains(text(), 'Новости развития поселков')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//div[contains(@class, 'w-news-wrapper')]//div[contains(@style, 'background-image')])[1]"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "(//div[contains(@class, 'w-news-wrapper')]//p[contains(@class, 'uk-text-bold')])[1]"
+      },
+      {
+        "name": "Дата на 1-й карточке",
+        "xpath": "(//div[contains(@class, 'w-news-wrapper')]//p[contains(@class, 'uk-text-secondary-dark')])[2]"
+      },
+      {
+        "name": "4-я карточка",
+        "xpath": "(//div[contains(@class, 'w-news-wrapper')]//li)[4]"
+      },
+      {
+        "name": "Кнопка 'Показать еще'",
+        "xpath": "//div[contains(@class, 'w-news-wrapper')]//a[text() [contains(., 'Посмотреть все новости')]]"
+      }
+    ]
+  },
+      {
+    "name": "Блок 'Непрерывное развитие поселков'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains(text(), 'Непрерывное развитие поселков')]"
+      },
+      {
+        "name": "Содержимое",
+        "xpath": "//h2[contains(text(), 'Непрерывное развитие поселков')]/ancestor::div[1]//div[contains(@class, 'embed-responsive')]"
+      }
+    ]
+  },
+  {
+    "name": "Форма с Анастаией",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons3']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'развитие участка')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons3']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/vaseh'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons3']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons3']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Популярные вопросы'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@class='w-faq']//h2[contains(text(), 'Популярные вопросы:')]"
+      },
+      {
+        "name": "Фото руки",
+        "xpath": "(//*[@class='w-faq']//img[(contains(@class, 'uk-visible@l')) and (contains (@alt, 'Фото страницы на телефоне'))])[1]"
+      },
+      {
+        "name": "Заголовок 1-го вопроса",
+        "xpath": "(//*[@class='w-faq']//li//h5)[1]"
+      },
+      {
+        "name": "1-е видео 1-го вопроса: фон",
+        "xpath": "(//*[@class='w-faq']//li//h5/ancestor::li//a[contains(@class, 'js-faq-control')])[2]"
+      },
+      {
+        "name": "Кнопка раскрытия 2-го вопроса",
+        "xpath": "//*[@id='form-main-cons3']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
+  {
+    "name": "Форма №2 с Софией",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons8']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'и капитализацию')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons8']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/sof1'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons8']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons8']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Видео, которые вам стоит увидеть'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id='b-video']//h2[contains(text(), 'которые вам')]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//div[@id='b-video']//img[(contains(@alt, 'Превью видео')) and (contains(@class, 'uk-visible@l'))])[1]"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "//div[@id='b-video']//h6[contains(text(), 'как это работает')]"
+      },
+      {
+        "name": "Стрелка прокрутки вправо",
+        "xpath": "//div[@id='b-video']//*[@aria-label='Next slide']"
+      },
+      {
+        "name": "5-й дотс",
+        "xpath": "//div[@id='b-video']//*[@aria-label='Slide 13']"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Строительство на землях сельхозназначения'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[text() [contains(.,'на землях сельхозназначения')]]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "//h2[text() [contains(.,'на землях сельхозназначения')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//img[@class='uk-visible@s']"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "//h2[text() [contains(.,'на землях сельхозназначения')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//h6[contains(text(), 'Обрабатывайте')]"
+      },
+      {
+        "name": "Есть 4-я карточка",
+        "xpath": "(//h2[text() [contains(.,'на землях сельхозназначения')]]/ancestor::div[1]//div[@uk-grid]/div)[4]"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Рекомендованные фундаменты'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[text() [contains(.,'Рекомендованные фундаменты')]]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "//h2[text() [contains(.,'Рекомендованные фундаменты')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//img"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "//h2[text() [contains(.,'Рекомендованные фундаменты')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//h5[contains(text(), 'Блочный')]"
+      },
+      {
+        "name": "Есть 2 карточка",
+        "xpath": "(//h2[text() [contains(.,'Рекомендованные фундаменты')]]/ancestor::div[1]//*[contains(@class,'grid-small')]/div)[2]"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Примеры строений'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[text() [contains(.,'Примеры строений')]]"
+      },
+      {
+        "name": "Фото 1-й карточки",
+        "xpath": "(//h2[text() [contains(.,'Примеры строений')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//img)[1]"
+      },
+      {
+        "name": "Заголовок на 1-й карточке",
+        "xpath": "//h2[text() [contains(.,'Примеры строений')]]/ancestor::div[1]//*[contains(@class,'uk-first-column')]//h6[contains(text(), 'Каркасный')]"
+      },
+      {
+        "name": "Есть 7-й дотс",
+        "xpath": "(//h2[text() [contains(.,'Примеры строений')]]/ancestor::div[1]//*[contains(@class,'grid-small')]/div)[2]"
+      },
+      {
+        "name": "Кнопка 'Оставить заявку'",
+        "xpath": "(//h2[text() [contains(.,'Примеры строений')]]/ancestor::div[1]//*[contains(@class,'grid-small')]/div)[2]"
+      },
+      {
+        "name": "Кнопка 'Скачать памятку'",
+        "xpath": "(//h2[text() [contains(.,'Примеры строений')]]/ancestor::div[1]//*[contains(@class,'grid-small')]/div)[2]"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Федеральный закон'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='buildvar']//h2[text() [contains(.,'Федеральный закон')]]"
+      },
+      {
+        "name": "заголовок 1-го аккордиона",
+        "xpath": "//*[@id='buildvar']//h6[text() [contains(.,'назначения без смены')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "//*[@id='buildvar']//img[(contains(@class, 'uk-visible@l')) and (contains (@alt, 'Фото герба РФ'))]"
+      },
+      {
+        "name": "Ссылка на пресс-релиз",
+        "xpath": "//*[@id='buildvar']//a[(contains(@href, 'https://www.zsto.ru/index.php/press-tsentr/novosti-zakonodatelnogo-sobraniya/12254-v-tverskoj-oblasti-prinyat-zakon-reguliruyushchij-voprosy-zemelnykh-otnoshenij')) and (contains (text(), 'пресс-релиз'))]"
+      },
+      {
+        "name": "Ссылка на обоснование",
+        "xpath": "//*[@id='buildvar']//a[(contains(@href, '/img/build/build.pdf')) and (contains (text(), 'Обоснование'))]"
+      },
+      {
+        "name": "Кнопка видео",
+        "xpath": "//*[@id='buildvar']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvixy2lbksrssc3gwu?autoplay=0&mute=0']//img[@data-src='/img/play.svg']"
+      }
+    ]
+  },
     {
-      "name": "Стрелка прокрутки слайдер вправо",
-      "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'uk-slidenav-next')])[1]"
-    },
-    {
-      "name": "Видны три дотса",
-      "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//ul[contains(@class, 'uk-dotnav')]//li)[9]"
-    }
-  ]
-}
+    "name": "Приглашаем на встречу в офис",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//div[@id='meeting']//h2[text()[contains(.,'Приглашаем на встречу')]]"
+      },
+      {
+        "name": "1-я строка",
+        "xpath": "(//div[@id='meeting']//li)[1]//h5[contains(text(), 'Индивидуальный подбор участка')]"
+      },
+      {
+        "name": "1-я кнопка",
+        "xpath": "(//div[@id='meeting']//a[@uk-toggle='target: #modal-meeting-meeting'])[1]"
+      },
+      {
+        "name": "1-е фото в наборе",
+        "xpath": "//div[@id='meeting']//img[(contains (@class, 'uk-visible@l')) and (contains (@src, '/img/meeting/1'))]"
+      },
+      {
+        "name": "Телефон горячей линии",
+        "xpath": "//div[@id='meeting']//h5[contains(., 'Телефоны')]/ancestor::div[1]//b[contains (text(), '8 (800) 301-76-20 — Телефон горячей линии')]"
+      },
+      {
+        "name": "Ссылка 'Обратный звонок'",
+        "xpath": "//div[@id='meeting']//h5[contains(., 'Телефоны')]/ancestor::div[1]/a[(contains(@uk-toggle, 'target: #modal-main-consultation')) and (contains(., 'Обратный звонок'))]"
+      },
+      {
+        "name": "2-я кнопка",
+        "xpath": "(//div[@id='meeting']//a[@uk-toggle='target: #modal-meeting-meeting'])[2]"
+      }
+    ]
+  },
+  {
+    "name": "Форма с Максимом",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons5']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'нет на сайте')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons5']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/max'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons5']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons5']//li[@class='uk-active']//button[@type='submit']"
+      }
+    ]
+  },
+  {
+    "name": "Футер",
+    "elements": [
+      {
+        "name": "Ссылка 'О проекте'",
+        "xpath": "//*[contains(@class, 'w-footer')]/div/div/div/div/div/a[@href='/about']/div[contains(text(), 'О проекте')]"
+      },
+      {
+        "name": "Иконка подарочного сертификата",
+        "xpath": "//*[contains(@class, 'w-footer')]//img[(contains(@class, 'uk-visible@m')) and (contains(@src, '/img/gift.svg'))]"
+      },
+      {
+        "name": "Телефон горячей линии",
+        "xpath": "//*[contains(@class, 'w-footer')]//div[contains(text(), 'Контакты')]/ancestor::div[2]//a[@href='tel:88003017620']"
+      },
+      {
+        "name": "Кнопка 'Связаться'",
+        "xpath": "//*[contains(@class, 'w-footer')]//div[contains(text(), 'Контакты')]/ancestor::div[2]//button[@uk-toggle='target: #modal-main-consultation']"
+      },
+      {
+        "name": "Ссылка на ВК",
+        "xpath": "//*[contains(@class, 'w-footer')]//div[contains(text(), 'Контакты')]/ancestor::div[2]//a[@href=\"https://vk.com/mgektar\"]/img[(contains(@class, 'uk-icon-visible')) and (contains(@data-src, '/img/vk-dark.svg'))]"
+      },
+      {
+        "name": "Рейтинг Яндекса",
+        "xpath": "//iframe[@src='https://yandex.ru/sprav/widget/rating-badge/36705983328']"
+      },
+      {
+        "name": "Строка инфо об оферте",
+        "xpath": "//*[contains(@class, 'w-footer')]//p[contains(text(), 'Вся представленная на сайте')]"
+      }
+    ]
+  }
 ]

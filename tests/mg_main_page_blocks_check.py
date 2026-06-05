@@ -32,7 +32,6 @@ from helpers.popups import remove_popups
 # Блок "Зорабатывайте на гектаре..."
 # Блок "Государственная поддержка отрасли"
 # Блок "Награды проекта..."
-
 # Форма №1 с Ариной
 # Блок "Проект От сохи до сохи"
 # Блок "Отзывы о проекте"
@@ -88,7 +87,7 @@ class PageBlocksChecker:
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
         self.driver.set_window_size(1680, 1000)
-        self.driver.implicitly_wait(10)
+        self.driver.implicitly_wait(15)
         return self.driver
 
 
@@ -230,7 +229,7 @@ def main():
     try:
         checker.init_driver()
 
-        with open('../data/mg_main_page_blocks_config_test.json', 'r', encoding='utf-8') as f:
+        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
             blocks_config = json.load(f)
 
         # Загружаем главную страницу
