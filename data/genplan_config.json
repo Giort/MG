@@ -118,6 +118,12 @@
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
+      "project_name": "vazuza3 Долина Вазузы",
+      "type": "old",
+      "title_xpath": "(//*[text()[contains(.,\"Нажмите, \")]])[1]",
+      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
+    },
+    {
       "project_name": "сайт турпортала",
       "type": "old",
       "title_xpath": "(//*[text()[contains(.,\"Интерактивная\")]])[1]",
