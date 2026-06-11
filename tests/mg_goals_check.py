@@ -397,6 +397,16 @@ quiz_tests = [
         'place': 'в хедере'
     },
     {
+        'quiz_btn': '//*[contains(@class, "w-main")]//a[contains(@class, "uk-button-danger")]',
+        'goal': 'quiz_btn_v2',
+        'place': 'на 1-м экране'
+    },
+    {
+        'quiz_btn': '(//*[@id="w-gektar-idea"]//a[contains(@class, "uk-button-danger")])[1]',
+        'goal': 'quiz_btn_v2',
+        'place': 'в "Гектар для реализации..."'
+    },
+    {
         'quiz_btn': '(//*[@id="w-descr"]//a)[3]',
         'goal': 'quiz_btn_v2',
         'place': 'в "Описании проекта"'

@@ -319,6 +319,7 @@ except Exception as e:
     print(' ERROR: при проверке кнопок соцсетей в модалке авторизации — ', error_msg)
 
 
+# кнопки вызова квиза: отправляется цель при нажатии
 def check_quiz_btn_goal(tests, max_attempts=3):
     results = {test['place']: {'success': False, 'attempts': 0} for test in tests}
 
@@ -385,6 +386,16 @@ quiz_tests = [
         'quiz_btn': '(//*[contains(@class, "w-navbar")]//a[text()[contains(., "Каталог участков")]])[2]',
         'goal': 'quiz_btn_v2',
         'place': 'в хедере'
+    },
+    {
+        'quiz_btn': '//*[contains(@class, "w-main")]//a[contains(@class, "uk-button-danger")]',
+        'goal': 'quiz_btn_v2',
+        'place': 'на 1-м экране'
+    },
+    {
+        'quiz_btn': '(//*[@id="w-gektar-idea"]//a[contains(@class, "uk-button-danger")])[1]',
+        'goal': 'quiz_btn_v2',
+        'place': 'в "Гектар для реализации..."'
     },
     {
         'quiz_btn': '//*[@id="w-descr"]//a[contains(@class, "uk-button-danger")]',
@@ -694,7 +705,7 @@ def check_catalogue_button_goal(button_tests, max_attempts=3):
                     driver.get(f"{MG_BASE_URL}/catalogue-no-auth/?__counters=1")
                     time.sleep(5)
                     if not test['goal'] == "catalog_v4.filter_button_click":
-                        actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
+                        actions.send_keys(Keys.PAGE_DOWN).perform()
                     elem = driver.find_element(By.XPATH, test['loc'])
                     if test['goal'] == "catalog_v4.list_view_toggle":
                         button = driver.find_element(By.XPATH, '(//*[text()[contains(., "На карте")]])[2]')
