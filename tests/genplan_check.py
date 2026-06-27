@@ -157,7 +157,7 @@ class GenplanChecker:
 
         return True
 
-    def check_genplan_old(self, name, title_xpath, genplan_css, wait_time=14):
+    def check_genplan_old(self, name, title_xpath, genplan_css, url=None, wait_time=14):
         """Проверка генплана старого типа (с кликом)"""
         try:
             # Ожидание и скролл к элементу
@@ -176,18 +176,18 @@ class GenplanChecker:
 
             if genplan_elem:
                 print(f'     OK: {name}')
-                self._record_result(name, True)
+                self._record_result(name, True, url)
                 return True
 
         except Exception as e:
             print(f'ERROR: генплан на {name}')
-            self._record_result(name, False)
+            self._record_result(name, False, url)
             return False
 
-        self._record_result(name, False)
+        self._record_result(name, False, url)
         return False
 
-    def check_genplan_new(self, name, title_xpath, check_css, wait_time=14):
+    def check_genplan_new(self, name, title_xpath, check_css, url=None, wait_time=14):
         """Проверка генплана нового типа (без клика)"""
         try:
             # Ожидание появления элемента
@@ -206,15 +206,15 @@ class GenplanChecker:
 
             if check_element:
                 print(f'     OK: {name}')
-                self._record_result(name, True)
+                self._record_result(name, True, url)
                 return True
 
         except Exception as e:
             print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]}')
-            self._record_result(name, False)
+            self._record_result(name, False, url)
             return False
 
-        self._record_result(name, False)
+        self._record_result(name, False, url)
         return False
 
     def check_catalogue_map(self, config):
@@ -244,13 +244,13 @@ class GenplanChecker:
 
                 if tour_element:
                     print(f'     OK: {name}')
-                    self._record_result(name, True)
+                    self._record_result(name, True, url)
                     return True
 
             except Exception as e:
                 if attempt == max_attempts - 1:
                     print(f'ERROR: {name} - {str(e)}')
-                    self._record_result(name, False)
+                    self._record_result(name, False, url)
                     return False
                 else:
                     try:
@@ -277,7 +277,7 @@ class GenplanChecker:
         for attempt in range(max_attempts):
             try:
                 genplan_button = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, '//*[text()[contains(.,"Генеральный")]]'))
+                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(.,"Генеральный")]])[2]'))
                 )
 
                 if attempt == 0:
@@ -291,13 +291,13 @@ class GenplanChecker:
 
                 if to_plot_element:
                     print(f'     OK: {name}')
-                    self._record_result(name, True)
+                    self._record_result(name, True, url)
                     return True
 
             except Exception as e:
                 if attempt == max_attempts - 1:
                     print(f'ERROR: {name} - {str(e)}')
-                    self._record_result(name, False)
+                    self._record_result(name, False, url)
                     return False
                 else:
                     try:
@@ -309,11 +309,11 @@ class GenplanChecker:
 
         return False
 
-    def _record_result(self, name: str, success: bool):
+    def _record_result(self, name: str, success: bool, url: str = None):
         if success:
             self.results['success'].append(name)
         else:
-            self.results['failed'].append(name)
+            self.results['failed'].append((name, url))
 
     def _print_summary(self):
         total   = len(self.results['success']) + len(self.results['failed'])
@@ -325,8 +325,11 @@ class GenplanChecker:
 
         if self.results['failed']:
             print(f"\n     Недоступные генпланы:")
-            for item in self.results['failed']:
-                print(f"       - {item}")
+            for name, url in self.results['failed']:
+                if url:
+                    print(f"       - {name} {url}")
+                else:
+                    print(f"       - {name}")
         else:
             print(f"\n     ОШИБОК НЕТ")
 
@@ -374,13 +377,15 @@ class GenplanChecker:
                 self.check_genplan_old(
                     display_name,
                     genplan.get('title_xpath'),
-                    genplan.get('genplan_css')
+                    genplan.get('genplan_css'),
+                    url=url
                 )
             elif genplan_type == 'new':
                 self.check_genplan_new(
                     display_name,
                     genplan.get('title_xpath'),
-                    genplan.get('check_css')
+                    genplan.get('check_css'),
+                    url=url
                 )
 
             time.sleep(1)
