@@ -56,6 +56,23 @@
     ]
   },
   {
+    "name": "Максимальная выгода от покупки",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//section[@id='w-benefits']//h2[text()[contains(.,'Максимальная выгода от покупки')]]"
+      },
+      {
+        "name": "Заголовок 1-го блока",
+        "xpath": "(//section[@id='w-benefits']//div[contains(@class, 'uk-first-column')])[1]//span[contains(text(), 'Ваш бизнес')]"
+      },
+      {
+        "name": "Картинка 1-го блока",
+        "xpath": "(//section[@id='w-benefits']//div[contains(@class, 'uk-first-column')])[1]//img[@data-src='/img/benefits/card-1.png']"
+      }
+    ]
+  },
+  {
     "name": "Блок 'Преимущества проекта'",
     "elements": [
       {

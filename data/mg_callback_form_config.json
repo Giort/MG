@@ -133,7 +133,7 @@
 
   {
     "page_name": "стр. актива",
-    "form_name": "форма Ариной",
+    "form_name": "форма с Ариной",
     "url": "/batches/44607",
     "scroll": false,
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_batch_page_arina_callback'])[1]",

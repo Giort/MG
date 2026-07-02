@@ -187,7 +187,7 @@ class GenplanChecker:
         self._record_result(name, False, url)
         return False
 
-    def check_genplan_new(self, name, title_xpath, check_css, url=None, wait_time=14):
+    def check_genplan_new(self, name, title_xpath, check_xpath, url=None, wait_time=14):
         """Проверка генплана нового типа (без клика)"""
         try:
             # Ожидание появления элемента
@@ -201,7 +201,7 @@ class GenplanChecker:
 
             # Проверка видимости целевого элемента
             check_element = wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, check_css))
+                EC.visibility_of_element_located((By.XPATH, check_xpath))
             )
 
             if check_element:
@@ -384,7 +384,7 @@ class GenplanChecker:
                 self.check_genplan_new(
                     display_name,
                     genplan.get('title_xpath'),
-                    genplan.get('check_css'),
+                    genplan.get('check_xpath'),
                     url=url
                 )
 

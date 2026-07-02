@@ -1,7 +1,7 @@
 {
   "catalogue": {
     "url": "https://moigektar.ru/catalogue-no-auth",
-    "name": "Каталог МГ"
+    "name": "Каталог МГ - основная карта"
   },
   "asset": {
     "url": "https://moigektar.ru/batches-no-auth/60786",
@@ -22,30 +22,37 @@
     },
     {
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "name": "новый: Усадьба в Подмосковье",
+      "name": "новый: Усадьба в Подмосковье - Подсухино",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье»\")]]",
-      "check_css": "#plan2-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье» д. Подсухино\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='plan2-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "name": "новый: Артёмки",
+      "name": "новый: Усадьба в Подмосковье - Артёмки",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье». д. Артёмки\")]]",
-      "check_css": "#plan3-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//*[text()[contains(.,\"Генеральный план «Усадьба в Подмосковье». д. Артёмки\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//div[@id='plan3-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "name": "новый: Экополис",
+      "name": "новый: Экополис на Новорижском шоссе",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Экополиса»\")]]",
-      "check_css": "#plan1-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//*[text()[contains(.,\"Генеральный план «Экополиса»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//div[@id='plan1-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "project_name": "syn_34 Усадьба в Подмосковье",
+      "name": "новый: Экополис на Волге",
+      "type": "new",
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[4]//*[text()[contains(.,\"Генеральный план «Экополис на Волге»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[4]//div[@id='plan4-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_34 Усадьба в Подмосковье",
       "name": "старый",
       "type": "old",
-      "title_xpath": "(//*[text()[contains(.,\"Генеральный\")]])[6]",
+      "title_xpath": "//div[(contains(@class, 'uk-container uk-container-xlarge')) and (contains(@id, 'plan'))]/ancestor::div[1]//*[text()[contains(.,\"Генеральный\")]]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
@@ -76,15 +83,15 @@
       "project_name": "syn_48-97-105 Парк Патриот",
       "name": "новый: д. Харино",
       "type": "new",
-      "title_xpath": "//*[@id='plan1-map']",
-      "check_css": "#plan1-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,\"Генеральный план «Парк Патриот» д. Харино\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='plan1-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
       "name": "новый: д. Подсухино",
       "type": "new",
-      "title_xpath": "//*[@id='plan2-map']",
-      "check_css": "#plan2-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//*[text()[contains(.,\"Генеральный план «Парк Патриот» д. Струйское\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//div[@id='plan2-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
@@ -175,22 +182,22 @@
       "project_name": "syn_89 Долина озёр",
       "name": "Оазис на Осуге",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Оазис на Осуге»\")]]",
-      "check_css": "#sm-osuga-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,\"Генеральный план «Оазис на Осуге»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='sm-osuga-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_89 Долина озёр",
       "name": "Клубный Оазис",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Клубный Оазис»\")]]",
-      "check_css": "#sm-oasis-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//*[text()[contains(.,\"Генеральный план «Клубный Оазис»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//div[@id='sm-oasis-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_89 Долина озёр",
       "name": "Усадьба на Большом озере",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Усадьба на Большом озере»\")]]",
-      "check_css": "#sm-big-lake-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//*[text()[contains(.,\"Генеральный план «Усадьба на Большом озере»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//div[@id='sm-big-lake-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_92 Усадьба в Дубровке",
@@ -208,8 +215,8 @@
       "project_name": "syn_98 Оазис в Завидово",
       "name": "новый: Оазис в Завидово",
       "type": "new",
-      "title_xpath": "//*[text()[contains(.,\"Генеральный план «Оазис в Завидово»\")]]",
-      "check_css": "#sm-oasis2-map .ol-zoom-in"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,\"Генеральный план «Оазис в Завидово»\")]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='sm-oasis2-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_98 Оазис в Завидово",

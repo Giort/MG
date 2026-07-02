@@ -70,6 +70,13 @@
       "elem_xpath": "//div[(contains(@style, 'z-index: 176'))]"
     },
     {
+      "name": "syn_34 - Экополис на Волге (4)",
+      "project_name": "syn_34 Усадьба в Подмосковье",
+      "title_locator": ["xpath", "(//*[text()[contains(., 'Экополис на Волге')]])[1]"],
+      "btn_locator": ["xpath", "(//lord-icon)[4]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]"
+    },
+    {
       "name": "syn_35 Усадьба подо Ржевом",
       "project_name": "syn_35 Усадьба подо Ржевом",
       "title_locator": ["id", "tour"],
