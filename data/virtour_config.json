@@ -11,27 +11,35 @@
   },
   "tours": [
     {
-      "name": "МГ главная, тур 1",
+      "name": "МГ главная, 'Лучший посёлок месяца', Экополис на Волге",
       "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]",
+      "title_locator": ["xpath", "//*[text()[contains(., 'Лучший поселок месяца')]]"],
+      "btn_locator": ["xpath", "//*[contains(@class, 'w-project-villages__tour-btn')]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, тур 2",
+      "name": "МГ главная, 'Лучшие поселения', тур 1",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[2]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]",
+      "btn_locator": ["xpath", "(//*[@class='w-lord'])[4]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, тур 3",
+      "name": "МГ главная, 'Лучшие поселения', тур 2",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[3]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]",
+      "btn_locator": ["xpath", "(//*[@class='w-lord'])[5]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 347'))]",
+      "remove_webinar_popup": true
+    },
+    {
+      "name": "МГ главная, 'Лучшие поселения', тур 3",
+      "project_name": "МГ главная",
+      "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
+      "btn_locator": ["xpath", "(//*[@class='w-lord'])[6]"],
+      "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]",
       "remove_webinar_popup": true
     },
     {

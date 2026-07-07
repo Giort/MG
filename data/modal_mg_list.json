@@ -8,37 +8,37 @@
       "modal_id": "modal-auth-lk",
       "lgform": "catalog_auth_request"
     },
-    {
-      "name": "Баннер 'Распродажа на Волге'",
+{
+      "name": "Баннер 'Экополис на Волге'",
       "url_name": "главная",
       "url": "/",
       "btn_selector": "//*[@id='banner-promo']",
-      "modal_id": "promo-volga-2026",
-      "lgform": "callback_main_promo_volga_2026"
-    },
-    {
-      "name": "'Лучшие поселения месяца', карточка 'Новая жизнь'",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[1]",
-      "modal_id": "modal_syn-53",
-      "lgform": "lg_main_catalog_new_gizn"
-    },
-    {
-      "name": "'Лучшие поселения месяца', карточка 'Усадьба в Завидово'",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[2]",
-      "modal_id": "modal_syn-98",
-      "lgform": "lg_main_catalog_usadba_v_zavidovo"
+      "modal_id": "promo-ecopolis",
+      "lgform": "callback_main_promo_ecopolis"
     },
     {
       "name": "'Лучшие поселения месяца', карточка 'Усадьба в Подмосковье'",
       "url_name": "главная",
       "url": "/",
+      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[1]",
+      "modal_id": "modal_syn-104",
+      "lgform": "lg_main_catalog_ecopolis_na_volge"
+    },
+    {
+      "name": "'Лучшие поселения месяца', карточка 'Новая жизнь'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[2]",
+      "modal_id": "modal_syn-53",
+      "lgform": "lg_main_catalog_new_gizn"
+    },
+    {
+      "name": "'Лучшие поселения месяца', карточка 'Моё поместье'",
+      "url_name": "главная",
+      "url": "/",
       "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[3]",
-      "modal_id": "modal_syn-63",
-      "lgform": "lg_main_catalog_usadba_v_podmoskovie"
+      "modal_id": "modal_syn-67",
+      "lgform": "lg_main_catalog_moe_pomestie"
     },
     {
       "name": "'Реализуйте продукцию...', 1-я карточка",
