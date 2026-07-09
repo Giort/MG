@@ -42,12 +42,12 @@ ENV_CONFIG = {
     "prod": {
         "base_url":  "https://moigektar.ru",
         "cred_key":  "LK_cred",
-        "auth_url":    "https://moigektar.ru/",
+        "auth_url":    "https://moigektar.ru/12345",
     },
     "local": {
         "base_url":  "http://moigektar.localhost",
         "cred_key":  "LK_local_cred",
-        "auth_url":    "http://moigektar.localhost/",
+        "auth_url":    "http://moigektar.localhost/12345",
     },
 }
 
@@ -57,17 +57,13 @@ BASE_URL = config["base_url"]
 print(f"\n     Проверка генерации КП на домене {BASE_URL} | [{ENV.upper()}]\n")
 
 # логин
-driver.get(f"{BASE_URL}/catalogue")
-
-time.sleep(2)
-remove_popups(driver)
-
 auth_mg(driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
 # сделать выборку по не самым популярным фильтрам (чтобы не было КП из кеша), нажать на кнопку "пдф",
 # на странице КП дождаться отображения иконки "Смотреть КП"
 driver.get(f"{BASE_URL}/catalogue?sortId=price")
 time.sleep(2)
+remove_popups(driver)
 actions.send_keys(Keys.PAGE_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()
 time.sleep(2)
 btn = driver.find_element(by=By.XPATH, value='(//*[(contains(@class, "js-card-special-icon-click-download"))])[2]')

@@ -29,13 +29,13 @@ ENV_CONFIG = {
         "mg_base_url": "https://moigektar.ru",
         "lk_base_url": "https://cabinet.moigektar.ru",
         "cred_key":    "LK_cred",
-        "auth_url":    "https://moigektar.ru/",
+        "auth_url":    "https://moigektar.ru/12345",
     },
     "local": {
         "mg_base_url": "http://moigektar.localhost",
         "lk_base_url": "http://cabinet.moigektar.localhost",
         "cred_key":    "LK_local_cred",
-        "auth_url":    "http://moigektar.localhost/",
+        "auth_url":    "http://moigektar.localhost/12345",
     },
 }
 

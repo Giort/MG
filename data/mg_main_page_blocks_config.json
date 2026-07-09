@@ -103,15 +103,15 @@
     ]
   },
   {
-    "name": "Баннер 'Распродажа на Волге'",
+    "name": "Баннер 'Экополис на Волге'",
     "elements": [
       {
-        "name": "Заголовок 'Распродажа участков на Волге'",
-        "xpath": "//*[@id='banner-promo']//*[contains(text(), 'участков на Волге')]"
+        "name": "Заголовок 'Экополис на Волге'",
+        "xpath": "//*[@id='banner-promo']//*[contains(text(), 'Экополис на Волге')]"
       },
       {
         "name": "ссылка на модалку",
-        "xpath": "//*[(contains(@id, 'banner-promo')) and (contains (@uk-toggle, 'target: #promo-volga-2026'))]"
+        "xpath": "//*[(contains(@id, 'banner-promo')) and (contains (@uk-toggle, 'target: #promo-ecopolis'))]"
       },
       {
         "name": "счётчик",
@@ -119,7 +119,7 @@
       },
       {
         "name": "фоновое фото",
-        "xpath": "//*[@id='banner-promo']//*[(contains (@class, 'uk-visible@l')) and (contains(@src, '/img/extended-banner/bg-volga.jpg'))]"
+        "xpath": "//*[@id='banner-promo']//*[(contains (@class, 'uk-visible@l')) and (contains(@src, '/img/extended-banner/bg-ecopolis.jpg'))]"
       }
     ]
   },
