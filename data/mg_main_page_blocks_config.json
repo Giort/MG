@@ -9,7 +9,7 @@
       },
       {
         "name": "Ссылка на каталог",
-        "xpath": "(//div[contains(@class, 'w-navbar')]//a[@href='/catalogue'])[1]"
+        "xpath": "(//div[contains(@class, 'w-navbar')]//a[@href='https://moigektar.ru/catalogue'])[1]"
       },
       {
         "name": "Кнопка 'Каталог участков' (квиз)",
@@ -307,7 +307,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "//*[@class='w-why']//*[@src='/img/why/outline.svg']"
+        "xpath": "//*[@class='w-why']//*[@src='/img/why/outline.svg?ver=1']"
       }
     ]
   },
@@ -624,7 +624,7 @@
       },
       {
         "name": "Содержимое",
-        "xpath": "//h2[contains(text(), 'Непрерывное развитие поселков')]/ancestor::div[1]//div[contains(@class, 'embed-responsive')]"
+        "xpath": "//h2[contains(text(), 'Непрерывное развитие поселков')]/ancestor::div[1]//iframe[@class='uk-width-1-1']"
       }
     ]
   },

@@ -62,12 +62,12 @@ class ModalChecker:
     def _set_desktop_viewport(self):
         self.driver.set_window_size(1660, 1000)
 
-    def _navigate(self, url: str) -> bool:
+    def _navigate(self, url: str, skip_popups: list = None) -> bool:
         """Переходит на страницу и убирает попап"""
         try:
             self.driver.get(url)
             time.sleep(2)
-            remove_popups(self.driver)
+            remove_popups(self.driver, skip=skip_popups)
             return True
         except Exception as e:
             print(f"     ERROR: Не удалось открыть {url} — {e}")
@@ -180,9 +180,23 @@ class ModalChecker:
             self._set_desktop_viewport()
 
         # 1. Переход на страницу
-        if not self._navigate(url):
+        skip_popups = modal_config.get('skip_popups', None)
+        if not self._navigate(url, skip_popups=skip_popups):
             self._record_result(label, False, 'не удалось открыть страницу')
             return False
+
+        # 1а. Предварительный клик для отображения кнопки (если задан pre_click_selector)
+        pre_click_selector = modal_config.get('pre_click_selector')
+        if pre_click_selector:
+            try:
+                pre_elem = WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, pre_click_selector))
+                )
+                pre_elem.click()
+                time.sleep(1)
+            except Exception as e:
+                self._record_result(label, False, f'не удалось кликнуть по pre_click_selector ({pre_click_selector})')
+                return False
 
         # 2. Скролл к кнопке
         btn = self._scroll_to_element(btn_selector)

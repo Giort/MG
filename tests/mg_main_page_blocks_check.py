@@ -66,7 +66,7 @@ ENV = "prod"
 
 ENV_CONFIG = {
     "prod": {
-        "base_url": "https://moigektar.ru",
+        "base_url": "https://moigektar.ru?__ab=1",
     },
     "local": {
         "base_url": "http://moigektar.localhost",

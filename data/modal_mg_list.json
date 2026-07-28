@@ -8,6 +8,16 @@
       "modal_id": "modal-auth-lk",
       "lgform": "catalog_auth_request"
     },
+    {
+      "name": "Модалка на 1-м экране в фикс. видео",
+      "skip_popups": ["wStickyVideo"],
+      "pre_click_selector": "#wStickyVideo",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//*[@href='#modal-main-promo-video']",
+      "modal_id": "modal-main-promo-video",
+      "lgform": "lg_main_sticky_video"
+    },
 {
       "name": "Баннер 'Экополис на Волге'",
       "url_name": "главная",

@@ -13,29 +13,29 @@
     {
       "name": "МГ главная, 'Лучший посёлок месяца', Экополис на Волге",
       "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Лучший поселок месяца')]]"],
+      "title_locator": ["xpath", "//*[text()[contains(., 'Новый поселок')]]"],
       "btn_locator": ["xpath", "//*[contains(@class, 'w-project-villages__tour-btn')]"],
       "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, 'Лучшие поселения', тур 1",
+      "name": "МГ главная, 'Лучшие поселения', тур 1 ('Экополис на Волге')",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[4]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, 'Лучшие поселения', тур 2",
+      "name": "МГ главная, 'Лучшие поселения', тур 2 ('Новая Жизнь')",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[5]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 347'))]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]",
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, 'Лучшие поселения', тур 3",
+      "name": "МГ главная, 'Лучшие поселения', тур 3 ('Моё поместье')",
       "project_name": "МГ главная",
       "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
       "btn_locator": ["xpath", "(//*[@class='w-lord'])[6]"],
@@ -133,7 +133,7 @@
       "project_name": "syn_53 Новая жизнь",
       "title_locator": ["id", "tour"],
       "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 332'))]"
+      "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
     {
       "name": "syn_67 Моё поместье",
