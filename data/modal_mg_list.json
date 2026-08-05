@@ -9,46 +9,12 @@
       "lgform": "catalog_auth_request"
     },
     {
-      "name": "Модалка на 1-м экране в фикс. видео",
-      "skip_popups": ["wStickyVideo"],
-      "pre_click_selector": "#wStickyVideo",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "//*[@href='#modal-main-promo-video']",
-      "modal_id": "modal-main-promo-video",
-      "lgform": "lg_main_sticky_video"
-    },
-{
       "name": "Баннер 'Экополис на Волге'",
       "url_name": "главная",
       "url": "/",
       "btn_selector": "//*[@id='banner-promo']",
       "modal_id": "promo-ecopolis",
       "lgform": "callback_main_promo_ecopolis"
-    },
-    {
-      "name": "'Лучшие поселения месяца', карточка 'Усадьба в Подмосковье'",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[1]",
-      "modal_id": "modal_syn-104",
-      "lgform": "lg_main_catalog_ecopolis_na_volge"
-    },
-    {
-      "name": "'Лучшие поселения месяца', карточка 'Новая жизнь'",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[2]",
-      "modal_id": "modal_syn-53",
-      "lgform": "lg_main_catalog_new_gizn"
-    },
-    {
-      "name": "'Лучшие поселения месяца', карточка 'Моё поместье'",
-      "url_name": "главная",
-      "url": "/",
-      "btn_selector": "(//*[@id='catalogue']//li[contains(@class, 'uk-active')]//a[contains(@class, 'uk-button-large')])[3]",
-      "modal_id": "modal_syn-67",
-      "lgform": "lg_main_catalog_moe_pomestie"
     },
     {
       "name": "'Реализуйте продукцию...', 1-я карточка",

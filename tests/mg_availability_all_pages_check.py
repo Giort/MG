@@ -125,7 +125,7 @@ def load_pages_config(config_file='../data/mg_pages.json'):
         raise
     except Exception as e:
         print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        return get_default_pages_config()
+        raise
 
 
 def get_default_pages_config():
@@ -152,7 +152,7 @@ def main():
     checker = PageChecker(MG_BASE_URL)
 
     try:
-        pages_config = load_pages_config('../data/mg_pages.json')
+        pages_config = load_pages_config()
 
         checker.init_driver()
         results = checker.check_all_pages(pages_config, delay=1)

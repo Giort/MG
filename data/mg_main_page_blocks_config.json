@@ -39,7 +39,7 @@
     ]
   },
   {
-    "name": "Блок 'Гектар для реализации всех идей'",
+    "name": "Блок 'Гектар для ваших идей'",
     "elements": [
       {
         "name": "Заголовок",
@@ -52,6 +52,27 @@
       {
         "name": "1-й блок: кнопка вызова квиза",
         "xpath": "(//div[@id='w-gektar-idea']//a[contains(text(), 'Подобрать участок')])[1]"
+      }
+    ]
+  },
+  {
+    "name": "Истории собственников",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]"
+      },
+      {
+        "name": "1-я карточка, видео",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//*[@aria-label='1 of 14']//a[@href='https://storage.yandexcloud.net/moigektar-materials/stories/owners_stories/anisimov-reels.mp4']"
+      },
+      {
+        "name": "Дотсы, 1-й дотс",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//ul/li[@uk-slider-item='0']"
+      },
+      {
+        "name": "Стрелка прокрутки вперёд",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
       }
     ]
   },
@@ -148,24 +169,68 @@
       }
     ]
   },
-  {
-    "name": "Блок 'Лучшие поселения месяца'",
+    {
+    "name": "Новый поселок",
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//*[@id='catalogue']//h2[contains(text(), 'Лучшие поселения месяца')]"
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]"
       },
       {
-        "name": "Кнопка запуска тура",
-        "xpath": "(//*[@id='catalogue']//lord-icon[@src='/dist/icons/air-balloon.json'])[1]"
+        "name": "Заголовок блока описания",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//h4[contains(@class, 'w-project-villages__heading') and contains(text(), '«Экополис на Волге»')]"
       },
       {
-        "name": "1-я карточка: вызов модалки",
-        "xpath": "(//*[@id='catalogue']//a[@href='#modal_syn-53'])[1]"
+        "name": "Содержимое описания",
+        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'uk-text-default')]//p[contains(text(), 'Мы расширяем границы')])[1]"
+      },
+      {
+        "name": "Кнопка 'Посмотреть в каталоге'",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//a[text()='Посмотреть в каталоге']"
+      },
+      {
+        "name": "1-е фото слайдера фото",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img[@src='/img/project-overview-gallery/syn-104-full/1.jpg']"
+      },
+      {
+        "name": "Слайдер фото: всего 6 фото",
+        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img)[6]"
+      },
+      {
+        "name": "Кнопка вызова виртура",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//*[contains(@class, 'uk-slider')]//a[contains(@href, 'https://cdn.vt.bigland.ru/779f0d06-149c-489c-a96d-801cd592a533') and contains(@class, 'w-project-villages__tour-btn')]"
+      },
+      {
+        "name": "'Категории участков' - заголовок",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]//h5[contains(text(), 'Категории участков')]"
+      },
+      {
+        "name": "'Категории участков' - 1-я карточка, фото",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div/div/img[@src='/img/project-segment-gallery/syn-104-1ha-housing/1.jpg']"
+      },
+      {
+        "name": "'Категории участков' - 1-я карточка, кнопка",
+        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a[@href='https://moigektar.ru/catalogue?areaMin=90&areaMax=399&clusterIds=63']"
+      },
+      {
+        "name": "'Категории участков' - всего 3 карточки",
+        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a)[3]"
+      },
+      {
+        "name": "Генплан Сновидово",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
+      },
+      {
+        "name": "Генплан Курьково",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
+      },
+      {
+        "name": "Кнопка 'Посмотреть в каталоге' в самом низу блока",
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
       }
     ]
   },
-    {
+  {
     "name": "Форма №1 с Софией",
     "elements": [
       {

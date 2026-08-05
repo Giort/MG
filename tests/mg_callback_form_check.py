@@ -158,11 +158,11 @@ class FormChecker:
 
         self.check_phone_clickable(form_config['lgform_xpath'], page_name, form_name)
 
-    def run_all_checks(self, config_path='../data/mg_callback_form_config.json'):
+    def run_all_checks(self):
         """Запуск всех проверок из конфига"""
         print(f"\n     Проверка форм обратной связи на сайте МойГектар на домене {self.BASE_URL} | [{self.ENV.upper()}]\n")
 
-        forms = self._load_config(config_path)
+        forms = self._load_config()
         for form_config in forms:
             self.check_form(form_config)
 

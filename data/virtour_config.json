@@ -19,30 +19,6 @@
       "remove_webinar_popup": true
     },
     {
-      "name": "МГ главная, 'Лучшие поселения', тур 1 ('Экополис на Волге')",
-      "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[4]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
-      "remove_webinar_popup": true
-    },
-    {
-      "name": "МГ главная, 'Лучшие поселения', тур 2 ('Новая Жизнь')",
-      "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[5]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]",
-      "remove_webinar_popup": true
-    },
-    {
-      "name": "МГ главная, 'Лучшие поселения', тур 3 ('Моё поместье')",
-      "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Лучшие поселения месяца')]]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[6]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]",
-      "remove_webinar_popup": true
-    },
-    {
       "name": "syn_9 Бологое",
       "project_name": "syn_9 Бологое",
       "title_locator": ["id", "tour"],

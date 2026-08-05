@@ -343,6 +343,8 @@ def check_quiz_btn_goal(tests, max_attempts=3):
 
                 try:
                     driver.get(f'{MG_BASE_URL}/?__counters=1')
+                    time.sleep(2)
+                    remove_popups(driver)
                     btn = driver.find_element(By.XPATH, test['quiz_btn'])
                     actions.move_to_element(btn).perform()
                     actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ARROW_DOWN).perform()

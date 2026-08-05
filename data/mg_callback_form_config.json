@@ -134,7 +134,7 @@
   {
     "page_name": "стр. актива",
     "form_name": "форма с Ариной",
-    "url": "/batches/44607",
+    "url": "/batches-no-auth/44607",
     "scroll": false,
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_batch_page_arina_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
