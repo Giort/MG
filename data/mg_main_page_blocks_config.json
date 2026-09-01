@@ -9,7 +9,7 @@
       },
       {
         "name": "Ссылка на каталог",
-        "xpath": "(//div[contains(@class, 'w-navbar')]//a[@href='https://moigektar.ru/catalogue'])[1]"
+        "xpath": "(//div[contains(@class, 'w-navbar')]//a[@href='https://moigektar.ru/catalogue/landing'])[1]"
       },
       {
         "name": "Кнопка 'Каталог участков' (квиз)",
@@ -39,11 +39,11 @@
     ]
   },
   {
-    "name": "Блок 'Гектар для ваших идей'",
+    "name": "Блок 'Гектар для реализации всех идей'",
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//div[@id='w-gektar-idea']/h2[contains(text(), 'Гектар для ваших идей')]"
+        "xpath": "//div[@id='w-gektar-idea']/h2[contains(text(), 'Гектар для реализации всех идей')]"
       },
       {
         "name": "1-й блок: кнопка запуска видео",
@@ -77,23 +77,6 @@
     ]
   },
   {
-    "name": "Максимальная выгода от покупки",
-    "elements": [
-      {
-        "name": "Заголовок",
-        "xpath": "//section[@id='w-benefits']//h2[text()[contains(.,'Максимальная выгода от покупки')]]"
-      },
-      {
-        "name": "Заголовок 1-го блока",
-        "xpath": "(//section[@id='w-benefits']//div[contains(@class, 'uk-first-column')])[1]//span[contains(text(), 'Ваш бизнес')]"
-      },
-      {
-        "name": "Картинка 1-го блока",
-        "xpath": "(//section[@id='w-benefits']//div[contains(@class, 'uk-first-column')])[1]//img[@data-src='/img/benefits/card-1.png']"
-      }
-    ]
-  },
-  {
     "name": "Блок 'Преимущества проекта'",
     "elements": [
       {
@@ -119,7 +102,7 @@
       },
       {
         "name": "1-я секция: фото",
-        "xpath": "(//div[@id='w-descr']//img[contains(@class, 'uk-visible@l')])[1]"
+        "xpath": "(//div[@id='w-descr']//img[contains(@class, 'uk-visible@xl')])[1]"
       }
     ]
   },
@@ -140,7 +123,7 @@
       },
       {
         "name": "фоновое фото",
-        "xpath": "//*[@id='banner-promo']//*[(contains (@class, 'uk-visible@l')) and (contains(@src, '/img/extended-banner/bg-ecopolis.jpg'))]"
+        "xpath": "//*[@id='banner-promo']//*[(contains (@class, 'uk-visible@xl')) and (contains(@src, '/img/extended-banner/bg-ecopolis.jpg'))]"
       }
     ]
   },
@@ -161,7 +144,7 @@
       },
       {
         "name": "Кнопка перехода в каталог",
-        "xpath": "//div[@id='catalogueSpecial']//a[contains(@href, 'https://moigektar.ru/catalogue?popularChoiceIds%5B0%5D=1&clusterIds%5B0%5D=26&clusterIds%5B1%5D=64') and contains(text(), 'Перейти в каталог')]"
+        "xpath": "//div[@id='catalogueSpecial']//a[contains(@href, 'https://moigektar.ru/catalogue/landing') and contains(text(), 'Перейти в каталог')]"
       },
       {
         "name": "Количество карточек - 6",
@@ -170,51 +153,51 @@
     ]
   },
     {
-    "name": "Новый поселок",
+    "name": "Описание поселка",
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]"
       },
       {
         "name": "Заголовок блока описания",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//h4[contains(@class, 'w-project-villages__heading') and contains(text(), '«Экополис на Волге»')]"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//h4[contains(@class, 'w-project-villages__heading') and contains(text(), '«Экополис на Волге»')]"
       },
       {
         "name": "Содержимое описания",
-        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'uk-text-default')]//p[contains(text(), 'Мы расширяем границы')])[1]"
+        "xpath": "(//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'uk-text-default')]//p[contains(text(), 'Мы расширяем границы')])[1]"
       },
       {
         "name": "Кнопка 'Посмотреть в каталоге'",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//a[text()='Посмотреть в каталоге']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//a[contains(., 'Посмотреть в каталоге')]"
       },
       {
         "name": "1-е фото слайдера фото",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img[@src='/img/project-overview-gallery/syn-104-full/1.jpg']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img[@src='/img/project-overview-gallery/syn-104-full/7.jpg?ver=2']"
       },
       {
         "name": "Слайдер фото: всего 6 фото",
-        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img)[6]"
+        "xpath": "(//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img)[6]"
       },
       {
         "name": "Кнопка вызова виртура",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//*[contains(@class, 'uk-slider')]//a[contains(@href, 'https://cdn.vt.bigland.ru/779f0d06-149c-489c-a96d-801cd592a533') and contains(@class, 'w-project-villages__tour-btn')]"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//*[contains(@class, 'uk-slider')]//a[contains(@href, 'https://cdn.vt.bigland.ru/779f0d06-149c-489c-a96d-801cd592a533') and contains(@class, 'w-project-villages__tour-btn')]"
       },
       {
         "name": "'Категории участков' - заголовок",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]//h5[contains(text(), 'Категории участков')]"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]//h5[contains(text(), 'Категории участков')]"
       },
       {
         "name": "'Категории участков' - 1-я карточка, фото",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div/div/img[@src='/img/project-segment-gallery/syn-104-1ha-housing/1.jpg']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div/div/img[@src='/img/project-segment-gallery/syn-104-1ha-housing/1.jpg']"
       },
       {
         "name": "'Категории участков' - 1-я карточка, кнопка",
-        "xpath": "//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a[@href='https://moigektar.ru/catalogue?areaMin=90&areaMax=399&clusterIds=63']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a[@href='#modal-ecopolis-estate']"
       },
       {
         "name": "'Категории участков' - всего 3 карточки",
-        "xpath": "(//h2[text()[contains(.,'Новый поселок')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a)[3]"
+        "xpath": "(//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div)[5]"
       },
       {
         "name": "Генплан Сновидово",
@@ -239,7 +222,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons4']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/sof'))])[1]"
+        "xpath": "(//*[@id='form-main-cons4']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/sof'))])[1]"
       },
       {
         "name": "Поле ввода",
@@ -372,7 +355,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "//*[@class='w-why']//*[@src='/img/why/outline.svg?ver=1']"
+        "xpath": "//*[@class='w-why']//*[@src='/img/why/outline-white.svg']"
       }
     ]
   },
@@ -389,7 +372,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "//*[@id='profitCalculation']//img[(contains(@src, '/img/invest-profit-calc/bg')) and (contains(@class, 'uk-visible@l'))]"
+        "xpath": "//*[@id='profitCalculation']//img[(contains(@src, '/img/invest-profit-calc/bg')) and (contains(@class, 'uk-visible@xl'))]"
       },
       {
         "name": "Ссылка на pdf",
@@ -431,7 +414,7 @@
       },
       {
         "name": "Фото на 1-й карточке",
-        "xpath": "(//*[contains(text(), 'Зарабатывайте на гектаре')]/ancestor::div[1]//img[contains(@class, 'uk-width-1-1 uk-visible@l')])[1]"
+        "xpath": "(//*[contains(text(), 'Зарабатывайте на гектаре')]/ancestor::div[1]//img[contains(@class, 'uk-width-1-1 uk-visible@xl')])[1]"
       },
       {
         "name": "Кнопка на 1-й карточке",
@@ -452,7 +435,7 @@
       },
       {
         "name": "Фото на 1-й карточке",
-        "xpath": "//*[text()='Государственная поддержка отрасли']/ancestor::div[1]//img[(contains(@class, 'w-gov-support__img')) and (contains (@class, 'uk-visible@l'))]"
+        "xpath": "//*[text()='Государственная поддержка отрасли']/ancestor::div[1]//img[(contains(@class, 'w-gov-support__img')) and (contains (@class, 'uk-visible@xl'))]"
       },
       {
         "name": "Текст 1-й карточки",
@@ -477,7 +460,7 @@
       },
       {
         "name": "Фото 1-й карточки",
-        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//img[contains(@class, 'uk-visible@l')]"
+        "xpath": "(//h2[contains(text(), 'Награды проекта')]/ancestor::div[contains(@class, 'uk-news')]//a[contains(@class, 'js-smi-card')])[1]//img[contains(@class, 'uk-visible@xl')]"
       },
       {
         "name": "Кнопка 'Перейти' на 1-й карточке",
@@ -502,7 +485,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons2']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/arina'))])[1]"
+        "xpath": "(//*[@id='form-main-cons2']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/arina'))])[1]"
       },
       {
         "name": "Поле ввода",
@@ -523,7 +506,7 @@
       },
       {
         "name": "Фото 1-й карточки",
-        "xpath": "(//div[contains(@class, 'w-project-sohi')]//a[contains(@class, 'w-project-sohi-img')])[1]//img[contains(@class, 'uk-visible@l')]"
+        "xpath": "(//div[contains(@class, 'w-project-sohi')]//a[contains(@class, 'w-project-sohi-img')])[1]//img[contains(@class, 'uk-visible@xl')]"
       },
       {
         "name": "Кнопка запуска видео на 1-й карточке",
@@ -614,7 +597,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons7']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/arina'))])[1]"
+        "xpath": "(//*[@id='form-main-cons7']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/arina'))])[1]"
       },
       {
         "name": "Поле ввода",
@@ -702,7 +685,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons3']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/vaseh'))])[1]"
+        "xpath": "(//*[@id='form-main-cons3']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/vaseh'))])[1]"
       },
       {
         "name": "Поле ввода",
@@ -723,7 +706,7 @@
       },
       {
         "name": "Фото руки",
-        "xpath": "(//*[@class='w-faq']//img[(contains(@class, 'uk-visible@l')) and (contains (@alt, 'Фото страницы на телефоне'))])[1]"
+        "xpath": "(//*[@class='w-faq']//img[(contains(@class, 'uk-visible@xl')) and (contains (@alt, 'Фото страницы на телефоне'))])[1]"
       },
       {
         "name": "Заголовок 1-го вопроса",
@@ -748,7 +731,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons8']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/sof1'))])[1]"
+        "xpath": "(//*[@id='form-main-cons8']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/sof1'))])[1]"
       },
       {
         "name": "Поле ввода",
@@ -769,7 +752,7 @@
       },
       {
         "name": "Фото 1-й карточки",
-        "xpath": "(//div[@id='b-video']//img[(contains(@alt, 'Превью видео')) and (contains(@class, 'uk-visible@l'))])[1]"
+        "xpath": "(//div[@id='b-video']//img[(contains(@alt, 'Превью видео')) and (contains(@class, 'uk-visible@xl'))])[1]"
       },
       {
         "name": "Заголовок на 1-й карточке",
@@ -869,7 +852,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "//*[@id='buildvar']//img[(contains(@class, 'uk-visible@l')) and (contains (@alt, 'Фото герба РФ'))]"
+        "xpath": "//*[@id='buildvar']//img[(contains(@class, 'uk-visible@xl')) and (contains (@alt, 'Фото герба РФ'))]"
       },
       {
         "name": "Ссылка на пресс-релиз",
@@ -902,7 +885,7 @@
       },
       {
         "name": "1-е фото в наборе",
-        "xpath": "//div[@id='meeting']//img[(contains (@class, 'uk-visible@l')) and (contains (@src, '/img/meeting/1'))]"
+        "xpath": "//div[@id='meeting']//img[(contains (@class, 'uk-visible@xl')) and (contains (@src, '/img/meeting/1'))]"
       },
       {
         "name": "Телефон горячей линии",
@@ -927,7 +910,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "(//*[@id='form-main-cons5']//img[(contains(@class, 'uk-visible@l')) and (contains (@src, '/img/form/max'))])[1]"
+        "xpath": "(//*[@id='form-main-cons5']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/max'))])[1]"
       },
       {
         "name": "Поле ввода",
