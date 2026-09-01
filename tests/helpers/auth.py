@@ -3,6 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+from .popups import remove_popups
 
 def auth_mg(driver, auth_url: str, creds: dict, btn_index: int = 1) -> bool:
     """
@@ -19,6 +20,7 @@ def auth_mg(driver, auth_url: str, creds: dict, btn_index: int = 1) -> bool:
     """
     try:
         driver.get(auth_url)
+        remove_popups(driver)
 
         # Открываем модальное окно авторизации
         auth_btn = WebDriverWait(driver, 10).until(
