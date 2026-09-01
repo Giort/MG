@@ -13,9 +13,9 @@
     {
       "name": "МГ главная, 'Лучший посёлок месяца', Экополис на Волге",
       "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Новый поселок')]]"],
+      "title_locator": ["xpath", "//*[text()[contains(., 'Описание поселка')]]"],
       "btn_locator": ["xpath", "//*[contains(@class, 'w-project-villages__tour-btn')]"],
-      "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
       "remove_webinar_popup": true
     },
     {

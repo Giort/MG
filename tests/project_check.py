@@ -134,15 +134,22 @@ def perform_auth(driver, auth_config, project_name, auth_data):
     if not need_auth or not auth_data:
         return True
 
+    # Отдельно пробуем найти форму логина. Если её нет на странице — это не ошибка авторизации
+    # (возможно, сессия уже авторизованаили форма логина не требуется на этой странице), поэтому не
+    # считаем это провалом и не пишем ложное предупреждение.
     try:
-        # Пробуем найти поля авторизации
         login_input = wait(driver, 10).until(
             EC.presence_of_element_located((By.ID, 'loginconfig-username'))
         )
+    except TimeoutException:
+        return True
+
+    # Форма логина найдена — вот тут уже реальная попытка авторизации,
+    # и любая ошибка на этом этапе действительно является ошибкой авторизации
+    try:
         password_input = driver.find_element(By.ID, 'loginconfig-password')
         submit_btn = driver.find_element(By.CSS_SELECTOR, 'div button, button[type]')
 
-        # Получаем credentials
         creds = auth_data.get(credentials_key, {})
         login = str(creds.get("login", ""))
         password = str(creds.get("password", ""))

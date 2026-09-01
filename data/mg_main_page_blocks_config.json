@@ -43,7 +43,7 @@
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//div[@id='w-gektar-idea']/h2[contains(text(), 'Гектар для реализации всех идей')]"
+        "xpath": "//div[@id='w-gektar-idea']/h2[contains(text(), 'Гектар для ваших идей')]"
       },
       {
         "name": "1-й блок: кнопка запуска видео",
@@ -64,7 +64,7 @@
       },
       {
         "name": "1-я карточка, видео",
-        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//*[@aria-label='1 of 14']//a[@href='https://storage.yandexcloud.net/moigektar-materials/stories/owners_stories/anisimov-reels.mp4']"
+        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//*[@aria-label='1 of 14']//a[@href='https://storage.yandexcloud.net/moigektar-materials/stories/owners_stories/balance-mg-reels.mp4']"
       },
       {
         "name": "Дотсы, 1-й дотс",

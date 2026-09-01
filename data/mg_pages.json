@@ -724,6 +724,12 @@
         "requires_auth": false
     },
     {
+        "name": "страница упаковки",
+        "path": "bigland",
+        "xpath": "//*[text()[contains(.,'Проектное бюро №1')]]",
+        "requires_auth": false
+    },
+    {
         "name": "страница регистрации клиента от стойки",
         "path": "public-event",
         "xpath": "//input[@id='publiceventform-name']",
