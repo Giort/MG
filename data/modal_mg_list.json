@@ -587,6 +587,62 @@
       "btn_selector": "//*[@id='main']//a[contains (text(), 'выбрать поселок')]",
       "modal_id": "b2b-main-modal",
       "lgform": "b2b_modal"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 1, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать аэрофотосъемку')]",
+      "modal_id": "bigland-descr-modal-aerophotografy",
+      "lgform": "lg_bigland_aerophotography"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 2, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать виртуальный тур')]",
+      "modal_id": "bigland-descr-modal-tour",
+      "lgform": "lg_bigland_tour"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 3, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать эскизный проект')]",
+      "modal_id": "bigland-descr-modal-genplan",
+      "lgform": "lg_bigland_genplan"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 4, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать ортофотоплан')]",
+      "modal_id": "bigland-descr-modal-ofp",
+      "lgform": "lg_bigland_ofp"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 5, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать 3D-модель')]",
+      "modal_id": "bigland-descr-modal-3d-model",
+      "lgform": "lg_bigland_3d_model"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 6, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать анализ')]",
+      "modal_id": "bigland-descr-modal-analiz",
+      "lgform": "lg_bigland_analiz"
+    },
+    {
+      "name": "Блок 'Семь шагов', шаг 7, кнопка",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[@id='main']//a[contains (text(), 'Заказать презентацию')]",
+      "modal_id": "bigland-descr-modal-present",
+      "lgform": "lg_bigland_present"
     }
   ]
 }

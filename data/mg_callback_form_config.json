@@ -503,6 +503,14 @@
     "lgform_xpath": "(//*[contains(@id, 'cfw')]//*[@value='b2b_page_presentation'])[1]",
     "header_xpath": null
   },
+  {
+    "page_name": "стр. упаковки",
+    "form_name": "форма с Алексеем Ахмадеевым",
+    "url": "/bigland",
+    "scroll": false,
+    "lgform_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_bigland_page_ahmadeev_callback'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'заявку прямо сейчас!')]])[2]"
+  },
 
 
   {
