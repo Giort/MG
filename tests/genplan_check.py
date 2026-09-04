@@ -11,6 +11,7 @@ import time
 import json
 import socket
 from helpers.popups import remove_popups
+from helpers.auth import auth_mg
 
 start_time = time.time()
 
@@ -217,6 +218,78 @@ class GenplanChecker:
         self._record_result(name, False, url)
         return False
 
+    def check_moigektar_genplan(self, config):
+        """
+        Проверка генплана на отдельных страницах сайта Мой Гектар
+        (в отличие от check_asset/catalogue, URL берётся напрямую из
+        конфига, а не через project_list.json; поддерживает и старый,
+        и новый тип генплана через поле 'type')
+        """
+        url = config.get('url')
+        name = config.get('name', url)
+        genplan_type = config.get('type', 'new')
+
+        if not url:
+            print(f'WARNING: Не указан url для {name}')
+            return False
+
+        if not self._load_page(url):
+            return False
+
+        remove_popups(self.driver)
+
+        if genplan_type == 'old':
+            return self.check_genplan_old(
+                name,
+                config.get('title_xpath'),
+                config.get('genplan_css'),
+                url=url
+            )
+        elif genplan_type == 'new':
+            return self.check_genplan_new(
+                name,
+                config.get('title_xpath'),
+                config.get('check_xpath'),
+                url=url
+            )
+        else:
+            print(f'WARNING: Неизвестный type "{genplan_type}" для {name}')
+            self._record_result(name, False, url)
+            return False
+
+    def _authenticate_mg(self):
+        """
+        Авторизация на сайте Мой Гектар через модальное окно (helpers.auth.auth_mg).
+        Вызывается один раз перед проверками МГ - куки сессии затем
+        действуют для всех последующих страниц этого домена.
+        Логика повторяет mg_availability_uspages_check.py.
+        """
+        auth_config = self.genplan_config.get('auth')
+        if not auth_config:
+            return True
+
+        credentials_key = auth_config.get('credentials_key', 'LK_cred')
+        creds = self.creds_data.get(credentials_key, {})
+
+        if not creds:
+            print(f'WARNING: Не найдены credentials по ключу "{credentials_key}" в data.json')
+            return False
+
+        auth_url = auth_config.get('auth_url', 'https://moigektar.ru/12345')
+
+        try:
+            if not auth_mg(self.driver, auth_url=auth_url, creds=creds):
+                print('ERROR: Не удалось авторизоваться на Мой Гектар')
+                return False
+
+            time.sleep(6)
+            self.current_url = auth_url
+            self.is_authenticated = True
+            return True
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на Мой Гектар - {str(e)}')
+            return False
+
     def check_catalogue_map(self, config):
         """Проверка загрузки карты в каталоге"""
         url = config.get('url', 'https://moigektar.ru/catalogue-no-auth')
@@ -337,6 +410,9 @@ class GenplanChecker:
         """Запуск всех проверок из конфига"""
         print(f"\n     Проверка доступности блока генплана на сайтах \n")
 
+        # Авторизация на Мой Гектар (теперь требуется для доступа к генпланам)
+        self._authenticate_mg()
+
         # Проверка каталога
         if 'catalogue' in self.genplan_config:
             self.check_catalogue_map(self.genplan_config['catalogue'])
@@ -345,6 +421,12 @@ class GenplanChecker:
         # Проверка страницы актива
         if 'asset' in self.genplan_config:
             self.check_asset_genplan(self.genplan_config['asset'])
+            time.sleep(1)
+
+        # Проверка генпланов на прочих страницах Мой Гектар
+        # (старого и/или нового типа, URL задаётся прямо в конфиге)
+        for genplan in self.genplan_config.get('moigektar_genplans', []):
+            self.check_moigektar_genplan(genplan)
             time.sleep(1)
 
         # Проверка лендингов по конфигу генпланов
