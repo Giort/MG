@@ -43,6 +43,27 @@
       "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/ancestor::div[1]//div[@id='w12-map']//button[@class='ol-zoom-in']"
     },
     {
+      "url": "https://moigektar.ru/ecopolis",
+      "name": "Стр. Экополиса - Экополис на Волге, Сновидово",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "url": "https://moigektar.ru/ecopolis",
+      "name": "Стр. Экополиса - Экополис на Волге, Курьково",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "url": "https://moigektar.ru/ecopolis",
+      "name": "Стр. Экополиса - Экополис на Новорижском шоссе",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
+    },
+    {
       "url": "https://moigektar.ru/goal/farm",
       "name": "Фермы - Мое поместье, д. Высокое",
       "type": "new",

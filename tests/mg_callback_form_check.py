@@ -47,6 +47,7 @@ class FormChecker:
         self.actions = ActionChains(self.driver)
         self.errors = []
         self.success_count = 0
+        self.current_url = None  # чтобы не перезагружать уже открытую страницу
 
     def _init_driver(self, headless):
         """Инициализация Chrome WebDriver"""
@@ -59,7 +60,7 @@ class FormChecker:
             service=Service(ChromeDriverManager().install()),
             options=ch_options
         )
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(6)
         driver.set_window_size(1660, 1000)
         return driver
 
@@ -68,22 +69,25 @@ class FormChecker:
         with open(config_path, 'r', encoding='utf-8') as f:
             return json.load(f)
 
-    def _scroll_page(self):
-        """Прокрутка страницы вниз"""
-        for _ in range(8):
+    def _scroll_page(self, count=8):
+        """Прокрутка страницы вниз на заданное количество шагов"""
+        for _ in range(count):
             self.actions.send_keys(Keys.PAGE_DOWN).perform()
             time.sleep(1)
 
-    def check_element(self, xpath, page_name, form_name, check_type, max_attempts=3):
+    def check_element(self, xpath, page_name, form_name, check_type, scroll_count=None, max_attempts=3):
         """
         Универсальная проверка элемента на странице с повторными попытками
 
         Args:
-            xpath:        XPath селектор элемента
-            page_name:    название страницы для логирования
-            form_name:    название формы для логирования
-            check_type:   тип проверки (lgForm / заголовок)
-            max_attempts: максимальное количество попыток
+            xpath:         XPath селектор элемента
+            page_name:     название страницы для логирования
+            form_name:     название формы для логирования
+            check_type:    тип проверки (lgForm / заголовок)
+            scroll_count:  если задано, перед каждой повторной попыткой страница
+                           пере-скроллится на это же количество шагов (нужно,
+                           т.к. refresh сбрасывает скролл к началу страницы)
+            max_attempts:  максимальное количество попыток
         """
         for attempt in range(1, max_attempts + 1):
             try:
@@ -94,7 +98,10 @@ class FormChecker:
             except Exception as e:
                 if attempt < max_attempts:
                     self.driver.refresh()
+                    remove_popups(self.driver)
                     time.sleep(2)
+                    if scroll_count:
+                        self._scroll_page(scroll_count)
                 else:
                     error_msg = str(e).split('\n')[0]
                     error_text = f" ERROR: {page_name}, {form_name} — {check_type} — {error_msg}"
@@ -102,7 +109,7 @@ class FormChecker:
                     self.errors.append(error_text)
                     return False
 
-    def check_phone_clickable(self, lgform_xpath, page_name, form_name, max_attempts=3):
+    def check_phone_clickable(self, lgform_xpath, page_name, form_name, scroll_count=None, max_attempts=3):
         """
         Проверяет кликабельность инпута телефона внутри формы.
         Поднимается от lgform_xpath до контейнера cfw и ищет инпут внутри него.
@@ -125,7 +132,10 @@ class FormChecker:
             except Exception as e:
                 if attempt < max_attempts:
                     self.driver.refresh()
+                    remove_popups(self.driver)
                     time.sleep(2)
+                    if scroll_count:
+                        self._scroll_page(scroll_count)
                 else:
                     error_msg = f"инпут телефона не кликабелен"
                     error_text = f" ERROR: {page_name}, {form_name} — {error_msg}"
@@ -136,27 +146,39 @@ class FormChecker:
     def check_form(self, form_config):
         """
         Проверка одной формы из конфига:
-        - загружает страницу
-        - при необходимости прокручивает
+        - загружает страницу (если она ещё не загружена)
+        - при необходимости прокручивает на заданное кол-во шагов
         - проверяет lgForm, заголовок и кликабельность инпута телефона
         """
         page_name = form_config['page_name']
         form_name = form_config.get('form_name', '')
         url       = self.BASE_URL + form_config['url']
         scroll    = form_config.get('scroll', False)
+        scroll_count = form_config.get('scroll_count', 8)
 
-        self.driver.get(url)
-        remove_popups(self.driver)
+        if self.current_url != url:
+            self.driver.get(url)
+            remove_popups(self.driver)
+            self.current_url = url
 
         if scroll:
-            self._scroll_page()
+            self._scroll_page(scroll_count)
 
-        self.check_element(form_config['lgform_xpath'], page_name, form_name, 'lgForm')
+        self.check_element(
+            form_config['lgform_xpath'], page_name, form_name, 'lgForm',
+            scroll_count=scroll_count if scroll else None
+        )
 
         if form_config.get('header_xpath'):
-            self.check_element(form_config['header_xpath'], page_name, form_name, 'заголовок')
+            self.check_element(
+                form_config['header_xpath'], page_name, form_name, 'заголовок',
+                scroll_count=scroll_count if scroll else None
+            )
 
-        self.check_phone_clickable(form_config['lgform_xpath'], page_name, form_name)
+        self.check_phone_clickable(
+            form_config['lgform_xpath'], page_name, form_name,
+            scroll_count=scroll_count if scroll else None
+        )
 
     def run_all_checks(self):
         """Запуск всех проверок из конфига"""
