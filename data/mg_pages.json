@@ -688,6 +688,12 @@
         "requires_auth": false
     },
     {
+        "name": "стр. Экополиса",
+        "path": "ecopolis",
+        "xpath": "//h1[contains(.,'Большие участки для ')]",
+        "requires_auth": false
+    },
+    {
         "name": "цели - туризм (глэмпинги)",
         "path": "goal/glamping",
         "xpath": "//*[contains(@class, 'uk-card') and contains(.,'кемпинги')]",

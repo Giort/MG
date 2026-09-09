@@ -19,6 +19,35 @@
       "remove_webinar_popup": true
     },
     {
+      "url": "https://moigektar.ru/catalogue/landing",
+      "name": "МГ, каталог посёлков, блок 'Усадьба в Подмосковье'",
+      "title_locator": "(//h4[contains(., '«Усадьба в Подмосковье»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[2]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/ecopolis",
+      "name": "МГ, стр. Экополиса, блок 'Экополис на Волге'",
+      "title_locator": "(//h4[contains(., '«Экополис на Волге»')])[1]",
+      "btn_locator": "//span[contains(., 'Виртуальный тур')]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/goal/farm",
+      "name": "МГ, стр. ферм, блок 'Поселок фермеров «Мое поместье»'",
+      "title_locator": "(//h4[contains(., '«Мое поместье»')])[1]",
+      "btn_locator": "//span[contains(., 'Виртуальный тур')]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]",
+      "remove_popups": true,
+      "scroll": true
+    }
+  ],
+  "tours": [
+    {
       "name": "syn_9 Бологое",
       "project_name": "syn_9 Бологое",
       "title_locator": ["id", "tour"],

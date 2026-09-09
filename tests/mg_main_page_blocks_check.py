@@ -67,14 +67,17 @@ ENV = "prod"
 
 ENV_CONFIG = {
     "prod": {
-        "base_url": "https://moigektar.ru?__ab=1",
+        "base_url": "https://moigektar.ru",
+        "query": "?__ab=1",
     },
     "local": {
         "base_url": "http://moigektar.localhost",
+        "query": "",
     },
 }
 
 MG_BASE_URL = ENV_CONFIG[ENV]["base_url"]
+MG_QUERY = ENV_CONFIG[ENV]["query"]
 
 
 class PageBlocksChecker:
@@ -84,7 +87,7 @@ class PageBlocksChecker:
 
     def init_driver(self):
         ch_options = Options()
-        ch_options.add_argument('--headless')
+        # ch_options.add_argument('--headless')
         ch_options.page_load_strategy = 'eager'
         service = ChromeService(executable_path=ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=ch_options)
@@ -235,7 +238,7 @@ def main():
             blocks_config = json.load(f)
 
         # Загружаем главную страницу
-        checker.driver.get(f"{MG_BASE_URL}/")
+        checker.driver.get(f"{MG_BASE_URL}/{MG_QUERY}")
 
         time.sleep(3)
         remove_popups(checker.driver)

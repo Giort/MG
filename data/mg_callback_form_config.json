@@ -365,8 +365,31 @@
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_contact_page_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
   },
-
-
+  {
+    "page_name": "стр. Экополиса",
+    "form_name": "презентация проекта",
+    "url": "/ecopolis",
+    "scroll": true,
+    "scroll_count": 17,
+    "lgform_xpath": "//*[contains (@id, 'publiceventform-lgform') and contains (@value, 'mg_ecopolis_present')]",
+    "header_xpath": null
+  },
+  {
+    "page_name": "стр. Экополиса",
+    "form_name": "связаться с отделом продаж",
+    "url": "/ecopolis",
+    "scroll": true,
+    "scroll_count": 19,
+    "lgform_xpath": "//*[contains (@id, 'publiceventform-lgform') and contains (@value, 'mg_ecopolis_doit')]",
+    "header_xpath": null
+  },
+  {
+    "page_name": "стр. Экополиса",
+    "form_name": "форма в футере",
+    "url": "/ecopolis",
+    "lgform_xpath": "//*[contains (@id, 'publiceventform-lgform') and contains (@value, 'mg_ecopolis_footer')]",
+    "header_xpath": null
+  },
   {
     "page_name": "Глэмпинг",
     "form_name": "форма с Андреем",

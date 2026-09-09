@@ -348,6 +348,66 @@
       "modal_id": "modal-meeting-meeting",
       "lgform": "meeting_book"
     },
+
+
+    {
+      "name": "1-й экран, кнопка 'Подобрать участок'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "//*[contains(@class, 'w-main')]//a[contains (text(), 'подобрать участок')]",
+      "modal_id": "modal-main-ecopolis",
+      "lgform": "lg_mg_ecopolis_page"
+    },
+    {
+      "name": "Поселки проекта - Категории участков, 1-я карточка, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[1]",
+      "modal_id": "modal-ecopolis-estate",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "Поселки проекта - Категории участков, 2-я карточка, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[2]",
+      "modal_id": "modal-ecopolis-dacha",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "Поселки проекта - Категории участков, 3-я карточка, кнопка 'Узнать подробнее'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[3]",
+      "modal_id": "modal-ecopolis-farm",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "Рассчитайте рассрочку, кнопка 'Оставить заявку'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "//*[@id='calc']/ancestor::div[1]//a[contains (text(), 'Оставить заявку')]",
+      "modal_id": "modal-main-ecopolis",
+      "lgform": "lg_mg_ecopolis_page"
+    },
+    {
+      "name": "Экополис на Волге уникальная акватория",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "(//*[@id='about']//a[contains (text(), 'Отправить заявку')])[1]",
+      "modal_id": "modal-request",
+      "lgform": "lg_mg_ecopolis_page"
+    },
+    {
+      "name": "Чем заняться на территории, карточка 1, кнопка 'Подробнее'",
+      "url_name": "Стр. Экополиса",
+      "url": "/ecopolis",
+      "btn_selector": "(//*[@id='things']//a[contains (text(), 'подробнее')])[1]",
+      "modal_id": "modal-details",
+      "lgform": "lg_mg_ecopolis_page"
+    },
+
+
     {
       "name": "1-й экран, кнопка 'Подобрать участок'",
       "url_name": "Стр. глэмпинга",
