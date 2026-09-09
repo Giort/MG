@@ -394,7 +394,7 @@ def check_quiz_btn_goal(tests, max_attempts=3):
 # Параметры для check_quiz_btn_goal
 quiz_tests = [
     {
-        'quiz_btn': '(//*[contains(@class, "w-navbar")]//a[text()[contains(., "Каталог участков")]])[2]',
+        'quiz_btn': '//*[contains(@class, "w-navbar")]//a[text()[contains(., "Каталог участков")]]',
         'goal': 'quiz_btn_v2',
         'place': 'в хедере'
     },

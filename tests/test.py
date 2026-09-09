@@ -1,308 +1,221 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import json
 import time
+import sys
 import os
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from webdriver_manager.chrome import ChromeDriverManager
+
+sys.path.insert(0, os.path.dirname(__file__))
 from helpers.popups import remove_popups
 
 
-# МГ: проверка доступности и атрибутов модальных окон
+# Проверка форм обратной связи.
+# Находим форму по подзаголовку, проверяем, что установлен правильный lgForm и правильный заголовок
 
-# ============================================================
-#  Переключение окружения: "prod" или "local"
-# ============================================================
-ENV = "prod"
-# ============================================================
 
-ENV_CONFIG = {
-    "prod": {
-        "base_url": "https://moigektar.ru",
-    },
-    "local": {
-        "base_url": "http://moigektar.localhost",
-    },
-}
-
-config = ENV_CONFIG[ENV]
-BASE_URL = config["base_url"]
-
+# Засекаем время начала теста
 start_time = time.time()
 
 
-class ModalChecker:
-    def __init__(self):
-        ch_options = Options()
-        ch_options.add_argument('--headless')
-        ch_options.page_load_strategy = 'eager'
-        ch_options.add_argument('--no-sandbox')
-        ch_options.add_argument('--disable-dev-shm-usage')
+class FormChecker:
+    """Класс для проверки форм обратной связи на сайте МойГектар"""
 
-        service = ChromeService(executable_path=ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=ch_options)
-        self.driver.set_window_size(1660, 1000)
-        self.wait = WebDriverWait(self.driver, 30)
+    # ============================================================
+    #  Переключение окружения: "prod" или "local"
+    # ============================================================
+    ENV = "prod"
+    # ============================================================
+
+    ENV_CONFIG = {
+        "prod": {
+            "base_url": "https://moigektar.ru",
+        },
+        "local": {
+            "base_url": "http://moigektar.localhost",
+        },
+    }
+
+    BASE_URL = ENV_CONFIG[ENV]["base_url"]
+
+    def __init__(self, headless=False):
+        self.driver = self._init_driver(headless)
         self.actions = ActionChains(self.driver)
+        self.errors = []
+        self.success_count = 0
+        self.current_url = None  # чтобы не перезагружать уже открытую страницу
 
-        self.results = {'success': [], 'failed': []}
+    def _init_driver(self, headless):
+        """Инициализация Chrome WebDriver"""
+        ch_options = Options()
+        if headless:
+            ch_options.add_argument('--headless')
+        ch_options.page_load_strategy = 'eager'
 
-    # ------------------------------------------------------------------
-    # Вспомогательные методы
-    # ------------------------------------------------------------------
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=ch_options
+        )
+        driver.implicitly_wait(6)
+        driver.set_window_size(1660, 1000)
+        return driver
 
-    def _set_mobile_viewport(self):
-        self.driver.set_window_size(390, 844)
+    def _load_config(self, config_path='../data/mg_callback_form_config.json'):
+        """Загрузка конфигурации форм"""
+        with open(config_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
 
-    def _set_desktop_viewport(self):
-        self.driver.set_window_size(1660, 1000)
+    def _scroll_page(self, count=8):
+        """Прокрутка страницы вниз на заданное количество шагов"""
+        for _ in range(count):
+            self.actions.send_keys(Keys.PAGE_DOWN).perform()
+            time.sleep(1)
 
-    def _navigate(self, url: str, skip_popups: list = None) -> bool:
-        """Переходит на страницу и убирает попап"""
-        try:
-            self.driver.get(url)
-            time.sleep(2)
-            remove_popups(self.driver, skip=skip_popups)
-            return True
-        except Exception as e:
-            print(f"     ERROR: Не удалось открыть {url} — {e}")
-            return False
+    def check_element(self, xpath, page_name, form_name, check_type, scroll_count=None, max_attempts=3):
+        """
+        Универсальная проверка элемента на странице с повторными попытками
 
-    def _scroll_to_element(self, selector: str) -> object | None:
-        """Находит элемент, ждёт его появления и скроллит к нему"""
-        from selenium.common.exceptions import MoveTargetOutOfBoundsException
-        try:
-            btn = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, selector))
-            )
+        Args:
+            xpath:         XPath селектор элемента
+            page_name:     название страницы для логирования
+            form_name:     название формы для логирования
+            check_type:    тип проверки (lgForm / заголовок)
+            scroll_count:  если задано, перед каждой повторной попыткой страница
+                           пере-скроллится на это же количество шагов (нужно,
+                           т.к. refresh сбрасывает скролл к началу страницы)
+            max_attempts:  максимальное количество попыток
+        """
+        for attempt in range(1, max_attempts + 1):
             try:
-                self.actions.move_to_element(btn).perform()
-            except MoveTargetOutOfBoundsException:
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
-            time.sleep(0.5)
-            return btn
-        except (NoSuchElementException, TimeoutException):
-            return None
-
-    def _click_button(self, btn) -> bool:
-        """Кликает по кнопке"""
-        try:
-            btn.click()
-            return True
-        except Exception:
-            try:
-                self.driver.execute_script("arguments[0].click();", btn)
+                self.driver.find_element(By.XPATH, xpath)
+                print(f"     ОК: {page_name}: {form_name} — {check_type}")
+                self.success_count += 1
                 return True
             except Exception as e:
-                print(f"     ERROR: Не удалось кликнуть — {e}")
-                return False
+                if attempt < max_attempts:
+                    self.driver.refresh()
+                    remove_popups(self.driver)
+                    time.sleep(2)
+                    if scroll_count:
+                        self._scroll_page(scroll_count)
+                else:
+                    error_msg = str(e).split('\n')[0]
+                    error_text = f" ERROR: {page_name}, {form_name} — {check_type} — {error_msg}"
+                    print(error_text)
+                    self.errors.append(error_text)
+                    return False
 
-    def _wait_modal_open(self, modal_id: str, timeout: int = 8) -> bool:
-        """Ждёт появления модалки с классом uk-open"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located((
-                    By.XPATH,
-                    f'//*[@id="{modal_id}" and contains(@class,"uk-open")]'
-                ))
-            )
-            return True
-        except TimeoutException:
-            return False
-
-    def _check_phone_clickable(self, modal_id: str, phone_selector: str = None) -> bool:
-        """Проверяет что телефонный инпут внутри модалки кликабелен"""
-        try:
-            xpath = phone_selector if phone_selector else \
-                f'(//*[@id="{modal_id}"]//input[@id="consultationform-phone"])'
-            phone_input = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
-            )
-            return phone_input.is_displayed() and phone_input.is_enabled()
-        except TimeoutException:
-            return False
-
-    def _get_lgform_value(self, modal_id: str, lgform_selector: str = None) -> str | None:
-        """Читает значение скрытого поля lgForm внутри открытой модалки"""
-        try:
-            xpath = lgform_selector if lgform_selector else \
-                f'//*[@id="{modal_id}"]//input[@id="consultationform-lgform"]'
-            lgform_input = self.driver.find_element(By.XPATH, xpath)
-            return lgform_input.get_attribute('value')
-        except NoSuchElementException:
-            return None
-
-    def _close_modal(self, modal_id: str):
-        """Закрывает модалку нажатием Escape"""
-        try:
-            from selenium.webdriver.common.keys import Keys
-            self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-            time.sleep(0.5)
-        except Exception:
-            pass
-
-    # ------------------------------------------------------------------
-    # Основная проверка одной модалки
-    # ------------------------------------------------------------------
-
-    def check_modal(self, modal_config: dict) -> bool:
+    def check_phone_clickable(self, lgform_xpath, page_name, form_name, scroll_count=None, max_attempts=3):
         """
-        Полный цикл проверки одной модалки:
-        1. Переход на страницу
-        2. Скролл к кнопке
-        3. Клик по кнопке
-        4. Ожидание открытия модалки
-        5. Проверка кликабельности инпута (видимость для пользователя)
-        6. Проверка значения lgForm
+        Проверяет кликабельность инпута телефона внутри формы.
+        Поднимается от lgform_xpath до контейнера cfw и ищет инпут внутри него.
         """
-        name = modal_config['name']
-        url_name = modal_config['url_name']
-        url = BASE_URL + modal_config['url']
-        btn_selector = modal_config['btn_selector']
-        modal_id = modal_config['modal_id']
-        expected_lgform = modal_config['lgform']
-        phone_selector = modal_config.get('phone_selector', None) # у большинства мод. одинаковые селекторы инпута
-        # телефона, но у некоторых нужно задавать другой
-        lgform_selector = modal_config.get('lgform_selector', None) # у большинства мод. одинаковые селекторы lgForm,
-        # но у некоторых нужно задавать другой
+        phone_xpath = f"({lgform_xpath}/ancestor::div[contains(@id, 'cfw')]//input[contains(@class, 'js-phone') and @type='tel'])[1]"
 
-        label = f'[{url_name}] {name}'
-
-        is_mobile = modal_config.get('mobile', False)
-        if is_mobile:
-            self._set_mobile_viewport()
-        else:
-            self._set_desktop_viewport()
-
-        # 1. Переход на страницу
-        skip_popups = modal_config.get('skip_popups', None)
-        if not self._navigate(url, skip_popups=skip_popups):
-            self._record_result(label, False, 'не удалось открыть страницу')
-            return False
-
-        # 1а. Предварительный клик для отображения кнопки (если задан pre_click_selector)
-        pre_click_selector = modal_config.get('pre_click_selector')
-        if pre_click_selector:
+        for attempt in range(1, max_attempts + 1):
             try:
-                pre_elem = WebDriverWait(self.driver, 10).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, pre_click_selector))
+                from selenium.webdriver.support.ui import WebDriverWait
+                from selenium.webdriver.support import expected_conditions as EC
+                phone_input = WebDriverWait(self.driver, 5).until(
+                    EC.element_to_be_clickable((By.XPATH, phone_xpath))
                 )
-                pre_elem.click()
-                time.sleep(1)
+                if phone_input.is_displayed() and phone_input.is_enabled():
+                    print(f"     ОК: {page_name}: {form_name} — инпут телефона кликабелен")
+                    self.success_count += 1
+                    return True
+                else:
+                    raise Exception("инпут не отображается или недоступен")
             except Exception as e:
-                self._record_result(label, False, f'не удалось кликнуть по pre_click_selector ({pre_click_selector})')
-                return False
+                if attempt < max_attempts:
+                    self.driver.refresh()
+                    remove_popups(self.driver)
+                    time.sleep(2)
+                    if scroll_count:
+                        self._scroll_page(scroll_count)
+                else:
+                    error_msg = f"инпут телефона не кликабелен"
+                    error_text = f" ERROR: {page_name}, {form_name} — {error_msg}"
+                    print(error_text)
+                    self.errors.append(error_text)
+                    return False
 
-        # 2. Скролл к кнопке
-        btn = self._scroll_to_element(btn_selector)
-        if btn is None:
-            # Одна повторная попытка после перезагрузки страницы
-            time.sleep(2)
-            self.driver.refresh()
-            time.sleep(2)
+    def check_form(self, form_config):
+        """
+        Проверка одной формы из конфига:
+        - загружает страницу (если она ещё не загружена)
+        - при необходимости прокручивает на заданное кол-во шагов
+        - проверяет lgForm, заголовок и кликабельность инпута телефона
+        """
+        page_name = form_config['page_name']
+        form_name = form_config.get('form_name', '')
+        url       = self.BASE_URL + form_config['url']
+        scroll    = form_config.get('scroll', False)
+        scroll_count = form_config.get('scroll_count', 8)
+
+        if self.current_url != url:
+            self.driver.get(url)
             remove_popups(self.driver)
-            btn = self._scroll_to_element(btn_selector)
-        if btn is None:
-            self._record_result(label, False, 'кнопка не найдена')
-            return False
+            self.current_url = url
 
-        # 3. Клик
-        if not self._click_button(btn):
-            self._record_result(label, False, 'не удалось кликнуть по кнопке')
-            return False
+        if scroll:
+            self._scroll_page(scroll_count)
 
-        # 4. Ожидание открытия модалки
-        if not self._wait_modal_open(modal_id):
-            self._record_result(label, False, 'модалка не открылась (нет класса uk-open)')
-            return False
+        self.check_element(
+            form_config['lgform_xpath'], page_name, form_name, 'lgForm',
+            scroll_count=scroll_count if scroll else None
+        )
 
-        # 5. Проверка видимости инпута
-        if not self._check_phone_clickable(modal_id, phone_selector):
-            self._record_result(label, False, 'телефонный инпут не кликабелен')
-            return False
+        if form_config.get('header_xpath'):
+            self.check_element(
+                form_config['header_xpath'], page_name, form_name, 'заголовок',
+                scroll_count=scroll_count if scroll else None
+            )
 
-        # 6. Проверка lgForm
-        actual_lgform = self._get_lgform_value(modal_id, lgform_selector)
-        if actual_lgform != expected_lgform:
-            msg = f'lgForm: ожидалось "{expected_lgform}", получено "{actual_lgform}"'
-            self._record_result(label, False, msg)
-            return False
+        self.check_phone_clickable(
+            form_config['lgform_xpath'], page_name, form_name,
+            scroll_count=scroll_count if scroll else None
+        )
 
-        self._record_result(label, True)
-        self._close_modal(modal_id)
-        return True
+    def run_all_checks(self):
+        """Запуск всех проверок из конфига"""
+        print(f"\n     Проверка форм обратной связи на сайте МойГектар на домене {self.BASE_URL} | [{self.ENV.upper()}]\n")
 
-    def _record_result(self, label: str, success: bool, error: str = ''):
-        if success:
-            print(f"     OK: {label}")
-            self.results['success'].append(label)
-        else:
-            print(f" ERROR: {label} — {error}")
-            self.results['failed'].append(f"{label} ({error})")
+        forms = self._load_config()
+        for form_config in forms:
+            self.check_form(form_config)
 
-    # ------------------------------------------------------------------
-    # Запуск всех проверок
-    # ------------------------------------------------------------------
+        self.print_report(total=len(forms))
 
-    def run(self, modals_config: list):
-        print(f"\n     Проверка модальных окон МГ на домене {BASE_URL} | [{ENV.upper()}]\n")
-
-        for modal_config in modals_config:
-            self.check_modal(modal_config)
-
-        self._print_summary()
-
-    def _print_summary(self):
-        total = len(self.results['success']) + len(self.results['failed'])
-        success = len(self.results['success'])
-        failed = len(self.results['failed'])
-
+    def print_report(self, total):
+        """Вывод отчёта о результатах"""
         print(f"\n     {'=' * 50}")
-        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
+        print(f"     Итого форм: {total}  |  OK: {self.success_count}  |  Ошибок: {len(self.errors)}")
 
-        if self.results['failed']:
-            print(f"\n     Проблемные модалки:")
-            for item in self.results['failed']:
-                print(f"       - {item}")
+        if self.errors:
+            print(f"\n     Список ошибок:")
+            for i, error in enumerate(self.errors, 1):
+                print(f"     {i}. {error}")
         else:
             print(f"\n     ОШИБОК НЕТ")
 
     def close(self):
-        if self.driver:
-            self.driver.quit()
-
-
-def load_modals_config(config_file: str) -> list:
-    try:
-        if not os.path.exists(config_file):
-            raise FileNotFoundError(f"Файл конфигурации не найден: {config_file}")
-        with open(config_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return data['modals']
-    except Exception as e:
-        print(f" ERROR: Ошибка загрузки конфигурации: {e}")
-        raise
-
-
-def main():
-    modals_config = load_modals_config('../data/modal_mg_list.json')
-
-    checker = ModalChecker()
-    try:
-        checker.run(modals_config)
-    finally:
-        checker.close()
+        """Закрытие браузера"""
+        time.sleep(3)
+        self.driver.quit()
 
 
 if __name__ == "__main__":
-    main()
+    checker = FormChecker(headless=True)
+    try:
+        checker.run_all_checks()
+    finally:
+        checker.close()
 
-# Время выполнения
+# Вычисляем и выводим время выполнения теста
 end_time = time.time()
 elapsed_time = end_time - start_time
 minutes = int(elapsed_time // 60)

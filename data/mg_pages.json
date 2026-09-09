@@ -6,9 +6,15 @@
         "requires_auth": false
     },
     {
-        "name": "каталог",
+        "name": "каталог участков",
         "path": "catalogue",
         "xpath": "(//*[(contains(@class, 'js-batch-name'))])[1]",
+        "requires_auth": true
+    },
+    {
+        "name": "каталог посёлков",
+        "path": "catalogue/landing",
+        "xpath": "//h1[contains(., 'Каталог')]",
         "requires_auth": true
     },
     {
