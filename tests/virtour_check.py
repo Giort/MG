@@ -11,6 +11,7 @@ import time
 import json
 import socket
 from helpers.popups import remove_popups
+from helpers.auth import auth_mg
 
 start_time = time.time()
 
@@ -157,17 +158,58 @@ class VirtourChecker:
 
         return True
 
+    def _authenticate_mg(self):
+        """
+        Авторизация на сайте Мой Гектар через модальное окно (helpers.auth.auth_mg).
+        Вызывается один раз перед проверками МГ - куки сессии затем
+        действуют для всех последующих страниц этого домена.
+        """
+        auth_config = self.virtour_config.get('auth')
+        if not auth_config:
+            return True
+
+        credentials_key = auth_config.get('credentials_key', 'LK_cred')
+        creds = self.creds_data.get(credentials_key, {})
+
+        if not creds:
+            print(f'WARNING: Не найдены credentials по ключу "{credentials_key}" в data.json')
+            return False
+
+        auth_url = auth_config.get('auth_url', 'https://moigektar.ru/12345')
+
+        try:
+            if not auth_mg(self.driver, auth_url=auth_url, creds=creds):
+                print('ERROR: Не удалось авторизоваться на Мой Гектар')
+                return False
+
+            time.sleep(6)
+            self.current_url = auth_url
+            self.is_authenticated = True
+            return True
+        except Exception as e:
+            print(f'ERROR: Ошибка авторизации на Мой Гектар - {str(e)}')
+            return False
+
     def _parse_locator(self, locator):
         """
         Преобразует locator из формата JSON в формат Selenium
 
-        Формат JSON: ["by_type", "value"]
-        Поддерживаемые by_type: xpath, css_selector, id, class_name, name, tag_name
+        Поддерживает два формата:
+        - Строка: трактуется как xpath (основной формат для этого конфига)
+        - Список ["by_type", "value"]: для типов, отличных от xpath
+          (css_selector, id, class_name, name, tag_name)
 
         Returns:
             tuple (By, value)
         """
-        if not locator or len(locator) != 2:
+        if not locator:
+            raise ValueError(f"Неверный формат локатора: {locator}")
+
+        # Строка - всегда xpath
+        if isinstance(locator, str):
+            return (By.XPATH, locator)
+
+        if len(locator) != 2:
             raise ValueError(f"Неверный формат локатора: {locator}")
 
         by_type, value = locator
@@ -316,6 +358,9 @@ class VirtourChecker:
         """Запуск всех проверок из конфига"""
         print(f"\n     Проверка доступности виртуальных туров на сайтах \n")
 
+        # Авторизация на Мой Гектар (требуется для доступа к турам на МГ)
+        self._authenticate_mg()
+
         # Проверка тура на странице актива
         if 'asset_tour' in self.virtour_config:
             # Для asset_tour тоже нужно получить project_name
@@ -327,6 +372,13 @@ class VirtourChecker:
                 asset_config['auth'] = auth
                 asset_config['credentials_key'] = credentials_key
             self.check_tour(asset_config)
+            time.sleep(1)
+
+        # Проверка туров на прочих страницах Мой Гектар
+        # (url задаётся прямо в конфиге, без резолва через project_list.json,
+        # авторизация на МГ уже выполнена глобально через _authenticate_mg)
+        for tour in self.virtour_config.get('moigektar_tours', []):
+            self.check_tour(tour)
             time.sleep(1)
 
         # Проверка туров на лендингах по конфигу

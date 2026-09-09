@@ -1,22 +1,36 @@
 {
+  "auth": {
+    "auth_url": "https://moigektar.ru/12345",
+    "credentials_key": "LK_cred"
+  },
   "asset_tour": {
-    "name": "МГ, тур на странице актива",
+    "name": "МГ, страница актива",
     "project_name": "МГ",
     "url": "https://moigektar.ru/batches-no-auth/29305",
-    "title_locator": ["xpath", "(//a[@data-type='iframe'])[7]"],
-    "btn_locator": ["xpath", "(//a[@data-type='iframe'])[7]"],
+    "title_locator": "(//a[@data-type='iframe'])[7]",
+    "btn_locator": "(//a[@data-type='iframe'])[7]",
     "elem_xpath": "//div[(contains(@style, 'z-index: 182'))]",
     "iframe_class": "uk-lightbox-iframe",
-    "remove_webinar_popup": true
+    "remove_popups": true
   },
-  "tours": [
+  "moigektar_tours": [
     {
-      "name": "МГ главная, 'Лучший посёлок месяца', Экополис на Волге",
-      "project_name": "МГ главная",
-      "title_locator": ["xpath", "//*[text()[contains(., 'Описание поселка')]]"],
-      "btn_locator": ["xpath", "//*[contains(@class, 'w-project-villages__tour-btn')]"],
+      "url": "https://moigektar.ru",
+      "name": "МГ, главная, блок 'Экополис на Волге'",
+      "title_locator": "(//h4[contains(., '«Экополис на Волге»')])[1]",
+      "btn_locator": "//span[contains(., 'Виртуальный тур')]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
-      "remove_webinar_popup": true
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/catalogue/landing",
+      "name": "МГ, каталог посёлков, блок 'Экополис на Волге'",
+      "title_locator": "(//h4[contains(., '«Экополис на Волге»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[1]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
+      "remove_popups": true,
+      "scroll": true
     },
     {
       "url": "https://moigektar.ru/catalogue/landing",
@@ -50,223 +64,283 @@
     {
       "name": "syn_9 Бологое",
       "project_name": "syn_9 Бологое",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 3056'))]"
     },
     {
       "name": "syn_33 Лисицыно",
       "project_name": "syn_33 Лисицыно",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "(//*[(contains(@class, 'w-plan__btn'))])[1]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "(//*[(contains(@class, 'w-plan__btn'))])[1]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]"
     },
     {
       "name": "syn_34 - Усадьба в Подмосковье (1)",
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "title_locator": ["xpath", "(//*[text()[contains(., 'в Подмосковье»')]])[7]"],
-      "btn_locator": ["xpath", "(//lord-icon)[1]"],
+      "title_locator": "(//*[text()[contains(., 'в Подмосковье»')]])[7]",
+      "btn_locator": "(//lord-icon)[1]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]"
     },
     {
       "name": "syn_34 - Артёмки (2)",
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "title_locator": ["xpath", "(//*[text()[contains(., 'д. Артёмки')]])[1]"],
-      "btn_locator": ["xpath", "(//lord-icon)[2]"],
+      "title_locator": "(//*[text()[contains(., 'д. Артёмки')]])[1]",
+      "btn_locator": "(//lord-icon)[2]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 173'))]"
     },
     {
       "name": "syn_34 - Экополис (3)",
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "title_locator": ["xpath", "(//*[text()[contains(., '«Экополис»')]])[1]"],
-      "btn_locator": ["xpath", "(//lord-icon)[3]"],
+      "title_locator": "(//*[text()[contains(., '«Экополис»')]])[1]",
+      "btn_locator": "(//lord-icon)[3]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 176'))]"
     },
     {
       "name": "syn_34 - Экополис на Волге (4)",
       "project_name": "syn_34 Усадьба в Подмосковье",
-      "title_locator": ["xpath", "(//*[text()[contains(., 'Экополис на Волге')]])[1]"],
-      "btn_locator": ["xpath", "(//lord-icon)[4]"],
+      "title_locator": "(//*[text()[contains(., 'Экополис на Волге')]])[1]",
+      "btn_locator": "(//lord-icon)[4]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]"
     },
     {
       "name": "syn_35 Усадьба подо Ржевом",
       "project_name": "syn_35 Усадьба подо Ржевом",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]"
     },
     {
       "name": "syn_39 Лесная усадьба",
       "project_name": "syn_39 Лесная усадьба",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 155'))]",
       "scroll": true
     },
     {
       "name": "syn_42 Усадьба в Завидово",
       "project_name": "syn_42 Усадьба в Завидово",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 239'))]",
       "scroll": true
     },
     {
       "name": "syn_47 Synergy Island",
       "project_name": "syn_47 Synergy Island",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 173'))]"
     },
     {
       "name": "syn_48 Парк Патриот",
       "project_name": "syn_48-97-105 Парк Патриот",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 207'))]"
     },
     {
       "name": "syn_52 Долина Волги",
       "project_name": "syn_52 Долина Волги",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 245'))]"
     },
     {
       "name": "syn_53 Новая жизнь",
       "project_name": "syn_53 Новая жизнь",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
     {
       "name": "syn_67 Моё поместье",
       "project_name": "syn_67 Моё поместье",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]"
     },
     {
       "name": "syn_73 Ясные зори",
       "project_name": "syn_73 Ясные зори",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 173'))]",
       "wait_time": 3
     },
     {
       "name": "syn_74 Междуречье",
       "project_name": "syn_74 Междуречье syn_75 Устье",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__icon'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__icon'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 188'))]",
       "wait_time": 3
     },
     {
       "name": "syn_84 Малая родина",
       "project_name": "syn_83-84 Малая родина",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 182'))]",
       "wait_time": 3
     },
     {
       "name": "syn_85 Междуречье на Валдае",
       "project_name": "syn_85 Междуречье на Валдае",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]"
     },
     {
       "name": "syn_87 Москва-Тверская",
       "project_name": "syn_19-44-87 Москва-Тверская",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 230'))]"
     },
     {
       "name": "syn_89 - Оазис на Осуге (1)",
       "project_name": "syn_89 Долина озёр",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'Оазис на Осуге')]])[1]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[1]"],
+      "title_locator": "(//h5[text()[contains(., 'Оазис на Осуге')]])[1]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[1]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 161'))]"
     },
     {
       "name": "syn_89 - Усадьба на озере Шитовское (2)",
       "project_name": "syn_89 Долина озёр",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'на озере Шитовское')]])[1]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[2]"],
+      "title_locator": "(//h5[text()[contains(., 'на озере Шитовское')]])[1]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[2]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 155'))]"
     },
     {
       "name": "syn_89 - Усадьба на Большом озере (3)",
       "project_name": "syn_89 Долина озёр",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'на Большом озере')]])[1]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[3]"],
+      "title_locator": "(//h5[text()[contains(., 'на Большом озере')]])[1]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[3]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 176'))]"
     },
     {
       "name": "syn_92 Усадьба в Дубровке",
       "project_name": "syn_92 Усадьба в Дубровке",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 189'))]"
     },
     {
       "name": "syn_95 Усадьба императрицы",
       "project_name": "syn_95 Усадьба императрицы",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
-     {
+    {
       "name": "syn_98 Оазис в Завидово",
       "project_name": "syn_98 Оазис в Завидово",
-      "title_locator": ["xpath", "(//h5[text()[contains(., 'Оазис в Завидово')]])[1]"],
-      "btn_locator": ["xpath", "(//*[@class='w-lord'])[1]"],
+      "title_locator": "(//h5[text()[contains(., 'Оазис в Завидово')]])[1]",
+      "btn_locator": "(//*[@class='w-lord'])[1]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]"
     },
     {
       "name": "syn_99 Лесные озёра",
       "project_name": "syn_99 Лесные озёра",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 181'))]"
     },
     {
       "name": "syn_111 Технопарк",
       "project_name": "syn_111 Технопарк",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 215'))]"
     },
     {
       "name": "syn_447 Усадьба на Байкале",
       "project_name": "syn_447 Усадьба на Байкале",
-      "title_locator": ["id", "tour"],
-      "btn_locator": ["xpath", "//*[(contains(@class, 'w-tour__btn'))]"],
+      "title_locator": [
+        "id",
+        "tour"
+      ],
+      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 263'))]"
     },
     {
       "name": "Крым - Равнополье (1)",
       "project_name": "Крым",
-      "title_locator": ["xpath", "//h3[text()[contains(., 'Равнополье')]]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[1]"],
+      "title_locator": "//h3[text()[contains(., 'Равнополье')]]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[1]",
       "elem_xpath": "(//div[(contains(@style, 'z-index: 4'))])[4]"
     },
     {
       "name": "Крым - Ивановка (2)",
       "project_name": "Крым",
-      "title_locator": ["xpath", "//h3[text()[contains(., 'Ивановка')]]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[2]"],
+      "title_locator": "//h3[text()[contains(., 'Ивановка')]]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[2]",
       "elem_xpath": "//div[(contains(@style, 'z-index: 161'))]"
     },
     {
       "name": "Крым - Камышинка (3)",
       "project_name": "Крым",
-      "title_locator": ["xpath", "//h3[text()[contains(., 'Камышинка')]]"],
-      "btn_locator": ["xpath", "(//img[@src='/img/360.svg'])[3]"],
+      "title_locator": "//h3[text()[contains(., 'Камышинка')]]",
+      "btn_locator": "(//img[@src='/img/360.svg'])[3]",
       "elem_xpath": "(//div[(contains(@style, 'z-index: 4'))])[4]"
     }
   ]
