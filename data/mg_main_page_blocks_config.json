@@ -38,6 +38,15 @@
       }
     ]
   },
+    {
+    "name": "Слайдер наград",
+    "elements": [
+      {
+        "name": "1-й элемент",
+        "xpath": "//*[@id='w-promo3']"
+      }
+    ]
+  },
   {
     "name": "Блок 'Гектар для реализации всех идей'",
     "elements": [
@@ -189,7 +198,7 @@
       },
       {
         "name": "'Категории участков' - 1-я карточка, фото",
-        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div/div/img[@src='/img/project-segment-gallery/syn-104-1ha-housing/1.jpg']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div/div/img[@src='/img/project-segment-gallery/syn-104-1ha-housing/1.jpg?ver=2']"
       },
       {
         "name": "'Категории участков' - 1-я карточка, кнопка",
@@ -306,6 +315,89 @@
       {
         "name": "Количество карточек - 4",
         "xpath": "(//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//img)[19]"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Участки под минифермы и агробизнес'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]"
+      },
+      {
+        "name": "1-я карточка СП, фото",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//img)[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж скидки",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//div[@data-src='/img/catalogue/label-sale.svg'])[1]"
+      },
+      {
+        "name": "1-я карточка СП, бейдж СП",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//span[contains(text(), 'Спецпредложение')])[1]"
+      },
+      {
+        "name": "Кнопка 'Узнать подробнее'",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, '/goal/farm') and contains(text(), 'Узнать подробнее')]"
+      },
+      {
+        "name": "Кнопка перехода в каталог",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, 'https://moigektar.ru/catalogue?purposeUseIds%5B0%5D=5') and contains(text(), 'Перейти в каталог')]"
+      },
+      {
+        "name": "Количество карточек - 4",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//img)[25]"
+      }
+    ]
+  },
+  {
+    "name": "Блок 'Идеи, которые воплощают собственники'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@class='w-ideas']//span[contains(., 'Идеи,')]"
+      },
+      {
+        "name": "Цитата, текст",
+        "xpath": "//*[@class='w-ideas']//p[contains(., 'Каждый проект начинается с идеи.')]"
+      },
+      {
+        "name": "Цитата, фото",
+        "xpath": "(//*[@class='w-ideas']//img[@src='https://storage.yandexcloud.net/moigektar-materials/img/ideas/av.jpg'])[1]"
+      },
+      {
+        "name": "Описание, текст 1-го блока",
+        "xpath": "//*[@class='w-ideas']//h3[contains(., '> 500')]"
+      },
+      {
+        "name": "1-е фото 1-го слайдера",
+        "xpath": "(//*[@class='w-ideas']//img[contains(@src, 'https://storage.yandexcloud.net/moigektar-materials/img/ideas/1-1.jpg') and contains (@class, 'uk-visible@xl')])[1]"
+      },
+      {
+        "name": "Есть три слайда",
+        "xpath": "//*[@class='w-ideas']//a[@aria-label='Slide 3']"
+      }
+    ]
+  },
+  {
+    "name": "Форма с Анастаией №1",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='form-main-cons9']//li[not (@role='tabpanel') and (@class='uk-active')]/div[text()[contains(.,'Закажите 3D-концепцию')]]"
+      },
+      {
+        "name": "Фото",
+        "xpath": "(//*[@id='form-main-cons9']//img[(contains(@class, 'uk-visible@xl')) and (contains (@src, '/img/form/vaseh'))])[1]"
+      },
+      {
+        "name": "Поле ввода",
+        "xpath": "//*[@id='form-main-cons9']//input[@type='tel']"
+      },
+      {
+        "name": "Кнопка 'Отправить'",
+        "xpath": "//*[@id='form-main-cons9']//li[@class='uk-active']//button[@type='submit']"
       }
     ]
   },
@@ -677,7 +769,7 @@
     ]
   },
   {
-    "name": "Форма с Анастаией",
+    "name": "Форма с Анастаией №2",
     "elements": [
       {
         "name": "Заголовок",
