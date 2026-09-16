@@ -3,370 +3,277 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, InvalidArgumentException
-from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
-import os
-import socket
+from helpers.popups import remove_popups
 
-# Проверка доступности веб-интерфейсов сервисов по наличию на страницах ключевых элементов
+# Проверка доступности блоков на главной МГ
+# В каждом блоке несколько элементов проверяются на видимость
+
+# Хедер
+# 1-й экран
+# Слайдер наград
+# "Гектар для реализации всех идей"
+# "Истории собственников"
+# "Преимущества проекта"
+# "Описание проекта"
+# Баннер "Экополис на Волге"
+# "Специальная цена на участки"
+# "Описание поселка"
+# Форма №1 с Софией
+# "Лучшие участки у воды"
+# "Образ будущих поселений"
+# "Распродажа инвестпроектов"
+# "Участки под минифермы и агробизнес"
+# "Идеи, которые воплощают собственники"
+# Форма №2 с Анастасией
+# "Успешные примеры проекта"
+# "Территория для ваших идей"
+# "Ваш доход с гектара"
+# "Реализуйте продукцию"
+# "Зарабатывайте на гектаре..."
+# "Государственная поддержка отрасли"
+# "Награды проекта «Мой гектар»"
+# Форма №1 с Ариной
+# "Проект От сохи до сохи"
+# "Отзывы о проекте"
+# "Сми о проекте"
+# Форма №2 с Ариной
+# "Выбери участок в лучшей локации"
+# "Новости развития поселков"
+# "Непрерывное развитие поселков"
+# Форма №2 с Анастасией
+# "Популярные вопросы"
+# Форма №2 с Софией
+# "Видео, которое вам стоит увидеть"
+# "Строительство на землях сельхозназначения"
+# "Рекомендованные фундаменты"
+# "Примеры строений"
+# "Федеральный закон"
+# "Приглашаем на встречу в офис"
+# Форма с Максимом
+# Футер
+
+
 
 # Засекаем время начала теста
 start_time = time.time()
 
+# ============================================================
+#  Переключение окружения: "prod" или "local"
+# ============================================================
+ENV = "prod"
+# ============================================================
 
-def init_driver():
-    """Инициализация драйвера Chrome"""
-    ch_options = Options()
-    ch_options.add_argument('--headless')
-    ch_options.page_load_strategy = 'eager'
-    service = ChromeService(executable_path=ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=ch_options)
-    driver.set_window_size(1680, 1000)
-    driver.implicitly_wait(10)
-    driver.set_page_load_timeout(30)
-    return driver
+ENV_CONFIG = {
+    "prod": {
+        "base_url": "https://moigektar.ru",
+        "query": "?__ab=1",
+    },
+    "local": {
+        "base_url": "http://moigektar.localhost",
+        "query": "",
+    },
+}
+
+MG_BASE_URL = ENV_CONFIG[ENV]["base_url"]
+MG_QUERY = ENV_CONFIG[ENV]["query"]
 
 
-def check_domain(url, max_attempts=3, wait_time=2):
-    """Проверка доступности домена с несколькими попытками"""
-    try:
-        domain = url.split('//')[1].split('/')[0]
-    except:
-        print(f'ERROR: Не удалось извлечь домен из URL: {url}')
-        return False
+class PageBlocksChecker:
+    def __init__(self, mg_base_url):
+        self.mg_base_url = mg_base_url.rstrip('/')
+        self.driver = None
 
-    for attempt in range(max_attempts):
+    def init_driver(self):
+        ch_options = Options()
+        ch_options.add_argument('--headless')
+        ch_options.page_load_strategy = 'eager'
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=ch_options)
+        self.driver.set_window_size(1680, 1000)
+        self.driver.implicitly_wait(15)
+        return self.driver
+
+
+    def check_block_visibility(self, block_config, timeout=10):
+        """
+        Проверка видимости конкретного блока по его конфигурации
+
+        Returns:
+            tuple (success: bool, missing_elements: list) - список проблемных
+            элементов возвращается отсюда же, чтобы отчёт (check_all_blocks)
+            не делал повторную, более слабую проверку (по одному лишь
+            присутствию в DOM), которая может разойтись с этой проверкой
+            видимости и "потерять" блок из сводки.
+        """
+        block_name = block_config['name']
+
+        # Список для сбора отсутствующих элементов
+        missing_elements = []
+
         try:
-            socket.gethostbyname(domain)
-            if attempt > 0:
-                print(f'     == Домен {domain} доступен после {attempt + 1} попытки')
-            return True
-        except socket.gaierror:
-            if attempt == max_attempts - 1:
-                return False
-            else:
-                time.sleep(wait_time)
-        except Exception as e:
-            print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
-            return False
-    return False
+            # Проверяем каждый элемент в блоке
+            for element_config in block_config['elements']:
+                element_name = element_config['name']
+                xpath = element_config['xpath']
 
-
-def load_resources():
-    """Загрузка конфигурации ресурсов из JSON файла"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(os.path.dirname(current_dir), 'data', 'project_list.json')
-
-        with open(json_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            return data.get('resources', [])
-    except FileNotFoundError:
-        print(f"ERROR: Файл project_list.json не найден")
-        return []
-    except json.JSONDecodeError as e:
-        print(f"ERROR: Ошибка парсинга JSON: {e}")
-        return []
-    except Exception as e:
-        print(f"ERROR: Неожиданная ошибка при загрузке ресурсов: {e}")
-        return []
-
-
-def load_auth_data():
-    """Загрузка данных для авторизации"""
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(os.path.dirname(current_dir), 'data', 'data.json')
-
-        with open(json_path, 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        print("WARNING: файл data.json не найден, авторизация будет пропущена")
-        return {}
-    except Exception as e:
-        print(f"WARNING: Ошибка загрузки data.json: {e}")
-        return {}
-
-
-def get_auth_credentials(auth_config, project_name):
-    """
-    Получить данные для авторизации на основе конфига auth
-
-    Args:
-        auth_config: значение поля auth из project_list.json
-        project_name: имя проекта
-
-    Returns:
-        tuple: (нужна_ли_авторизация, ключ_для_credentials)
-    """
-    if not auth_config:
-        return False, None
-
-    if isinstance(auth_config, str):
-        # Если строка - используем её как ключ
-        return True, auth_config
-    elif isinstance(auth_config, bool) and auth_config is True:
-        # Если True - используем project_name как ключ
-        return True, project_name
-    else:
-        return False, None
-
-
-def perform_auth(driver, auth_config, project_name, auth_data):
-    """
-    Универсальная авторизация на странице
-
-    Args:
-        driver: WebDriver
-        auth_config: значение поля auth из конфига
-        project_name: имя проекта
-        auth_data: словарь с данными авторизации
-
-    Returns:
-        bool: успешность авторизации
-    """
-    need_auth, credentials_key = get_auth_credentials(auth_config, project_name)
-
-    if not need_auth or not auth_data:
-        return True
-
-    # Отдельно пробуем найти форму логина. Если её нет на странице — это не ошибка авторизации
-    # (возможно, сессия уже авторизованаили форма логина не требуется на этой странице), поэтому не
-    # считаем это провалом и не пишем ложное предупреждение.
-    try:
-        login_input = wait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, 'loginconfig-username'))
-        )
-    except TimeoutException:
-        return True
-
-    # Форма логина найдена — вот тут уже реальная попытка авторизации,
-    # и любая ошибка на этом этапе действительно является ошибкой авторизации
-    try:
-        password_input = driver.find_element(By.ID, 'loginconfig-password')
-        submit_btn = driver.find_element(By.CSS_SELECTOR, 'div button, button[type]')
-
-        creds = auth_data.get(credentials_key, {})
-        login = str(creds.get("login", ""))
-        password = str(creds.get("password", ""))
-
-        login_input.send_keys(login)
-        password_input.send_keys(password)
-        submit_btn.click()
-        time.sleep(2)
-
-        return True
-    except Exception as e:
-        print(f'WARNING: Ошибка авторизации - {str(e)[:100]}')
-        return False
-
-
-def check_single_resource(driver, resource, auth_data):
-    """Проверка одного ресурса (одиночный URL)"""
-    url = resource['url']
-    name = resource['name']
-    selector = resource['selector']
-    auth_config = resource.get('auth', False)
-    clear_cookies = resource.get('clear_cookies', False)
-    max_attempts = 3
-    wait_timeout = 14
-
-    # Проверка доступности домена
-    if not check_domain(url):
-        print(f'ERROR: {name} - домен недоступен ({url})')
-        return False
-
-    # Загрузка страницы
-    try:
-        driver.get(url)
-        time.sleep(1)
-    except InvalidArgumentException:
-        print(f'ERROR: {name} - некорректный URL ({url})')
-        return False
-    except Exception as e:
-        print(f'ERROR: {name} - ошибка загрузки: {str(e)[:100]} ({url})')
-        return False
-
-    # Авторизация, если нужна
-    perform_auth(driver, auth_config, name, auth_data)
-
-    # Проверка элемента
-    for attempt in range(max_attempts):
-        try:
-            elem = wait(driver, wait_timeout).until(
-                EC.visibility_of_element_located((By.XPATH, selector))
-            )
-            if elem:
-                print(f'     OK: {name}')
-
-                if clear_cookies:
-                    driver.delete_all_cookies()
-                    time.sleep(5)
-
-                return True
-        except Exception as e:
-            if attempt == max_attempts - 1:
-                print(f'ERROR: {name}: {str(e)[:100]} ({url})')
-
-                if clear_cookies:
-                    driver.delete_all_cookies()
-                    time.sleep(0.5)
-
-                return False
-            else:
                 try:
-                    driver.refresh()
-                    time.sleep(2)
+                    element = WebDriverWait(self.driver, timeout).until(
+                        EC.visibility_of_element_located((By.XPATH, xpath))
+                    )
 
-                    # Повторная авторизация после обновления
-                    perform_auth(driver, auth_config, name, auth_data)
-                except:
-                    pass
+                    # Прокручиваем к элементу
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
 
-    return False
+                    self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                                               element)
+                    time.sleep(0.3)
 
+                    # Дополнительная проверка видимости
+                    if not element.is_displayed():
+                        missing_elements.append(element_name)
 
-def check_project_with_domains(driver, project, auth_data):
-    """Проверка проекта с несколькими доменами"""
-    project_name = project['project_name']
-    domains = project['domains']
-    selector = project['selector']
-    auth_config = project.get('auth', False)
-    clear_cookies = project.get('clear_cookies', False)
+                except (TimeoutException, Exception):
+                    missing_elements.append(element_name)
 
-    all_success = True
+            # Формируем результат
+            if not missing_elements:
+                print(f"     OK: {block_name}")
+                return True, []
+            else:
+                # Формируем строку только с отсутствующими элементами
+                missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
+                print(f" ERROR: {block_name} - {missing_str}")
+                return False, missing_elements
 
-    for domain in domains:
-        url = domain['url']
-        domain_name = domain['name']
-
-        # Для логов используем короткое имя
-        display_name = f"[{project_name}] {domain_name}"
-
-        # Проверка доступности домена
-        if not check_domain(url):
-            print(f'ERROR: {display_name} - домен недоступен ({url})')
-            all_success = False
-            continue
-
-        # Загрузка страницы
-        try:
-            driver.get(url)
-            time.sleep(2)
         except Exception as e:
-            print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]} ({url})')
-            all_success = False
-            continue
+            print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
+            return False, [f"Критическая ошибка: {str(e)[:100]}"]
 
-        # Авторизация, если нужна (универсальный метод)
-        perform_auth(driver, auth_config, project_name, auth_data)
+    def check_all_blocks(self, blocks_config, delay=1):
+        """Проверка всех блоков из конфигурации"""
 
-        # Проверка элемента
-        success = False
-        for attempt in range(3):
+        results = {}
+
+        for block_config in blocks_config:
+            result, problematic_elements = self.check_block_visibility(block_config)
+
+            results[block_config['name']] = {
+                'visible': result,
+                'problematic_elements': problematic_elements
+            }
+            time.sleep(delay)
+
+        return results
+
+    def print_summary(self, results):
+        """Вывод сводки результатов"""
+
+        total = len(results)
+        visible = sum(1 for r in results.values() if r['visible'])
+        not_visible = total - visible
+
+        print(f"\n{'=' * 60}")
+        print("     Результат")
+
+        if not_visible > 0:
+            print(f"\n     БЛОКИ С ПРОБЛЕМАМИ:")
+            for name, info in results.items():
+                if not info['visible'] and info['problematic_elements']:
+                    # Показываем только проблемные элементы для каждого блока
+                    elements_str = ", ".join(info['problematic_elements'])
+                    print(f"     {name}: {elements_str}")
+        else:
+            print(f"\n     ОШИБОК НЕТ")
+
+    def check_blocks_order(self, blocks_config):
+        """Проверяет что блоки идут сверху вниз в правильном порядке"""
+        positions = []
+
+        for block_config in blocks_config:
+            if block_config.get('skip_order_check'):
+                continue
+            anchor_xpath = block_config['elements'][0]['xpath']
             try:
-                elem = wait(driver, 14).until(
-                    EC.visibility_of_element_located((By.XPATH, selector))
+                element = self.driver.find_element(By.XPATH, anchor_xpath)
+                y = element.location['y']
+                positions.append((block_config['name'], y))
+            except Exception:
+                pass  # если блок не найден — его уже поймает check_block_visibility
+
+        # Сортируем по фактическому положению на странице
+        sorted_by_y = sorted(positions, key=lambda x: x[1])
+        expected_order = [name for name, _ in positions]
+        actual_order   = [name for name, _ in sorted_by_y]
+
+        order_errors = []
+        for i, (expected, actual) in enumerate(zip(expected_order, actual_order)):
+            if expected != actual:
+                actual_index = actual_order.index(expected)
+                order_errors.append(
+                    f'«{expected}» ожидается на позиции {i + 1}, фактически на позиции {actual_index + 1}'
                 )
-                if elem:
-                    print(f'     OK: {display_name}')
-                    success = True
 
-                    if clear_cookies:
-                        driver.delete_all_cookies()
-                        time.sleep(5)
+        return order_errors
 
-                    break
-            except Exception as e:
-                if attempt == 2:
-                    print(f'ERROR: {display_name} - {str(e)[:100]} ({url})')
-
-                    if clear_cookies:
-                        driver.delete_all_cookies()
-                        time.sleep(0.5)
-
-                    all_success = False
-                else:
-                    try:
-                        driver.refresh()
-                        time.sleep(2)
-                        # Повторная авторизация после обновления
-                        perform_auth(driver, auth_config, project_name, auth_data)
-                    except:
-                        pass
-
-        time.sleep(0.5)  # Пауза между доменами
-
-    return all_success
+    def close(self):
+        if self.driver:
+            self.driver.quit()
 
 
 def main():
-    """Основная функция запуска проверок"""
-    print(f"\n     Проверка доступности сайтов \n")
+    checker = PageBlocksChecker(MG_BASE_URL)
 
-    # Загрузка данных
-    resources = load_resources()
-    if not resources:
-        print("ERROR: Нет ресурсов для проверки")
-        return
-
-    auth_data = load_auth_data()
-
-    # Инициализация драйвера
-    driver = init_driver()
+    print(f"\n     Проверка главной страницы на домене {MG_BASE_URL} | [{ENV.upper()}]\n")
 
     try:
-        total_resources = 0
-        successful = 0
-        failed = 0
+        checker.init_driver()
 
-        # Проходим по всем ресурсам
-        for resource in resources:
-            # Проверка типа ресурса
-            if 'domains' in resource:
-                # Это проект с несколькими доменами
-                if check_project_with_domains(driver, resource, auth_data):
-                    successful += len(resource['domains'])
-                else:
-                    failed += len(resource['domains'])
-                total_resources += len(resource['domains'])
-            else:
-                # Это одиночный ресурс
-                if check_single_resource(driver, resource, auth_data):
-                    successful += 1
-                else:
-                    failed += 1
-                total_resources += 1
+        with open('../data/mg_main_page_blocks_config_test.json', 'r', encoding='utf-8') as f:
+            blocks_config = json.load(f)
 
-            time.sleep(0.5)  # Пауза между проверками
+        # Загружаем главную страницу
+        checker.driver.get(f"{MG_BASE_URL}/{MG_QUERY}")
 
-        # Итоговая статистика
-        print(f"\n     Итоги проверки:")
-        print(f"     Всего ресурсов: {total_resources}")
-        print(f"     Успешно: {successful}")
-        print(f"     Ошибок: {failed}")
-        if total_resources > 0:
-            print(f"     Доступность: {successful / total_resources * 100:.1f}%")
+        time.sleep(3)
+        remove_popups(checker.driver)
 
+        # Проверяем все блоки
+        results = checker.check_all_blocks(blocks_config)
+
+        # Проверяем порядок блоков
+        order_errors = checker.check_blocks_order(blocks_config)
+
+        # Выводим сводку
+        checker.print_summary(results)
+
+        if order_errors:
+            print(f"\n     НАРУШЕН ПОРЯДОК БЛОКОВ:")
+            for err in order_errors:
+                print(f"       - {err}")
+
+    except Exception as e:
+        print(f" Критическая ошибка: {e}")
     finally:
-        time.sleep(2)
-        driver.quit()
+        checker.close()
 
 
 if __name__ == "__main__":
     main()
 
-    # Вычисляем и выводим время выполнения теста
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    minutes = int(elapsed_time // 60)
-    seconds = int(elapsed_time % 60)
+# Вычисляем и выводим время выполнения теста
+end_time = time.time()
+elapsed_time = end_time - start_time
+minutes = int(elapsed_time // 60)
+seconds = int(elapsed_time % 60)
 
-    if minutes > 0:
-        print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
-    else:
-        print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+if minutes > 0:
+    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+else:
+    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

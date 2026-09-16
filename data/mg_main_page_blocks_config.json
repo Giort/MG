@@ -141,7 +141,7 @@
     "elements": [
       {
         "name": "1-я карточка СП, фото",
-        "xpath": "(//div[@id='catalogueSpecial']//a//div/img)[1]"
+        "xpath": "(//div[@id='catalogueSpecial']//a//div[contains(@class, 'w-card-special-img')]/img)[1]"
       },
       {
         "name": "1-я карточка СП, бейдж скидки",
@@ -157,7 +157,7 @@
       },
       {
         "name": "Количество карточек - 6",
-        "xpath": "(//div[@id='catalogueSpecial']//a//div/img)[6]"
+        "xpath": "(//div[@id='catalogueSpecial']//a//div[contains(@class, 'w-card-special-img')]/img)[6]"
       }
     ]
   },
@@ -177,15 +177,11 @@
         "xpath": "(//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'uk-text-default')]//p[contains(text(), 'Мы расширяем границы')])[1]"
       },
       {
-        "name": "Кнопка 'Посмотреть в каталоге'",
-        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//a[contains(., 'Посмотреть в каталоге')]"
-      },
-      {
         "name": "1-е фото слайдера фото",
         "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img[@src='/img/project-overview-gallery/syn-104-full/7.jpg?ver=2']"
       },
       {
-        "name": "Слайдер фото: всего 6 фото",
+        "name": "Слайдер фото: есть не меньше 6 фото",
         "xpath": "(//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//*[contains(@class, 'w-project-villages__card')]//ul/li/img)[6]"
       },
       {
@@ -210,20 +206,24 @@
       },
       {
         "name": "Генплан Сновидово",
-        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Сновидово']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w1-map']//*[@class='ol-zoom-in']"
       },
       {
         "name": "Генплан Курьково",
-        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w2-map']//*[@class='ol-zoom-in']"
+      },
+      {
+        "name": "Генплан Экополиса на Новорижском",
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Новорижском шоссе»']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w3-map']//*[@class='ol-zoom-in']"
       },
       {
         "name": "Кнопка 'Посмотреть в каталоге' в самом низу блока",
-        "xpath": "//h2[text()[contains(.,'Истории собственников')]]/ancestor::div[2]//a[@uk-slidenav-next]"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//a[contains(., 'Посмотреть в каталоге')]"
       }
     ]
   },
   {
-    "name": "Форма №1 с Софией",
+    "name": "Форма с Софией (1)",
     "elements": [
       {
         "name": "Заголовок",
@@ -252,7 +252,7 @@
       },
       {
         "name": "1-я карточка СП, фото",
-        "xpath": "(//h2[contains (text(), 'Лучшие участки у воды')]/ancestor::div[@id='catalogueSpecial11']//img)[1]"
+        "xpath": "(//h2[contains (text(), 'Лучшие участки у воды')]/ancestor::div[@id='catalogueSpecial11']//div[contains(@class, 'w-card-special-img')]/img)[1]"
       },
       {
         "name": "1-я карточка СП, бейдж скидки",
@@ -268,7 +268,7 @@
       },
       {
         "name": "Количество карточек - 4",
-        "xpath": "(//h2[contains (text(), 'Лучшие участки у воды')]/ancestor::div[@id='catalogueSpecial11']//img)[19]"
+        "xpath": "(//h2[contains (text(), 'Лучшие участки у воды')]/ancestor::div[@id='catalogueSpecial11']//div[contains(@class, 'w-card-special-img')]/img)[4]"
       }
     ]
   },
@@ -298,7 +298,7 @@
       },
       {
         "name": "1-я карточка СП, фото",
-        "xpath": "(//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//img)[1]"
+        "xpath": "(//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//div[contains(@class, 'w-card-special-img')]/img)[1]"
       },
       {
         "name": "1-я карточка СП, бейдж скидки",
@@ -314,7 +314,7 @@
       },
       {
         "name": "Количество карточек - 4",
-        "xpath": "(//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//img)[19]"
+        "xpath": "(//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//div[contains(@class, 'w-card-special-img')]/img)[4]"
       }
     ]
   },
@@ -326,16 +326,8 @@
         "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]"
       },
       {
-        "name": "1-я карточка СП, фото",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//img)[1]"
-      },
-      {
-        "name": "1-я карточка СП, бейдж скидки",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//div[@data-src='/img/catalogue/label-sale.svg'])[1]"
-      },
-      {
-        "name": "1-я карточка СП, бейдж СП",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//span[contains(text(), 'Спецпредложение')])[1]"
+        "name": "1-я карточка, фото",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[1]"
       },
       {
         "name": "Кнопка 'Узнать подробнее'",
@@ -347,7 +339,7 @@
       },
       {
         "name": "Количество карточек - 4",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//img)[25]"
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[4]"
       }
     ]
   },
@@ -381,7 +373,7 @@
     ]
   },
   {
-    "name": "Форма с Анастаией №1",
+    "name": "Форма с Анастаией (1))",
     "elements": [
       {
         "name": "Заголовок",
@@ -447,7 +439,7 @@
       },
       {
         "name": "Фото",
-        "xpath": "//*[@class='w-why']//*[@src='/img/why/outline-white.svg']"
+        "xpath": "//*[@class='w-why']//*[@src='/img/why/bg.jpg?ver=1']"
       }
     ]
   },
@@ -569,7 +561,7 @@
     ]
   },
   {
-  "name": "Форма №1 с Ариной",
+  "name": "Форма с Ариной (1)",
   "elements": [
       {
         "name": "Заголовок",
@@ -681,7 +673,7 @@
     ]
   },
   {
-  "name": "Форма №2 с Ариной",
+  "name": "Форма с Ариной (2)",
   "elements": [
       {
         "name": "Заголовок",
@@ -769,7 +761,7 @@
     ]
   },
   {
-    "name": "Форма с Анастаией №2",
+    "name": "Форма с Анастаией (2)",
     "elements": [
       {
         "name": "Заголовок",
@@ -815,7 +807,7 @@
     ]
   },
   {
-    "name": "Форма №2 с Софией",
+    "name": "Форма с Софией (2)",
     "elements": [
       {
         "name": "Заголовок",

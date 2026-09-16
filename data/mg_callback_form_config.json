@@ -171,10 +171,10 @@
   },
   {
     "page_name": "Личный кабинет",
-    "form_name": "форма с Игорем Калининым",
+    "form_name": "форма с Софией",
     "url": "/cabinet",
-    "lgform_xpath": "(//*[text()[contains(.,'Игорь')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_lk_page_kalinin_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Игорь')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'к личному кабинету')]])[1]"
+    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_lk_page_sofia_callback'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
     "page_name": "Развитие - Развитие поселков",
