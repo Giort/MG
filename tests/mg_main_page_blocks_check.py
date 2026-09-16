@@ -100,7 +100,16 @@ class PageBlocksChecker:
 
 
     def check_block_visibility(self, block_config, timeout=10):
-        """Проверка видимости конкретного блока по его конфигурации"""
+        """
+        Проверка видимости конкретного блока по его конфигурации
+
+        Returns:
+            tuple (success: bool, missing_elements: list) - список проблемных
+            элементов возвращается отсюда же, чтобы отчёт (check_all_blocks)
+            не делал повторную, более слабую проверку (по одному лишь
+            присутствию в DOM), которая может разойтись с этой проверкой
+            видимости и "потерять" блок из сводки.
+        """
         block_name = block_config['name']
 
         # Список для сбора отсутствующих элементов
@@ -136,16 +145,16 @@ class PageBlocksChecker:
             # Формируем результат
             if not missing_elements:
                 print(f"     OK: {block_name}")
-                return True
+                return True, []
             else:
                 # Формируем строку только с отсутствующими элементами
                 missing_str = " | ".join([f"✗ {elem}" for elem in missing_elements])
                 print(f" ERROR: {block_name} - {missing_str}")
-                return False
+                return False, missing_elements
 
         except Exception as e:
             print(f" ERROR: {block_name} - Критическая ошибка: {str(e)[:100]}")
-            return False
+            return False, [f"Критическая ошибка: {str(e)[:100]}"]
 
     def check_all_blocks(self, blocks_config, delay=1):
         """Проверка всех блоков из конфигурации"""
@@ -153,18 +162,7 @@ class PageBlocksChecker:
         results = {}
 
         for block_config in blocks_config:
-            result = self.check_block_visibility(block_config)
-
-            # Собираем информацию о проблемных элементах для сводки
-            problematic_elements = []
-            if not result:
-                for element_config in block_config['elements']:
-                    element_name = element_config['name']
-                    xpath = element_config['xpath']
-                    try:
-                        self.driver.find_element(By.XPATH, xpath)
-                    except:
-                        problematic_elements.append(element_name)
+            result, problematic_elements = self.check_block_visibility(block_config)
 
             results[block_config['name']] = {
                 'visible': result,
@@ -237,7 +235,7 @@ def main():
     try:
         checker.init_driver()
 
-        with open('../data/mg_main_page_blocks_config.json', 'r', encoding='utf-8') as f:
+        with open('../data/mg_main_page_blocks_config_test.json', 'r', encoding='utf-8') as f:
             blocks_config = json.load(f)
 
         # Загружаем главную страницу
