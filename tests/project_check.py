@@ -177,7 +177,7 @@ def check_single_resource(driver, resource, auth_data):
 
     # Проверка доступности домена
     if not check_domain(url):
-        print(f'ERROR: {name} - домен недоступен')
+        print(f'ERROR: {name} - домен недоступен ({url})')
         return False
 
     # Загрузка страницы
@@ -185,10 +185,10 @@ def check_single_resource(driver, resource, auth_data):
         driver.get(url)
         time.sleep(1)
     except InvalidArgumentException:
-        print(f'ERROR: {name} - некорректный URL')
+        print(f'ERROR: {name} - некорректный URL ({url})')
         return False
     except Exception as e:
-        print(f'ERROR: {name} - ошибка загрузки: {str(e)[:100]}')
+        print(f'ERROR: {name} - ошибка загрузки: {str(e)[:100]} ({url})')
         return False
 
     # Авторизация, если нужна
@@ -210,7 +210,7 @@ def check_single_resource(driver, resource, auth_data):
                 return True
         except Exception as e:
             if attempt == max_attempts - 1:
-                print(f'ERROR: {name}: {str(e)[:100]}')
+                print(f'ERROR: {name}: {str(e)[:100]} ({url})')
 
                 if clear_cookies:
                     driver.delete_all_cookies()
@@ -249,7 +249,7 @@ def check_project_with_domains(driver, project, auth_data):
 
         # Проверка доступности домена
         if not check_domain(url):
-            print(f'ERROR: {display_name} - домен недоступен')
+            print(f'ERROR: {display_name} - домен недоступен ({url})')
             all_success = False
             continue
 
@@ -258,7 +258,7 @@ def check_project_with_domains(driver, project, auth_data):
             driver.get(url)
             time.sleep(2)
         except Exception as e:
-            print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]}')
+            print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]} ({url})')
             all_success = False
             continue
 
@@ -283,7 +283,7 @@ def check_project_with_domains(driver, project, auth_data):
                     break
             except Exception as e:
                 if attempt == 2:
-                    print(f'ERROR: {display_name} - {str(e)[:100]}')
+                    print(f'ERROR: {display_name} - {str(e)[:100]} ({url})')
 
                     if clear_cookies:
                         driver.delete_all_cookies()
