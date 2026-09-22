@@ -149,7 +149,7 @@ class GenplanChecker:
             self.current_url = url
             self.is_authenticated = False
         except Exception as e:
-            print(f'ERROR: Ошибка загрузки {url}: {str(e)}')
+            print(f'ERROR: Ошибка загрузки {url}: {str(e)[:200]}')
             return False
 
         # Авторизация, если нужно
@@ -181,7 +181,7 @@ class GenplanChecker:
                 return True
 
         except Exception as e:
-            print(f'ERROR: генплан на {name}')
+            print(f'ERROR: генплан на {name} - {str(e)[:100]} ({url})')
             self._record_result(name, False, url)
             return False
 
@@ -211,7 +211,7 @@ class GenplanChecker:
                 return True
 
         except Exception as e:
-            print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]}')
+            print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]} ({url})')
             self._record_result(name, False, url)
             return False
 
@@ -322,7 +322,7 @@ class GenplanChecker:
 
             except Exception as e:
                 if attempt == max_attempts - 1:
-                    print(f'ERROR: {name} - {str(e)}')
+                    print(f'ERROR: {name} - {str(e)} ({url})')
                     self._record_result(name, False, url)
                     return False
                 else:
@@ -369,7 +369,7 @@ class GenplanChecker:
 
             except Exception as e:
                 if attempt == max_attempts - 1:
-                    print(f'ERROR: {name} - {str(e)}')
+                    print(f'ERROR: {name} - {str(e)} ({url})')
                     self._record_result(name, False, url)
                     return False
                 else:
