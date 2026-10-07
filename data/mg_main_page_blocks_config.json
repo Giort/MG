@@ -48,11 +48,23 @@
     ]
   },
   {
-    "name": "Блок 'Гектар для реализации всех идей'",
+    "name": "'Гектар для реализации всех идей'",
     "elements": [
       {
         "name": "Заголовок",
         "xpath": "//div[@id='w-gektar-idea']/h2[contains(text(), 'Гектар для реализации всех идей')]"
+      },
+      {
+        "name": "Цитата, текст",
+        "xpath": "//div[@id='w-gektar-idea']//p[contains(., '«Проект «Мой гектар» работает по-другому')]"
+      },
+      {
+        "name": "Цитата, фото",
+        "xpath": "//div[@id='w-gektar-idea']//img[@src=\"/img/quoteWidget/denis.png\"]"
+      },
+      {
+        "name": "Цитата, имя",
+        "xpath": "//div[@id='w-gektar-idea']//h6[contains(., 'Денис Бучельников')]"
       },
       {
         "name": "1-й блок: кнопка запуска видео",
@@ -65,7 +77,7 @@
     ]
   },
   {
-    "name": "Истории собственников",
+    "name": "'Истории собственников'",
     "elements": [
       {
         "name": "Заголовок",
@@ -86,7 +98,7 @@
     ]
   },
   {
-    "name": "Блок 'Преимущества проекта'",
+    "name": "'Преимущества проекта'",
     "elements": [
       {
         "name": "Заголовок",
@@ -99,7 +111,7 @@
     ]
   },
   {
-    "name": "Блок 'Описание проекта'",
+    "name": "'Описание проекта'",
     "elements": [
       {
         "name": "Заголовок 'Описание проекта'",
@@ -112,6 +124,73 @@
       {
         "name": "1-я секция: фото",
         "xpath": "(//div[@id='w-descr']//img[contains(@class, 'uk-visible@xl')])[1]"
+      }
+    ]
+  },
+    {
+    "name": "Цитата Пушкина",
+    "elements": [
+      {
+        "name": "Цитата, текст",
+        "xpath": "//p[contains(., '«...неволю душных городов!')]"
+      },
+      {
+        "name": "Цитата, фото",
+        "xpath": "//p[contains(., '«...неволю душных городов!')]/ancestor::div[2]//img[@src=\"/img/quoteWidget/pushkin.png\"]"
+      },
+      {
+        "name": "Цитата, имя",
+        "xpath": "//p[contains(., '«...неволю душных городов!')]/ancestor::div[2]//h6[contains(., 'Александр Пушкин')]"
+      }
+    ]
+  },
+  {
+    "name": "'Успешные примеры проекта'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@id='best-example']//h2[contains (text(), 'Успешные примеры проекта')]"
+      },
+      {
+        "name": "1-й таб 'Готовый поселок'",
+        "xpath": "//*[@id='best-example']//li[contains(@class, 'uk-active')]//*[contains (text(), 'Готовый поселок')]"
+      },
+      {
+        "name": "Видео в 1-м блоке",
+        "xpath": "//*[@id='best-example']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']"
+      },
+      {
+        "name": "Кнопка видео в 1-м блоке",
+        "xpath": "//*[@id='best-example']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']//img[@src='/img/play.svg']"
+      },
+      {
+        "name": "Заголовок и текст в 1-м блоке",
+        "xpath": "//*[@id='best-example']//h4[text()='Готовое поселение на гектарах']/ancestor::div[1]//p[text()[contains(., 'поселок с участками площадью 1 гектар')]]"
+      },
+      {
+        "name": "Кнопка вызова квиза в 1-м блоке",
+        "xpath": "//*[@id='best-example']//h4[text()='Готовое поселение на гектарах']/ancestor::div[2]//a[contains(@class, 'js-analytics-quiz-btn-v2')]"
+      },
+      {
+        "name": "2-й таб есть, всего 8 табов",
+        "xpath": "//*[@id='best-example']//li[@aria-label='2 of 8']//a/*[contains (text(), 'Княжьи горы')]"
+      }
+    ]
+  },
+  {
+    "name": "'Территория для ваших идей'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//*[@class='w-why']//h2[text()='Территория для ваших идей']"
+      },
+      {
+        "name": "Текст",
+        "xpath": "//*[@class='w-why']//*[text()='Дом с хозпостройками']"
+      },
+      {
+        "name": "Фото",
+        "xpath": "//*[@class='w-why']//*[@src='/img/why/bg.jpg?ver=1']"
       }
     ]
   },
@@ -137,7 +216,7 @@
     ]
   },
   {
-    "name": "Блок СП",
+    "name": "'Специальная цена на участки'",
     "elements": [
       {
         "name": "1-я карточка СП, фото",
@@ -158,6 +237,23 @@
       {
         "name": "Количество карточек - 6",
         "xpath": "(//div[@id='catalogueSpecial']//a//div[contains(@class, 'w-card-special-img')]/img)[6]"
+      }
+    ]
+  },
+    {
+    "name": "Цитата Толстого",
+    "elements": [
+      {
+        "name": "Цитата, текст",
+        "xpath": "//p[contains(., '«Жизнь вне города, под')]"
+      },
+      {
+        "name": "Цитата, фото",
+        "xpath": "//p[contains(., '«Жизнь вне города, под')]/ancestor::div[2]//img[@src=\"/img/quoteWidget/tolstoy.png\"]"
+      },
+      {
+        "name": "Цитата, имя",
+        "xpath": "//p[contains(., '«Жизнь вне города, под')]/ancestor::div[2]//h6[contains(., 'Лев Толстой')]"
       }
     ]
   },
@@ -206,15 +302,15 @@
       },
       {
         "name": "Генплан Сновидово",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Сновидово']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w1-map']//*[@class='ol-zoom-in']"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Сновидово']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w1-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-snovidovo.jpg']"
       },
       {
         "name": "Генплан Курьково",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w2-map']//*[@class='ol-zoom-in']"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w2-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-kurkovo.jpg']"
       },
       {
         "name": "Генплан Экополиса на Новорижском",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Новорижском шоссе»']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w3-map']//*[@class='ol-zoom-in']"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Новорижском шоссе»']/following-sibling::div[contains(@class, 'uk-container-max-content')]//img[@src='/img/project-overview-gallery/syn-425/poster.jpg']"
       },
       {
         "name": "Кнопка 'Посмотреть в каталоге' в самом низу блока",
@@ -244,7 +340,7 @@
     ]
   },
   {
-    "name": "Блок 'Лучшие участки у воды'",
+    "name": "'Лучшие участки у воды'",
     "elements": [
       {
         "name": "Заголовок",
@@ -272,25 +368,50 @@
       }
     ]
   },
-  {
-    "name": "Блок 'Образ будущих поселений'",
+    {
+    "name": "Цитата Шукшина",
     "elements": [
       {
-        "name": "Заголовок",
-        "xpath": "//*[@id='tour']//h3[contains (text(), 'Образ будущих')]"
+        "name": "Цитата, текст",
+        "xpath": "//p[contains(., '«Деревня, видите ли!..')]"
       },
       {
-        "name": "Кнопка Play",
-        "xpath": "//*[@id='tour']//img[@src='/img/play.svg']"
+        "name": "Цитата, фото",
+        "xpath": "//p[contains(., '«Деревня, видите ли!..')]/ancestor::div[2]//img[@src=\"/img/quoteWidget/shukshin.png\"]"
       },
       {
-        "name": "Видео",
-        "xpath": "//*[@id='tour']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0']"
+        "name": "Цитата, имя",
+        "xpath": "//p[contains(., '«Деревня, видите ли!..')]/ancestor::div[2]//h6[contains(., 'Василий Шукшин')]"
       }
     ]
   },
   {
-    "name": "Блок 'Распродажа инвестпроектов'",
+    "name": "'Участки под минифермы и агробизнес'",
+    "elements": [
+      {
+        "name": "Заголовок",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]"
+      },
+      {
+        "name": "1-я карточка, фото",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[1]"
+      },
+      {
+        "name": "Кнопка 'Узнать подробнее'",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, '/goal/farm') and contains(text(), 'Узнать подробнее')]"
+      },
+      {
+        "name": "Кнопка перехода в каталог",
+        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, 'https://moigektar.ru/catalogue?purposeUseIds%5B0%5D=5') and contains(text(), 'Перейти в каталог')]"
+      },
+      {
+        "name": "Количество карточек - 4",
+        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[4]"
+      }
+    ]
+  },
+  {
+    "name": "'Распродажа инвестпроектов'",
     "elements": [
       {
         "name": "Заголовок",
@@ -319,32 +440,24 @@
     ]
   },
   {
-    "name": "Блок 'Участки под минифермы и агробизнес'",
+    "name": "'Образ будущих поселений'",
     "elements": [
       {
         "name": "Заголовок",
-        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]"
+        "xpath": "//*[@id='tour']//h3[contains (text(), 'Образ будущих')]"
       },
       {
-        "name": "1-я карточка, фото",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[1]"
+        "name": "Кнопка Play",
+        "xpath": "//*[@id='tour']//img[@src='/img/play.svg']"
       },
       {
-        "name": "Кнопка 'Узнать подробнее'",
-        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, '/goal/farm') and contains(text(), 'Узнать подробнее')]"
-      },
-      {
-        "name": "Кнопка перехода в каталог",
-        "xpath": "//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//a[contains(@href, 'https://moigektar.ru/catalogue?purposeUseIds%5B0%5D=5') and contains(text(), 'Перейти в каталог')]"
-      },
-      {
-        "name": "Количество карточек - 4",
-        "xpath": "(//h2[contains (text(), 'Участки под минифермы и агробизнес')]/ancestor::div[1]//*[contains(@class, 'w-card-special-img')]/img)[4]"
+        "name": "Видео",
+        "xpath": "//*[@id='tour']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvttgbo6ozwwx7nvr6?autoplay=0&mute=0']"
       }
     ]
   },
   {
-    "name": "Блок 'Идеи, которые воплощают собственники'",
+    "name": "'Идеи, которые воплощают собственники'",
     "elements": [
       {
         "name": "Заголовок",
@@ -356,7 +469,7 @@
       },
       {
         "name": "Цитата, фото",
-        "xpath": "(//*[@class='w-ideas']//img[@src='https://storage.yandexcloud.net/moigektar-materials/img/ideas/av.jpg'])[1]"
+        "xpath": "//*[@class='w-ideas']//img[@src='/img/quoteWidget/vasehina.png']"
       },
       {
         "name": "Описание, текст 1-го блока",
@@ -393,58 +506,8 @@
       }
     ]
   },
-  {
-    "name": "Блок 'Успешные примеры проекта'",
-    "elements": [
-      {
-        "name": "Заголовок",
-        "xpath": "//*[@id='best-example']//h2[contains (text(), 'Успешные примеры проекта')]"
-      },
-      {
-        "name": "1-й таб 'Готовый поселок'",
-        "xpath": "//*[@id='best-example']//li[contains(@class, 'uk-active')]//*[contains (text(), 'Готовый поселок')]"
-      },
-      {
-        "name": "Видео в 1-м блоке",
-        "xpath": "//*[@id='best-example']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']"
-      },
-      {
-        "name": "Кнопка видео в 1-м блоке",
-        "xpath": "//*[@id='best-example']//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvjayy5hv6upycrotc?autoplay=0&mute=0']//img[@src='/img/play.svg']"
-      },
-      {
-        "name": "Заголовок и текст в 1-м блоке",
-        "xpath": "//*[@id='best-example']//h4[text()='Готовое поселение на гектарах']/ancestor::div[1]//p[text()[contains(., 'поселок с участками площадью 1 гектар')]]"
-      },
-      {
-        "name": "Кнопка вызова квиза в 1-м блоке",
-        "xpath": "//*[@id='best-example']//h4[text()='Готовое поселение на гектарах']/ancestor::div[2]//a[contains(@class, 'js-analytics-quiz-btn-v2')]"
-      },
-      {
-        "name": "2-й таб есть, всего 8 табов",
-        "xpath": "//*[@id='best-example']//li[@aria-label='2 of 8']//a/*[contains (text(), 'Княжьи горы')]"
-      }
-    ]
-  },
-  {
-    "name": "Блок 'Территория для ваших идей'",
-    "elements": [
-      {
-        "name": "Заголовок",
-        "xpath": "//*[@class='w-why']//h2[text()='Территория для ваших идей']"
-      },
-      {
-        "name": "Текст",
-        "xpath": "//*[@class='w-why']//*[text()='Дом с хозпостройками']"
-      },
-      {
-        "name": "Фото",
-        "xpath": "//*[@class='w-why']//*[@src='/img/why/bg.jpg?ver=1']"
-      }
-    ]
-  },
     {
-    "name": "Блок 'Ваш доход с гектара'",
+    "name": "'Ваш доход с гектара'",
     "elements": [
       {
         "name": "Заголовок",
@@ -469,7 +532,7 @@
     ]
   },
    {
-    "name": "Блок 'Реализуйте продукцию...'",
+    "name": "'Реализуйте продукцию...'",
     "elements": [
       {
         "name": "Заголовок",
@@ -490,7 +553,7 @@
     ]
   },
    {
-    "name": "Блок 'Зарабатывайте на гектаре...'",
+    "name": "'Зарабатывайте на гектаре...'",
     "elements": [
       {
         "name": "Заголовок",
@@ -527,7 +590,7 @@
       },
       {
         "name": "Кнопка видео 1-й карточки",
-        "xpath": "//*[text()='Государственная поддержка отрасли']/ancestor::div[1]//a[@href='https://vk.com/video_ext.php?oid=-45664686&id=456240007&hd=2&autoplay=1']"
+        "xpath": "//*[text()='Государственная поддержка отрасли']/ancestor::div[1]//a[@href='https://runtime.video.cloud.yandex.net/player/video/vplvj3ohsikuqmf4mtyj?autoplay=0&mute=0']"
       },
       {
         "name": "4 дотса",
@@ -536,7 +599,7 @@
     ]
   },
     {
-  "name": "Блок 'Награды проекта'",
+  "name": "'Награды проекта'",
   "elements": [
       {
         "name": "Заголовок",
@@ -582,7 +645,7 @@
     ]
   },
     {
-    "name": "Блок 'Проект От сохи до сохи'",
+    "name": "'Проект От сохи до сохи'",
     "elements": [
       {
         "name": "Заголовок",
@@ -607,7 +670,7 @@
     ]
   },
     {
-    "name": "Блок 'Отзывы о проекте'",
+    "name": "'Отзывы о проекте'",
     "elements": [
       {
         "name": "Заголовок",
@@ -640,7 +703,7 @@
     ]
   },
     {
-    "name": "Блок 'Сми о проекте'",
+    "name": "'Сми о проекте'",
     "elements": [
       {
         "name": "Заголовок",
@@ -694,7 +757,7 @@
     ]
   },
   {
-  "name": "Блок 'Выбери участок в лучшей локации'",
+  "name": "'Выбери участок в лучшей локации'",
   "elements": [
       {
         "name": "Заголовок",
@@ -719,7 +782,7 @@
     ]
   },
       {
-    "name": "Блок 'Новости развития поселков'",
+    "name": "'Новости развития поселков'",
     "elements": [
       {
         "name": "Заголовок",
@@ -748,7 +811,7 @@
     ]
   },
       {
-    "name": "Блок 'Непрерывное развитие поселков'",
+    "name": "'Непрерывное развитие поселков'",
     "elements": [
       {
         "name": "Заголовок",
@@ -782,7 +845,7 @@
     ]
   },
   {
-    "name": "Блок 'Популярные вопросы'",
+    "name": "'Популярные вопросы'",
     "elements": [
       {
         "name": "Заголовок",
@@ -828,7 +891,7 @@
     ]
   },
   {
-    "name": "Блок 'Видео, которые вам стоит увидеть'",
+    "name": "'Видео, которые вам стоит увидеть'",
     "elements": [
       {
         "name": "Заголовок",
@@ -853,7 +916,7 @@
     ]
   },
   {
-    "name": "Блок 'Строительство на землях сельхозназначения'",
+    "name": "'Строительство на землях сельхозназначения'",
     "elements": [
       {
         "name": "Заголовок",
@@ -874,7 +937,7 @@
     ]
   },
   {
-    "name": "Блок 'Рекомендованные фундаменты'",
+    "name": "'Рекомендованные фундаменты'",
     "elements": [
       {
         "name": "Заголовок",
@@ -895,7 +958,7 @@
     ]
   },
   {
-    "name": "Блок 'Примеры строений'",
+    "name": "'Примеры строений'",
     "elements": [
       {
         "name": "Заголовок",
@@ -924,7 +987,7 @@
     ]
   },
   {
-    "name": "Блок 'Федеральный закон'",
+    "name": "'Федеральный закон'",
     "elements": [
       {
         "name": "Заголовок",
@@ -977,7 +1040,7 @@
       },
       {
         "name": "Ссылка 'Обратный звонок'",
-        "xpath": "//div[@id='meeting']//h5[contains(., 'Телефоны')]/ancestor::div[1]/a[(contains(@uk-toggle, 'target: #modal-main-consultation')) and (contains(., 'Обратный звонок'))]"
+        "xpath": "//div[@id='meeting']//h5[contains(., 'Телефоны')]/ancestor::div[1]/a[(contains(@uk-toggle, 'target: #modal-meeting-meeting')) and (contains(., 'Обратный звонок'))]"
       },
       {
         "name": "2-я кнопка",
