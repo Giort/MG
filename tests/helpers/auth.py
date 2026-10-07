@@ -23,7 +23,7 @@ def auth_mg(driver, auth_url: str, creds: dict, btn_index: int = 1) -> bool:
         remove_popups(driver)
 
         # Открываем модальное окно авторизации
-        auth_btn = WebDriverWait(driver, 10).until(
+        auth_btn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (By.XPATH, f'(//*[@href="#modal-auth-lk"])[{btn_index}]')
             )
@@ -40,7 +40,7 @@ def auth_mg(driver, auth_url: str, creds: dict, btn_index: int = 1) -> bool:
         driver.find_element(By.XPATH, '//*[@id="authform-password"]').send_keys(str(creds["password"]))
         driver.find_element(By.XPATH, '//*[text()="Войти"]').click()
 
-        time.sleep(5)
+        time.sleep(20)
         return True
 
     except Exception as e:

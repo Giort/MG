@@ -54,7 +54,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('page_checker.log', encoding='utf-8'),
+        logging.FileHandler('../logs/page_checker.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )

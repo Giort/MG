@@ -14,6 +14,27 @@
     "type": "old"
   },
   "moigektar_genplans": [
+      {
+      "url": "https://moigektar.ru",
+      "name": "Главная - Экополис на Волге, Сновидово",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "url": "https://moigektar.ru",
+      "name": "Главная - Экополис на Волге, Курьково",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "url": "https://moigektar.ru",
+      "name": "Главная - Генеральный план «Экополис на Новорижском шоссе»",
+      "type": "new",
+      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
+      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
+    },
     {
       "url": "https://moigektar.ru/catalogue/landing",
       "name": "Каталог посёлков - Экополис на Волге, Сновидово",
@@ -65,14 +86,14 @@
     },
     {
       "url": "https://moigektar.ru/goal/farm",
-      "name": "Фермы - Мое поместье, д. Высокое",
+      "name": "Стр. ферм - Мое поместье, д. Высокое",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]",
       "check_xpath": "//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/goal/farm",
-      "name": "Фермы - Стан-Агро, д. Стан",
+      "name": "Стр. ферм - Стан-Агро, д. Стан",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]",
       "check_xpath": "//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
