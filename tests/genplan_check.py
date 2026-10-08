@@ -158,7 +158,38 @@ class GenplanChecker:
 
         return True
 
-    def check_genplan_old(self, name, title_xpath, genplan_css, url=None, wait_time=14):
+    @staticmethod
+    def _is_true(value):
+        """Приведение значения флага из конфига к bool (true / "true" / 1 / "1" / "да")"""
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return value == 1
+        if isinstance(value, str):
+            return value.strip().lower() in ('true', '1', 'yes', 'да')
+        return False
+
+    def _click_poster(self, poster_xpath, wait_time=14):
+        """
+        Нажатие на постер, после которого подгружается генплан.
+        Если обычный клик перехвачен другим элементом - кликаем через JS.
+        Исключения пробрасываются наверх, чтобы проверка генплана упала с ошибкой.
+        """
+        poster = wait(self.driver, wait_time).until(
+            EC.element_to_be_clickable((By.XPATH, poster_xpath))
+        )
+        self.actions.move_to_element(poster).perform()
+
+        try:
+            poster.click()
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", poster)
+
+        # Даём генплану время начать загрузку
+        time.sleep(1)
+
+    def check_genplan_old(self, name, title_xpath, genplan_css, url=None, wait_time=14,
+                          poster_xpath=None):
         """Проверка генплана старого типа (с кликом)"""
         try:
             # Ожидание и скролл к элементу
@@ -169,6 +200,10 @@ class GenplanChecker:
 
             # Клик для открытия генплана
             title.click()
+
+            # Нажатие на постер (если требуется)
+            if poster_xpath:
+                self._click_poster(poster_xpath, wait_time)
 
             # Проверка загрузки генплана
             genplan_elem = wait(self.driver, wait_time).until(
@@ -188,8 +223,9 @@ class GenplanChecker:
         self._record_result(name, False, url)
         return False
 
-    def check_genplan_new(self, name, title_xpath, check_xpath, url=None, wait_time=14):
-        """Проверка генплана нового типа (без клика)"""
+    def check_genplan_new(self, name, title_xpath, check_xpath, url=None, wait_time=14,
+                          poster_xpath=None):
+        """Проверка генплана нового типа (без клика, при необходимости - с нажатием на постер)"""
         try:
             # Ожидание появления элемента
             title = wait(self.driver, wait_time).until(
@@ -199,6 +235,10 @@ class GenplanChecker:
             # Скролл к элементу
             self.actions.move_to_element(title).perform()
             time.sleep(1)
+
+            # Нажатие на постер (если требуется)
+            if poster_xpath:
+                self._click_poster(poster_xpath, wait_time)
 
             # Проверка видимости целевого элемента
             check_element = wait(self.driver, wait_time).until(
@@ -236,6 +276,15 @@ class GenplanChecker:
         if not self._load_page(url):
             return False
 
+        # Нужно ли нажимать на постер перед загрузкой генплана
+        poster_xpath = None
+        if self._is_true(config.get('poster_click', False)):
+            poster_xpath = config.get('poster_xpath')
+            if not poster_xpath:
+                print(f'WARNING: Для {name} включён poster_click, но не указан poster_xpath')
+                self._record_result(name, False, url)
+                return False
+
         remove_popups(self.driver)
 
         if genplan_type == 'old':
@@ -243,14 +292,16 @@ class GenplanChecker:
                 name,
                 config.get('title_xpath'),
                 config.get('genplan_css'),
-                url=url
+                url=url,
+                poster_xpath=poster_xpath
             )
         elif genplan_type == 'new':
             return self.check_genplan_new(
                 name,
                 config.get('title_xpath'),
                 config.get('check_xpath'),
-                url=url
+                url=url,
+                poster_xpath=poster_xpath
             )
         else:
             print(f'WARNING: Неизвестный type "{genplan_type}" для {name}')

@@ -19,6 +19,8 @@
       "name": "Главная - Экополис на Волге, Сновидово",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -26,6 +28,8 @@
       "name": "Главная - Экополис на Волге, Курьково",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -33,6 +37,8 @@
       "name": "Главная - Генеральный план «Экополис на Новорижском шоссе»",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -40,6 +46,8 @@
       "name": "Каталог посёлков - Экополис на Волге, Сновидово",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/ancestor::div[1]//div[@id='w8-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -47,6 +55,8 @@
       "name": "Каталог посёлков - Экополис на Волге, Курьково",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w9-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -54,6 +64,8 @@
       "name": "Каталог посёлков - Генеральный план «Экополис на Новорижском шоссе»",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w10-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -61,6 +73,8 @@
       "name": "Каталог посёлков - Усадьба в Подмосковье, Подсухино",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/ancestor::div[1]//div[@id='w12-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -68,6 +82,8 @@
       "name": "Стр. Экополиса - Экополис на Волге, Сновидово",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Сновидово')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -75,6 +91,8 @@
       "name": "Стр. Экополиса - Экополис на Волге, Курьково",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -82,6 +100,8 @@
       "name": "Стр. Экополиса - Экополис на Новорижском шоссе",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
+      "poster_click": true,
+      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -89,6 +109,7 @@
       "name": "Стр. ферм - Мое поместье, д. Высокое",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]",
+      "poster_click": false,
       "check_xpath": "//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]/ancestor::div[1]//div[@id='w1-map']//button[@class='ol-zoom-in']"
     },
     {
@@ -96,6 +117,7 @@
       "name": "Стр. ферм - Стан-Агро, д. Стан",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]",
+      "poster_click": false,
       "check_xpath": "//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
     }
   ],
