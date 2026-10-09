@@ -40,7 +40,7 @@ class GenplanChecker:
         driver = webdriver.Chrome(service=service, options=ch_options)
         driver.set_window_size(1920, 1080)
         driver.implicitly_wait(10)
-        driver.set_page_load_timeout(30)
+        driver.set_page_load_timeout(40)
         return driver
 
     def _load_json(self, path):
@@ -135,8 +135,8 @@ class GenplanChecker:
             print(f'ERROR: Ошибка авторизации - {str(e)}')
             return False
 
-    def _load_page(self, url, auth=False, credentials_key=None):
-        """Загрузка страницы с возможной авторизацией"""
+    def _load_page(self, url, auth=False, credentials_key=None, max_attempts=3, retry_delay=5):
+        """Загрузка страницы с повторными попытками и возможной авторизацией"""
         if not self._check_domain(url):
             return False
 
@@ -144,13 +144,29 @@ class GenplanChecker:
         if self.current_url == url and self.is_authenticated:
             return True
 
-        try:
-            self.driver.get(url)
-            self.current_url = url
-            self.is_authenticated = False
-        except Exception as e:
-            print(f'ERROR: Ошибка загрузки {url}: {str(e)[:200]}')
-            return False
+        for attempt in range(1, max_attempts + 1):
+            try:
+                self.driver.get(url)
+                self.current_url = url
+                self.is_authenticated = False
+                break
+            except Exception as e:
+                # Страница не загрузилась - сбрасываем состояние
+                self.current_url = None
+                self.is_authenticated = False
+
+                if attempt == max_attempts:
+                    print(f'ERROR: Ошибка загрузки {url} (попыток: {max_attempts}): {str(e)[:200]}')
+                    return False
+
+                print(f'     Повторная загрузка {url} (попытка {attempt + 1} из {max_attempts})')
+
+                # Останавливаем зависшую загрузку, чтобы следующий get() не упал сразу
+                try:
+                    self.driver.execute_script('window.stop();')
+                except Exception:
+                    pass
+                time.sleep(retry_delay)
 
         # Авторизация, если нужно
         if auth and credentials_key:
@@ -274,6 +290,7 @@ class GenplanChecker:
             return False
 
         if not self._load_page(url):
+            self._record_result(name, False, url)
             return False
 
         # Нужно ли нажимать на постер перед загрузкой генплана
@@ -349,6 +366,7 @@ class GenplanChecker:
         wait_time = 14
 
         if not self._load_page(url):
+            self._record_result(name, False, url)
             return False
 
         remove_popups(self.driver)
@@ -394,6 +412,7 @@ class GenplanChecker:
         wait_time = 30
 
         if not self._load_page(url):
+            self._record_result(name, False, url)
             return False
 
         remove_popups(self.driver)
@@ -483,11 +502,6 @@ class GenplanChecker:
         # Проверка лендингов по конфигу генпланов
         for genplan in self.genplan_config.get('genplans', []):
             project_name = genplan.get('project_name')
-            url = self._get_project_url(project_name)
-
-            if not url:
-                print(f'WARNING: Не найден URL для проекта {project_name}')
-                continue
 
             # Формируем название для вывода
             plan_name = genplan.get('name')
@@ -496,6 +510,13 @@ class GenplanChecker:
             else:
                 display_name = project_name
 
+            url = self._get_project_url(project_name)
+
+            if not url:
+                print(f'WARNING: Не найден URL для проекта {project_name}')
+                self._record_result(display_name, False, None)
+                continue
+
             # ПОЛУЧАЕМ АВТОРИЗАЦИЮ ИЗ PROJECT_LIST
             auth, credentials_key = self._get_auth_from_project_list(project_name)
 
@@ -503,6 +524,7 @@ class GenplanChecker:
 
             # Загружаем страницу
             if not self._load_page(url, auth, credentials_key):
+                self._record_result(display_name, False, url)
                 continue
 
             # Проверяем в зависимости от типа
@@ -520,6 +542,9 @@ class GenplanChecker:
                     genplan.get('check_xpath'),
                     url=url
                 )
+            else:
+                print(f'WARNING: Неизвестный type "{genplan_type}" для {display_name}')
+                self._record_result(display_name, False, url)
 
             time.sleep(1)
 
