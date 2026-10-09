@@ -9,12 +9,44 @@
       "lgform": "catalog_auth_request"
     },
     {
+      "name": "'Описание проекта', секция 4",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "//*[@id='w-descr']//button[contains(., 'Узнать подробнее')]",
+      "modal_id": "modal-main-consultation",
+      "lgform": "callback_main"
+    },
+    {
       "name": "Баннер 'Экополис на Волге'",
       "url_name": "главная",
       "url": "/",
       "btn_selector": "//*[@id='banner-promo']",
       "modal_id": "promo-ecopolis",
       "lgform": "callback_main_promo_ecopolis"
+    },
+    {
+      "name": "'Описание поселка' - 'Экополис на Волге', карточка '1 гектар'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//h2[contains(., 'Описание поселка')]/ancestor::div[1]//*[contains(@class, 'w-project-villages__category-body')]/a)[1]",
+      "modal_id": "syn-104-1ha-housing-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Описание поселка' - 'Экополис на Волге', карточка '30 сот'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//h2[contains(., 'Описание поселка')]/ancestor::div[1]//*[contains(@class, 'w-project-villages__category-body')]/a)[2]",
+      "modal_id": "syn-104-30ar-dacha-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Описание поселка' - 'Экополис на Волге', карточка '4 гектара'",
+      "url_name": "главная",
+      "url": "/",
+      "btn_selector": "(//h2[contains(., 'Описание поселка')]/ancestor::div[1]//*[contains(@class, 'w-project-villages__category-body')]/a)[3]",
+      "modal_id": "syn-104-4ha-farm-form",
+      "lgform": "mg_ecopolis_category"
     },
     {
       "name": "'Реализуйте продукцию...', 1-я карточка",
@@ -107,6 +139,54 @@
       "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[3]",
       "modal_id": "modal-batch-installment",
       "lgform": "batch_installment_special_offer"
+    },
+{
+      "name": "'Экополис на Волге', карточка '1 гектар'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-96')]//*[contains(@class, 'w-project-villages__category-body')]/a)[1]",
+      "modal_id": "syn-104-1ha-housing-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Экополис на Волге', карточка '30 сот'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-96')]//*[contains(@class, 'w-project-villages__category-body')]/a)[2]",
+      "modal_id": "syn-104-30ar-dacha-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Экополис на Волге', карточка '4 гектара'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-96')]//*[contains(@class, 'w-project-villages__category-body')]/a)[3]",
+      "modal_id": "syn-104-4ha-farm-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Усадьба Бельгардов', карточка 'Инвестиционные участки'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-23')]//*[contains(@class, 'w-project-villages__category-body')]/a)[1]",
+      "modal_id": "syn-27-investment-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Усадьба Бельгардов', карточка 'Участок с домом'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-23')]//*[contains(@class, 'w-project-villages__category-body')]/a)[2]",
+      "modal_id": "syn-27-turnkey-house-form",
+      "lgform": "mg_ecopolis_category"
+    },
+    {
+      "name": "'Усадьба Бельгардов', карточка 'Готовый арендный бизнес'",
+      "url_name": "каталог посёлков",
+      "url": "/catalogue/landing",
+      "btn_selector": "(//*[contains(@class, 'js-scroll-to-cluster-23')]//*[contains(@class, 'w-project-villages__category-body')]/a)[3]",
+      "modal_id": "syn-27-turnkey-rent-form",
+      "lgform": "mg_ecopolis_category"
     },
     {
       "name": "'Как это работает?..', кнопка 'Записаться на собеседование'",
@@ -363,7 +443,7 @@
       "url_name": "Стр. Экополиса",
       "url": "/ecopolis",
       "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[1]",
-      "modal_id": "modal-ecopolis-estate",
+      "modal_id": "syn-104-1ha-housing-form",
       "lgform": "mg_ecopolis_category"
     },
     {
@@ -371,7 +451,7 @@
       "url_name": "Стр. Экополиса",
       "url": "/ecopolis",
       "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[2]",
-      "modal_id": "modal-ecopolis-dacha",
+      "modal_id": "syn-104-30ar-dacha-form",
       "lgform": "mg_ecopolis_category"
     },
     {
@@ -379,7 +459,7 @@
       "url_name": "Стр. Экополиса",
       "url": "/ecopolis",
       "btn_selector": "(//*[@id='plan']//a[contains (text(), 'Узнать подробнее')])[3]",
-      "modal_id": "modal-ecopolis-farm",
+      "modal_id": "syn-104-4ha-farm-form",
       "lgform": "mg_ecopolis_category"
     },
     {
@@ -647,6 +727,14 @@
       "btn_selector": "//*[@id='main']//a[contains (text(), 'выбрать поселок')]",
       "modal_id": "b2b-main-modal",
       "lgform": "b2b_modal"
+    },
+    {
+      "name": "1-й экран, кнопка 'Оставить заявку'",
+      "url_name": "Стр. упаковки",
+      "url": "/bigland",
+      "btn_selector": "//*[contains(@class, 'w-bigland__main')]//a",
+      "modal_id": "bigland-universal-modal",
+      "lgform": "lg_bigland_universal_modal"
     },
     {
       "name": "Блок 'Семь шагов', шаг 1, кнопка",

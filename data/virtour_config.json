@@ -42,6 +42,15 @@
       "scroll": true
     },
     {
+      "url": "https://moigektar.ru/catalogue/landing",
+      "name": "МГ, каталог посёлков, блок 'Усадьба Бельгардов'",
+      "title_locator": "(//h4[contains(., 'Усадьба Бельгардов')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[3]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 191'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
       "url": "https://moigektar.ru/ecopolis",
       "name": "МГ, стр. Экополиса, блок 'Экополис на Волге'",
       "title_locator": "(//h4[contains(., '«Экополис на Волге»')])[1]",

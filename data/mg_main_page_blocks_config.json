@@ -294,7 +294,7 @@
       },
       {
         "name": "'Категории участков' - 1-я карточка, кнопка",
-        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a[@href='#modal-ecopolis-estate']"
+        "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//div[contains(@class, 'w-project-villages__categories')]/div/div/div/div/div/div//a[@href='#syn-104-1ha-housing-form']"
       },
       {
         "name": "'Категории участков' - всего 3 карточки",
@@ -302,11 +302,11 @@
       },
       {
         "name": "Генплан Сновидово",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Сновидово']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w1-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-snovidovo.jpg']"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Сновидово']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w2-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-snovidovo.jpg']"
       },
       {
         "name": "Генплан Курьково",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w2-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-kurkovo.jpg']"
+        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w3-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-kurkovo.jpg']"
       },
       {
         "name": "Генплан Экополиса на Новорижском",

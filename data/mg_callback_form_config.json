@@ -448,10 +448,10 @@
   },
   {
     "page_name": "стр. упаковки",
-    "form_name": "форма с Алексеем Ахмадеевым",
+    "form_name": "форма инструкции",
     "url": "/bigland",
-    "lgform_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_bigland_page_ahmadeev_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'заявку прямо сейчас!')]])[2]"
+    "lgform_xpath": "//*[text()[contains(.,'Скачать инструкцию')]]/ancestor::div[contains(@id, 'presentation')]//*[@value='lg_bigland_instruction']",
+    "header_xpath": null
   },
   {
     "page_name": "Вебинар \"Как заработать на гектаре\"",

@@ -738,7 +738,7 @@
     {
         "name": "страница упаковки",
         "path": "bigland",
-        "xpath": "//h1[text()[contains(.,'Платформа для упаковки,')]]",
+        "xpath": "//h1[text()[contains(.,'коллективного развития')]]",
         "requires_auth": false
     },
     {
