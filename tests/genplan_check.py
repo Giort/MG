@@ -40,7 +40,7 @@ class GenplanChecker:
         driver = webdriver.Chrome(service=service, options=ch_options)
         driver.set_window_size(1920, 1080)
         driver.implicitly_wait(10)
-        driver.set_page_load_timeout(40)
+        driver.set_page_load_timeout(60)
         return driver
 
     def _load_json(self, path):
@@ -159,8 +159,6 @@ class GenplanChecker:
                     print(f'ERROR: Ошибка загрузки {url} (попыток: {max_attempts}): {str(e)[:200]}')
                     return False
 
-                print(f'     Повторная загрузка {url} (попытка {attempt + 1} из {max_attempts})')
-
                 # Останавливаем зависшую загрузку, чтобы следующий get() не упал сразу
                 try:
                     self.driver.execute_script('window.stop();')
@@ -185,94 +183,115 @@ class GenplanChecker:
             return value.strip().lower() in ('true', '1', 'yes', 'да')
         return False
 
-    def _click_poster(self, poster_xpath, wait_time=14):
+    def _click_element(self, element):
         """
-        Нажатие на постер, после которого подгружается генплан.
+        Нажатие на элемент, запускающий генплан (постер или тайтл).
         Если обычный клик перехвачен другим элементом - кликаем через JS.
-        Исключения пробрасываются наверх, чтобы проверка генплана упала с ошибкой.
         """
-        poster = wait(self.driver, wait_time).until(
-            EC.element_to_be_clickable((By.XPATH, poster_xpath))
-        )
-        self.actions.move_to_element(poster).perform()
-
+        self.actions.move_to_element(element).perform()
         try:
-            poster.click()
+            element.click()
         except Exception:
-            self.driver.execute_script("arguments[0].click();", poster)
+            self.driver.execute_script("arguments[0].click();", element)
 
         # Даём генплану время начать загрузку
         time.sleep(1)
 
-    def check_genplan_old(self, name, title_xpath, genplan_css, url=None, wait_time=14,
-                          poster_xpath=None):
-        """Проверка генплана старого типа (с кликом)"""
+    def _scroll_to_anchor(self, anchor_xpath, wait_time=14):
+        """
+        Прокрутка к якорю перед поиском тайтла - для блоков с ленивой загрузкой,
+        которые появляются в DOM только когда до них доскроллили.
+        Используется JS scrollIntoView: якорь может быть пустым элементом
+        без размеров, и move_to_element на нём не сработает.
+        """
+        anchor = wait(self.driver, wait_time).until(
+            EC.presence_of_element_located((By.XPATH, anchor_xpath))
+        )
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'start'});", anchor
+        )
+        # Даём блоку время подгрузиться
+        time.sleep(2)
+
+    def _get_poster_xpath(self, config):
+        """
+        Локатор постера из конфига.
+        Постер нажимается, если указан poster_xpath; poster_click: false
+        позволяет временно отключить нажатие, не удаляя локатор.
+        Возвращает (xpath или None, ошибка конфига или None).
+        """
+        poster_xpath = config.get('poster_xpath')
+        poster_click = config.get('poster_click')
+
+        if poster_click is not None and not self._is_true(poster_click):
+            return None, None
+        if self._is_true(poster_click) and not poster_xpath:
+            return None, 'включён poster_click, но не указан poster_xpath'
+        return poster_xpath, None
+
+    def check_genplan(self, name, config, url=None, wait_time=14):
+        """
+        Единая проверка генплана для обоих типов:
+          1. прокрутка к якорю (anchor_xpath, если блок грузится лениво);
+          2. перемещение к тайтлу (title_xpath);
+          3. нажатие на постер, запускающий генплан:
+             - poster_xpath, если указан;
+             - иначе для type "old" постером считается сам тайтл;
+             - иначе для type "new" ничего не нажимается;
+          4. проверка загрузки:
+             - type "old": видимость genplan_css;
+             - type "new": видимость check_xpath.
+        """
+        genplan_type = config.get('type')
+        if genplan_type == 'old':
+            check_locator = (By.CSS_SELECTOR, config.get('genplan_css'))
+        elif genplan_type == 'new':
+            check_locator = (By.XPATH, config.get('check_xpath'))
+        else:
+            print(f'WARNING: Неизвестный type "{genplan_type}" для {name}')
+            self._record_result(name, False, url)
+            return False
+
+        poster_xpath, config_error = self._get_poster_xpath(config)
+        if config_error:
+            print(f'WARNING: Для {name} {config_error}')
+            self._record_result(name, False, url)
+            return False
+
         try:
-            # Ожидание и скролл к элементу
+            # 1. Прокрутка к якорю (если блок грузится лениво)
+            anchor_xpath = config.get('anchor_xpath')
+            if anchor_xpath:
+                self._scroll_to_anchor(anchor_xpath, wait_time)
+
+            # 2. Перемещение к тайтлу
             title = wait(self.driver, wait_time).until(
-                EC.presence_of_element_located((By.XPATH, title_xpath))
+                EC.presence_of_element_located((By.XPATH, config.get('title_xpath')))
             )
             self.actions.move_to_element(title).perform()
+            time.sleep(1)
 
-            # Клик для открытия генплана
-            title.click()
-
-            # Нажатие на постер (если требуется)
+            # 3. Нажатие на постер
             if poster_xpath:
-                self._click_poster(poster_xpath, wait_time)
+                poster = wait(self.driver, wait_time).until(
+                    EC.element_to_be_clickable((By.XPATH, poster_xpath))
+                )
+                self._click_element(poster)
+            elif genplan_type == 'old':
+                self._click_element(title)
 
-            # Проверка загрузки генплана
-            genplan_elem = wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, genplan_css))
+            # 4. Проверка загрузки генплана
+            wait(self.driver, wait_time).until(
+                EC.visibility_of_element_located(check_locator)
             )
-
-            if genplan_elem:
-                print(f'     OK: {name}')
-                self._record_result(name, True, url)
-                return True
+            print(f'     OK: {name}')
+            self._record_result(name, True, url)
+            return True
 
         except Exception as e:
             print(f'ERROR: генплан на {name} - {str(e)[:100]} ({url})')
             self._record_result(name, False, url)
             return False
-
-        self._record_result(name, False, url)
-        return False
-
-    def check_genplan_new(self, name, title_xpath, check_xpath, url=None, wait_time=14,
-                          poster_xpath=None):
-        """Проверка генплана нового типа (без клика, при необходимости - с нажатием на постер)"""
-        try:
-            # Ожидание появления элемента
-            title = wait(self.driver, wait_time).until(
-                EC.presence_of_element_located((By.XPATH, title_xpath))
-            )
-
-            # Скролл к элементу
-            self.actions.move_to_element(title).perform()
-            time.sleep(1)
-
-            # Нажатие на постер (если требуется)
-            if poster_xpath:
-                self._click_poster(poster_xpath, wait_time)
-
-            # Проверка видимости целевого элемента
-            check_element = wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located((By.XPATH, check_xpath))
-            )
-
-            if check_element:
-                print(f'     OK: {name}')
-                self._record_result(name, True, url)
-                return True
-
-        except Exception as e:
-            print(f'ERROR: {name} (проверка нового генплана) - {str(e)[:100]} ({url})')
-            self._record_result(name, False, url)
-            return False
-
-        self._record_result(name, False, url)
-        return False
 
     def check_moigektar_genplan(self, config):
         """
@@ -283,47 +302,20 @@ class GenplanChecker:
         """
         url = config.get('url')
         name = config.get('name', url)
-        genplan_type = config.get('type', 'new')
 
         if not url:
             print(f'WARNING: Не указан url для {name}')
+            self._record_result(name, False, None)
             return False
 
         if not self._load_page(url):
             self._record_result(name, False, url)
             return False
 
-        # Нужно ли нажимать на постер перед загрузкой генплана
-        poster_xpath = None
-        if self._is_true(config.get('poster_click', False)):
-            poster_xpath = config.get('poster_xpath')
-            if not poster_xpath:
-                print(f'WARNING: Для {name} включён poster_click, но не указан poster_xpath')
-                self._record_result(name, False, url)
-                return False
-
         remove_popups(self.driver)
 
-        if genplan_type == 'old':
-            return self.check_genplan_old(
-                name,
-                config.get('title_xpath'),
-                config.get('genplan_css'),
-                url=url,
-                poster_xpath=poster_xpath
-            )
-        elif genplan_type == 'new':
-            return self.check_genplan_new(
-                name,
-                config.get('title_xpath'),
-                config.get('check_xpath'),
-                url=url,
-                poster_xpath=poster_xpath
-            )
-        else:
-            print(f'WARNING: Неизвестный type "{genplan_type}" для {name}')
-            self._record_result(name, False, url)
-            return False
+        # Для страниц МГ тип по умолчанию - новый (как и раньше)
+        return self.check_genplan(name, {'type': 'new', **config}, url=url)
 
     def _authenticate_mg(self):
         """
@@ -520,31 +512,12 @@ class GenplanChecker:
             # ПОЛУЧАЕМ АВТОРИЗАЦИЮ ИЗ PROJECT_LIST
             auth, credentials_key = self._get_auth_from_project_list(project_name)
 
-            genplan_type = genplan.get('type')
-
             # Загружаем страницу
             if not self._load_page(url, auth, credentials_key):
                 self._record_result(display_name, False, url)
                 continue
 
-            # Проверяем в зависимости от типа
-            if genplan_type == 'old':
-                self.check_genplan_old(
-                    display_name,
-                    genplan.get('title_xpath'),
-                    genplan.get('genplan_css'),
-                    url=url
-                )
-            elif genplan_type == 'new':
-                self.check_genplan_new(
-                    display_name,
-                    genplan.get('title_xpath'),
-                    genplan.get('check_xpath'),
-                    url=url
-                )
-            else:
-                print(f'WARNING: Неизвестный type "{genplan_type}" для {display_name}')
-                self._record_result(display_name, False, url)
+            self.check_genplan(display_name, genplan, url=url)
 
             time.sleep(1)
 
