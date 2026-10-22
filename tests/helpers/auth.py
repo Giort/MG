@@ -23,7 +23,7 @@ def auth_mg(driver, auth_url: str, creds: dict, btn_index: int = 1) -> bool:
         remove_popups(driver)
 
         # Открываем модальное окно авторизации
-        auth_btn = WebDriverWait(driver, 5).until(
+        auth_btn = WebDriverWait(driver, 1).until(
             EC.element_to_be_clickable(
                 (By.XPATH, f'(//*[@href="#modal-auth-lk"])[{btn_index}]')
             )

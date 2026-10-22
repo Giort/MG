@@ -450,6 +450,8 @@
     "page_name": "стр. упаковки",
     "form_name": "форма инструкции",
     "url": "/bigland",
+    "scroll": true,
+    "scroll_count": 14,
     "lgform_xpath": "//*[text()[contains(.,'Скачать инструкцию')]]/ancestor::div[contains(@id, 'presentation')]//*[@value='lg_bigland_instruction']",
     "header_xpath": null
   },

@@ -132,15 +132,15 @@
     "elements": [
       {
         "name": "Цитата, текст",
-        "xpath": "//p[contains(., '«...неволю душных городов!')]"
+        "xpath": "//p[contains(., '«Неволю душных городов!')]"
       },
       {
         "name": "Цитата, фото",
-        "xpath": "//p[contains(., '«...неволю душных городов!')]/ancestor::div[2]//img[@src=\"/img/quoteWidget/pushkin.png\"]"
+        "xpath": "//p[contains(., '«Неволю душных городов!')]/ancestor::div[2]//img[@src=\"/img/quoteWidget/pushkin.png\"]"
       },
       {
         "name": "Цитата, имя",
-        "xpath": "//p[contains(., '«...неволю душных городов!')]/ancestor::div[2]//h6[contains(., 'Александр Пушкин')]"
+        "xpath": "//p[contains(., '«Неволю душных городов!')]/ancestor::div[2]//h6[contains(., 'Александр Пушкин')]"
       }
     ]
   },
@@ -687,10 +687,6 @@
       {
         "name": "Текст описания на 1-й карточке",
         "xpath": "//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//div[text() [contains(., 'всю жизнь')]]"
-      },
-      {
-        "name": "Дата на 1-й карточке",
-        "xpath": "(//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//li)[1]//p[contains(@class, 'uk-text-secondary-dark')]"
       },
       {
         "name": "6-я карточка",

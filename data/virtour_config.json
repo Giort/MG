@@ -191,14 +191,11 @@
       "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]"
     },
     {
-      "name": "syn_67 Моё поместье",
+      "name": "syn_67 Моё поместье (1)",
       "project_name": "syn_67 Моё поместье",
-      "title_locator": [
-        "id",
-        "tour"
-      ],
-      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
-      "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]"
+      "title_locator": "(//*[text()[contains(., '«Поместье на Волге»')]])[3]",
+      "btn_locator": "//img[@src='/img/village/balloon.svg']",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 215'))]"
     },
     {
       "name": "syn_73 Ясные зори",

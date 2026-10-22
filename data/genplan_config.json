@@ -127,16 +127,18 @@
       "name": "Стр. ферм - Мое поместье, д. Высокое",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]",
-      "poster_click": false,
-      "check_xpath": "//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
+      "poster_click": true,
+      "poster_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]/ancestor::div[1]//h2",
+      "check_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Генеральный план «Мое поместье» д. Высокое')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/goal/farm",
       "name": "Стр. ферм - Стан-Агро, д. Стан",
       "type": "new",
       "title_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]",
-      "poster_click": false,
-      "check_xpath": "//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]/ancestor::div[1]//div[@id='w4-map']//button[@class='ol-zoom-in']"
+      "poster_click": true,
+      "poster_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]/ancestor::div[1]//h2",
+      "check_xpath": "//*[text()[contains(.,'Поселки проекта')]]/ancestor::div[2]//h5[contains(., 'Поселок фермеров «Стан-Агро» д. Стан')]/ancestor::div[1]//div[@id='w4-map']//button[@class='ol-zoom-in']"
     }
   ],
   "genplans": [
@@ -271,8 +273,26 @@
     },
     {
       "project_name": "syn_67 Моё поместье",
+      "type": "new",
+      "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 1')]]",
+      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 1')]]/ancestor::section//button[@class='ol-zoom-in']"
+    },
+    {
+      "project_name": "syn_67 Моё поместье",
+      "type": "new",
+      "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 2')]]",
+      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 2')]]/ancestor::section//button[@class='ol-zoom-in']"
+    },
+    {
+      "project_name": "syn_67 Моё поместье",
+      "type": "new",
+      "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 3')]]",
+      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 3')]]/ancestor::section//button[@class='ol-zoom-in']"
+    },
+    {
+      "project_name": "syn_67 Моё поместье",
       "type": "old",
-      "title_xpath": "(//*[text()[contains(.,'Генеральный')]])[3]",
+      "title_xpath": "(//*[text()[contains(.,'Генеральный')]])[6]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
