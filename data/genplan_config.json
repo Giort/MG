@@ -216,17 +216,24 @@
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
-      "name": "новый: д. Харино",
+      "name": "новый: Новорижское ш.",
       "type": "new",
-      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,'Генеральный план «Парк Патриот» д. Харино')]]",
-      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='plan1-map']//button[@class='ol-zoom-in']"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//*[text()[contains(.,'Генеральный план поселка «Парк Патриот» Новорижское шоссе')]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[1]//div[@id='plan3-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
-      "name": "новый: д. Подсухино",
+      "name": "новый: д. Харино",
       "type": "new",
-      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//*[text()[contains(.,'Генеральный план «Парк Патриот» д. Струйское')]]",
-      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//div[@id='plan2-map']//button[@class='ol-zoom-in']"
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//*[text()[contains(.,'Генеральный план «Парк Патриот» д. Харино')]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[2]//div[@id='plan1-map']//button[@class='ol-zoom-in']"
+    },
+    {
+      "project_name": "syn_48-97-105 Парк Патриот",
+      "name": "новый: д. Струйское",
+      "type": "new",
+      "title_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//*[text()[contains(.,'Генеральный план «Парк Патриот» д. Струйское')]]",
+      "check_xpath": "(//div[(contains(@id, 'plan')) and(contains (@class, 'w-project-villages'))]/div/div)[3]//div[@id='plan2-map']//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_48-97-105 Парк Патриот",
@@ -273,21 +280,24 @@
     },
     {
       "project_name": "syn_67 Моё поместье",
+      "name": "новый, часть 1",
       "type": "new",
       "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 1')]]",
-      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 1')]]/ancestor::section//button[@class='ol-zoom-in']"
+      "check_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 1')]]/ancestor::section//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_67 Моё поместье",
+      "name": "новый, часть 2",
       "type": "new",
       "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 2')]]",
-      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 2')]]/ancestor::section//button[@class='ol-zoom-in']"
+      "check_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 2')]]/ancestor::section//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_67 Моё поместье",
+      "name": "новый, часть 3",
       "type": "new",
       "title_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 3')]]",
-      "genplan_css": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 3')]]/ancestor::section//button[@class='ol-zoom-in']"
+      "check_xpath": "//div[@id='village']//*[text()[contains(.,'Генеральный план «Поместье на Волге» Часть 3')]]/ancestor::section//button[@class='ol-zoom-in']"
     },
     {
       "project_name": "syn_67 Моё поместье",

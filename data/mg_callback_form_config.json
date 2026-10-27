@@ -1,51 +1,51 @@
 [
   {
     "page_name": "главная",
-    "form_name": "форма с Софией №1",
+    "form_name": "форма с Софией Титовой (1)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_sofia2_callback'])[2]",
+    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_titova2_callback'])[2]",
     "header_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//div[@class='uk-visible@s']//*[text()[contains(.,'проконсультирую')]])[1]"
   },
   {
     "page_name": "главная",
-    "form_name": "форма с Анастасией В. №1",
+    "form_name": "форма с Анастасией Васехиной (1)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_anastasiya_3d_concept'])[2]",
+    "lgform_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_vasehina_3d_concept'])[2]",
     "header_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//div[@class='uk-visible@s']//*[text()[contains(.,'3D-концепцию')]])[1]"
   },
   {
     "page_name": "главная",
-    "form_name": "форма с Ариной №1",
+    "form_name": "форма с Ариной (1)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_arina_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_popova_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
   },
   {
     "page_name": "главная",
-    "form_name": "форма с Ариной №2",
+    "form_name": "форма с Ариной (2)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_arina2_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_popova2_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Расскажу подробнее об акциях')]])[2]"
   },
   {
     "page_name": "главная",
-    "form_name": "форма с Анастасией В. №2",
+    "form_name": "форма с Анастасией В. (2)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_anastasiya_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_vasehina_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Закажите развитие участка')]])[3]"
   },
   {
     "page_name": "главная",
-    "form_name": "форма с Софией №2",
+    "form_name": "форма с Софией (2)",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_sofia_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_titova_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'Расскажу про развитие участка')]])[2]"
   },
   {
     "page_name": "главная",
     "form_name": "форма с Максимом",
     "url": "/",
-    "lgform_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_max_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_zhukov_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'которых нет на сайте')]])[3]"
   },
   {
@@ -54,7 +54,7 @@
     "url": "/catalogue-no-auth",
     "scroll": true,
     "scroll_count": 8,
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_catalog_arina_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_catalog_popova_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
   },
   {
@@ -62,69 +62,69 @@
     "form_name": "форма с Ариной",
     "url": "/catalogue/kiev-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_kiev'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Москва",
     "form_name": "форма с Ариной",
     "url": "/catalogue/moscow-batch",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_moscow_batch'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Московская область",
     "form_name": "форма с Ариной",
     "url": "/catalogue/moscow-region-batch",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_moscow_region_batch'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Калужское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/kaluga-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_kaluga'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Ярославльское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/yaroslavl-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_yaroslav'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Симферопольское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/simferopol-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_simferopol'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Каширское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/kashirskoe-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_kashirskoe'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Минское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/minsk-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_minsk'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "регионы - Рогачёвское шоссе",
     "form_name": "форма с Ариной",
     "url": "/catalogue/rogachevskoe-highway",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_highway_page_rogachevskoe'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'оставьте свой номер')]])[3]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//*[text()[contains(., 'и я вас')]])[3]"
   },
   {
     "page_name": "стр. актива",
     "form_name": "форма с Ариной",
     "url": "/batches-no-auth/44607",
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_batch_page_arina_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_batch_page_popova_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
   },
   {
@@ -164,17 +164,10 @@
   },
   {
     "page_name": "Личный кабинет",
-    "form_name": "форма с Ариной",
+    "form_name": "форма с Анастасией Васехиной",
     "url": "/cabinet",
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_lk_page_page_arina_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
-  },
-  {
-    "page_name": "Личный кабинет",
-    "form_name": "форма с Софией",
-    "url": "/cabinet",
-    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_lk_page_sofia_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
+    "lgform_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_service_company_form_callback'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'Анастасия')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'вопросы Сервисной компании')]])[1]"
   },
   {
     "page_name": "Развитие - Развитие поселков",
@@ -187,8 +180,8 @@
     "page_name": "Развитие - Детальная страница услуги",
     "form_name": "форма с Ариной",
     "url": "/growth/view?uuid=e4d3e952-97e5-4f6d-b258-89cfb39386e4",
-    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_arina_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
+    "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_main_page_popova_callback'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'вас проконсультирую')]])[2]"
   },
   {
     "page_name": "Развитие - Глазами инвестора",
@@ -292,7 +285,7 @@
     "page_name": "Акции - Основная",
     "form_name": "форма с Максимом",
     "url": "/actions",
-    "lgform_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_main_page_max_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_action_main_page_zhukov_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Максим')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
@@ -394,21 +387,21 @@
     "page_name": "Глэмпинг",
     "form_name": "форма с Андреем",
     "url": "/goal/glamping",
-    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_glamping_page_andrey_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_glamping_page_vasilev_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
     "page_name": "Фермы и агробизнес",
     "form_name": "форма с Андреем",
     "url": "/goal/farm",
-    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_farm_page_andrey_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_farm_page_vasilev_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
     "page_name": "Родовые поселения",
     "form_name": "форма с Андреем",
     "url": "/goal/settlements",
-    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_settlements_page_andrey_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_settlements_page_vasilev_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
@@ -422,7 +415,7 @@
     "page_name": "страница для брокеров",
     "form_name": "форма с Андреем",
     "url": "/broker",
-    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_broker_page_andrey_callback'])[1]",
+    "lgform_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='mg_broker_page_vasilev_callback'])[1]",
     "header_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'Сервисной компании')]])[1]"
   },
   {
@@ -434,10 +427,10 @@
   },
   {
     "page_name": "страница b2b",
-    "form_name": "форма с Алексеем Ахмадеевым",
+    "form_name": "форма с Софией Титовой",
     "url": "/b2b",
-    "lgform_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='b2b_page_ahmadeev_callback'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
+    "lgform_xpath": "(//*[text()[contains(.,'София')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='b2b_page_titova_callback'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'София')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
     "page_name": "раздел b2b",
@@ -558,7 +551,7 @@
     "form_name": "форма с Ариной",
     "url": "/webinar/meeting",
     "lgform_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='default'])[1]",
-    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//div[text()[contains(., 'оставьте свой номер')]])[2]"
+    "header_xpath": "(//*[text()[contains(.,'Арина')]]/ancestor::div[contains(@id, 'cfw')]//div[text()[contains(., 'Записаться на встречу')]])[2]"
   },
   {
     "page_name": "раздел регистрации от стойки",
