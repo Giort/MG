@@ -1,552 +1,526 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, InvalidArgumentException
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import json
+import os
 import socket
-from helpers.popups import remove_popups
-from helpers.auth import auth_mg
 
+# Проверка доступности веб-интерфейсов сервисов по наличию на страницах ключевых элементов
+
+# Засекаем время начала теста
 start_time = time.time()
 
+# Подстроки URL, ошибки по которым не учитываются при проверке консоли
+# (например, сторонние счётчики). Пример: ['mc.yandex.ru', 'google-analytics.com']
+CONSOLE_IGNORE_URLS = []
 
-class GenplanChecker:
-    """Класс для проверки загрузки генпланов на сайтах посёлков"""
+# Сколько ошибок консоли выводить по одному сайту
+CONSOLE_ERRORS_PRINT_LIMIT = 5
 
-    def __init__(self, projects_path='../data/project_list.json',
-                 genplan_config_path='../data/genplan_config.json'):
-        self.driver = self._init_driver()
-        self.actions = ActionChains(self.driver)
-        self.creds_data = self._load_json('../data/data.json')
-        self.projects = self._load_json(projects_path)
-        self.genplan_config = self._load_json(genplan_config_path)
-        self.current_url = None
-        self.is_authenticated = False
-        self.results = {'success': [], 'failed': []}
 
-    def _init_driver(self):
-        """Инициализация драйвера Chrome"""
-        service = ChromeService(executable_path=ChromeDriverManager().install())
-        ch_options = Options()
-        ch_options.add_argument('--headless')
-        ch_options.page_load_strategy = 'eager'
+def init_driver():
+    """Инициализация драйвера Chrome"""
+    ch_options = Options()
+    ch_options.add_argument('--headless')
+    ch_options.page_load_strategy = 'eager'
 
-        driver = webdriver.Chrome(service=service, options=ch_options)
-        driver.set_window_size(1920, 1080)
-        driver.implicitly_wait(10)
-        driver.set_page_load_timeout(60)
-        return driver
+    # Журнал сетевых событий - из него берутся HTTP-статусы всех запросов страницы
+    ch_options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
 
-    def _load_json(self, path):
-        """Загрузка JSON файла"""
-        try:
-            with open(path, 'r') as file:
-                return json.load(file)
-        except FileNotFoundError:
-            print(f'WARNING: Файл {path} не найден')
-            return {}
-        except json.JSONDecodeError as e:
-            print(f'ERROR: Ошибка парсинга JSON {path}: {e}')
-            return {}
+    service = ChromeService(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=ch_options)
+    driver.set_window_size(1680, 1000)
+    driver.implicitly_wait(10)
+    driver.set_page_load_timeout(30)
+    return driver
 
-    def _get_project_url(self, project_name):
-        """Получить первый URL проекта по имени"""
-        for resource in self.projects.get('resources', []):
-            # Проверяем поле project_name
-            if resource.get('project_name') == project_name:
-                domains = resource.get('domains', [])
-                if domains:
-                    return domains[0].get('url')
-            # Проверяем поле name (для обычных ресурсов)
-            if resource.get('name') == project_name:
-                return resource.get('url')
-        return None
 
-    def _check_domain(self, url, max_attempts=3, wait_time=2):
-        """Проверка доступности домена"""
-        try:
-            domain = url.split('//')[1].split('/')[0]
-        except:
-            print(f'ERROR: Не удалось извлечь домен из URL: {url}')
-            return False
-
-        for attempt in range(max_attempts):
-            try:
-                socket.gethostbyname(domain)
-                return True
-            except socket.gaierror as e:
-                if attempt == max_attempts - 1:
-                    print(f'ERROR: Домен {domain} недоступен - {str(e)}')
-                    return False
-                time.sleep(wait_time)
-            except Exception as e:
-                print(f'ERROR: Ошибка проверки домена {domain}: {str(e)}')
-                return False
+def check_domain(url, max_attempts=3, wait_time=2):
+    """Проверка доступности домена с несколькими попытками"""
+    try:
+        domain = url.split('//')[1].split('/')[0]
+    except:
+        print(f'ERROR: Не удалось извлечь домен из URL: {url}')
         return False
 
-    def _get_auth_from_project_list(self, project_name):
-        """
-        Получить настройки авторизации для проекта из project_list.json
+    for attempt in range(max_attempts):
+        try:
+            socket.gethostbyname(domain)
+            if attempt > 0:
+                print(f'     == Домен {domain} доступен после {attempt + 1} попытки')
+            return True
+        except socket.gaierror:
+            if attempt == max_attempts - 1:
+                return False
+            else:
+                time.sleep(wait_time)
+        except Exception as e:
+            print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
+            return False
+    return False
 
-        Returns:
-            tuple: (нужна_ли_авторизация, ключ_для_credentials)
-        """
-        for resource in self.projects.get('resources', []):
-            if resource.get('project_name') == project_name:
-                auth_config = resource.get('auth', False)
 
-                if not auth_config:
-                    return False, None
-                elif isinstance(auth_config, str):
-                    return True, auth_config
-                elif isinstance(auth_config, bool) and auth_config is True:
-                    return True, project_name
-                else:
-                    return False, None
+def flush_network_log(driver):
+    """
+    Очистка накопленного журнала сети.
+    Вызывается перед каждой загрузкой страницы, чтобы ошибки
+    предыдущего сайта не попали в отчёт по следующему.
+    """
+    try:
+        driver.get_log('performance')
+    except Exception:
+        pass
 
+
+def collect_http_errors(driver, ignore_urls=None):
+    """
+    Сбор запросов страницы, вернувших 4xx/5xx (то, что в консоли браузера
+    выглядит как "Failed to load resource: the server responded with a status of ...").
+
+    Returns:
+        list: [{'status': 404, 'url': '...', 'count': 1}, ...]
+    """
+    ignore_urls = ignore_urls if ignore_urls is not None else CONSOLE_IGNORE_URLS
+    errors = {}
+
+    try:
+        logs = driver.get_log('performance')
+    except Exception as e:
+        print(f'WARNING: Не удалось получить журнал сети: {str(e)[:100]}')
+        return []
+
+    for entry in logs:
+        try:
+            message = json.loads(entry['message'])['message']
+        except Exception:
+            continue
+
+        if message.get('method') != 'Network.responseReceived':
+            continue
+
+        response = message.get('params', {}).get('response', {})
+        url = response.get('url', '')
+        try:
+            status = int(response.get('status'))
+        except (TypeError, ValueError):
+            continue
+
+        if not 400 <= status < 600:
+            continue
+        if any(pattern in url for pattern in ignore_urls):
+            continue
+
+        # Один и тот же запрос может повторяться - считаем, а не дублируем
+        key = (status, url)
+        if key in errors:
+            errors[key]['count'] += 1
+        else:
+            errors[key] = {'status': status, 'url': url, 'count': 1}
+
+    return sorted(errors.values(), key=lambda e: (e['status'], e['url']))
+
+
+def print_http_errors(errors, indent='       ', limit=CONSOLE_ERRORS_PRINT_LIMIT):
+    """Вывод списка ошибок консоли"""
+    for error in errors[:limit]:
+        count = f" (x{error['count']})" if error['count'] > 1 else ''
+        print(f"{indent}[{error['status']}] {error['url'][:150]}{count}")
+    if len(errors) > limit:
+        print(f'{indent}... и ещё {len(errors) - limit}')
+
+
+def check_console(driver, display_name, url, console_report, skip=False):
+    """
+    Проверка ошибок 4xx/5xx в консоли после загрузки страницы.
+    Найденные ошибки выводятся сразу и сохраняются в console_report для итогового отчёта.
+    skip=True - проверка консоли для сайта отключена
+    Ключ skip_console_check в конфиге. Для одиночного сайта: ключ добавляется в список
+    остальных ключей. Для проекта с несколькими доменами ключ можно поставить на весь проект
+    или на отдельный домен. Флаг домена важнее флага проекта, поэтому можно, например,
+    отключить проверку для всего проекта, а для одного домена включить обратно через
+    "skip_console_check": false
+    """
+    if skip:
+        return []
+
+    # Даём странице время выполнить фоновые запросы
+    time.sleep(1)
+
+    errors = collect_http_errors(driver)
+    if errors:
+        print(f'WARNING: {display_name} - ошибки в консоли: {len(errors)} ({url})')
+        print_http_errors(errors)
+        console_report.append({'name': display_name, 'url': url, 'errors': errors})
+
+    return errors
+
+
+def load_resources():
+    """Загрузка конфигурации ресурсов из JSON файла"""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(os.path.dirname(current_dir), 'data', 'project_list.json')
+
+        with open(json_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            return data.get('resources', [])
+    except FileNotFoundError:
+        print(f"ERROR: Файл project_list.json не найден")
+        return []
+    except json.JSONDecodeError as e:
+        print(f"ERROR: Ошибка парсинга JSON: {e}")
+        return []
+    except Exception as e:
+        print(f"ERROR: Неожиданная ошибка при загрузке ресурсов: {e}")
+        return []
+
+
+def load_auth_data():
+    """Загрузка данных для авторизации"""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(os.path.dirname(current_dir), 'data', 'data.json')
+
+        with open(json_path, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print("WARNING: файл data.json не найден, авторизация будет пропущена")
+        return {}
+    except Exception as e:
+        print(f"WARNING: Ошибка загрузки data.json: {e}")
+        return {}
+
+
+def get_auth_credentials(auth_config, project_name):
+    """
+    Получить данные для авторизации на основе конфига auth
+
+    Args:
+        auth_config: значение поля auth из project_list.json
+        project_name: имя проекта
+
+    Returns:
+        tuple: (нужна_ли_авторизация, ключ_для_credentials)
+    """
+    if not auth_config:
         return False, None
 
-    def _authenticate(self, credentials_key):
-        """Авторизация на текущей странице"""
-        if not self._check_domain(self.driver.current_url):
-            return False
+    if isinstance(auth_config, str):
+        # Если строка - используем её как ключ
+        return True, auth_config
+    elif isinstance(auth_config, bool) and auth_config is True:
+        # Если True - используем project_name как ключ
+        return True, project_name
+    else:
+        return False, None
 
-        try:
-            creds = self.creds_data.get(credentials_key, {})
-            login_input = wait(self.driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'loginconfig-username'))
-            )
-            password_input = self.driver.find_element(By.ID, 'loginconfig-password')
-            submit_btn = self.driver.find_element(By.CSS_SELECTOR, 'div button')
 
-            login_input.send_keys(str(creds.get("login", "")))
-            password_input.send_keys(str(creds.get("password", "")))
-            submit_btn.click()
-            time.sleep(2)
-            self.is_authenticated = True
-            return True
-        except Exception as e:
-            print(f'ERROR: Ошибка авторизации - {str(e)}')
-            return False
+def perform_auth(driver, auth_config, project_name, auth_data):
+    """
+    Универсальная авторизация на странице
 
-    def _load_page(self, url, auth=False, credentials_key=None, max_attempts=3, retry_delay=5):
-        """Загрузка страницы с повторными попытками и возможной авторизацией"""
-        if not self._check_domain(url):
-            return False
+    Args:
+        driver: WebDriver
+        auth_config: значение поля auth из конфига
+        project_name: имя проекта
+        auth_data: словарь с данными авторизации
 
-        # Если страница уже загружена и авторизована, не перезагружаем
-        if self.current_url == url and self.is_authenticated:
-            return True
+    Returns:
+        bool: успешность авторизации
+    """
+    need_auth, credentials_key = get_auth_credentials(auth_config, project_name)
 
-        for attempt in range(1, max_attempts + 1):
-            try:
-                self.driver.get(url)
-                self.current_url = url
-                self.is_authenticated = False
-                break
-            except Exception as e:
-                # Страница не загрузилась - сбрасываем состояние
-                self.current_url = None
-                self.is_authenticated = False
-
-                if attempt == max_attempts:
-                    print(f'ERROR: Ошибка загрузки {url} (попыток: {max_attempts}): {str(e)[:200]}')
-                    return False
-
-                # Останавливаем зависшую загрузку, чтобы следующий get() не упал сразу
-                try:
-                    self.driver.execute_script('window.stop();')
-                except Exception:
-                    pass
-                time.sleep(retry_delay)
-
-        # Авторизация, если нужно
-        if auth and credentials_key:
-            return self._authenticate(credentials_key)
-
+    if not need_auth or not auth_data:
         return True
 
-    @staticmethod
-    def _is_true(value):
-        """Приведение значения флага из конфига к bool (true / "true" / 1 / "1" / "да")"""
-        if isinstance(value, bool):
-            return value
-        if isinstance(value, (int, float)):
-            return value == 1
-        if isinstance(value, str):
-            return value.strip().lower() in ('true', '1', 'yes', 'да')
-        return False
-
-    def _click_element(self, element):
-        """
-        Нажатие на элемент, запускающий генплан (постер или тайтл).
-        Если обычный клик перехвачен другим элементом - кликаем через JS.
-        """
-        self.actions.move_to_element(element).perform()
-        try:
-            element.click()
-        except Exception:
-            self.driver.execute_script("arguments[0].click();", element)
-
-        # Даём генплану время начать загрузку
-        time.sleep(1)
-
-    def _scroll_to_anchor(self, anchor_xpath, wait_time=14):
-        """
-        Прокрутка к якорю перед поиском тайтла - для блоков с ленивой загрузкой,
-        которые появляются в DOM только когда до них доскроллили.
-        Используется JS scrollIntoView: якорь может быть пустым элементом
-        без размеров, и move_to_element на нём не сработает.
-        """
-        anchor = wait(self.driver, wait_time).until(
-            EC.presence_of_element_located((By.XPATH, anchor_xpath))
+    # Отдельно пробуем найти форму логина. Если её нет на странице — это не ошибка авторизации
+    # (возможно, сессия уже авторизованаили форма логина не требуется на этой странице), поэтому не
+    # считаем это провалом и не пишем ложное предупреждение.
+    try:
+        login_input = wait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'loginconfig-username'))
         )
-        self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'start'});", anchor
-        )
-        # Даём блоку время подгрузиться
+    except TimeoutException:
+        return True
+
+    # Форма логина найдена — вот тут уже реальная попытка авторизации,
+    # и любая ошибка на этом этапе действительно является ошибкой авторизации
+    try:
+        password_input = driver.find_element(By.ID, 'loginconfig-password')
+        submit_btn = driver.find_element(By.CSS_SELECTOR, 'div button, button[type]')
+
+        creds = auth_data.get(credentials_key, {})
+        login = str(creds.get("login", ""))
+        password = str(creds.get("password", ""))
+
+        login_input.send_keys(login)
+        password_input.send_keys(password)
+        submit_btn.click()
         time.sleep(2)
 
-    def _get_poster_xpath(self, config):
-        """
-        Локатор постера из конфига.
-        Постер нажимается, если указан poster_xpath; poster_click: false
-        позволяет временно отключить нажатие, не удаляя локатор.
-        Возвращает (xpath или None, ошибка конфига или None).
-        """
-        poster_xpath = config.get('poster_xpath')
-        poster_click = config.get('poster_click')
+        # Запросы до входа (например, 401 от API) не считаем ошибками сайта
+        flush_network_log(driver)
 
-        if poster_click is not None and not self._is_true(poster_click):
-            return None, None
-        if self._is_true(poster_click) and not poster_xpath:
-            return None, 'включён poster_click, но не указан poster_xpath'
-        return poster_xpath, None
+        return True
+    except Exception as e:
+        print(f'WARNING: Ошибка авторизации - {str(e)[:100]}')
+        return False
 
-    def check_genplan(self, name, config, url=None, wait_time=14):
-        """
-        Единая проверка генплана для обоих типов:
-          1. прокрутка к якорю (anchor_xpath, если блок грузится лениво);
-          2. перемещение к тайтлу (title_xpath);
-          3. нажатие на постер, запускающий генплан:
-             - poster_xpath, если указан;
-             - иначе для type "old" постером считается сам тайтл;
-             - иначе для type "new" ничего не нажимается;
-          4. проверка загрузки:
-             - type "old": видимость genplan_css;
-             - type "new": видимость check_xpath.
-        """
-        genplan_type = config.get('type')
-        if genplan_type == 'old':
-            check_locator = (By.CSS_SELECTOR, config.get('genplan_css'))
-        elif genplan_type == 'new':
-            check_locator = (By.XPATH, config.get('check_xpath'))
-        else:
-            print(f'WARNING: Неизвестный type "{genplan_type}" для {name}')
-            self._record_result(name, False, url)
-            return False
 
-        poster_xpath, config_error = self._get_poster_xpath(config)
-        if config_error:
-            print(f'WARNING: Для {name} {config_error}')
-            self._record_result(name, False, url)
-            return False
+def check_single_resource(driver, resource, auth_data, console_report):
+    """Проверка одного ресурса (одиночный URL)"""
+    url = resource['url']
+    name = resource['name']
+    selector = resource['selector']
+    auth_config = resource.get('auth', False)
+    clear_cookies = resource.get('clear_cookies', False)
+    skip_console = resource.get('skip_console_check', False) is True
+    max_attempts = 3
+    wait_timeout = 14
 
+    # Проверка доступности домена
+    if not check_domain(url):
+        print(f'ERROR: {name} - домен недоступен ({url})')
+        return False
+
+    # Загрузка страницы
+    try:
+        flush_network_log(driver)
+        driver.get(url)
+        time.sleep(1)
+    except InvalidArgumentException:
+        print(f'ERROR: {name} - некорректный URL ({url})')
+        return False
+    except Exception as e:
+        print(f'ERROR: {name} - ошибка загрузки: {str(e)[:100]} ({url})')
+        return False
+
+    # Авторизация, если нужна
+    perform_auth(driver, auth_config, name, auth_data)
+
+    # Проверка элемента
+    for attempt in range(max_attempts):
         try:
-            # 1. Прокрутка к якорю (если блок грузится лениво)
-            anchor_xpath = config.get('anchor_xpath')
-            if anchor_xpath:
-                self._scroll_to_anchor(anchor_xpath, wait_time)
-
-            # 2. Перемещение к тайтлу
-            title = wait(self.driver, wait_time).until(
-                EC.presence_of_element_located((By.XPATH, config.get('title_xpath')))
+            elem = wait(driver, wait_timeout).until(
+                EC.visibility_of_element_located((By.XPATH, selector))
             )
-            self.actions.move_to_element(title).perform()
-            time.sleep(1)
+            if elem:
+                print(f'     OK: {name}')
+                check_console(driver, name, url, console_report, skip_console)
 
-            # 3. Нажатие на постер
-            if poster_xpath:
-                poster = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, poster_xpath))
-                )
-                self._click_element(poster)
-            elif genplan_type == 'old':
-                self._click_element(title)
+                if clear_cookies:
+                    driver.delete_all_cookies()
+                    time.sleep(5)
 
-            # 4. Проверка загрузки генплана
-            wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located(check_locator)
-            )
-            print(f'     OK: {name}')
-            self._record_result(name, True, url)
-            return True
-
+                return True
         except Exception as e:
-            print(f'ERROR: генплан на {name} - {str(e)[:100]} ({url})')
-            self._record_result(name, False, url)
-            return False
+            if attempt == max_attempts - 1:
+                print(f'ERROR: {name}: {str(e)[:100]} ({url})')
+                check_console(driver, name, url, console_report, skip_console)
 
-    def check_moigektar_genplan(self, config):
-        """
-        Проверка генплана на отдельных страницах сайта Мой Гектар
-        (в отличие от check_asset/catalogue, URL берётся напрямую из
-        конфига, а не через project_list.json; поддерживает и старый,
-        и новый тип генплана через поле 'type')
-        """
-        url = config.get('url')
-        name = config.get('name', url)
+                if clear_cookies:
+                    driver.delete_all_cookies()
+                    time.sleep(0.5)
 
-        if not url:
-            print(f'WARNING: Не указан url для {name}')
-            self._record_result(name, False, None)
-            return False
-
-        if not self._load_page(url):
-            self._record_result(name, False, url)
-            return False
-
-        remove_popups(self.driver)
-
-        # Для страниц МГ тип по умолчанию - новый (как и раньше)
-        return self.check_genplan(name, {'type': 'new', **config}, url=url)
-
-    def _authenticate_mg(self):
-        """
-        Авторизация на сайте Мой Гектар через модальное окно (helpers.auth.auth_mg).
-        Вызывается один раз перед проверками МГ - куки сессии затем
-        действуют для всех последующих страниц этого домена.
-        Логика повторяет mg_availability_uspages_check.py.
-        """
-        auth_config = self.genplan_config.get('auth')
-        if not auth_config:
-            return True
-
-        credentials_key = auth_config.get('credentials_key', 'LK_cred')
-        creds = self.creds_data.get(credentials_key, {})
-
-        if not creds:
-            print(f'WARNING: Не найдены credentials по ключу "{credentials_key}" в data.json')
-            return False
-
-        auth_url = auth_config.get('auth_url', 'https://moigektar.ru/12345')
-
-        try:
-            if not auth_mg(self.driver, auth_url=auth_url, creds=creds):
-                print('ERROR: Не удалось авторизоваться на Мой Гектар')
                 return False
-
-            time.sleep(6)
-            self.current_url = auth_url
-            self.is_authenticated = True
-            return True
-        except Exception as e:
-            print(f'ERROR: Ошибка авторизации на Мой Гектар - {str(e)}')
-            return False
-
-    def check_catalogue_map(self, config):
-        """Проверка загрузки карты в каталоге"""
-        url = config.get('url', 'https://moigektar.ru/catalogue-no-auth')
-        name = config.get('name', 'Каталог МГ')
-        max_attempts = 3
-        wait_time = 14
-
-        if not self._load_page(url):
-            self._record_result(name, False, url)
-            return False
-
-        remove_popups(self.driver)
-
-        self.actions.send_keys(Keys.PAGE_DOWN).perform()
-
-        for attempt in range(max_attempts):
-            try:
-                map_button = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(., "На карте")]])[1]'))
-                )
-                map_button.click()
-
-                tour_element = wait(self.driver, wait_time).until(
-                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(., "Слои")]]'))
-                )
-
-                if tour_element:
-                    print(f'     OK: {name}')
-                    self._record_result(name, True, url)
-                    return True
-
-            except Exception as e:
-                if attempt == max_attempts - 1:
-                    print(f'ERROR: {name} - {str(e)} ({url})')
-                    self._record_result(name, False, url)
-                    return False
-                else:
-                    try:
-                        time.sleep(1)
-                        self.driver.refresh()
-                    except:
-                        pass
-                    time.sleep(2)
-
-        return False
-
-    def check_asset_genplan(self, config):
-        """Проверка загрузки генплана на странице актива"""
-        url = config.get('url', 'https://moigektar.ru/batches-no-auth/60786')
-        name = config.get('name', 'Страница участка')
-        max_attempts = 3
-        wait_time = 30
-
-        if not self._load_page(url):
-            self._record_result(name, False, url)
-            return False
-
-        remove_popups(self.driver)
-
-        for attempt in range(max_attempts):
-            try:
-                genplan_button = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(.,"Генеральный")]])[2]'))
-                )
-
-                if attempt == 0:
-                    self.actions.move_to_element(genplan_button).perform()
-
-                genplan_button.click()
-
-                to_plot_element = wait(self.driver, wait_time).until(
-                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"На участок")]]'))
-                )
-
-                if to_plot_element:
-                    print(f'     OK: {name}')
-                    self._record_result(name, True, url)
-                    return True
-
-            except Exception as e:
-                if attempt == max_attempts - 1:
-                    print(f'ERROR: {name} - {str(e)} ({url})')
-                    self._record_result(name, False, url)
-                    return False
-                else:
-                    try:
-                        time.sleep(1)
-                        self.driver.refresh()
-                    except:
-                        pass
-                    time.sleep(2)
-
-        return False
-
-    def _record_result(self, name: str, success: bool, url: str = None):
-        if success:
-            self.results['success'].append(name)
-        else:
-            self.results['failed'].append((name, url))
-
-    def _print_summary(self):
-        total   = len(self.results['success']) + len(self.results['failed'])
-        success = len(self.results['success'])
-        failed  = len(self.results['failed'])
-
-        print(f"\n     {'=' * 50}")
-        print(f"     Итого: {total}  |  OK: {success}  |  Ошибок: {failed}")
-
-        if self.results['failed']:
-            print(f"\n     Недоступные генпланы:")
-            for name, url in self.results['failed']:
-                if url:
-                    print(f"       - {name} {url}")
-                else:
-                    print(f"       - {name}")
-        else:
-            print(f"\n     ОШИБОК НЕТ")
-
-    def run_checks(self):
-        """Запуск всех проверок из конфига"""
-        print(f"\n     Проверка доступности блока генплана на сайтах \n")
-
-        # Авторизация на Мой Гектар (теперь требуется для доступа к генпланам)
-        self._authenticate_mg()
-
-        # Проверка каталога
-        if 'catalogue' in self.genplan_config:
-            self.check_catalogue_map(self.genplan_config['catalogue'])
-            time.sleep(1)
-
-        # Проверка страницы актива
-        if 'asset' in self.genplan_config:
-            self.check_asset_genplan(self.genplan_config['asset'])
-            time.sleep(1)
-
-        # Проверка генпланов на прочих страницах Мой Гектар
-        # (старого и/или нового типа, URL задаётся прямо в конфиге)
-        for genplan in self.genplan_config.get('moigektar_genplans', []):
-            self.check_moigektar_genplan(genplan)
-            time.sleep(1)
-
-        # Проверка лендингов по конфигу генпланов
-        for genplan in self.genplan_config.get('genplans', []):
-            project_name = genplan.get('project_name')
-
-            # Формируем название для вывода
-            plan_name = genplan.get('name')
-            if plan_name:
-                display_name = f"{project_name} - {plan_name}"
             else:
-                display_name = project_name
+                try:
+                    flush_network_log(driver)
+                    driver.refresh()
+                    time.sleep(2)
 
-            url = self._get_project_url(project_name)
+                    # Повторная авторизация после обновления
+                    perform_auth(driver, auth_config, name, auth_data)
+                except:
+                    pass
 
-            if not url:
-                print(f'WARNING: Не найден URL для проекта {project_name}')
-                self._record_result(display_name, False, None)
-                continue
+    return False
 
-            # ПОЛУЧАЕМ АВТОРИЗАЦИЮ ИЗ PROJECT_LIST
-            auth, credentials_key = self._get_auth_from_project_list(project_name)
 
-            # Загружаем страницу
-            if not self._load_page(url, auth, credentials_key):
-                self._record_result(display_name, False, url)
-                continue
+def check_project_with_domains(driver, project, auth_data, console_report):
+    """
+    Проверка проекта с несколькими доменами.
 
-            self.check_genplan(display_name, genplan, url=url)
+    Returns:
+        tuple: (успешных доменов, доменов с ошибкой)
+    """
+    project_name = project['project_name']
+    domains = project['domains']
+    selector = project['selector']
+    auth_config = project.get('auth', False)
+    clear_cookies = project.get('clear_cookies', False)
 
-            time.sleep(1)
+    successful = 0
+    failed = 0
 
-        self._print_summary()
+    for domain in domains:
+        url = domain['url']
+        domain_name = domain['name']
 
-    def cleanup(self):
-        """Закрытие драйвера"""
-        time.sleep(5)
-        self.driver.quit()
+        # Флаг домена важнее флага проекта
+        skip_console = domain.get(
+            'skip_console_check', project.get('skip_console_check', False)
+        ) is True
+
+        # Для логов используем короткое имя
+        display_name = f"[{project_name}] {domain_name}"
+
+        # Проверка доступности домена
+        if not check_domain(url):
+            print(f'ERROR: {display_name} - домен недоступен ({url})')
+            failed += 1
+            continue
+
+        # Загрузка страницы
+        try:
+            flush_network_log(driver)
+            driver.get(url)
+            time.sleep(2)
+        except Exception as e:
+            print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]} ({url})')
+            failed += 1
+            continue
+
+        # Авторизация, если нужна (универсальный метод)
+        perform_auth(driver, auth_config, project_name, auth_data)
+
+        # Проверка элемента
+        success = False
+        for attempt in range(3):
+            try:
+                elem = wait(driver, 14).until(
+                    EC.visibility_of_element_located((By.XPATH, selector))
+                )
+                if elem:
+                    print(f'     OK: {display_name}')
+                    check_console(driver, display_name, url, console_report, skip_console)
+                    success = True
+
+                    if clear_cookies:
+                        driver.delete_all_cookies()
+                        time.sleep(5)
+
+                    break
+            except Exception as e:
+                if attempt == 2:
+                    print(f'ERROR: {display_name} - {str(e)[:100]} ({url})')
+                    check_console(driver, display_name, url, console_report, skip_console)
+
+                    if clear_cookies:
+                        driver.delete_all_cookies()
+                        time.sleep(0.5)
+
+                else:
+                    try:
+                        flush_network_log(driver)
+                        driver.refresh()
+                        time.sleep(2)
+                        # Повторная авторизация после обновления
+                        perform_auth(driver, auth_config, project_name, auth_data)
+                    except:
+                        pass
+
+        if success:
+            successful += 1
+        else:
+            failed += 1
+
+        time.sleep(0.5)  # Пауза между доменами
+
+    return successful, failed
 
 
 def main():
     """Основная функция запуска проверок"""
-    checker = GenplanChecker()
+    print(f"\n     Проверка доступности сайтов \n")
+
+    # Загрузка данных
+    resources = load_resources()
+    if not resources:
+        print("ERROR: Нет ресурсов для проверки")
+        return
+
+    auth_data = load_auth_data()
+
+    # Инициализация драйвера
+    driver = init_driver()
+
     try:
-        checker.run_checks()
+        total_resources = 0
+        successful = 0
+        failed = 0
+        console_report = []  # Сайты с ошибками 4xx/5xx в консоли
+
+        # Сайты, у которых проверка консоли отключена (для итогов)
+        skipped_console = []
+        for resource in resources:
+            if 'domains' in resource:
+                for domain in resource['domains']:
+                    if domain.get('skip_console_check',
+                                  resource.get('skip_console_check', False)) is True:
+                        skipped_console.append(f"[{resource['project_name']}] {domain['name']}")
+            elif resource.get('skip_console_check', False) is True:
+                skipped_console.append(resource['name'])
+
+        # Проходим по всем ресурсам
+        for resource in resources:
+            # Проверка типа ресурса
+            if 'domains' in resource:
+                # Это проект с несколькими доменами
+                ok, fail = check_project_with_domains(driver, resource, auth_data, console_report)
+                successful += ok
+                failed += fail
+                total_resources += len(resource['domains'])
+            else:
+                # Это одиночный ресурс
+                if check_single_resource(driver, resource, auth_data, console_report):
+                    successful += 1
+                else:
+                    failed += 1
+                total_resources += 1
+
+            time.sleep(0.5)  # Пауза между проверками
+
+        # Итоговая статистика
+        print(f"\n     Итоги проверки:")
+        print(f"     Всего ресурсов: {total_resources}")
+        print(f"     Успешно: {successful}")
+        print(f"     Ошибок: {failed}")
+        if total_resources > 0:
+            print(f"     Доступность: {successful / total_resources * 100:.1f}%")
+        print(f"     С ошибками в консоли: {len(console_report)}")
+        if skipped_console:
+            print(f"     Без проверки консоли: {len(skipped_console)} ({', '.join(skipped_console)})")
+
+        # Отчёт по ошибкам консоли
+        if console_report:
+            print(f"\n     Ошибки 4xx/5xx в консоли:")
+            for site in console_report:
+                print(f"\n       {site['name']} ({site['url']})")
+                print_http_errors(site['errors'], indent='         ')
+
     finally:
-        checker.cleanup()
+        time.sleep(2)
+        driver.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
-end_time = time.time()
-elapsed_time = end_time - start_time
-minutes = int(elapsed_time // 60)
-seconds = int(elapsed_time % 60)
+    # Вычисляем и выводим время выполнения теста
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    minutes = int(elapsed_time // 60)
+    seconds = int(elapsed_time % 60)
 
-if minutes > 0:
-    print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
-else:
-    print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')
+    if minutes > 0:
+        print(f'\n     Время выполнения теста: {minutes} мин {seconds} сек ({elapsed_time:.2f} сек)')
+    else:
+        print(f'\n     Время выполнения теста: {seconds} сек ({elapsed_time:.2f} сек)')

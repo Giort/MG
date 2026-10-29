@@ -26,7 +26,8 @@
         }
       ],
       "selector": "//h2[text()[contains(.,'Выбрать участок')]]",
-      "auth": false
+      "auth": false,
+      "skip_console_check": true
     },
     {
       "project_name": "syn_8 Долина Селигера",
@@ -63,7 +64,8 @@
       "name": "syn_11",
       "url": "https://syn11.lp.moigektar.ru",
       "selector": "//span[text()[contains(.,'Интерактивный')]]",
-      "auth": false
+      "auth": false,
+      "skip_console_check": true
     },
     {
       "project_name": "syn_12 Синергия-Волга",
@@ -111,14 +113,11 @@
     },
     {
       "project_name": "syn_17 Агро-Мирный",
-      "domains": [
-        {
-          "name": "syn_17",
-          "url": "https://syn17.lp.moigektar.ru"
-        }
-      ],
+      "name": "syn_17",
+      "url": "https://syn17.lp.moigektar.ru",
       "selector": "//span[text()[contains(.,'Виртуальные')]]",
-      "auth": false
+      "auth": false,
+      "skip_console_check": true
     },
     {
       "project_name": "Почурино 2",
@@ -159,7 +158,8 @@
         },
         {
           "name": "княжьигоры.рф",
-          "url": "https://княжьигоры.рф"
+          "url": "https://княжьигоры.рф",
+          "skip_console_check": true
         }
       ],
       "selector": "//span[text()[contains(.,'Генеральный')]]",
@@ -170,7 +170,8 @@
       "domains": [
         {
           "name": "syn_29",
-          "url": "https://syn29.lp.moigektar.ru"
+          "url": "https://syn29.lp.moigektar.ru",
+          "skip_console_check": true
         },
         {
           "name": "syn_37",
@@ -254,7 +255,8 @@
       "domains": [
         {
           "name": "syn_25",
-          "url": "https://syn25.lp.moigektar.ru"
+          "url": "https://syn25.lp.moigektar.ru",
+          "skip_console_check": true
         },
         {
           "name": "syn_26",
@@ -282,11 +284,13 @@
         },
         {
           "name": "pobeda.lp.moigektar.ru",
-          "url": "https://pobeda.lp.moigektar.ru"
+          "url": "https://pobeda.lp.moigektar.ru",
+          "skip_console_check": true
         },
         {
           "name": "поселок-победа.рф",
-          "url": "https://поселок-победа.рф"
+          "url": "https://поселок-победа.рф",
+          "skip_console_check": true
         }
       ],
       "selector": "//span[text()[contains(.,'Генеральный')]]",

@@ -17,12 +17,23 @@ import socket
 # Засекаем время начала теста
 start_time = time.time()
 
+# Подстроки URL, ошибки по которым не учитываются при проверке консоли
+# (например, сторонние счётчики). Пример: ['mc.yandex.ru', 'google-analytics.com']
+CONSOLE_IGNORE_URLS = []
+
+# Сколько ошибок консоли выводить по одному сайту
+CONSOLE_ERRORS_PRINT_LIMIT = 5
+
 
 def init_driver():
     """Инициализация драйвера Chrome"""
     ch_options = Options()
     ch_options.add_argument('--headless')
     ch_options.page_load_strategy = 'eager'
+
+    # Журнал сетевых событий - из него берутся HTTP-статусы всех запросов страницы
+    ch_options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
+
     service = ChromeService(executable_path=ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=ch_options)
     driver.set_window_size(1680, 1000)
@@ -54,6 +65,101 @@ def check_domain(url, max_attempts=3, wait_time=2):
             print(f'ERROR: Неожиданная ошибка при проверке домена {domain}: {str(e)}')
             return False
     return False
+
+
+def flush_network_log(driver):
+    """
+    Очистка накопленного журнала сети.
+    Вызывается перед каждой загрузкой страницы, чтобы ошибки
+    предыдущего сайта не попали в отчёт по следующему.
+    """
+    try:
+        driver.get_log('performance')
+    except Exception:
+        pass
+
+
+def collect_http_errors(driver, ignore_urls=None):
+    """
+    Сбор запросов страницы, вернувших 4xx/5xx (то, что в консоли браузера
+    выглядит как "Failed to load resource: the server responded with a status of ...").
+
+    Returns:
+        list: [{'status': 404, 'url': '...', 'count': 1}, ...]
+    """
+    ignore_urls = ignore_urls if ignore_urls is not None else CONSOLE_IGNORE_URLS
+    errors = {}
+
+    try:
+        logs = driver.get_log('performance')
+    except Exception as e:
+        print(f'WARNING: Не удалось получить журнал сети: {str(e)[:100]}')
+        return []
+
+    for entry in logs:
+        try:
+            message = json.loads(entry['message'])['message']
+        except Exception:
+            continue
+
+        if message.get('method') != 'Network.responseReceived':
+            continue
+
+        response = message.get('params', {}).get('response', {})
+        url = response.get('url', '')
+        try:
+            status = int(response.get('status'))
+        except (TypeError, ValueError):
+            continue
+
+        if not 400 <= status < 600:
+            continue
+        if any(pattern in url for pattern in ignore_urls):
+            continue
+
+        # Один и тот же запрос может повторяться - считаем, а не дублируем
+        key = (status, url)
+        if key in errors:
+            errors[key]['count'] += 1
+        else:
+            errors[key] = {'status': status, 'url': url, 'count': 1}
+
+    return sorted(errors.values(), key=lambda e: (e['status'], e['url']))
+
+
+def print_http_errors(errors, indent='       ', limit=CONSOLE_ERRORS_PRINT_LIMIT):
+    """Вывод списка ошибок консоли"""
+    for error in errors[:limit]:
+        count = f" (x{error['count']})" if error['count'] > 1 else ''
+        print(f"{indent}[{error['status']}] {error['url'][:150]}{count}")
+    if len(errors) > limit:
+        print(f'{indent}... и ещё {len(errors) - limit}')
+
+
+def check_console(driver, display_name, url, console_report, skip=False):
+    """
+    Проверка ошибок 4xx/5xx в консоли после загрузки страницы.
+    Найденные ошибки выводятся сразу и сохраняются в console_report для итогового отчёта.
+    skip=True - проверка консоли для сайта отключена
+    Ключ skip_console_check в конфиге. Для одиночного сайта: ключ добавляется в список
+    остальных ключей. Для проекта с несколькими доменами ключ можно поставить на весь проект
+    или на отдельный домен. Флаг домена важнее флага проекта, поэтому можно, например,
+    отключить проверку для всего проекта, а для одного домена включить обратно через
+    "skip_console_check": false
+    """
+    if skip:
+        return []
+
+    # Даём странице время выполнить фоновые запросы
+    time.sleep(1)
+
+    errors = collect_http_errors(driver)
+    if errors:
+        print(f'WARNING: {display_name} - ошибки в консоли: {len(errors)} ({url})')
+        print_http_errors(errors)
+        console_report.append({'name': display_name, 'url': url, 'errors': errors})
+
+    return errors
 
 
 def load_resources():
@@ -159,19 +265,23 @@ def perform_auth(driver, auth_config, project_name, auth_data):
         submit_btn.click()
         time.sleep(2)
 
+        # Запросы до входа (например, 401 от API) не считаем ошибками сайта
+        flush_network_log(driver)
+
         return True
     except Exception as e:
         print(f'WARNING: Ошибка авторизации - {str(e)[:100]}')
         return False
 
 
-def check_single_resource(driver, resource, auth_data):
+def check_single_resource(driver, resource, auth_data, console_report):
     """Проверка одного ресурса (одиночный URL)"""
     url = resource['url']
     name = resource['name']
     selector = resource['selector']
     auth_config = resource.get('auth', False)
     clear_cookies = resource.get('clear_cookies', False)
+    skip_console = resource.get('skip_console_check', False) is True
     max_attempts = 3
     wait_timeout = 14
 
@@ -182,6 +292,7 @@ def check_single_resource(driver, resource, auth_data):
 
     # Загрузка страницы
     try:
+        flush_network_log(driver)
         driver.get(url)
         time.sleep(1)
     except InvalidArgumentException:
@@ -202,6 +313,7 @@ def check_single_resource(driver, resource, auth_data):
             )
             if elem:
                 print(f'     OK: {name}')
+                check_console(driver, name, url, console_report, skip_console)
 
                 if clear_cookies:
                     driver.delete_all_cookies()
@@ -211,6 +323,7 @@ def check_single_resource(driver, resource, auth_data):
         except Exception as e:
             if attempt == max_attempts - 1:
                 print(f'ERROR: {name}: {str(e)[:100]} ({url})')
+                check_console(driver, name, url, console_report, skip_console)
 
                 if clear_cookies:
                     driver.delete_all_cookies()
@@ -219,6 +332,7 @@ def check_single_resource(driver, resource, auth_data):
                 return False
             else:
                 try:
+                    flush_network_log(driver)
                     driver.refresh()
                     time.sleep(2)
 
@@ -230,19 +344,30 @@ def check_single_resource(driver, resource, auth_data):
     return False
 
 
-def check_project_with_domains(driver, project, auth_data):
-    """Проверка проекта с несколькими доменами"""
+def check_project_with_domains(driver, project, auth_data, console_report):
+    """
+    Проверка проекта с несколькими доменами.
+
+    Returns:
+        tuple: (успешных доменов, доменов с ошибкой)
+    """
     project_name = project['project_name']
     domains = project['domains']
     selector = project['selector']
     auth_config = project.get('auth', False)
     clear_cookies = project.get('clear_cookies', False)
 
-    all_success = True
+    successful = 0
+    failed = 0
 
     for domain in domains:
         url = domain['url']
         domain_name = domain['name']
+
+        # Флаг домена важнее флага проекта
+        skip_console = domain.get(
+            'skip_console_check', project.get('skip_console_check', False)
+        ) is True
 
         # Для логов используем короткое имя
         display_name = f"[{project_name}] {domain_name}"
@@ -250,16 +375,17 @@ def check_project_with_domains(driver, project, auth_data):
         # Проверка доступности домена
         if not check_domain(url):
             print(f'ERROR: {display_name} - домен недоступен ({url})')
-            all_success = False
+            failed += 1
             continue
 
         # Загрузка страницы
         try:
+            flush_network_log(driver)
             driver.get(url)
             time.sleep(2)
         except Exception as e:
             print(f'ERROR: {display_name} - ошибка загрузки: {str(e)[:100]} ({url})')
-            all_success = False
+            failed += 1
             continue
 
         # Авторизация, если нужна (универсальный метод)
@@ -274,6 +400,7 @@ def check_project_with_domains(driver, project, auth_data):
                 )
                 if elem:
                     print(f'     OK: {display_name}')
+                    check_console(driver, display_name, url, console_report, skip_console)
                     success = True
 
                     if clear_cookies:
@@ -284,14 +411,15 @@ def check_project_with_domains(driver, project, auth_data):
             except Exception as e:
                 if attempt == 2:
                     print(f'ERROR: {display_name} - {str(e)[:100]} ({url})')
+                    check_console(driver, display_name, url, console_report, skip_console)
 
                     if clear_cookies:
                         driver.delete_all_cookies()
                         time.sleep(0.5)
 
-                    all_success = False
                 else:
                     try:
+                        flush_network_log(driver)
                         driver.refresh()
                         time.sleep(2)
                         # Повторная авторизация после обновления
@@ -299,9 +427,14 @@ def check_project_with_domains(driver, project, auth_data):
                     except:
                         pass
 
+        if success:
+            successful += 1
+        else:
+            failed += 1
+
         time.sleep(0.5)  # Пауза между доменами
 
-    return all_success
+    return successful, failed
 
 
 def main():
@@ -323,20 +456,31 @@ def main():
         total_resources = 0
         successful = 0
         failed = 0
+        console_report = []  # Сайты с ошибками 4xx/5xx в консоли
+
+        # Сайты, у которых проверка консоли отключена (для итогов)
+        skipped_console = []
+        for resource in resources:
+            if 'domains' in resource:
+                for domain in resource['domains']:
+                    if domain.get('skip_console_check',
+                                  resource.get('skip_console_check', False)) is True:
+                        skipped_console.append(f"[{resource['project_name']}] {domain['name']}")
+            elif resource.get('skip_console_check', False) is True:
+                skipped_console.append(resource['name'])
 
         # Проходим по всем ресурсам
         for resource in resources:
             # Проверка типа ресурса
             if 'domains' in resource:
                 # Это проект с несколькими доменами
-                if check_project_with_domains(driver, resource, auth_data):
-                    successful += len(resource['domains'])
-                else:
-                    failed += len(resource['domains'])
+                ok, fail = check_project_with_domains(driver, resource, auth_data, console_report)
+                successful += ok
+                failed += fail
                 total_resources += len(resource['domains'])
             else:
                 # Это одиночный ресурс
-                if check_single_resource(driver, resource, auth_data):
+                if check_single_resource(driver, resource, auth_data, console_report):
                     successful += 1
                 else:
                     failed += 1
@@ -351,6 +495,16 @@ def main():
         print(f"     Ошибок: {failed}")
         if total_resources > 0:
             print(f"     Доступность: {successful / total_resources * 100:.1f}%")
+        print(f"     С ошибками в консоли: {len(console_report)}")
+        if skipped_console:
+            print(f"     Без проверки консоли: {len(skipped_console)} ({', '.join(skipped_console)})")
+
+        # Отчёт по ошибкам консоли
+        if console_report:
+            print(f"\n     Ошибки 4xx/5xx в консоли:")
+            for site in console_report:
+                print(f"\n       {site['name']} ({site['url']})")
+                print_http_errors(site['errors'], indent='         ')
 
     finally:
         time.sleep(2)
