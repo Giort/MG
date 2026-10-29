@@ -43,9 +43,6 @@ ENV_CONFIG = {
 config      = ENV_CONFIG[ENV]
 MG_BASE_URL = config["mg_base_url"]
 
-# Настройки исключаемых типов страниц
-DEFAULT_EXCLUDED_PAGE_TYPES = ['chpu', 'thanks']
-
 # Список страниц для проверки
 PAGES_CONFIG_FILE = '../data/mg_pages.json'
 
@@ -68,16 +65,10 @@ start_time = time.time()
 
 
 class PageChecker:
-    def __init__(self, base_url, excluded_types=None):
+    def __init__(self, base_url):
         self.base_url = base_url.rstrip('/')
         self.driver = None
         self.session = requests.Session()
-
-        # Настраиваем исключаемые типы
-        if excluded_types is None:
-            self.excluded_types = DEFAULT_EXCLUDED_PAGE_TYPES
-        else:
-            self.excluded_types = excluded_types
 
         # Настраиваем сессию для проверки HTTP
         self.session.headers.update({
@@ -678,7 +669,6 @@ class PageChecker:
             auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
         print(f"\n     Начинаем проверку страниц [{ENV.upper()}]")
-        print(f"     Исключаемые типы: {', '.join(self.excluded_types)}")
 
         total_pages = len(pages_config)
         successful = 0
@@ -688,11 +678,9 @@ class PageChecker:
         for i, page_config in enumerate(pages_config, 1):
             page_name = page_config['name']
 
-            # Пропускаем страницы с исключенными типами
-            page_type = page_config.get('page_type', '')
-            if page_type in self.excluded_types:
-                skip_reason = f"page_type: {page_type}"
-                print(f"\n     Страница {i}/{total_pages}: {page_name} - \033[33mПРОПУЩЕНА ({skip_reason})\033[0m")
+            # Страница исключена из проверки консоли
+            if page_config.get('skip_console_check', False) is True:
+                print(f"\n     Страница {i}/{total_pages}: {page_name} - \033[33mПРОПУЩЕНА\033[0m")
                 skipped += 1
                 continue
 
@@ -737,7 +725,7 @@ class PageChecker:
 
         print(f"\n     Статистика:")
         print(f"       Всего проверено страниц: {total}")
-        print(f"       Пропущено (типы: {', '.join(self.excluded_types)}): {skipped}")
+        print(f"       Пропущено (skip_console_check): {skipped}")
         print(f"       Проверено страниц: {total - skipped}")
 
         if total - skipped > 0:

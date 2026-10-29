@@ -98,12 +98,19 @@ class PageChecker:
             auth_mg(self.driver, auth_url=config["auth_url"], creds=data[config["cred_key"]])
 
         results = {}
+        skipped = []
         for page_config in pages_config:
+            # Страница исключена из проверки доступности
+            if page_config.get('skip_availability_check', False) is True:
+                print(f"     ПРОПУЩЕНА: {page_config['name']}")
+                skipped.append(page_config['name'])
+                continue
+
             result = self.check_page(page_config)
             results[page_config['name']] = result
             time.sleep(delay)
 
-        return results
+        return results, skipped
 
     def close(self):
         if self.driver:
@@ -155,7 +162,7 @@ def main():
         pages_config = load_pages_config()
 
         checker.init_driver()
-        results = checker.check_all_pages(pages_config, delay=1)
+        results, skipped = checker.check_all_pages(pages_config, delay=1)
 
         failed_pages = [name for name, res in results.items() if not res]
 
@@ -163,6 +170,8 @@ def main():
         print(f"     Всего страниц: {len(results)}")
         print(f"     Успешно: {len(results) - len(failed_pages)}")
         print(f"     Ошибок: {len(failed_pages)}")
+        if skipped:
+            print(f"     Пропущено: {len(skipped)}")
 
         if failed_pages:
             print(f"\n     Недоступные страницы:")
