@@ -17,9 +17,22 @@ import socket
 # Засекаем время начала теста
 start_time = time.time()
 
-# Подстроки URL, ошибки по которым не учитываются при проверке консоли
-# (например, сторонние счётчики). Пример: ['mc.yandex.ru', 'google-analytics.com']
+# Подстроки URL, ошибки по которым полностью игнорируются при проверке консоли
+# (не выводятся нигде). Пример: ['mc.yandex.ru', 'google-analytics.com']
 CONSOLE_IGNORE_URLS = []
+
+# Известные сторонние ошибки: не считаются ошибками сайтов, но собираются
+# в отдельный блок итогов - видно, на скольких сайтах проблема ещё есть.
+# Формат: {'подстрока URL': 'описание'}
+CONSOLE_KNOWN_ERRORS = {
+    # 'privacy-cs.mail.ru': 'VK: хост недоступен, грузится из плеера VK Видео '
+    #                       '(video_ext.php → top-fwz1.mail.ru/js/code.js → sync-loader.js)',
+    # 'stats.vk-portal.net': 'VK: сбор статистики, грузится из плеера/виджета VK',
+}
+
+# Найденные известные ошибки за прогон:
+# {подстрока: {'statuses': {503, ...}, 'sites': {'имя сайта', ...}}}
+known_errors_found = {}
 
 # Сколько ошибок консоли выводить по одному сайту
 CONSOLE_ERRORS_PRINT_LIMIT = 5
@@ -84,8 +97,12 @@ def collect_http_errors(driver, ignore_urls=None):
     Сбор запросов страницы, вернувших 4xx/5xx (то, что в консоли браузера
     выглядит как "Failed to load resource: the server responded with a status of ...").
 
+    Ошибки по URL из CONSOLE_KNOWN_ERRORS возвращаются отдельно.
+
     Returns:
-        list: [{'status': 404, 'url': '...', 'count': 1}, ...]
+        tuple: (ошибки сайта, известные сторонние ошибки),
+               каждая - [{'status': 404, 'url': '...', 'count': 1, 'known': None}, ...]
+               (для известных в 'known' - подстрока из CONSOLE_KNOWN_ERRORS)
     """
     ignore_urls = ignore_urls if ignore_urls is not None else CONSOLE_IGNORE_URLS
     errors = {}
@@ -94,7 +111,7 @@ def collect_http_errors(driver, ignore_urls=None):
         logs = driver.get_log('performance')
     except Exception as e:
         print(f'WARNING: Не удалось получить журнал сети: {str(e)[:100]}')
-        return []
+        return [], []
 
     for entry in logs:
         try:
@@ -117,14 +134,19 @@ def collect_http_errors(driver, ignore_urls=None):
         if any(pattern in url for pattern in ignore_urls):
             continue
 
+        known = next((p for p in CONSOLE_KNOWN_ERRORS if p in url), None)
+
         # Один и тот же запрос может повторяться - считаем, а не дублируем
         key = (status, url)
         if key in errors:
             errors[key]['count'] += 1
         else:
-            errors[key] = {'status': status, 'url': url, 'count': 1}
+            errors[key] = {'status': status, 'url': url, 'count': 1, 'known': known}
 
-    return sorted(errors.values(), key=lambda e: (e['status'], e['url']))
+    all_errors = sorted(errors.values(), key=lambda e: (e['status'], e['url']))
+    site_errors = [e for e in all_errors if e['known'] is None]
+    known_errors = [e for e in all_errors if e['known'] is not None]
+    return site_errors, known_errors
 
 
 def print_http_errors(errors, indent='       ', limit=CONSOLE_ERRORS_PRINT_LIMIT):
@@ -140,12 +162,7 @@ def check_console(driver, display_name, url, console_report, skip=False):
     """
     Проверка ошибок 4xx/5xx в консоли после загрузки страницы.
     Найденные ошибки выводятся сразу и сохраняются в console_report для итогового отчёта.
-    skip=True - проверка консоли для сайта отключена
-    Ключ skip_console_check в конфиге. Для одиночного сайта: ключ добавляется в список
-    остальных ключей. Для проекта с несколькими доменами ключ можно поставить на весь проект
-    или на отдельный домен. Флаг домена важнее флага проекта, поэтому можно, например,
-    отключить проверку для всего проекта, а для одного домена включить обратно через
-    "skip_console_check": false
+    skip=True - проверка консоли для сайта отключена (ключ skip_console_check в конфиге).
     """
     if skip:
         return []
@@ -153,7 +170,14 @@ def check_console(driver, display_name, url, console_report, skip=False):
     # Даём странице время выполнить фоновые запросы
     time.sleep(1)
 
-    errors = collect_http_errors(driver)
+    errors, known_errors = collect_http_errors(driver)
+
+    # Известные сторонние ошибки - только в общий счётчик, без предупреждения по сайту
+    for error in known_errors:
+        found = known_errors_found.setdefault(error['known'], {'statuses': set(), 'sites': set()})
+        found['statuses'].add(error['status'])
+        found['sites'].add(display_name)
+
     if errors:
         print(f'WARNING: {display_name} - ошибки в консоли: {len(errors)} ({url})')
         print_http_errors(errors)
@@ -498,6 +522,19 @@ def main():
         print(f"     С ошибками в консоли: {len(console_report)}")
         if skipped_console:
             print(f"     Без проверки консоли: {len(skipped_console)} ({', '.join(skipped_console)})")
+
+        # Известные сторонние ошибки
+        if CONSOLE_KNOWN_ERRORS:
+            print(f"\n     Известные сторонние ошибки:")
+            for pattern, description in CONSOLE_KNOWN_ERRORS.items():
+                found = known_errors_found.get(pattern)
+                if found:
+                    statuses = ', '.join(str(s) for s in sorted(found['statuses']))
+                    print(f"       {pattern} [{statuses}] - на {len(found['sites'])} сайтах")
+                    print(f"         {description}")
+                else:
+                    print(f"       {pattern} - не обнаружено (возможно, исправлено - "
+                          f"можно убрать из CONSOLE_KNOWN_ERRORS)")
 
         # Отчёт по ошибкам консоли
         if console_report:

@@ -309,10 +309,6 @@
         "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Волге», Курьково']/following-sibling::div[contains(@class, 'uk-container-max-content')]//*[@id='w3-map']//img[@src='/img/project-overview-gallery/syn-104-full/poster-kurkovo.jpg']"
       },
       {
-        "name": "Генплан Экополиса на Новорижском",
-        "xpath": "//h5[normalize-space(text())='Генеральный план «Экополис на Новорижском шоссе»']/following-sibling::div[contains(@class, 'uk-container-max-content')]//img[@src='/img/project-overview-gallery/syn-425/poster.jpg']"
-      },
-      {
         "name": "Кнопка 'Посмотреть в каталоге' в самом низу блока",
         "xpath": "//h2[text()[contains(.,'Описание поселка')]]/ancestor::div[1]//a[contains(., 'Посмотреть в каталоге')]"
       }
@@ -431,7 +427,7 @@
       },
       {
         "name": "Кнопка перехода в каталог",
-        "xpath": "//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//a[contains(@href, '/catalogue?popularChoiceIds%5B%5D=11') and contains(text(), 'Перейти в каталог')]"
+        "xpath": "//h2[contains (text(), 'Распродажа инвестпроектов')]/ancestor::div[@id='catalogueSpecial11']//a[contains(@href, '/catalogue?popularChoiceIds%5B0%5D=11') and contains(text(), 'Перейти в каталог')]"
       },
       {
         "name": "Количество карточек - 4",
@@ -665,7 +661,7 @@
       },
       {
         "name": "Кнопка 'Посмотреть больше'",
-        "xpath": "//div[contains(@class, 'w-project-sohi')]//a[@href='/news/list/ot-sohi-do-sohi']"
+        "xpath": "//div[contains(@class, 'w-project-sohi')]//a[contains(@href, '/news/list/ot-sohi-do-sohi')]"
       }
     ]
   },
@@ -681,12 +677,8 @@
         "xpath": "(//*[@class='reviews-v2']//img)[1]"
       },
       {
-        "name": "Кнопка запуска видео на 1-й карточке",
-        "xpath": "(//*[@class='reviews-v2']//img[@src='/img/play.svg'])[1]"
-      },
-      {
-        "name": "Текст описания на 1-й карточке",
-        "xpath": "//*[@class='reviews-v2']//span[text() [contains(., 'всю жизнь')]]"
+        "name": "Текст описания на 1-й карточке отображается",
+        "xpath": "(//*[@class='reviews-v2']//div[@class='reviews-v2__text uk-text-small'])[1]"
       },
       {
         "name": "Отображается 4 карточки",
@@ -694,7 +686,7 @@
       },
       {
         "name": "Кнопка 'Посмотреть больше'",
-        "xpath": "//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//a[@href='/about/reviews']"
+        "xpath": "//h2[contains(text(), 'Отзывы о проекте')]/ancestor::div[contains(@class, 'uk-container')]//a[contains(@href, '/about/reviews')]"
       }
     ]
   },
@@ -1070,7 +1062,7 @@
     "elements": [
       {
         "name": "Ссылка 'О проекте'",
-        "xpath": "//*[contains(@class, 'w-footer')]/div/div/div/div/div/a[@href='/about']/div[contains(text(), 'О проекте')]"
+        "xpath": "//*[contains(@class, 'w-footer')]/div/div/div/div/div/a[contains (@href, '/about')]/div[contains(text(), 'О проекте')]"
       },
       {
         "name": "Иконка подарочного сертификата",

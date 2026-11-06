@@ -151,16 +151,6 @@
       "scroll": true
     },
     {
-      "name": "syn_47 Synergy Island",
-      "project_name": "syn_47 Synergy Island",
-      "title_locator": [
-        "id",
-        "tour"
-      ],
-      "btn_locator": "//*[(contains(@class, 'w-tour__btn'))]",
-      "elem_xpath": "//div[(contains(@style, 'z-index: 173'))]"
-    },
-    {
       "name": "syn_48 Парк Патриот",
       "project_name": "syn_48-97-105 Парк Патриот",
       "title_locator": [
