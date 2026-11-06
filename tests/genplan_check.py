@@ -20,7 +20,7 @@ class GenplanChecker:
     """Класс для проверки загрузки генпланов на сайтах посёлков"""
 
     def __init__(self, projects_path='../data/project_list.json',
-                 genplan_config_path='../data/genplan_config.json'):
+                 genplan_config_path='../data/genplan_config_test.json'):
         self.driver = self._init_driver()
         self.actions = ActionChains(self.driver)
         self.creds_data = self._load_json('../data/data.json')
@@ -229,11 +229,11 @@ class GenplanChecker:
             return None, 'включён poster_click, но не указан poster_xpath'
         return poster_xpath, None
 
-    def check_genplan(self, name, config, url=None, wait_time=14):
+    def check_genplan(self, name, config, url=None, popups=False):
         """
         Единая проверка генплана для обоих типов:
           1. прокрутка к якорю (anchor_xpath, если блок грузится лениво);
-          2. перемещение к тайтлу (title_xpath);
+          2. перемещение к тайтлу (title_xpath; необязателен, если указан poster_xpath);
           3. нажатие на постер, запускающий генплан:
              - poster_xpath, если указан;
              - иначе для type "old" постером считается сам тайтл;
@@ -241,6 +241,11 @@ class GenplanChecker:
           4. проверка загрузки:
              - type "old": видимость genplan_css;
              - type "new": видимость check_xpath.
+
+        Необязательные ключи конфига:
+          attempts  - число попыток (по умолчанию 1); между попытками страница перезагружается;
+          wait_time - ожидание каждого элемента, сек (по умолчанию 14).
+        popups=True - убирать попапы после перезагрузки (для страниц МГ).
         """
         genplan_type = config.get('type')
         if genplan_type == 'old':
@@ -253,45 +258,66 @@ class GenplanChecker:
             return False
 
         poster_xpath, config_error = self._get_poster_xpath(config)
+        title_xpath = config.get('title_xpath')
+        if not config_error and genplan_type == 'old' and not title_xpath and not poster_xpath:
+            config_error = 'для type "old" нужен title_xpath или poster_xpath'
         if config_error:
             print(f'WARNING: Для {name} {config_error}')
             self._record_result(name, False, url)
             return False
 
-        try:
-            # 1. Прокрутка к якорю (если блок грузится лениво)
-            anchor_xpath = config.get('anchor_xpath')
-            if anchor_xpath:
-                self._scroll_to_anchor(anchor_xpath, wait_time)
+        attempts = int(config.get('attempts', 1))
+        wait_time = int(config.get('wait_time', 14))
 
-            # 2. Перемещение к тайтлу
-            title = wait(self.driver, wait_time).until(
-                EC.presence_of_element_located((By.XPATH, config.get('title_xpath')))
-            )
-            self.actions.move_to_element(title).perform()
-            time.sleep(1)
+        for attempt in range(1, attempts + 1):
+            try:
+                # 1. Прокрутка к якорю (если блок грузится лениво)
+                anchor_xpath = config.get('anchor_xpath')
+                if anchor_xpath:
+                    self._scroll_to_anchor(anchor_xpath, wait_time)
 
-            # 3. Нажатие на постер
-            if poster_xpath:
-                poster = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, poster_xpath))
+                # 2. Перемещение к тайтлу
+                title = None
+                if title_xpath:
+                    title = wait(self.driver, wait_time).until(
+                        EC.presence_of_element_located((By.XPATH, title_xpath))
+                    )
+                    self.actions.move_to_element(title).perform()
+                    time.sleep(1)
+
+                # 3. Нажатие на постер
+                if poster_xpath:
+                    poster = wait(self.driver, wait_time).until(
+                        EC.element_to_be_clickable((By.XPATH, poster_xpath))
+                    )
+                    self._click_element(poster)
+                elif genplan_type == 'old':
+                    self._click_element(title)
+
+                # 4. Проверка загрузки генплана
+                wait(self.driver, wait_time).until(
+                    EC.visibility_of_element_located(check_locator)
                 )
-                self._click_element(poster)
-            elif genplan_type == 'old':
-                self._click_element(title)
+                print(f'     OK: {name}')
+                self._record_result(name, True, url)
+                return True
 
-            # 4. Проверка загрузки генплана
-            wait(self.driver, wait_time).until(
-                EC.visibility_of_element_located(check_locator)
-            )
-            print(f'     OK: {name}')
-            self._record_result(name, True, url)
-            return True
+            except Exception as e:
+                if attempt == attempts:
+                    print(f'ERROR: генплан на {name} - {str(e)[:100]} ({url})')
+                    self._record_result(name, False, url)
+                    return False
 
-        except Exception as e:
-            print(f'ERROR: генплан на {name} - {str(e)[:100]} ({url})')
-            self._record_result(name, False, url)
-            return False
+                print(f'     Повторная проверка {name} (попытка {attempt + 1} из {attempts})')
+                try:
+                    self.driver.refresh()
+                    time.sleep(2)
+                    if popups:
+                        remove_popups(self.driver)
+                except Exception:
+                    pass
+
+        return False
 
     def check_moigektar_genplan(self, config):
         """
@@ -315,7 +341,7 @@ class GenplanChecker:
         remove_popups(self.driver)
 
         # Для страниц МГ тип по умолчанию - новый (как и раньше)
-        return self.check_genplan(name, {'type': 'new', **config}, url=url)
+        return self.check_genplan(name, {'type': 'new', **config}, url=url, popups=True)
 
     def _authenticate_mg(self):
         """
@@ -400,8 +426,6 @@ class GenplanChecker:
         """Проверка загрузки генплана на странице актива"""
         url = config.get('url', 'https://moigektar.ru/batches-no-auth/60786')
         name = config.get('name', 'Страница участка')
-        max_attempts = 3
-        wait_time = 30
 
         if not self._load_page(url):
             self._record_result(name, False, url)
@@ -409,40 +433,9 @@ class GenplanChecker:
 
         remove_popups(self.driver)
 
-        for attempt in range(max_attempts):
-            try:
-                genplan_button = wait(self.driver, wait_time).until(
-                    EC.element_to_be_clickable((By.XPATH, '(//*[text()[contains(.,"Генеральный")]])[2]'))
-                )
-
-                if attempt == 0:
-                    self.actions.move_to_element(genplan_button).perform()
-
-                genplan_button.click()
-
-                to_plot_element = wait(self.driver, wait_time).until(
-                    EC.visibility_of_element_located((By.XPATH, '//*[text()[contains(.,"На участок")]]'))
-                )
-
-                if to_plot_element:
-                    print(f'     OK: {name}')
-                    self._record_result(name, True, url)
-                    return True
-
-            except Exception as e:
-                if attempt == max_attempts - 1:
-                    print(f'ERROR: {name} - {str(e)} ({url})')
-                    self._record_result(name, False, url)
-                    return False
-                else:
-                    try:
-                        time.sleep(1)
-                        self.driver.refresh()
-                    except:
-                        pass
-                    time.sleep(2)
-
-        return False
+        # По умолчанию - как в прежней проверке: 3 попытки, ожидание 30 сек
+        defaults = {'type': 'new', 'attempts': 3, 'wait_time': 30}
+        return self.check_genplan(name, {**defaults, **config}, url=url, popups=True)
 
     def _record_result(self, name: str, success: bool, url: str = None):
         if success:

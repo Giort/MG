@@ -11,7 +11,11 @@
   "asset": {
     "url": "https://moigektar.ru/batches-no-auth/60786",
     "name": "Страница участка",
-    "type": "old"
+    "type": "new",
+    "poster_xpath": "//div[@id='w2']//img[@src='/img/batch/plan-icon.svg']",
+    "check_xpath": "//div[@id='w2']//div[@role='dialog']",
+    "attempts": 3,
+    "wait_time": 30
   },
   "moigektar_genplans": [
       {
@@ -33,15 +37,6 @@
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
     },
     {
-      "url": "https://moigektar.ru",
-      "name": "Главная - Генеральный план «Экополис на Новорижском шоссе»",
-      "type": "new",
-      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
-      "poster_click": true,
-      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w4-map']//button[@class='ol-zoom-in']"
-    },
-    {
       "url": "https://moigektar.ru/catalogue/landing",
       "name": "Каталог посёлков - Экополис на Волге, Сновидово",
       "type": "new",
@@ -61,21 +56,12 @@
     },
     {
       "url": "https://moigektar.ru/catalogue/landing",
-      "name": "Каталог посёлков - Генеральный план «Экополис на Новорижском шоссе»",
-      "type": "new",
-      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
-      "poster_click": true,
-      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w10-map']//button[@class='ol-zoom-in']"
-    },
-    {
-      "url": "https://moigektar.ru/catalogue/landing",
       "name": "Каталог посёлков - Усадьба в Подмосковье, Подсухино",
       "type": "new",
       "title_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]",
       "poster_click": true,
       "poster_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/ancestor::div[1]//div[@id='w12-map']//button[@class='ol-zoom-in']"
+      "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба в Подмосковье» д. Подсухино')]/ancestor::div[1]//div[@id='w11-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/catalogue/landing",
@@ -84,7 +70,7 @@
       "title_xpath": "//h5[contains(., 'Генеральный план «Усадьба Бельгардов»')]",
       "poster_click": true,
       "poster_xpath": "//h5[contains(., 'Генеральный план «Усадьба Бельгардов»')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба Бельгардов»')]/ancestor::div[1]//div[@id='w13-map']//button[@class='ol-zoom-in']"
+      "check_xpath": "//h5[contains(., 'Генеральный план «Усадьба Бельгардов»')]/ancestor::div[1]//div[@id='w12-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/catalogue/landing",
@@ -93,7 +79,7 @@
       "title_xpath": "//h5[contains(., 'Генеральный план «Рыбацкая деревня»')]",
       "poster_click": true,
       "poster_xpath": "//h5[contains(., 'Генеральный план «Рыбацкая деревня»')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Рыбацкая деревня»')]/ancestor::div[1]//div[@id='w14-map']//button[@class='ol-zoom-in']"
+      "check_xpath": "//h5[contains(., 'Генеральный план «Рыбацкая деревня»')]/ancestor::div[1]//div[@id='w13-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/ecopolis",
@@ -112,15 +98,6 @@
       "poster_click": true,
       "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/following-sibling::div[1]//h2",
       "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Волге», Курьково')]/ancestor::div[1]//div[@id='w2-map']//button[@class='ol-zoom-in']"
-    },
-    {
-      "url": "https://moigektar.ru/ecopolis",
-      "name": "Стр. Экополиса - Экополис на Новорижском шоссе",
-      "type": "new",
-      "title_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]",
-      "poster_click": true,
-      "poster_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/following-sibling::div[1]//h2",
-      "check_xpath": "//h5[contains(., 'Генеральный план «Экополис на Новорижском шоссе»')]/ancestor::div[1]//div[@id='w3-map']//button[@class='ol-zoom-in']"
     },
     {
       "url": "https://moigektar.ru/goal/farm",
@@ -205,13 +182,6 @@
       "project_name": "syn_42 Усадьба в Завидово",
       "type": "old",
       "title_xpath": "(//*[text()[contains(.,'Генеральный')]])[3]",
-      "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
-    },
-    {
-      "project_name": "syn_47 Synergy Island",
-      "type": "old",
-      "anchor_xpath": "//span[@id='plan']",
-      "title_xpath": "//*[@id='plan']//*[text()[contains(.,'Генеральный')]]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
     },
     {
@@ -301,6 +271,7 @@
     },
     {
       "project_name": "syn_67 Моё поместье",
+      "name": "старый",
       "type": "old",
       "title_xpath": "(//*[text()[contains(.,'Генеральный')]])[6]",
       "genplan_css": "ymaps.ymaps-2-1-79-inner-panes"
