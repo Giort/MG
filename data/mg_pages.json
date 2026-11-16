@@ -592,6 +592,12 @@
         "requires_auth": false
     },
     {
+        "name": "Сотрудничество",
+        "path": "partnership",
+        "xpath": "//*[text()[contains(.,'к сотрудничеству')]]",
+        "requires_auth": false
+    },
+    {
         "name": "подарочный сертификат",
         "path": "gift",
         "xpath": "//*[text()[contains(.,'преподнести подарок родным')]]",

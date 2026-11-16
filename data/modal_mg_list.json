@@ -609,6 +609,54 @@
       "lgform": "lg_broker_modal"
     },
     {
+      "name": "1-й экран, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "//*[@id='main']//*[@id='main']//a[contains (., 'Оставить заявку')]",
+      "modal_id": "partnership-main",
+      "lgform": "lg_partnership_michailov"
+    },
+    {
+      "name": "блок 'Готовы подключиться...', 1-я секция, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "(//*[contains(text(), 'Готовы подключиться')]/ancestor::div[2]//a)[1]",
+      "modal_id": "partnership-buyout",
+      "lgform": "lg_partnership_land_buyout"
+    },
+    {
+      "name": "блок 'Готовы подключиться...', 2-я секция, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "(//*[contains(text(), 'Готовы подключиться')]/ancestor::div[2]//a)[2]",
+      "modal_id": "partnership-start",
+      "lgform": "lg_partnership_sales_start"
+    },
+    {
+      "name": "блок 'Готовы подключиться...', 3-я секция, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "(//*[contains(text(), 'Готовы подключиться')]/ancestor::div[2]//a)[3]",
+      "modal_id": "partnership-launched",
+      "lgform": "lg_partnership_launched_projects"
+    },
+    {
+      "name": "блок 'Готовы подключиться...', 4-я секция, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "(//*[contains(text(), 'Готовы подключиться')]/ancestor::div[2]//a)[4]",
+      "modal_id": "partnership-manage",
+      "lgform": "lg_partnership_management_problems"
+    },
+    {
+      "name": "блок 'Готовы подключиться...', 5-я секция, кнопка 'Оставить заявку'",
+      "url_name": "Стр. сотрудничества",
+      "url": "/partnership",
+      "btn_selector": "(//*[contains(text(), 'Готовы подключиться')]/ancestor::div[2]//a)[5]",
+      "modal_id": "partnership-profit",
+      "lgform": "lg_partnership_developers_profit"
+    },
+    {
       "name": "1-й экран, кнопка 'Подарить'",
       "url_name": "Стр. подарочного сертификата",
       "url": "/gift",

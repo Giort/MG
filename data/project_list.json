@@ -327,17 +327,6 @@
       "auth": false
     },
     {
-      "project_name": "syn_47 Synergy Island",
-      "domains": [
-        {
-          "name": "syn_47",
-          "url": "https://syn47.lp.moigektar.ru"
-        }
-      ],
-      "selector": "//*[text()[contains(., 'Клубный поселок')]]",
-      "auth": false
-    },
-    {
       "project_name": "syn_48-97-105 Парк Патриот",
       "domains": [
         {

@@ -405,6 +405,13 @@
     "header_xpath": "(//*[text()[contains(.,'Андрей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'я вас проконсультирую')]])[1]"
   },
   {
+    "page_name": "Сотрудничество",
+    "form_name": "форма с Алексеем Михайловым",
+    "url": "/partnership",
+    "lgform_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::div[contains(@id, 'cfw')]//*[@value='lg_partnership_michailov'])[1]",
+    "header_xpath": "(//*[text()[contains(.,'Алексей')]]/ancestor::*[contains(@id, 'cfw')]//div[text()[contains(., 'прямо сейчас')]])[2]"
+  },
+  {
     "page_name": "Подарочный сертификат",
     "form_name": "форма с Ариной",
     "url": "/gift",
