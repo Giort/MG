@@ -742,10 +742,16 @@
         "requires_auth": false
     },
     {
-        "name": "страница упаковки",
+        "name": "Страница 'Мой поселок'",
         "path": "bigland",
         "xpath": "//h1[text()[contains(.,'коллективного развития')]]",
         "requires_auth": false
+    },
+    {
+        "name": "Стр. 'Мой поселок', каталог",
+        "path": "bigland/catalogue",
+        "xpath": "//h1[contains(., 'Каталог поселков')]",
+        "requires_auth": true
     },
     {
         "name": "страница регистрации клиента от стойки",

@@ -50,6 +50,97 @@
       "remove_popups": true,
       "scroll": true
     },
+
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Экополис на Волге'",
+      "title_locator": "(//h4[contains(., '«Экополис на Волге»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[1]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 242'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Усадьба в Подмосковье, Подсухино'",
+      "title_locator": "(//h4[contains(., 'Подсухино')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[2]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 350'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Усадьба в Подмосковье, Артёмки'",
+      "title_locator": "(//h4[contains(., 'Артёмки')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[3]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 173'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Усадьба Бельгардов'",
+      "title_locator": "(//h4[contains(., 'Усадьба Бельгардов')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[4]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 191'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Новая жизнь'",
+      "title_locator": "(//h4[contains(., '«Новая жизнь»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[5]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Оазис в Завидово'",
+      "title_locator": "(//h4[contains(., '«Оазис в Завидово»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[6]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 158'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Усадьба Императрицы'",
+      "title_locator": "(//h4[contains(., '«Усадьба Императрицы»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[7]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 275'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Парк Патриот, Харино'",
+      "title_locator": "(//h4[contains(., 'Харино')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[8]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 187'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Парк Патриот, Струйское'",
+      "title_locator": "(//h4[contains(., 'Струйское')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[9]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 166'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
+    {
+      "url": "https://moigektar.ru/bigland/catalogue",
+      "name": "МГ, стр. 'Мой посёлок', раздел каталог, блок 'Мое поместье'",
+      "title_locator": "(//h4[contains(., '«Мое поместье»')])[1]",
+      "btn_locator": "(//span[contains(., 'Виртуальный тур')])[10]",
+      "elem_xpath": "//div[(contains(@style, 'z-index: 3101'))]",
+      "remove_popups": true,
+      "scroll": true
+    },
     {
       "url": "https://moigektar.ru/ecopolis",
       "name": "МГ, стр. Экополиса, блок 'Экополис на Волге'",
