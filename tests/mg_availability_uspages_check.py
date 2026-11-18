@@ -54,7 +54,7 @@ PAGES = {
     },
     'asset': {
         'name': 'страница актива',
-        'path': 'batches/30608',
+        'path': 'batches/64145',
         'xpath_unauth': '//*[text()[contains(.,"Доступ в каталог")]]',
         'xpath_noauth': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',
         'xpath_auth': '(//*[@uk-toggle="target: #modal-batch-detail"])[2]',

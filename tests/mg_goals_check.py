@@ -123,7 +123,7 @@ modal_tests = [
         'goal': 'catalog_v4.authwall_shown'
     },
     {
-        'url': f'{MG_BASE_URL}/batches/59228?__counters=1',
+        'url': f'{MG_BASE_URL}/batches/64145?__counters=1',
         'text': 'стр. актива без авторизации',
         'goal': 'catalog_v4.authwall_shown'
     }

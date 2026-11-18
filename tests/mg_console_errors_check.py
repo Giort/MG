@@ -833,7 +833,7 @@ def get_default_pages_config():
         },
         {
             'name': 'Страница актива',
-            'path': 'batches/30608',
+            'path': 'batches/64145',
             'xpath': "(//*[@uk-toggle='target: #modal-batch-detail'])[2]",
         },
         {

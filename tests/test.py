@@ -424,7 +424,7 @@ class GenplanChecker:
 
     def check_asset_genplan(self, config):
         """Проверка загрузки генплана на странице актива"""
-        url = config.get('url', 'https://moigektar.ru/batches-no-auth/60786')
+        url = config.get('url', 'https://moigektar.ru/batches-no-auth/64145')
         name = config.get('name', 'Страница участка')
 
         if not self._load_page(url):

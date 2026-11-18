@@ -117,7 +117,7 @@
     {
       "name": "Кнопка 'Оставить заявку'",
       "url_name": "стр. актива",
-      "url": "/batches-no-auth/31243",
+      "url": "/batches-no-auth/64145",
       "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[2]",
       "modal_id": "modal-batch-detail",
       "lgform": "buy-batch-modal",
@@ -127,7 +127,7 @@
     {
       "name": "Баннер 'Начисляем кешбэк'",
       "url_name": "стр. актива",
-      "url": "/batches-no-auth/31243",
+      "url": "/batches-no-auth/64145",
       "btn_selector": "(//*[contains (@class, 'w-cashback-ban')])[1]",
       "modal_id": "modal-cashback-banner",
       "lgform": "batch_cashback"
@@ -135,7 +135,7 @@
     {
       "name": "'Рассчитайте рассрочку', кнопка 'Оставить заявку'",
       "url_name": "стр. актива",
-      "url": "/batches-no-auth/31243",
+      "url": "/batches-no-auth/64145",
       "btn_selector": "(//*[contains (text(), 'Оставить заявку')])[3]",
       "modal_id": "modal-batch-installment",
       "lgform": "batch_installment_special_offer"
